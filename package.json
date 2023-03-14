@@ -59,7 +59,7 @@
     "vinyl": "^2.2.1",
     "vinyl-fs": "^3.0.3",
     "web-streams-polyfill": "^3.2.0",
-    "webpack": "^5.65.0",
+    "webpack": "^5.76.0",
     "webpack-stream": "^7.0.0",
     "wintersmith": "^2.5.0",
     "yargs": "^17.3.1"
