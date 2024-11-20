@@ -16,3 +16,14 @@ from the `build/generic` folder, as that's what contains the built out version o
 A Github Action is available for releasing a new version of the package [here](https://github.com/CertifyInc/pdf.js/actions/workflows/npm-publish.yml).
 Select "Run workflow" in the top-right, base off of `master`, and select the appropriate Release Type in accordance with semantic versioning.
 
+## Merging the Latest Upstream Version
+If unable to Sync the latest version because of conflicts, you can merge in the latest version (and fix conflicts) by doing this:
+```
+git checkout master
+git pull
+git remote add upstream git@github.com:mozilla/pdf.js.git
+(if there is an error doing the above step, do this: git remote add upstream https://github.com/mozilla/pdf.js.git)
+git fetch upstream
+git merge upstream/master
+``
+From here you can fix conflicts, put into a branch, and create a PR
