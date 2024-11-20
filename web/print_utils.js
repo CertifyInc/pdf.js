@@ -25,10 +25,9 @@ function getXfaHtmlForPrinting(printContainer, pdfDocument) {
   for (const xfaPage of xfaHtml.children) {
     const page = document.createElement("div");
     page.className = "xfaPrintedPage";
-    printContainer.appendChild(page);
+    printContainer.append(page);
 
     const builder = new XfaLayerBuilder({
-      pageDiv: page,
       pdfPage: null,
       annotationStorage: pdfDocument.annotationStorage,
       linkService,
@@ -37,6 +36,7 @@ function getXfaHtmlForPrinting(printContainer, pdfDocument) {
     const viewport = getXfaPageViewport(xfaPage, { scale });
 
     builder.render(viewport, "print");
+    page.append(builder.div);
   }
 }
 

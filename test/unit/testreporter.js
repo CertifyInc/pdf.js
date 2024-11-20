@@ -1,23 +1,29 @@
 const TestReporter = function (browser) {
-  function send(action, json, cb) {
-    const r = new XMLHttpRequest();
-    // (The POST URI is ignored atm.)
-    r.open("POST", action, true);
-    r.setRequestHeader("Content-Type", "application/json");
-    r.onreadystatechange = function sendTaskResultOnreadystatechange(e) {
-      if (r.readyState === 4) {
-        // Retry until successful
-        if (r.status !== 200) {
-          send(action, json, cb);
-        } else {
-          if (cb) {
-            cb();
+  function send(action, json) {
+    return new Promise(resolve => {
+      json.browser = browser;
+
+      fetch(action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(json),
+      })
+        .then(response => {
+          // Retry until successful.
+          if (!response.ok || response.status !== 200) {
+            throw new Error(response.statusText);
           }
-        }
-      }
-    };
-    json.browser = browser;
-    r.send(JSON.stringify(json));
+          resolve();
+        })
+        .catch(reason => {
+          console.warn(`TestReporter - send failed (${action}): ${reason}`);
+          resolve();
+
+          send(action, json);
+        });
+    });
   }
 
   function sendInfo(message) {
@@ -29,7 +35,7 @@ const TestReporter = function (browser) {
       status,
       description,
     };
-    if (typeof error !== "undefined") {
+    if (error !== undefined) {
       message.error = error;
     }
     send("/submit_task_results", message);
@@ -52,12 +58,7 @@ const TestReporter = function (browser) {
   };
 
   this.suiteStarted = function (result) {
-    // Normally suite starts don't have to be reported because the individual
-    // specs inside them are reported, but it can happen that the suite cannot
-    // start, for instance due to an uncaught exception in `beforeEach`. This
-    // is problematic because the specs inside the suite will never be found
-    // and run, so if we don't report the suite start failure here it would be
-    // ignored silently, leading to passing tests even though some did not run.
+    // Report on the result of `beforeAll` invocations.
     if (result.failedExpectations.length > 0) {
       let failedMessages = "";
       for (const item of result.failedExpectations) {
@@ -70,6 +71,7 @@ const TestReporter = function (browser) {
   this.specStarted = function (result) {};
 
   this.specDone = function (result) {
+    // Report on the result of individual tests.
     if (result.failedExpectations.length === 0) {
       sendResult("TEST-PASSED", result.description);
     } else {
@@ -81,7 +83,16 @@ const TestReporter = function (browser) {
     }
   };
 
-  this.suiteDone = function (result) {};
+  this.suiteDone = function (result) {
+    // Report on the result of `afterAll` invocations.
+    if (result.failedExpectations.length > 0) {
+      let failedMessages = "";
+      for (const item of result.failedExpectations) {
+        failedMessages += `${item.message} `;
+      }
+      sendResult("TEST-UNEXPECTED-FAIL", result.description, failedMessages);
+    }
+  };
 
   this.jasmineDone = function () {
     // Give the test runner some time process any queued requests.

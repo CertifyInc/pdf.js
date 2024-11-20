@@ -151,13 +151,17 @@ describe("parser", function () {
         expect(plusLexer.getNumber()).toEqual(205.88);
       });
 
-      it("should treat a single decimal point as zero", function () {
-        const input = new StringStream(".");
-        const lexer = new Lexer(input);
-        expect(lexer.getNumber()).toEqual(0);
+      it("should treat a single decimal point, or minus/plus sign, as zero", function () {
+        const validNums = [".", "-", "+", "-.", "+.", "-\r\n.", "+\r\n."];
+        for (const number of validNums) {
+          const validInput = new StringStream(number);
+          const validLexer = new Lexer(validInput);
 
-        const numbers = ["..", "-.", "+.", "-\r\n.", "+\r\n."];
-        for (const number of numbers) {
+          expect(validLexer.getNumber()).toEqual(0);
+        }
+
+        const invalidNums = ["..", ".-", ".+"];
+        for (const number of invalidNums) {
           const invalidInput = new StringStream(number);
           const invalidLexer = new Lexer(invalidInput);
 
@@ -197,11 +201,12 @@ describe("parser", function () {
     });
 
     describe("getHexString", function () {
-      it("should not throw exception on bad input", function () {
-        // '7 0 2 15 5 2 2 2 4 3 2 4' should be parsed as '70 21 55 22 24 32'.
+      it("should handle an odd number of digits", function () {
+        // '7 0 2 15 5 2 2 2 4 3 2 4' should be parsed as
+        // '70 21 55 22 24 32 40'.
         const input = new StringStream("<7 0 2 15 5 2 2 2 4 3 2 4>");
         const lexer = new Lexer(input);
-        expect(lexer.getHexString()).toEqual('p!U"$2');
+        expect(lexer.getHexString()).toEqual('p!U"$2@');
       });
     });
 

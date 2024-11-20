@@ -35,7 +35,7 @@ describe("custom canvas rendering", function () {
   let page;
 
   beforeAll(async function () {
-    CanvasFactory = new DefaultCanvasFactory();
+    CanvasFactory = new DefaultCanvasFactory({});
 
     loadingTask = getDocument(transparentGetDocumentParams);
     const doc = await loadingTask.promise;
@@ -134,7 +134,7 @@ describe("custom ownerDocument", function () {
       fonts: new Set(),
       createElement,
       documentElement: {
-        getElementsByTagName: () => [{ appendChild: () => {} }],
+        getElementsByTagName: () => [{ append: () => {} }],
       },
     };
     const CanvasFactory = new DefaultCanvasFactory({ ownerDocument });
@@ -172,7 +172,7 @@ describe("custom ownerDocument", function () {
     expect(style).toBeFalsy();
     expect(ownerDocument.fonts.size).toBeGreaterThanOrEqual(1);
     expect(Array.from(ownerDocument.fonts).find(checkFont)).toBeTruthy();
-    await doc.destroy();
+
     await loadingTask.destroy();
     CanvasFactory.destroy(canvasAndCtx);
     expect(ownerDocument.fonts.size).toBe(0);
@@ -204,7 +204,7 @@ describe("custom ownerDocument", function () {
     const style = elements.find(element => element.tagName === "style");
     expect(style.sheet.cssRules.length).toBeGreaterThanOrEqual(1);
     expect(style.sheet.cssRules.find(checkFontFaceRule)).toBeTruthy();
-    await doc.destroy();
+
     await loadingTask.destroy();
     CanvasFactory.destroy(canvasAndCtx);
     expect(style.remove.called).toBe(true);
