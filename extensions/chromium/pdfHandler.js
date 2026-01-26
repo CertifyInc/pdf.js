@@ -69,11 +69,7 @@ async function registerPdfRedirectRule() {
     },
   };
 
-<<<<<<< HEAD
   // Rules in order of prority (highest priority rule first).
-=======
-  // Rules in order of priority (highest priority rule first).
->>>>>>> upstream/master
   // The required "id" fields will be auto-generated later.
   const addRules = [
     {

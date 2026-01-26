@@ -47,28 +47,6 @@ function handlePreprocessorAction(ctx, actionName, args, path) {
 }
 
 function babelPluginPDFJSPreprocessor(babel, ctx) {
-<<<<<<< HEAD
-=======
-  function removeUnusedFunctions(path) {
-    let removed;
-    do {
-      removed = false;
-      path.scope.crawl();
-      for (const name in path.scope.bindings) {
-        const binding = path.scope.bindings[name];
-        if (!binding.referenced) {
-          const { path: bindingPath } = binding;
-          if (bindingPath.isFunctionDeclaration()) {
-            bindingPath.remove();
-            removed = true;
-          }
-        }
-      }
-      // If we removed some functions, there might be new unused ones
-    } while (removed);
-  }
-
->>>>>>> upstream/master
   return {
     name: "babel-plugin-pdfjs-preprocessor",
     manipulateOptions({ parserOpts }) {
@@ -175,34 +153,18 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
           path.replaceWith(t.inherits(t.valueToNode(result), path.node));
         }
 
-<<<<<<< HEAD
         if (t.isIdentifier(node.callee, { name: "__non_webpack_import__" })) {
           if (node.arguments.length !== 1) {
             throw new Error("Invalid `__non_webpack_import__` usage.");
           }
           // Replace it with a standard `import`-call and
           // ensure that Webpack will leave it alone.
-=======
-        if (t.isIdentifier(node.callee, { name: "__raw_import__" })) {
-          if (node.arguments.length !== 1) {
-            throw new Error("Invalid `__raw_import__` usage.");
-          }
-          // Replace it with a standard `import`-call and attempt to ensure that
-          // various bundlers will leave it alone; this *must* include Webpack.
->>>>>>> upstream/master
           const source = node.arguments[0];
           source.leadingComments = [
             {
               type: "CommentBlock",
               value: "webpackIgnore: true",
             },
-<<<<<<< HEAD
-=======
-            {
-              type: "CommentBlock",
-              value: "@vite-ignore",
-            },
->>>>>>> upstream/master
           ];
           path.replaceWith(t.importExpression(source));
         }
@@ -259,11 +221,6 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
             // Function body ends with return without arg -- removing it.
             body.pop();
           }
-<<<<<<< HEAD
-=======
-
-          removeUnusedFunctions(path);
->>>>>>> upstream/master
         },
       },
       ClassMethod: {
@@ -286,29 +243,6 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
           }
         },
       },
-<<<<<<< HEAD
-=======
-      Program: {
-        exit(path) {
-          if (path.node.sourceType === "module") {
-            removeUnusedFunctions(path);
-          }
-        },
-      },
-      MemberExpression(path) {
-        // The Emscripten Compiler (emcc) generates code that allows the caller
-        // to provide the Wasm module (thorugh Module.instantiateWasm), with
-        // a fallback in case .instantiateWasm is not provided.
-        // We always define instantiateWasm, so we can hard-code the check
-        // and let our dead code elimination logic remove the unused fallback.
-        if (
-          path.parentPath.isIfStatement({ test: path.node }) &&
-          path.matchesPattern("Module.instantiateWasm")
-        ) {
-          path.replaceWith(t.booleanLiteral(true));
-        }
-      },
->>>>>>> upstream/master
     },
   };
 }

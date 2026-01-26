@@ -39,7 +39,6 @@ function preprocess(inFilename, outFilename, defines) {
   }
 
   function expandCssImports(content, baseUrl) {
-<<<<<<< HEAD
     return content.replaceAll(
       /^\s*@import\s+url\(([^)]+)\);\s*$/gm,
       function (all, url) {
@@ -49,24 +48,6 @@ function preprocess(inFilename, outFilename, defines) {
               return "";
           }
         }
-=======
-    if (defines.GECKOVIEW) {
-      // In Geckoview, we don't need some styles.
-      const startComment = "/* Ignored in GECKOVIEW: begin */";
-      const endComment = "/* Ignored in GECKOVIEW: end */";
-      const beginIndex = content.indexOf(startComment);
-      const endIndex = content.indexOf(endComment);
-      if (beginIndex >= 0 && endIndex > beginIndex) {
-        content =
-          content.substring(0, beginIndex) +
-          content.substring(endIndex + endComment.length);
-      }
-    }
-
-    return content.replaceAll(
-      /^\s*@import\s+url\(([^)]+)\);\s*$/gm,
-      function (all, url) {
->>>>>>> upstream/master
         const file = path.join(path.dirname(baseUrl), url);
         const imported = fs.readFileSync(file, "utf8").toString();
         return expandCssImports(imported, file);
@@ -170,11 +151,7 @@ function preprocess(inFilename, outFilename, defines) {
   let state = STATE_NONE;
   const stack = [];
   const control =
-<<<<<<< HEAD
     /^(?:\/\/|\s*\/\*|<!--)\s*#(if|elif|else|endif|expand|include|error)\b(?:\s+(.*?)(?:\*\/|-->)?$)?/;
-=======
-    /^(?:\/\/|\s*\/\*|\s*<!--)\s*#(if|elif|else|endif|expand|include|error)\b(?:\s+(.*?)(?:\*\/|-->)?$)?/;
->>>>>>> upstream/master
 
   while ((line = readLine()) !== null) {
     ++lineNumber;
@@ -236,11 +213,7 @@ function preprocess(inFilename, outFilename, defines) {
     ) {
       writeLine(
         line
-<<<<<<< HEAD
           .replaceAll(/^\/\/|^<!--/g, "  ")
-=======
-          .replaceAll(/^\/\/|^\s*<!--/g, "  ")
->>>>>>> upstream/master
           .replaceAll(/(^\s*)\/\*/g, "$1  ")
           .replaceAll(/\*\/$|-->$/g, "")
       );

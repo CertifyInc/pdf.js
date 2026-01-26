@@ -16,7 +16,3 @@ if ('1') {
 function f1() {
   "1";
 }
-<<<<<<< HEAD
-=======
-f1();
->>>>>>> upstream/master

@@ -17,4 +17,3 @@ function test() {
     "4";
   }
 }
-test();

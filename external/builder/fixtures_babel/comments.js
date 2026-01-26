@@ -6,7 +6,6 @@ function f1() {
   "2";
   /* tail */
 }
-f1();
 
 function f2() {
   // head
@@ -15,7 +14,6 @@ function f2() {
   "2";
   // tail
 }
-f2();
 
 function f3() {
   if ("1") { // begin block
@@ -26,4 +24,3 @@ function f3() {
     "4";
   }
 }
-f3();

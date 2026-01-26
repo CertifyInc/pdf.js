@@ -2,29 +2,17 @@ function f1() {
   return;
   var i = 0;
 }
-<<<<<<< HEAD
-=======
-f1();
->>>>>>> upstream/master
 
 function f2() {
   return 1;
   var i = 0;
 }
-<<<<<<< HEAD
-=======
-f2();
->>>>>>> upstream/master
 
 function f3() {
   var i = 0;
   throw "test";
   var j = 0;
 }
-<<<<<<< HEAD
-=======
-f3();
->>>>>>> upstream/master
 
 function f4() {
   var i = 0;
@@ -34,10 +22,6 @@ function f4() {
   throw "test";
   var j = 0;
 }
-<<<<<<< HEAD
-=======
-f4();
->>>>>>> upstream/master
 
 var obj = {
   method1() { return; var i = 0; },
