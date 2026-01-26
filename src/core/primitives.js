@@ -186,6 +186,13 @@ class Dict {
   // No dereferencing.
   getRawValues() {
     return [...this._map.values()];
+<<<<<<< HEAD
+=======
+  }
+
+  getRawEntries() {
+    return this._map.entries();
+>>>>>>> upstream/master
   }
 
   set(key, value) {
@@ -195,8 +202,51 @@ class Dict {
       } else if (value === undefined) {
         unreachable('Dict.set: The "value" cannot be undefined.');
       }
+<<<<<<< HEAD
     }
     this._map.set(key, value);
+=======
+    }
+    this._map.set(key, value);
+  }
+
+  setIfNotExists(key, value) {
+    if (!this.has(key)) {
+      this.set(key, value);
+    }
+  }
+
+  setIfNumber(key, value) {
+    if (typeof value === "number") {
+      this.set(key, value);
+    }
+  }
+
+  setIfArray(key, value) {
+    if (Array.isArray(value) || ArrayBuffer.isView(value)) {
+      this.set(key, value);
+    }
+  }
+
+  setIfDefined(key, value) {
+    if (value !== undefined && value !== null) {
+      this.set(key, value);
+    }
+  }
+
+  setIfName(key, value) {
+    if (typeof value === "string") {
+      this.set(key, Name.get(value));
+    } else if (value instanceof Name) {
+      this.set(key, value);
+    }
+  }
+
+  setIfDict(key, value) {
+    if (value instanceof Dict) {
+      this.set(key, value);
+    }
+>>>>>>> upstream/master
   }
 
   has(key) {
@@ -277,7 +327,11 @@ class Dict {
   }
 
   delete(key) {
+<<<<<<< HEAD
     delete this._map[key];
+=======
+    this._map.delete(key);
+>>>>>>> upstream/master
   }
 }
 
@@ -397,6 +451,15 @@ class RefSetCache {
       yield [Ref.fromString(ref), value];
     }
   }
+<<<<<<< HEAD
+=======
+
+  *keys() {
+    for (const ref of this._map.keys()) {
+      yield Ref.fromString(ref);
+    }
+  }
+>>>>>>> upstream/master
 }
 
 function isName(v, name) {

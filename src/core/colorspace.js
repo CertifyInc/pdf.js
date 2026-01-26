@@ -18,13 +18,19 @@ import {
   FeatureTest,
   FormatError,
   info,
+  MathClamp,
   shadow,
   unreachable,
+  Util,
   warn,
 } from "../shared/util.js";
+<<<<<<< HEAD
 import { Dict, Name, Ref } from "./primitives.js";
 import { BaseStream } from "./base_stream.js";
 import { MissingDataException } from "./core_utils.js";
+=======
+import { BaseStream } from "./base_stream.js";
+>>>>>>> upstream/master
 
 /**
  * Resizes an RGB image with 3 components.
@@ -117,6 +123,8 @@ function copyRgbaImage(src, dest, alpha01) {
 }
 
 class ColorSpace {
+  static #rgbBuf = new Uint8ClampedArray(3);
+
   constructor(name, numComps) {
     if (
       (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) &&
@@ -133,10 +141,14 @@ class ColorSpace {
    * located in the src array starting from the srcOffset. Returns the array
    * of the rgb components, each value ranging from [0,255].
    */
-  getRgb(src, srcOffset) {
-    const rgb = new Uint8ClampedArray(3);
-    this.getRgbItem(src, srcOffset, rgb, 0);
-    return rgb;
+  getRgb(src, srcOffset, output = new Uint8ClampedArray(3)) {
+    this.getRgbItem(src, srcOffset, output, 0);
+    return output;
+  }
+
+  getRgbHex(src, srcOffset) {
+    const buffer = this.getRgb(src, srcOffset, ColorSpace.#rgbBuf);
+    return Util.makeHexColor(buffer[0], buffer[1], buffer[2]);
   }
 
   /**
@@ -307,6 +319,7 @@ class ColorSpace {
   }
 
   /**
+<<<<<<< HEAD
    * @private
    */
   static _cache(cacheKey, xref, localColorSpaceCache, parsedColorSpace) {
@@ -546,6 +559,8 @@ class ColorSpace {
   }
 
   /**
+=======
+>>>>>>> upstream/master
    * Checks if a decode map matches the default decode map for a color space.
    * This handles the general decode maps where there are two values per
    * component, e.g. [0, 1, 0, 1, 0, 1] for a RGB color.
@@ -569,6 +584,7 @@ class ColorSpace {
     }
     return true;
   }
+<<<<<<< HEAD
 
   static get singletons() {
     return shadow(this, "singletons", {
@@ -586,6 +602,8 @@ class ColorSpace {
       },
     });
   }
+=======
+>>>>>>> upstream/master
 }
 
 /**
@@ -709,9 +727,10 @@ class IndexedCS extends ColorSpace {
         'IndexedCS.getRgbItem: Unsupported "dest" type.'
       );
     }
-    const numComps = this.base.numComps;
-    const start = src[srcOffset] * numComps;
-    this.base.getRgbBuffer(this.lookup, start, 1, dest, destOffset, 8, 0);
+    const { base, highVal, lookup } = this;
+    const start =
+      MathClamp(Math.round(src[srcOffset]), 0, highVal) * base.numComps;
+    base.getRgbBuffer(lookup, start, 1, dest, destOffset, 8, 0);
   }
 
   getRgbBuffer(src, srcOffset, count, dest, destOffset, bits, alpha01) {
@@ -721,13 +740,13 @@ class IndexedCS extends ColorSpace {
         'IndexedCS.getRgbBuffer: Unsupported "dest" type.'
       );
     }
-    const base = this.base;
-    const numComps = base.numComps;
+    const { base, highVal, lookup } = this;
+    const { numComps } = base;
     const outputDelta = base.getOutputLength(numComps, alpha01);
-    const lookup = this.lookup;
 
     for (let i = 0; i < count; ++i) {
-      const lookupPos = src[srcOffset++] * numComps;
+      const lookupPos =
+        MathClamp(Math.round(src[srcOffset++]), 0, highVal) * numComps;
       base.getRgbBuffer(lookup, lookupPos, 1, dest, destOffset, 8, alpha01);
       destOffset += outputDelta;
     }
@@ -1204,7 +1223,11 @@ class CalRGBCS extends ColorSpace {
   #sRGBTransferFunction(color) {
     // See http://en.wikipedia.org/wiki/SRGB.
     if (color <= 0.0031308) {
+<<<<<<< HEAD
       return this.#adjustToRange(0, 1, 12.92 * color);
+=======
+      return MathClamp(12.92 * color, 0, 1);
+>>>>>>> upstream/master
     }
     // Optimization:
     // If color is close enough to 1, skip calling the following transform
@@ -1215,6 +1238,7 @@ class CalRGBCS extends ColorSpace {
     if (color >= 0.99554525) {
       return 1;
     }
+<<<<<<< HEAD
     return this.#adjustToRange(0, 1, (1 + 0.055) * color ** (1 / 2.4) - 0.055);
   }
 
@@ -1222,6 +1246,11 @@ class CalRGBCS extends ColorSpace {
     return Math.max(min, Math.min(max, value));
   }
 
+=======
+    return MathClamp((1 + 0.055) * color ** (1 / 2.4) - 0.055, 0, 1);
+  }
+
+>>>>>>> upstream/master
   #decodeL(L) {
     if (L < 0) {
       return -this.#decodeL(-L);
@@ -1315,9 +1344,15 @@ class CalRGBCS extends ColorSpace {
   #toRgb(src, srcOffset, dest, destOffset, scale) {
     // A, B and C represent a red, green and blue components of a calibrated
     // rgb space.
+<<<<<<< HEAD
     const A = this.#adjustToRange(0, 1, src[srcOffset] * scale);
     const B = this.#adjustToRange(0, 1, src[srcOffset + 1] * scale);
     const C = this.#adjustToRange(0, 1, src[srcOffset + 2] * scale);
+=======
+    const A = MathClamp(src[srcOffset] * scale, 0, 1);
+    const B = MathClamp(src[srcOffset + 1] * scale, 0, 1);
+    const C = MathClamp(src[srcOffset + 2] * scale, 0, 1);
+>>>>>>> upstream/master
 
     // A <---> AGR in the spec
     // B <---> BGG in the spec
@@ -1529,6 +1564,24 @@ class LabCS extends ColorSpace {
       destOffset += 3 + alpha01;
     }
   }
+<<<<<<< HEAD
+
+  getOutputLength(inputLength, alpha01) {
+    return ((inputLength * (3 + alpha01)) / 3) | 0;
+  }
+
+  isDefaultDecode(decodeMap, bpc) {
+    // XXX: Decoding is handled with the lab conversion because of the strange
+    // ranges that are used.
+    return true;
+  }
+
+  get usesZeroToOneRange() {
+    return shadow(this, "usesZeroToOneRange", false);
+  }
+}
+=======
+>>>>>>> upstream/master
 
   getOutputLength(inputLength, alpha01) {
     return ((inputLength * (3 + alpha01)) / 3) | 0;
@@ -1545,4 +1598,16 @@ class LabCS extends ColorSpace {
   }
 }
 
-export { ColorSpace };
+export {
+  AlternateCS,
+  CalGrayCS,
+  CalRGBCS,
+  ColorSpace,
+  DeviceCmykCS,
+  DeviceGrayCS,
+  DeviceRgbaCS,
+  DeviceRgbCS,
+  IndexedCS,
+  LabCS,
+  PatternCS,
+};

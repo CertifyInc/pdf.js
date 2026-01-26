@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Propietæ do documento…
 pdfjs-document-properties-file-name = Nomme schedaio:
 pdfjs-document-properties-file-size = Dimenscion schedaio:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } kB ({ $size_b } byte)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byte)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Titolo:
 pdfjs-document-properties-author = Aoto:
 pdfjs-document-properties-subject = Ogetto:
 pdfjs-document-properties-keywords = Paròlle ciave:
 pdfjs-document-properties-creation-date = Dæta creaçion:
 pdfjs-document-properties-modification-date = Dæta cangiamento:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Aotô originale:
 pdfjs-document-properties-producer = Produtô PDF:
 pdfjs-document-properties-version = Verscion PDF:
@@ -207,9 +213,12 @@ pdfjs-page-scale-actual = Dimenscioin efetive
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = S'é verificou 'n'erô itno caregamento do PDF.
@@ -235,6 +244,7 @@ pdfjs-password-invalid = Paròlla segreta sbalia. Preuva torna.
 pdfjs-password-ok-button = Va ben
 pdfjs-password-cancel-button = Anulla
 pdfjs-web-fonts-disabled = I font do web en dizativæ: inposcibile adeuviâ i carateri do PDF.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -245,3 +255,5 @@ pdfjs-web-fonts-disabled = I font do web en dizativæ: inposcibile adeuviâ i ca
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

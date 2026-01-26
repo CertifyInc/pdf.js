@@ -42,6 +42,15 @@ import { GenericL10n } from "web-null_l10n";
  * @property {function} [onAppend]
  */
 
+<<<<<<< HEAD
+=======
+/**
+ * @typedef {Object} AnnotationEditorLayerBuilderRenderOptions
+ * @property {PageViewport} viewport
+ * @property {string} [intent] - The default value is "display".
+ */
+
+>>>>>>> upstream/master
 class AnnotationEditorLayerBuilder {
   #annotationLayer = null;
 
@@ -77,10 +86,17 @@ class AnnotationEditorLayerBuilder {
   }
 
   /**
+<<<<<<< HEAD
    * @param {PageViewport} viewport
    * @param {string} intent (default value is 'display')
    */
   async render(viewport, intent = "display") {
+=======
+   * @param {AnnotationEditorLayerBuilderRenderOptions} options
+   * @returns {Promise<void>}
+   */
+  async render({ viewport, intent = "display" }) {
+>>>>>>> upstream/master
     if (intent !== "display") {
       return;
     }
@@ -140,6 +156,10 @@ class AnnotationEditorLayerBuilder {
     if (!this.div) {
       return;
     }
+<<<<<<< HEAD
+=======
+    this.annotationEditorLayer.pause(/* on */ true);
+>>>>>>> upstream/master
     this.div.hidden = true;
   }
 
@@ -148,6 +168,10 @@ class AnnotationEditorLayerBuilder {
       return;
     }
     this.div.hidden = false;
+<<<<<<< HEAD
+=======
+    this.annotationEditorLayer.pause(/* on */ false);
+>>>>>>> upstream/master
   }
 }
 

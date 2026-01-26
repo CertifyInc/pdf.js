@@ -15,10 +15,21 @@
 
 import { FreeDrawOutline, FreeDrawOutliner } from "./freedraw.js";
 import { Outline } from "./outline.js";
+<<<<<<< HEAD
+=======
+import { Util } from "../../../shared/util.js";
+>>>>>>> upstream/master
 
 class HighlightOutliner {
   #box;
 
+<<<<<<< HEAD
+=======
+  #firstPoint;
+
+  #lastPoint;
+
+>>>>>>> upstream/master
   #verticalEdges = [];
 
   #intervals = [];
@@ -36,10 +47,14 @@ class HighlightOutliner {
    *   the last point of the boxes.
    */
   constructor(boxes, borderWidth = 0, innerMargin = 0, isLTR = true) {
+<<<<<<< HEAD
     let minX = Infinity;
     let maxX = -Infinity;
     let minY = Infinity;
     let maxY = -Infinity;
+=======
+    const minMax = [Infinity, Infinity, -Infinity, -Infinity];
+>>>>>>> upstream/master
 
     // We round the coordinates to slightly reduce the number of edges in the
     // final outlines.
@@ -56,6 +71,7 @@ class HighlightOutliner {
       const right = [x2, y1, y2, false];
       this.#verticalEdges.push(left, right);
 
+<<<<<<< HEAD
       minX = Math.min(minX, x1);
       maxX = Math.max(maxX, x2);
       minY = Math.min(minY, y1);
@@ -66,17 +82,49 @@ class HighlightOutliner {
     const bboxHeight = maxY - minY + 2 * innerMargin;
     const shiftedMinX = minX - innerMargin;
     const shiftedMinY = minY - innerMargin;
+=======
+      Util.rectBoundingBox(x1, y1, x2, y2, minMax);
+    }
+
+    const bboxWidth = minMax[2] - minMax[0] + 2 * innerMargin;
+    const bboxHeight = minMax[3] - minMax[1] + 2 * innerMargin;
+    const shiftedMinX = minMax[0] - innerMargin;
+    const shiftedMinY = minMax[1] - innerMargin;
+    let firstPointX = isLTR ? -Infinity : Infinity;
+    let firstPointY = Infinity;
+>>>>>>> upstream/master
     const lastEdge = this.#verticalEdges.at(isLTR ? -1 : -2);
     const lastPoint = [lastEdge[0], lastEdge[2]];
 
     // Convert the coordinates of the edges into box coordinates.
     for (const edge of this.#verticalEdges) {
+<<<<<<< HEAD
       const [x, y1, y2] = edge;
+=======
+      const [x, y1, y2, left] = edge;
+      if (!left && isLTR) {
+        if (y1 < firstPointY) {
+          firstPointY = y1;
+          firstPointX = x;
+        } else if (y1 === firstPointY) {
+          firstPointX = Math.max(firstPointX, x);
+        }
+      } else if (left && !isLTR) {
+        if (y1 < firstPointY) {
+          firstPointY = y1;
+          firstPointX = x;
+        } else if (y1 === firstPointY) {
+          firstPointX = Math.min(firstPointX, x);
+        }
+      }
+
+>>>>>>> upstream/master
       edge[0] = (x - shiftedMinX) / bboxWidth;
       edge[1] = (y1 - shiftedMinY) / bboxHeight;
       edge[2] = (y2 - shiftedMinY) / bboxHeight;
     }
 
+<<<<<<< HEAD
     this.#box = {
       x: shiftedMinX,
       y: shiftedMinY,
@@ -84,6 +132,16 @@ class HighlightOutliner {
       height: bboxHeight,
       lastPoint,
     };
+=======
+    this.#box = new Float32Array([
+      shiftedMinX,
+      shiftedMinY,
+      bboxWidth,
+      bboxHeight,
+    ]);
+    this.#firstPoint = [firstPointX, firstPointY];
+    this.#lastPoint = lastPoint;
+>>>>>>> upstream/master
   }
 
   getOutlines() {
@@ -173,7 +231,16 @@ class HighlightOutliner {
       }
       outline.push(lastPointX, lastPointY);
     }
+<<<<<<< HEAD
     return new HighlightOutline(outlines, this.#box);
+=======
+    return new HighlightOutline(
+      outlines,
+      this.#box,
+      this.#firstPoint,
+      this.#lastPoint
+    );
+>>>>>>> upstream/master
   }
 
   #binarySearch(y) {
@@ -267,10 +334,19 @@ class HighlightOutline extends Outline {
 
   #outlines;
 
+<<<<<<< HEAD
   constructor(outlines, box) {
     super();
     this.#outlines = outlines;
     this.#box = box;
+=======
+  constructor(outlines, box, firstPoint, lastPoint) {
+    super();
+    this.#outlines = outlines;
+    this.#box = box;
+    this.firstPoint = firstPoint;
+    this.lastPoint = lastPoint;
+>>>>>>> upstream/master
   }
 
   toSVGPath() {
@@ -319,10 +395,13 @@ class HighlightOutline extends Outline {
     return this.#box;
   }
 
+<<<<<<< HEAD
   get classNamesForDrawing() {
     return ["highlight"];
   }
 
+=======
+>>>>>>> upstream/master
   get classNamesForOutlining() {
     return ["highlightOutline"];
   }
@@ -339,6 +418,7 @@ class FreeHighlightOutliner extends FreeDrawOutliner {
       isLTR
     );
   }
+<<<<<<< HEAD
 
   get classNamesForDrawing() {
     return ["highlight", "free"];
@@ -354,6 +434,11 @@ class FreeHighlightOutline extends FreeDrawOutline {
     return ["highlightOutline", "free"];
   }
 
+=======
+}
+
+class FreeHighlightOutline extends FreeDrawOutline {
+>>>>>>> upstream/master
   newOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
     return new FreeHighlightOutliner(
       point,

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
+import { shadow, unreachable } from "../shared/util.js";
 import { DecodeStream } from "./decode_stream.js";
 import { JpxImage } from "./jpx.js";
-import { shadow } from "../shared/util.js";
 
 /**
  * For JPEG 2000's we use a library to decode these images and
@@ -42,15 +42,30 @@ class JpxStream extends DecodeStream {
   }
 
   readBlock(decoderOptions) {
+<<<<<<< HEAD
     this.decodeImage(null, decoderOptions);
   }
 
   decodeImage(bytes, decoderOptions) {
+=======
+    unreachable("JpxStream.readBlock");
+  }
+
+  get isAsyncDecoder() {
+    return true;
+  }
+
+  async decodeImage(bytes, decoderOptions) {
+>>>>>>> upstream/master
     if (this.eof) {
       return this.buffer;
     }
     bytes ||= this.bytes;
+<<<<<<< HEAD
     this.buffer = JpxImage.decode(bytes, decoderOptions);
+=======
+    this.buffer = await JpxImage.decode(bytes, decoderOptions);
+>>>>>>> upstream/master
     this.bufferLength = this.buffer.length;
     this.eof = true;
 
@@ -59,6 +74,13 @@ class JpxStream extends DecodeStream {
 
   get canAsyncDecodeImageFromBuffer() {
     return this.stream.isAsync;
+<<<<<<< HEAD
+=======
+  }
+
+  get isImageStream() {
+    return true;
+>>>>>>> upstream/master
   }
 }
 

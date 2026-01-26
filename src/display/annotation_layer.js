@@ -24,9 +24,18 @@
 /** @typedef {import("../src/display/editor/tools.js").AnnotationEditorUIManager} AnnotationEditorUIManager */
 // eslint-disable-next-line max-len
 /** @typedef {import("../../web/struct_tree_layer_builder.js").StructTreeLayerBuilder} StructTreeLayerBuilder */
+<<<<<<< HEAD
 
 import {
   AnnotationBorderStyleType,
+=======
+// eslint-disable-next-line max-len
+/** @typedef {import("../../web/comment_manager.js").CommentManager} CommentManager */
+
+import {
+  AnnotationBorderStyleType,
+  AnnotationEditorPrefix,
+>>>>>>> upstream/master
   AnnotationEditorType,
   AnnotationPrefix,
   AnnotationType,
@@ -37,6 +46,7 @@ import {
   Util,
   warn,
 } from "../shared/util.js";
+<<<<<<< HEAD
 import { PDFDateString, setLayerDimensions } from "./display_utils.js";
 import { AnnotationStorage } from "./annotation_storage.js";
 import { ColorConverters } from "../shared/scripting_utils.js";
@@ -44,8 +54,20 @@ import { DOMSVGFactory } from "./svg_factory.js";
 import { XfaLayer } from "./xfa_layer.js";
 
 const DEFAULT_TAB_INDEX = 1000;
+=======
+import {
+  PDFDateString,
+  renderRichText,
+  setLayerDimensions,
+} from "./display_utils.js";
+import { AnnotationStorage } from "./annotation_storage.js";
+import { ColorConverters } from "../shared/scripting_utils.js";
+import { DOMSVGFactory } from "./svg_factory.js";
+
+>>>>>>> upstream/master
 const DEFAULT_FONT_SIZE = 9;
 const GetElementsByNameSet = new WeakSet();
+const TIMEZONE_OFFSET = new Date().getTimezoneOffset() * 60 * 1000;
 
 function getRectDims(rect) {
   return {
@@ -180,21 +202,32 @@ class AnnotationElement {
     this.renderForms = parameters.renderForms;
     this.svgFactory = parameters.svgFactory;
     this.annotationStorage = parameters.annotationStorage;
+    this.enableComment = parameters.enableComment;
     this.enableScripting = parameters.enableScripting;
     this.hasJSActions = parameters.hasJSActions;
     this._fieldObjects = parameters.fieldObjects;
     this.parent = parameters.parent;
+<<<<<<< HEAD
+=======
+    this.hasOwnCommentButton = false;
+>>>>>>> upstream/master
 
     if (isRenderable) {
-      this.container = this._createContainer(ignoreBorder);
+      this.contentElement = this.container =
+        this._createContainer(ignoreBorder);
     }
     if (createQuadrilaterals) {
       this._createQuadrilaterals();
     }
   }
 
+<<<<<<< HEAD
   static _hasPopupData({ titleObj, contentsObj, richText }) {
     return !!(titleObj?.str || contentsObj?.str || richText?.str);
+=======
+  static _hasPopupData({ contentsObj, richText }) {
+    return !!(contentsObj?.str || richText?.str);
+>>>>>>> upstream/master
   }
 
   get _isEditable() {
@@ -202,7 +235,113 @@ class AnnotationElement {
   }
 
   get hasPopupData() {
+<<<<<<< HEAD
     return AnnotationElement._hasPopupData(this.data);
+=======
+    return (
+      AnnotationElement._hasPopupData(this.data) ||
+      (this.enableComment && !!this.commentText)
+    );
+  }
+
+  get commentData() {
+    const { data } = this;
+    const editor = this.annotationStorage?.getEditor(data.id);
+    if (editor) {
+      return editor.getData();
+    }
+    return data;
+  }
+
+  get hasCommentButton() {
+    return this.enableComment && this.hasPopupElement;
+  }
+
+  get commentButtonPosition() {
+    const editor = this.annotationStorage?.getEditor(this.data.id);
+    if (editor) {
+      return editor.commentButtonPositionInPage;
+    }
+    const { quadPoints, inkLists, rect } = this.data;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    if (quadPoints?.length >= 8) {
+      for (let i = 0; i < quadPoints.length; i += 8) {
+        if (quadPoints[i + 1] > maxY) {
+          maxY = quadPoints[i + 1];
+          maxX = quadPoints[i + 2];
+        } else if (quadPoints[i + 1] === maxY) {
+          maxX = Math.max(maxX, quadPoints[i + 2]);
+        }
+      }
+      return [maxX, maxY];
+    }
+    if (inkLists?.length >= 1) {
+      for (const inkList of inkLists) {
+        for (let i = 0, ii = inkList.length; i < ii; i += 2) {
+          if (inkList[i + 1] > maxY) {
+            maxY = inkList[i + 1];
+            maxX = inkList[i];
+          } else if (inkList[i + 1] === maxY) {
+            maxX = Math.max(maxX, inkList[i]);
+          }
+        }
+      }
+      if (maxX !== Infinity) {
+        return [maxX, maxY];
+      }
+    }
+    if (rect) {
+      return [rect[2], rect[3]];
+    }
+    return null;
+  }
+
+  _normalizePoint(point) {
+    const {
+      page: { view },
+      viewport: {
+        rawDims: { pageWidth, pageHeight, pageX, pageY },
+      },
+    } = this.parent;
+    point[1] = view[3] - point[1] + view[1];
+    point[0] = (100 * (point[0] - pageX)) / pageWidth;
+    point[1] = (100 * (point[1] - pageY)) / pageHeight;
+    return point;
+  }
+
+  get commentText() {
+    const { data } = this;
+    return (
+      this.annotationStorage.getRawValue(`${AnnotationEditorPrefix}${data.id}`)
+        ?.popup?.contents ||
+      data.contentsObj?.str ||
+      ""
+    );
+  }
+
+  set commentText(text) {
+    const { data } = this;
+    const popup = { deleted: !text, contents: text || "" };
+    if (!this.annotationStorage.updateEditor(data.id, { popup })) {
+      this.annotationStorage.setValue(`${AnnotationEditorPrefix}${data.id}`, {
+        id: data.id,
+        annotationType: data.annotationType,
+        page: this.parent.page,
+        popup,
+        popupRef: data.popupRef,
+        modificationDate: new Date(),
+      });
+    }
+    if (!text) {
+      this.removePopup();
+    }
+  }
+
+  removePopup() {
+    (this.#popupElement?.popup || this.popup)?.remove();
+    this.#popupElement = this.popup = null;
+>>>>>>> upstream/master
   }
 
   updateEdited(params) {
@@ -210,17 +349,44 @@ class AnnotationElement {
       return;
     }
 
+<<<<<<< HEAD
     this.#updates ||= {
       rect: this.data.rect.slice(0),
     };
 
     const { rect } = params;
+=======
+    if (params.rect) {
+      this.#updates ||= {
+        rect: this.data.rect.slice(0),
+      };
+    }
+
+    const { rect, popup: newPopup } = params;
+>>>>>>> upstream/master
 
     if (rect) {
       this.#setRectEdited(rect);
     }
 
+<<<<<<< HEAD
     this.#popupElement?.popup.updateEdited(params);
+=======
+    let popup = this.#popupElement?.popup || this.popup;
+    if (!popup && newPopup?.text) {
+      this._createPopup(newPopup);
+      popup = this.#popupElement.popup;
+    }
+    if (!popup) {
+      return;
+    }
+    popup.updateEdited(params);
+    if (newPopup?.deleted) {
+      popup.remove();
+      this.#popupElement = null;
+      this.popup = null;
+    }
+>>>>>>> upstream/master
   }
 
   resetEdited() {
@@ -243,12 +409,20 @@ class AnnotationElement {
       },
     } = this;
     currentRect?.splice(0, 4, ...rect);
+<<<<<<< HEAD
     const { width, height } = getRectDims(rect);
     style.left = `${(100 * (rect[0] - pageX)) / pageWidth}%`;
     style.top = `${(100 * (pageHeight - rect[3] + pageY)) / pageHeight}%`;
     if (rotation === 0) {
       style.width = `${(100 * width) / pageWidth}%`;
       style.height = `${(100 * height) / pageHeight}%`;
+=======
+    style.left = `${(100 * (rect[0] - pageX)) / pageWidth}%`;
+    style.top = `${(100 * (pageHeight - rect[3] + pageY)) / pageHeight}%`;
+    if (rotation === 0) {
+      style.width = `${(100 * /* width = */ (rect[2] - rect[0])) / pageWidth}%`;
+      style.height = `${(100 * /* height = */ (rect[3] - rect[1])) / pageHeight}%`;
+>>>>>>> upstream/master
     } else {
       this.setRotation(rotation);
     }
@@ -270,8 +444,16 @@ class AnnotationElement {
 
     const container = document.createElement("section");
     container.setAttribute("data-annotation-id", data.id);
+<<<<<<< HEAD
     if (!(this instanceof WidgetAnnotationElement)) {
       container.tabIndex = DEFAULT_TAB_INDEX;
+=======
+    if (
+      !(this instanceof WidgetAnnotationElement) &&
+      !(this instanceof LinkAnnotationElement)
+    ) {
+      container.tabIndex = 0;
+>>>>>>> upstream/master
     }
     const { style } = container;
 
@@ -280,7 +462,13 @@ class AnnotationElement {
     // But if an annotation is above an other one, then we must draw it
     // after the other one whatever the order is in the DOM, hence the
     // use of the z-index.
+<<<<<<< HEAD
     style.zIndex = this.parent.zIndex++;
+=======
+    style.zIndex = this.parent.zIndex;
+    // Keep zIndex + 1 for stuff we want to add on top of this annotation.
+    this.parent.zIndex += 2;
+>>>>>>> upstream/master
 
     if (data.alternativeText) {
       container.title = data.alternativeText;
@@ -297,8 +485,12 @@ class AnnotationElement {
       }
       return container;
     }
+<<<<<<< HEAD
 
     const { width, height } = getRectDims(data.rect);
+=======
+    const { width, height } = this;
+>>>>>>> upstream/master
 
     if (!ignoreBorder && data.borderStyle.width > 0) {
       style.borderWidth = `${data.borderStyle.width}px`;
@@ -306,10 +498,17 @@ class AnnotationElement {
       const horizontalRadius = data.borderStyle.horizontalCornerRadius;
       const verticalRadius = data.borderStyle.verticalCornerRadius;
       if (horizontalRadius > 0 || verticalRadius > 0) {
+<<<<<<< HEAD
         const radius = `calc(${horizontalRadius}px * var(--scale-factor)) / calc(${verticalRadius}px * var(--scale-factor))`;
         style.borderRadius = radius;
       } else if (this instanceof RadioButtonWidgetAnnotationElement) {
         const radius = `calc(${width}px * var(--scale-factor)) / calc(${height}px * var(--scale-factor))`;
+=======
+        const radius = `calc(${horizontalRadius}px * var(--total-scale-factor)) / calc(${verticalRadius}px * var(--total-scale-factor))`;
+        style.borderRadius = radius;
+      } else if (this instanceof RadioButtonWidgetAnnotationElement) {
+        const radius = `calc(${width}px * var(--total-scale-factor)) / calc(${height}px * var(--total-scale-factor))`;
+>>>>>>> upstream/master
         style.borderRadius = radius;
       }
 
@@ -381,6 +580,7 @@ class AnnotationElement {
       return;
     }
     const { pageWidth, pageHeight } = this.parent.viewport.rawDims;
+<<<<<<< HEAD
     const { width, height } = getRectDims(this.data.rect);
 
     let elementWidth, elementHeight;
@@ -394,6 +594,15 @@ class AnnotationElement {
 
     container.style.width = `${elementWidth}%`;
     container.style.height = `${elementHeight}%`;
+=======
+    let { width, height } = this;
+
+    if (angle % 180 !== 0) {
+      [width, height] = [height, width];
+    }
+    container.style.width = `${(100 * width) / pageWidth}%`;
+    container.style.height = `${(100 * height) / pageHeight}%`;
+>>>>>>> upstream/master
 
     container.setAttribute("data-main-rotation", (360 - angle) % 360);
   }
@@ -571,6 +780,10 @@ class AnnotationElement {
     svg.classList.add("quadrilateralsContainer");
     svg.setAttribute("width", 0);
     svg.setAttribute("height", 0);
+<<<<<<< HEAD
+=======
+    svg.role = "none";
+>>>>>>> upstream/master
     const defs = svgFactory.createElement("defs");
     svg.append(defs);
     const clipPath = svgFactory.createElement("clipPath");
@@ -613,6 +826,7 @@ class AnnotationElement {
    * annotations that do not have a Popup entry in the dictionary, but
    * are of a type that works with popups (such as Highlight annotations).
    *
+<<<<<<< HEAD
    * @private
    * @memberof AnnotationElement
    */
@@ -625,16 +839,59 @@ class AnnotationElement {
         titleObj: data.titleObj,
         modificationDate: data.modificationDate,
         contentsObj: data.contentsObj,
+=======
+   * @param {Object} [popupData] - The data for the popup, if any.
+   *
+   * @private
+   * @memberof AnnotationElement
+   */
+  _createPopup(popupData = null) {
+    const { data } = this;
+
+    let contentsObj, modificationDate;
+    if (popupData) {
+      contentsObj = {
+        str: popupData.text,
+      };
+      modificationDate = popupData.date;
+    } else {
+      contentsObj = data.contentsObj;
+      modificationDate = data.modificationDate;
+    }
+    this.#popupElement = new PopupAnnotationElement({
+      data: {
+        color: data.color,
+        titleObj: data.titleObj,
+        modificationDate,
+        contentsObj,
+>>>>>>> upstream/master
         richText: data.richText,
         parentRect: data.rect,
         borderStyle: 0,
         id: `popup_${data.id}`,
         rotation: data.rotation,
+<<<<<<< HEAD
       },
       parent: this.parent,
       elements: [this],
     }));
     this.parent.div.append(popup.render());
+=======
+        noRotate: true,
+      },
+      linkService: this.linkService,
+      parent: this.parent,
+      elements: [this],
+    });
+  }
+
+  get hasPopupElement() {
+    return !!(this.#popupElement || this.popup || this.data.popupRef);
+  }
+
+  get extraPopupElement() {
+    return this.#popupElement;
+>>>>>>> upstream/master
   }
 
   /**
@@ -745,8 +1002,70 @@ class AnnotationElement {
         source: this,
         mode,
         editId,
+<<<<<<< HEAD
+=======
+        mustEnterInEditMode: true,
+>>>>>>> upstream/master
       });
     });
+  }
+
+  get width() {
+    return this.data.rect[2] - this.data.rect[0];
+  }
+
+  get height() {
+    return this.data.rect[3] - this.data.rect[1];
+  }
+}
+
+class EditorAnnotationElement extends AnnotationElement {
+  constructor(parameters) {
+    super(parameters, { isRenderable: true, ignoreBorder: true });
+    this.editor = parameters.editor;
+  }
+
+  render() {
+    this.container.className = "editorAnnotation";
+    return this.container;
+  }
+
+  createOrUpdatePopup() {
+    const { editor } = this;
+    if (!editor.hasComment) {
+      return;
+    }
+    this._createPopup(editor.comment);
+  }
+
+  get hasCommentButton() {
+    return this.enableComment && this.editor.hasComment;
+  }
+
+  get commentButtonPosition() {
+    return this.editor.commentButtonPositionInPage;
+  }
+
+  get commentText() {
+    return this.editor.comment.text;
+  }
+
+  set commentText(text) {
+    this.editor.comment = text;
+    if (!text) {
+      this.removePopup();
+    }
+  }
+
+  get commentData() {
+    return this.editor.getData();
+  }
+
+  remove() {
+    this.parent.removeAnnotation(this.data.id);
+    this.container.remove();
+    this.container = null;
+    this.removePopup();
   }
 }
 
@@ -770,6 +1089,7 @@ class LinkAnnotationElement extends AnnotationElement {
       linkService.addLinkAttributes(link, data.url, data.newWindow);
       isBound = true;
     } else if (data.action) {
+<<<<<<< HEAD
       this._bindNamedAction(link, data.action);
       isBound = true;
     } else if (data.attachment) {
@@ -780,6 +1100,23 @@ class LinkAnnotationElement extends AnnotationElement {
       isBound = true;
     } else if (data.dest) {
       this._bindLink(link, data.dest);
+=======
+      this._bindNamedAction(link, data.action, data.overlaidText);
+      isBound = true;
+    } else if (data.attachment) {
+      this.#bindAttachment(
+        link,
+        data.attachment,
+        data.overlaidText,
+        data.attachmentDest
+      );
+      isBound = true;
+    } else if (data.setOCGState) {
+      this.#bindSetOCGState(link, data.setOCGState, data.overlaidText);
+      isBound = true;
+    } else if (data.dest) {
+      this._bindLink(link, data.dest, data.overlaidText);
+>>>>>>> upstream/master
       isBound = true;
     } else {
       if (
@@ -805,6 +1142,10 @@ class LinkAnnotationElement extends AnnotationElement {
 
     this.container.classList.add("linkAnnotation");
     if (isBound) {
+<<<<<<< HEAD
+=======
+      this.contentElement = link;
+>>>>>>> upstream/master
       this.container.append(link);
     }
 
@@ -821,9 +1162,10 @@ class LinkAnnotationElement extends AnnotationElement {
    * @private
    * @param {Object} link
    * @param {Object} destination
+   * @param {string} [overlaidText]
    * @memberof LinkAnnotationElement
    */
-  _bindLink(link, destination) {
+  _bindLink(link, destination, overlaidText = "") {
     link.href = this.linkService.getDestinationHash(destination);
     link.onclick = () => {
       if (destination) {
@@ -833,6 +1175,12 @@ class LinkAnnotationElement extends AnnotationElement {
     };
     if (destination || destination === /* isTooltipOnly = */ "") {
       this.#setInternalLink();
+<<<<<<< HEAD
+=======
+    }
+    if (overlaidText) {
+      link.title = overlaidText;
+>>>>>>> upstream/master
     }
   }
 
@@ -842,14 +1190,21 @@ class LinkAnnotationElement extends AnnotationElement {
    * @private
    * @param {Object} link
    * @param {Object} action
+   * @param {string} [overlaidText]
    * @memberof LinkAnnotationElement
    */
-  _bindNamedAction(link, action) {
+  _bindNamedAction(link, action, overlaidText = "") {
     link.href = this.linkService.getAnchorUrl("");
     link.onclick = () => {
       this.linkService.executeNamedAction(action);
       return false;
     };
+<<<<<<< HEAD
+=======
+    if (overlaidText) {
+      link.title = overlaidText;
+    }
+>>>>>>> upstream/master
     this.#setInternalLink();
   }
 
@@ -857,12 +1212,24 @@ class LinkAnnotationElement extends AnnotationElement {
    * Bind attachments to the link element.
    * @param {Object} link
    * @param {Object} attachment
+<<<<<<< HEAD
    * @param {str} [dest]
    */
   #bindAttachment(link, attachment, dest = null) {
     link.href = this.linkService.getAnchorUrl("");
     if (attachment.description) {
       link.title = attachment.description;
+=======
+   * @param {string} [overlaidText]
+   * @param {string} [dest]
+   */
+  #bindAttachment(link, attachment, overlaidText = "", dest = null) {
+    link.href = this.linkService.getAnchorUrl("");
+    if (attachment.description) {
+      link.title = attachment.description;
+    } else if (overlaidText) {
+      link.title = overlaidText;
+>>>>>>> upstream/master
     }
     link.onclick = () => {
       this.downloadManager?.openOrDownloadData(
@@ -879,13 +1246,25 @@ class LinkAnnotationElement extends AnnotationElement {
    * Bind SetOCGState actions to the link element.
    * @param {Object} link
    * @param {Object} action
+<<<<<<< HEAD
    */
   #bindSetOCGState(link, action) {
+=======
+   * @param {string} [overlaidText]
+   */
+  #bindSetOCGState(link, action, overlaidText = "") {
+>>>>>>> upstream/master
     link.href = this.linkService.getAnchorUrl("");
     link.onclick = () => {
       this.linkService.executeSetOCGState(action);
       return false;
     };
+<<<<<<< HEAD
+=======
+    if (overlaidText) {
+      link.title = overlaidText;
+    }
+>>>>>>> upstream/master
     this.#setInternalLink();
   }
 
@@ -919,6 +1298,9 @@ class LinkAnnotationElement extends AnnotationElement {
         });
         return false;
       };
+    }
+    if (data.overlaidText) {
+      link.title = data.overlaidText;
     }
 
     if (!link.onclick) {
@@ -1051,6 +1433,10 @@ class TextAnnotationElement extends AnnotationElement {
     );
 
     if (!this.data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -1201,7 +1587,11 @@ class WidgetAnnotationElement extends AnnotationElement {
         roundToOneDecimal(height / LINE_FACTOR)
       );
     }
+<<<<<<< HEAD
     style.fontSize = `calc(${computedFontSize}px * var(--scale-factor))`;
+=======
+    style.fontSize = `calc(${computedFontSize}px * var(--total-scale-factor))`;
+>>>>>>> upstream/master
 
     style.color = Util.makeHexColor(fontColor[0], fontColor[1], fontColor[2]);
 
@@ -1286,7 +1676,11 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
         }
       } else {
         element = document.createElement("input");
+<<<<<<< HEAD
         element.type = "text";
+=======
+        element.type = this.data.password ? "password" : "text";
+>>>>>>> upstream/master
         element.setAttribute("value", fieldFormattedValues ?? textContent);
         if (this.data.doNotScroll) {
           element.style.overflowX = "hidden";
@@ -1296,11 +1690,20 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
         element.hidden = true;
       }
       GetElementsByNameSet.add(element);
+<<<<<<< HEAD
+=======
+      this.contentElement = element;
+>>>>>>> upstream/master
       element.setAttribute("data-element-id", id);
 
       element.disabled = this.data.readOnly;
       element.name = this.data.fieldName;
-      element.tabIndex = DEFAULT_TAB_INDEX;
+      element.tabIndex = 0;
+      const { datetimeFormat, datetimeType, timeStep } = this.data;
+      const hasDateOrTime = !!datetimeType && this.enableScripting;
+      if (datetimeFormat) {
+        element.title = datetimeFormat;
+      }
 
       this._setRequired(element, this.data.required);
 
@@ -1340,8 +1743,39 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
             return;
           }
           const { target } = event;
+<<<<<<< HEAD
           if (elementData.userValue) {
             target.value = elementData.userValue;
+=======
+          if (hasDateOrTime) {
+            target.type = datetimeType;
+            if (timeStep) {
+              target.step = timeStep;
+            }
+          }
+
+          if (elementData.userValue) {
+            const value = elementData.userValue;
+            if (hasDateOrTime) {
+              if (datetimeType === "time") {
+                const date = new Date(value);
+                const parts = [
+                  date.getHours(),
+                  date.getMinutes(),
+                  date.getSeconds(),
+                ];
+                target.value = parts
+                  .map(v => v.toString().padStart(2, "0"))
+                  .join(":");
+              } else {
+                target.value = new Date(value - TIMEZONE_OFFSET)
+                  .toISOString()
+                  .split(datetimeType === "date" ? "T" : ".", 1)[0];
+              }
+            } else {
+              target.value = value;
+            }
+>>>>>>> upstream/master
           }
           elementData.lastCommittedValue = target.value;
           elementData.commitKey = 1;
@@ -1355,7 +1789,15 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
           const actions = {
             value(event) {
               elementData.userValue = event.detail.value ?? "";
+<<<<<<< HEAD
               storage.setValue(id, { value: elementData.userValue.toString() });
+=======
+              if (!hasDateOrTime) {
+                storage.setValue(id, {
+                  value: elementData.userValue.toString(),
+                });
+              }
+>>>>>>> upstream/master
               event.target.value = elementData.userValue;
             },
             formattedValue(event) {
@@ -1369,9 +1811,22 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
                 // Input hasn't the focus so display formatted string
                 event.target.value = formattedValue;
               }
+<<<<<<< HEAD
               storage.setValue(id, {
                 formattedValue,
               });
+=======
+              const data = {
+                formattedValue,
+              };
+              if (hasDateOrTime) {
+                // If the field is a date or time, we store the formatted value
+                // in the `value` property, so that it can be used by the
+                // `Keystroke` action.
+                data.value = formattedValue;
+              }
+              storage.setValue(id, data);
+>>>>>>> upstream/master
             },
             selRange(event) {
               event.target.setSelectionRange(...event.detail.selRange);
@@ -1459,7 +1914,37 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
           if (!this.data.actions?.Blur) {
             elementData.focused = false;
           }
+<<<<<<< HEAD
           const { value } = event.target;
+=======
+          const { target } = event;
+          let { value } = target;
+          if (hasDateOrTime) {
+            if (value && datetimeType === "time") {
+              const parts = value.split(":").map(v => parseInt(v, 10));
+              value = new Date(
+                2000,
+                0,
+                1,
+                parts[0],
+                parts[1],
+                parts[2] || 0
+              ).valueOf();
+              target.step = "";
+            } else {
+              // Unfortunately, when the date is "2025-09-23", the parser
+              // converts it to UTC time which may lead to the date being off by
+              // one day depending on the timezone. To workaround this, we
+              // append "T00:00" to the date so that it's parsed as local
+              // time (bug 1989874).
+              if (!value.includes("T")) {
+                value = `${value}T00:00`;
+              }
+              value = new Date(value).valueOf();
+            }
+            target.type = "text";
+          }
+>>>>>>> upstream/master
           elementData.userValue = value;
           if (elementData.lastCommittedValue !== value) {
             this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
@@ -1560,7 +2045,11 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
         const combWidth = fieldWidth / maxLen;
 
         element.classList.add("comb");
+<<<<<<< HEAD
         element.style.letterSpacing = `calc(${combWidth}px * var(--scale-factor) - 1ch)`;
+=======
+        element.style.letterSpacing = `calc(${combWidth}px * var(--total-scale-factor) - 1ch)`;
+>>>>>>> upstream/master
       }
     } else {
       element = document.createElement("div");
@@ -1620,7 +2109,7 @@ class CheckboxWidgetAnnotationElement extends WidgetAnnotationElement {
       element.setAttribute("checked", true);
     }
     element.setAttribute("exportValue", data.exportValue);
-    element.tabIndex = DEFAULT_TAB_INDEX;
+    element.tabIndex = 0;
 
     element.addEventListener("change", event => {
       const { name, checked } = event.target;
@@ -1720,7 +2209,11 @@ class RadioButtonWidgetAnnotationElement extends WidgetAnnotationElement {
     if (value) {
       element.setAttribute("checked", true);
     }
+<<<<<<< HEAD
     element.tabIndex = DEFAULT_TAB_INDEX;
+=======
+    element.tabIndex = 0;
+>>>>>>> upstream/master
 
     element.addEventListener("change", event => {
       const { name, checked } = event.target;
@@ -1823,12 +2316,21 @@ class ChoiceWidgetAnnotationElement extends WidgetAnnotationElement {
     const selectElement = document.createElement("select");
     GetElementsByNameSet.add(selectElement);
     selectElement.setAttribute("data-element-id", id);
+<<<<<<< HEAD
 
     selectElement.disabled = this.data.readOnly;
     this._setRequired(selectElement, this.data.required);
     selectElement.name = this.data.fieldName;
     selectElement.tabIndex = DEFAULT_TAB_INDEX;
 
+=======
+
+    selectElement.disabled = this.data.readOnly;
+    this._setRequired(selectElement, this.data.required);
+    selectElement.name = this.data.fieldName;
+    selectElement.tabIndex = 0;
+
+>>>>>>> upstream/master
     let addAnEmptyEntry = this.data.combo && this.data.options.length > 0;
 
     if (!this.data.combo) {
@@ -2057,6 +2559,7 @@ class ChoiceWidgetAnnotationElement extends WidgetAnnotationElement {
 
 class PopupAnnotationElement extends AnnotationElement {
   constructor(parameters) {
+<<<<<<< HEAD
     const { data, elements } = parameters;
     super(parameters, { isRenderable: AnnotationElement._hasPopupData(data) });
     this.elements = elements;
@@ -2079,6 +2582,47 @@ class PopupAnnotationElement extends AnnotationElement {
       elements: this.elements,
       open: this.data.open,
     }));
+=======
+    const { data, elements, parent } = parameters;
+    const hasCommentManager = !!parent._commentManager;
+    super(parameters, {
+      isRenderable: !hasCommentManager && AnnotationElement._hasPopupData(data),
+    });
+    this.elements = elements;
+    if (hasCommentManager && AnnotationElement._hasPopupData(data)) {
+      const popup = (this.popup = this.#createPopup());
+      for (const element of elements) {
+        element.popup = popup;
+      }
+    } else {
+      this.popup = null;
+    }
+  }
+
+  #createPopup() {
+    return new PopupElement({
+      container: this.container,
+      color: this.data.color,
+      titleObj: this.data.titleObj,
+      modificationDate: this.data.modificationDate || this.data.creationDate,
+      contentsObj: this.data.contentsObj,
+      richText: this.data.richText,
+      rect: this.data.rect,
+      parentRect: this.data.parentRect || null,
+      parent: this.parent,
+      elements: this.elements,
+      open: this.data.open,
+      commentManager: this.parent._commentManager,
+    });
+  }
+
+  render() {
+    const { container } = this;
+    container.classList.add("popupAnnotation");
+    container.role = "comment";
+
+    const popup = (this.popup = this.#createPopup());
+>>>>>>> upstream/master
 
     const elementIds = [];
     for (const element of this.elements) {
@@ -2098,6 +2642,7 @@ class PopupAnnotationElement extends AnnotationElement {
 }
 
 class PopupElement {
+<<<<<<< HEAD
   #boundKeyDown = this.#keyDown.bind(this);
 
   #boundHide = this.#hide.bind(this);
@@ -2112,6 +2657,24 @@ class PopupElement {
 
   #contentsObj = null;
 
+=======
+  #commentManager = null;
+
+  #boundKeyDown = this.#keyDown.bind(this);
+
+  #boundHide = this.#hide.bind(this);
+
+  #boundShow = this.#show.bind(this);
+
+  #boundToggle = this.#toggle.bind(this);
+
+  #color = null;
+
+  #container = null;
+
+  #contentsObj = null;
+
+>>>>>>> upstream/master
   #dateObj = null;
 
   #elements = null;
@@ -2124,8 +2687,21 @@ class PopupElement {
 
   #popup = null;
 
+<<<<<<< HEAD
   #position = null;
 
+=======
+  #popupAbortController = null;
+
+  #position = null;
+
+  #commentButton = null;
+
+  #commentButtonPosition = null;
+
+  #popupPosition = null;
+
+>>>>>>> upstream/master
   #rect = null;
 
   #richText = null;
@@ -2136,6 +2712,13 @@ class PopupElement {
 
   #wasVisible = false;
 
+<<<<<<< HEAD
+=======
+  #firstElement = null;
+
+  #commentText = null;
+
+>>>>>>> upstream/master
   constructor({
     container,
     color,
@@ -2148,6 +2731,10 @@ class PopupElement {
     rect,
     parentRect,
     open,
+<<<<<<< HEAD
+=======
+    commentManager = null,
+>>>>>>> upstream/master
   }) {
     this.#container = container;
     this.#titleObj = titleObj;
@@ -2158,11 +2745,17 @@ class PopupElement {
     this.#rect = rect;
     this.#parentRect = parentRect;
     this.#elements = elements;
+<<<<<<< HEAD
+=======
+    this.#commentManager = commentManager;
+    this.#firstElement = elements[0];
+>>>>>>> upstream/master
 
     // The modification date is shown in the popup instead of the creation
     // date if it is available and can be parsed correctly, which is
     // consistent with other viewers such as Adobe Acrobat.
     this.#dateObj = PDFDateString.toDateObject(modificationDate);
+<<<<<<< HEAD
 
     this.trigger = elements.flatMap(e => e.getElementsToTriggerPopup());
     // Attach the event listeners to the trigger element.
@@ -2334,9 +2927,505 @@ class PopupElement {
       p.append(document.createTextNode(line));
       if (i < ii - 1) {
         p.append(document.createElement("br"));
+=======
+
+    // The elements that will trigger the popup.
+    this.trigger = elements.flatMap(e => e.getElementsToTriggerPopup());
+
+    if (!commentManager) {
+      this.#addEventListeners();
+
+      this.#container.hidden = true;
+      if (open) {
+        this.#toggle();
+      }
+
+      if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING")) {
+        // Since the popup is lazily created, we need to ensure that it'll be
+        // created and displayed during reference tests.
+        this.#parent.popupShow.push(async () => {
+          if (this.#container.hidden) {
+            this.#show();
+          }
+        });
       }
     }
-    return p;
+  }
+
+  #addEventListeners() {
+    if (this.#popupAbortController) {
+      return;
+    }
+    this.#popupAbortController = new AbortController();
+    const { signal } = this.#popupAbortController;
+
+    // Attach the event listeners to the trigger element.
+    for (const element of this.trigger) {
+      element.addEventListener("click", this.#boundToggle, { signal });
+      element.addEventListener("pointerenter", this.#boundShow, { signal });
+      element.addEventListener("pointerleave", this.#boundHide, { signal });
+      element.classList.add("popupTriggerArea");
+    }
+
+    // Attach the event listener to toggle the popup with the keyboard.
+    for (const element of this.#elements) {
+      element.container?.addEventListener("keydown", this.#boundKeyDown, {
+        signal,
+      });
+    }
+  }
+
+  #setCommentButtonPosition() {
+    const element = this.#elements.find(e => e.hasCommentButton);
+    if (!element) {
+      return;
+    }
+    this.#commentButtonPosition = element._normalizePoint(
+      element.commentButtonPosition
+    );
+  }
+
+  renderCommentButton() {
+    if (this.#commentButton) {
+      if (!this.#commentButton.parentNode) {
+        this.#firstElement.container.after(this.#commentButton);
+      }
+      return;
+    }
+
+    if (!this.#commentButtonPosition) {
+      this.#setCommentButtonPosition();
+    }
+
+    if (!this.#commentButtonPosition) {
+      return;
+    }
+
+    const { signal } = (this.#popupAbortController = new AbortController());
+    const hasOwnButton = this.#firstElement.hasOwnCommentButton;
+    const togglePopup = () => {
+      this.#commentManager.toggleCommentPopup(
+        this,
+        /* isSelected = */ true,
+        /* visibility = */ undefined,
+        /* isEditable = */ !hasOwnButton
+      );
+    };
+    const showPopup = () => {
+      this.#commentManager.toggleCommentPopup(
+        this,
+        /* isSelected = */ false,
+        /* visibility = */ true,
+        /* isEditable = */ !hasOwnButton
+      );
+    };
+    const hidePopup = () => {
+      this.#commentManager.toggleCommentPopup(
+        this,
+        /* isSelected = */ false,
+        /* visibility = */ false
+      );
+    };
+
+    if (!hasOwnButton) {
+      const button = (this.#commentButton = document.createElement("button"));
+      button.className = "annotationCommentButton";
+      const parentContainer = this.#firstElement.container;
+      button.style.zIndex = parentContainer.style.zIndex + 1;
+      button.tabIndex = 0;
+      button.ariaHasPopup = "dialog";
+      button.ariaControls = "commentPopup";
+      button.setAttribute("data-l10n-id", "pdfjs-show-comment-button");
+      this.#updateColor();
+      this.#updateCommentButtonPosition();
+      button.addEventListener("keydown", this.#boundKeyDown, { signal });
+      button.addEventListener("click", togglePopup, { signal });
+      button.addEventListener("pointerenter", showPopup, { signal });
+      button.addEventListener("pointerleave", hidePopup, { signal });
+      parentContainer.after(button);
+    } else {
+      this.#commentButton = this.#firstElement.container;
+      for (const element of this.trigger) {
+        element.ariaHasPopup = "dialog";
+        element.ariaControls = "commentPopup";
+        element.addEventListener("keydown", this.#boundKeyDown, { signal });
+        element.addEventListener("click", togglePopup, { signal });
+        element.addEventListener("pointerenter", showPopup, { signal });
+        element.addEventListener("pointerleave", hidePopup, { signal });
+        element.classList.add("popupTriggerArea");
+>>>>>>> upstream/master
+      }
+    }
+  }
+
+  #updateCommentButtonPosition() {
+    if (this.#firstElement.extraPopupElement && !this.#firstElement.editor) {
+      // If there's no editor associated with the annotation then the comment
+      // button position can't be changed.
+      return;
+    }
+    if (!this.#commentButton) {
+      this.renderCommentButton();
+    }
+    const [x, y] = this.#commentButtonPosition;
+    const { style } = this.#commentButton;
+    style.left = `calc(${x}%)`;
+    style.top = `calc(${y}% - var(--comment-button-dim))`;
+  }
+
+  #updateColor() {
+    if (this.#firstElement.extraPopupElement) {
+      return;
+    }
+    if (!this.#commentButton) {
+      this.renderCommentButton();
+    }
+    this.#commentButton.style.backgroundColor = this.commentButtonColor || "";
+  }
+
+  get commentButtonColor() {
+    const { color, opacity } = this.#firstElement.commentData;
+    if (!color) {
+      return null;
+    }
+    return this.#parent._commentManager.makeCommentColor(color, opacity);
+  }
+
+  focusCommentButton() {
+    setTimeout(() => {
+      this.#commentButton?.focus();
+    }, 0);
+  }
+
+  getData() {
+    const { richText, color, opacity, creationDate, modificationDate } =
+      this.#firstElement.commentData;
+    return {
+      contentsObj: { str: this.comment },
+      richText,
+      color,
+      opacity,
+      creationDate,
+      modificationDate,
+    };
+  }
+
+  get elementBeforePopup() {
+    return this.#commentButton;
+  }
+
+  get comment() {
+    this.#commentText ||= this.#firstElement.commentText;
+    return this.#commentText;
+  }
+
+  set comment(text) {
+    if (text === this.comment) {
+      return;
+    }
+    this.#firstElement.commentText = this.#commentText = text;
+  }
+
+  focus() {
+    this.#firstElement.container?.focus();
+  }
+
+  get parentBoundingClientRect() {
+    return this.#firstElement.layer.getBoundingClientRect();
+  }
+
+  setCommentButtonStates({ selected, hasPopup }) {
+    if (!this.#commentButton) {
+      return;
+    }
+    this.#commentButton.classList.toggle("selected", selected);
+    this.#commentButton.ariaExpanded = hasPopup;
+  }
+
+  setSelectedCommentButton(selected) {
+    this.#commentButton.classList.toggle("selected", selected);
+  }
+
+  get commentPopupPosition() {
+    if (this.#popupPosition) {
+      return this.#popupPosition;
+    }
+    const { x, y, height } = this.#commentButton.getBoundingClientRect();
+    const {
+      x: parentX,
+      y: parentY,
+      width: parentWidth,
+      height: parentHeight,
+    } = this.#firstElement.layer.getBoundingClientRect();
+    return [(x - parentX) / parentWidth, (y + height - parentY) / parentHeight];
+  }
+
+  set commentPopupPosition(pos) {
+    this.#popupPosition = pos;
+  }
+
+  hasDefaultPopupPosition() {
+    return this.#popupPosition === null;
+  }
+
+  get commentButtonPosition() {
+    return this.#commentButtonPosition;
+  }
+
+  get commentButtonWidth() {
+    return (
+      this.#commentButton.getBoundingClientRect().width /
+      this.parentBoundingClientRect.width
+    );
+  }
+
+  editComment(options) {
+    const [posX, posY] =
+      this.#popupPosition || this.commentButtonPosition.map(x => x / 100);
+    const parentDimensions = this.parentBoundingClientRect;
+    const {
+      x: parentX,
+      y: parentY,
+      width: parentWidth,
+      height: parentHeight,
+    } = parentDimensions;
+    this.#commentManager.showDialog(
+      null,
+      this,
+      parentX + posX * parentWidth,
+      parentY + posY * parentHeight,
+      { ...options, parentDimensions }
+    );
+  }
+
+  render() {
+    if (this.#popup) {
+      return;
+    }
+
+    const popup = (this.#popup = document.createElement("div"));
+    popup.className = "popup";
+
+    if (this.#color) {
+      const baseColor = (popup.style.outlineColor = Util.makeHexColor(
+        ...this.#color
+      ));
+      popup.style.backgroundColor = `color-mix(in srgb, ${baseColor} 30%, white)`;
+    }
+
+    const header = document.createElement("span");
+    header.className = "header";
+    if (this.#titleObj?.str) {
+      const title = document.createElement("span");
+      title.className = "title";
+      header.append(title);
+      ({ dir: title.dir, str: title.textContent } = this.#titleObj);
+    }
+    popup.append(header);
+
+    if (this.#dateObj) {
+      const modificationDate = document.createElement("time");
+      modificationDate.className = "popupDate";
+      modificationDate.setAttribute(
+        "data-l10n-id",
+        "pdfjs-annotation-date-time-string"
+      );
+      modificationDate.setAttribute(
+        "data-l10n-args",
+        JSON.stringify({ dateObj: this.#dateObj.valueOf() })
+      );
+      modificationDate.dateTime = this.#dateObj.toISOString();
+      header.append(modificationDate);
+    }
+
+    renderRichText(
+      {
+        html: this.#html || this.#contentsObj.str,
+        dir: this.#contentsObj?.dir,
+        className: "popupContent",
+      },
+      popup
+    );
+
+    this.#container.append(popup);
+  }
+
+  get #html() {
+    const richText = this.#richText;
+    const contentsObj = this.#contentsObj;
+    if (
+      richText?.str &&
+      (!contentsObj?.str || contentsObj.str === richText.str)
+    ) {
+      return this.#richText.html || null;
+    }
+    return null;
+  }
+
+  get #fontSize() {
+    return this.#html?.attributes?.style?.fontSize || 0;
+  }
+
+  get #fontColor() {
+    return this.#html?.attributes?.style?.color || null;
+  }
+
+  #makePopupContent(text) {
+    const popupLines = [];
+    const popupContent = {
+      str: text,
+      html: {
+        name: "div",
+        attributes: {
+          dir: "auto",
+        },
+        children: [
+          {
+            name: "p",
+            children: popupLines,
+          },
+        ],
+      },
+    };
+    const lineAttributes = {
+      style: {
+        color: this.#fontColor,
+        fontSize: this.#fontSize
+          ? `calc(${this.#fontSize}px * var(--total-scale-factor))`
+          : "",
+      },
+    };
+    for (const line of text.split("\n")) {
+      popupLines.push({
+        name: "span",
+        value: line,
+        attributes: lineAttributes,
+      });
+    }
+    return popupContent;
+  }
+
+  #keyDown(event) {
+    if (event.altKey || event.shiftKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
+
+    if (event.key === "Enter" || (event.key === "Escape" && this.#pinned)) {
+      this.#toggle();
+    }
+  }
+
+  updateEdited({ rect, popup, deleted }) {
+    if (this.#commentManager) {
+      if (deleted) {
+        this.remove();
+        this.#commentText = null;
+      } else if (popup) {
+        if (popup.deleted) {
+          this.remove();
+        } else {
+          this.#updateColor();
+          this.#commentText = popup.text;
+        }
+      }
+      if (rect) {
+        this.#commentButtonPosition = null;
+        this.#setCommentButtonPosition();
+        this.#updateCommentButtonPosition();
+      }
+      return;
+    }
+    if (deleted || popup?.deleted) {
+      this.remove();
+      return;
+    }
+    this.#addEventListeners();
+    this.#updates ||= {
+      contentsObj: this.#contentsObj,
+      richText: this.#richText,
+    };
+    if (rect) {
+      this.#position = null;
+    }
+    if (popup && popup.text) {
+      this.#richText = this.#makePopupContent(popup.text);
+      this.#dateObj = PDFDateString.toDateObject(popup.date);
+      this.#contentsObj = null;
+    }
+    this.#popup?.remove();
+    this.#popup = null;
+  }
+
+  resetEdited() {
+    if (!this.#updates) {
+      return;
+    }
+    ({ contentsObj: this.#contentsObj, richText: this.#richText } =
+      this.#updates);
+    this.#updates = null;
+    this.#popup?.remove();
+    this.#popup = null;
+    this.#position = null;
+  }
+
+  remove() {
+    this.#popupAbortController?.abort();
+    this.#popupAbortController = null;
+    this.#popup?.remove();
+    this.#popup = null;
+    this.#wasVisible = false;
+    this.#pinned = false;
+    this.#commentButton?.remove();
+    this.#commentButton = null;
+    if (this.trigger) {
+      for (const element of this.trigger) {
+        element.classList.remove("popupTriggerArea");
+      }
+    }
+  }
+
+  #setPosition() {
+    if (this.#position !== null) {
+      return;
+    }
+    const {
+      page: { view },
+      viewport: {
+        rawDims: { pageWidth, pageHeight, pageX, pageY },
+      },
+    } = this.#parent;
+
+    let useParentRect = !!this.#parentRect;
+    let rect = useParentRect ? this.#parentRect : this.#rect;
+    for (const element of this.#elements) {
+      if (!rect || Util.intersect(element.data.rect, rect) !== null) {
+        rect = element.data.rect;
+        useParentRect = true;
+        break;
+      }
+    }
+
+    const normalizedRect = Util.normalizeRect([
+      rect[0],
+      view[3] - rect[1] + view[1],
+      rect[2],
+      view[3] - rect[3] + view[1],
+    ]);
+
+    const HORIZONTAL_SPACE_AFTER_ANNOTATION = 5;
+    const parentWidth = useParentRect
+      ? rect[2] - rect[0] + HORIZONTAL_SPACE_AFTER_ANNOTATION
+      : 0;
+    const popupLeft = normalizedRect[0] + parentWidth;
+    const popupTop = normalizedRect[1];
+    this.#position = [
+      (100 * (popupLeft - pageX)) / pageWidth,
+      (100 * (popupTop - pageY)) / pageHeight,
+    ];
+
+    const { style } = this.#container;
+    style.left = `${this.#position[0]}%`;
+    style.top = `${this.#position[1]}%`;
   }
 
   #keyDown(event) {
@@ -2425,6 +3514,14 @@ class PopupElement {
    * Toggle the visibility of the popup.
    */
   #toggle() {
+<<<<<<< HEAD
+=======
+    if (this.#commentManager) {
+      this.#commentManager.toggleCommentPopup(this, /* isSelected = */ false);
+      return;
+    }
+
+>>>>>>> upstream/master
     this.#pinned = !this.#pinned;
     if (this.#pinned) {
       this.#show();
@@ -2476,6 +3573,13 @@ class PopupElement {
   }
 
   maybeShow() {
+<<<<<<< HEAD
+=======
+    if (this.#commentManager) {
+      return;
+    }
+    this.#addEventListeners();
+>>>>>>> upstream/master
     if (!this.#wasVisible) {
       return;
     }
@@ -2487,6 +3591,12 @@ class PopupElement {
   }
 
   get isVisible() {
+<<<<<<< HEAD
+=======
+    if (this.#commentManager) {
+      return false;
+    }
+>>>>>>> upstream/master
     return this.#container.hidden === false;
   }
 }
@@ -2503,7 +3613,11 @@ class FreeTextAnnotationElement extends AnnotationElement {
     this.container.classList.add("freeTextAnnotation");
 
     if (this.textContent) {
+<<<<<<< HEAD
       const content = document.createElement("div");
+=======
+      const content = (this.contentElement = document.createElement("div"));
+>>>>>>> upstream/master
       content.classList.add("annotationTextContent");
       content.setAttribute("role", "comment");
       for (const line of this.textContent) {
@@ -2515,6 +3629,10 @@ class FreeTextAnnotationElement extends AnnotationElement {
     }
 
     if (!this.data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2537,8 +3655,12 @@ class LineAnnotationElement extends AnnotationElement {
     // Create an invisible line with the same starting and ending coordinates
     // that acts as the trigger for the popup. Only the line itself should
     // trigger the popup, not the entire container.
+<<<<<<< HEAD
     const data = this.data;
     const { width, height } = getRectDims(data.rect);
+=======
+    const { data, width, height } = this;
+>>>>>>> upstream/master
     const svg = this.svgFactory.create(
       width,
       height,
@@ -2564,6 +3686,10 @@ class LineAnnotationElement extends AnnotationElement {
     // Create the popup ourselves so that we can bind it to the line instead
     // of to the entire container (which is the default).
     if (!data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2592,8 +3718,12 @@ class SquareAnnotationElement extends AnnotationElement {
     // Create an invisible square with the same rectangle that acts as the
     // trigger for the popup. Only the square itself should trigger the
     // popup, not the entire container.
+<<<<<<< HEAD
     const data = this.data;
     const { width, height } = getRectDims(data.rect);
+=======
+    const { data, width, height } = this;
+>>>>>>> upstream/master
     const svg = this.svgFactory.create(
       width,
       height,
@@ -2621,6 +3751,10 @@ class SquareAnnotationElement extends AnnotationElement {
     // Create the popup ourselves so that we can bind it to the square instead
     // of to the entire container (which is the default).
     if (!data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2649,8 +3783,12 @@ class CircleAnnotationElement extends AnnotationElement {
     // Create an invisible circle with the same ellipse that acts as the
     // trigger for the popup. Only the circle itself should trigger the
     // popup, not the entire container.
+<<<<<<< HEAD
     const data = this.data;
     const { width, height } = getRectDims(data.rect);
+=======
+    const { data, width, height } = this;
+>>>>>>> upstream/master
     const svg = this.svgFactory.create(
       width,
       height,
@@ -2679,6 +3817,10 @@ class CircleAnnotationElement extends AnnotationElement {
     // Create the popup ourselves so that we can bind it to the circle instead
     // of to the entire container (which is the default).
     if (!data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2712,11 +3854,19 @@ class PolylineAnnotationElement extends AnnotationElement {
     // popup, not the entire container.
     const {
       data: { rect, vertices, borderStyle, popupRef },
+<<<<<<< HEAD
+=======
+      width,
+      height,
+>>>>>>> upstream/master
     } = this;
     if (!vertices) {
       return this.container;
     }
+<<<<<<< HEAD
     const { width, height } = getRectDims(rect);
+=======
+>>>>>>> upstream/master
     const svg = this.svgFactory.create(
       width,
       height,
@@ -2751,6 +3901,10 @@ class PolylineAnnotationElement extends AnnotationElement {
     // Create the popup ourselves so that we can bind it to the polyline
     // instead of to the entire container (which is the default).
     if (!popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2785,6 +3939,10 @@ class CaretAnnotationElement extends AnnotationElement {
     this.container.classList.add("caretAnnotation");
 
     if (!this.data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
     return this.container;
@@ -2792,6 +3950,11 @@ class CaretAnnotationElement extends AnnotationElement {
 }
 
 class InkAnnotationElement extends AnnotationElement {
+<<<<<<< HEAD
+=======
+  #polylinesGroupElement = null;
+
+>>>>>>> upstream/master
   #polylines = [];
 
   constructor(parameters) {
@@ -2807,6 +3970,41 @@ class InkAnnotationElement extends AnnotationElement {
       this.data.it === "InkHighlight"
         ? AnnotationEditorType.HIGHLIGHT
         : AnnotationEditorType.INK;
+<<<<<<< HEAD
+=======
+  }
+
+  #getTransform(rotation, rect) {
+    // PDF coordinates are calculated from a bottom left origin, so
+    // transform the polyline coordinates to a top left origin for the
+    // SVG element.
+    switch (rotation) {
+      case 90:
+        return {
+          transform: `rotate(90) translate(${-rect[0]},${rect[1]}) scale(1,-1)`,
+          width: rect[3] - rect[1],
+          height: rect[2] - rect[0],
+        };
+      case 180:
+        return {
+          transform: `rotate(180) translate(${-rect[2]},${rect[1]}) scale(1,-1)`,
+          width: rect[2] - rect[0],
+          height: rect[3] - rect[1],
+        };
+      case 270:
+        return {
+          transform: `rotate(270) translate(${-rect[2]},${rect[3]}) scale(1,-1)`,
+          width: rect[3] - rect[1],
+          height: rect[2] - rect[0],
+        };
+      default:
+        return {
+          transform: `translate(${-rect[0]},${rect[3]}) scale(1,-1)`,
+          width: rect[2] - rect[0],
+          height: rect[3] - rect[1],
+        };
+    }
+>>>>>>> upstream/master
   }
 
   render() {
@@ -2815,6 +4013,7 @@ class InkAnnotationElement extends AnnotationElement {
     // Create an invisible polyline with the same points that acts as the
     // trigger for the popup.
     const {
+<<<<<<< HEAD
       data: { rect, inkLists, borderStyle, popupRef },
     } = this;
     const { width, height } = getRectDims(rect);
@@ -2836,9 +4035,34 @@ class InkAnnotationElement extends AnnotationElement {
         points.push(`${x},${y}`);
       }
       points = points.join(" ");
+=======
+      data: { rect, rotation, inkLists, borderStyle, popupRef },
+    } = this;
+    const { transform, width, height } = this.#getTransform(rotation, rect);
 
+    const svg = this.svgFactory.create(
+      width,
+      height,
+      /* skipDimensions = */ true
+    );
+    const g = (this.#polylinesGroupElement =
+      this.svgFactory.createElement("svg:g"));
+    svg.append(g);
+    // Ensure that the 'stroke-width' is always non-zero, since otherwise it
+    // won't be possible to open/close the popup (note e.g. issue 11122).
+    g.setAttribute("stroke-width", borderStyle.width || 1);
+    g.setAttribute("stroke-linecap", "round");
+    g.setAttribute("stroke-linejoin", "round");
+    g.setAttribute("stroke-miterlimit", 10);
+    g.setAttribute("stroke", "transparent");
+    g.setAttribute("fill", "transparent");
+    g.setAttribute("transform", transform);
+>>>>>>> upstream/master
+
+    for (let i = 0, ii = inkLists.length; i < ii; i++) {
       const polyline = this.svgFactory.createElement(this.svgElementName);
       this.#polylines.push(polyline);
+<<<<<<< HEAD
       polyline.setAttribute("points", points);
       // Ensure that the 'stroke-width' is always non-zero, since otherwise it
       // won't be possible to open/close the popup (note e.g. issue 11122).
@@ -2850,6 +4074,14 @@ class InkAnnotationElement extends AnnotationElement {
     }
 
     if (!popupRef && this.hasPopupData) {
+=======
+      polyline.setAttribute("points", inkLists[i].join(","));
+      g.append(polyline);
+    }
+
+    if (!popupRef && this.hasPopupData) {
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
@@ -2859,6 +4091,32 @@ class InkAnnotationElement extends AnnotationElement {
     return this.container;
   }
 
+<<<<<<< HEAD
+=======
+  updateEdited(params) {
+    super.updateEdited(params);
+    const { thickness, points, rect } = params;
+    const g = this.#polylinesGroupElement;
+    if (thickness >= 0) {
+      g.setAttribute("stroke-width", thickness || 1);
+    }
+    if (points) {
+      for (let i = 0, ii = this.#polylines.length; i < ii; i++) {
+        this.#polylines[i].setAttribute("points", points[i].join(","));
+      }
+    }
+    if (rect) {
+      const { transform, width, height } = this.#getTransform(
+        this.data.rotation,
+        rect
+      );
+      const root = g.parentElement;
+      root.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      g.setAttribute("transform", transform);
+    }
+  }
+
+>>>>>>> upstream/master
   getElementsToTriggerPopup() {
     return this.#polylines;
   }
@@ -2879,12 +4137,30 @@ class HighlightAnnotationElement extends AnnotationElement {
   }
 
   render() {
+<<<<<<< HEAD
     if (!this.data.popupRef && this.hasPopupData) {
+=======
+    const {
+      data: { overlaidText, popupRef },
+    } = this;
+    if (!popupRef && this.hasPopupData) {
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
     this.container.classList.add("highlightAnnotation");
     this._editOnDoubleClick();
+<<<<<<< HEAD
+=======
+
+    if (overlaidText) {
+      const mark = document.createElement("mark");
+      mark.classList.add("overlaidText");
+      mark.textContent = overlaidText;
+      this.container.append(mark);
+    }
+>>>>>>> upstream/master
 
     return this.container;
   }
@@ -2900,11 +4176,30 @@ class UnderlineAnnotationElement extends AnnotationElement {
   }
 
   render() {
+<<<<<<< HEAD
     if (!this.data.popupRef && this.hasPopupData) {
+=======
+    const {
+      data: { overlaidText, popupRef },
+    } = this;
+    if (!popupRef && this.hasPopupData) {
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
     this.container.classList.add("underlineAnnotation");
+<<<<<<< HEAD
+=======
+
+    if (overlaidText) {
+      const underline = document.createElement("u");
+      underline.classList.add("overlaidText");
+      underline.textContent = overlaidText;
+      this.container.append(underline);
+    }
+
+>>>>>>> upstream/master
     return this.container;
   }
 }
@@ -2919,11 +4214,30 @@ class SquigglyAnnotationElement extends AnnotationElement {
   }
 
   render() {
+<<<<<<< HEAD
     if (!this.data.popupRef && this.hasPopupData) {
+=======
+    const {
+      data: { overlaidText, popupRef },
+    } = this;
+    if (!popupRef && this.hasPopupData) {
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
     this.container.classList.add("squigglyAnnotation");
+<<<<<<< HEAD
+=======
+
+    if (overlaidText) {
+      const underline = document.createElement("u");
+      underline.classList.add("overlaidText");
+      underline.textContent = overlaidText;
+      this.container.append(underline);
+    }
+
+>>>>>>> upstream/master
     return this.container;
   }
 }
@@ -2938,11 +4252,30 @@ class StrikeOutAnnotationElement extends AnnotationElement {
   }
 
   render() {
+<<<<<<< HEAD
     if (!this.data.popupRef && this.hasPopupData) {
+=======
+    const {
+      data: { overlaidText, popupRef },
+    } = this;
+    if (!popupRef && this.hasPopupData) {
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
 
     this.container.classList.add("strikeoutAnnotation");
+<<<<<<< HEAD
+=======
+
+    if (overlaidText) {
+      const strikeout = document.createElement("s");
+      strikeout.classList.add("overlaidText");
+      strikeout.textContent = overlaidText;
+      this.container.append(strikeout);
+    }
+
+>>>>>>> upstream/master
     return this.container;
   }
 }
@@ -2958,6 +4291,10 @@ class StampAnnotationElement extends AnnotationElement {
     this.container.setAttribute("role", "img");
 
     if (!this.data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     }
     this._editOnDoubleClick();
@@ -3021,6 +4358,10 @@ class FileAttachmentAnnotationElement extends AnnotationElement {
     });
 
     if (!data.popupRef && this.hasPopupData) {
+<<<<<<< HEAD
+=======
+      this.hasOwnCommentButton = true;
+>>>>>>> upstream/master
       this._createPopup();
     } else {
       trigger.classList.add("popupTriggerArea");
@@ -3066,6 +4407,10 @@ class FileAttachmentAnnotationElement extends AnnotationElement {
  * @property {TextAccessibilityManager} [accessibilityManager]
  * @property {AnnotationEditorUIManager} [annotationEditorUIManager]
  * @property {StructTreeLayerBuilder} [structTreeLayer]
+<<<<<<< HEAD
+=======
+ * @property {CommentManager} [commentManager] - The comment manager instance.
+>>>>>>> upstream/master
  */
 
 /**
@@ -3076,10 +4421,24 @@ class AnnotationLayer {
 
   #annotationCanvasMap = null;
 
+<<<<<<< HEAD
+=======
+  #annotationStorage = null;
+
+>>>>>>> upstream/master
   #editableAnnotations = new Map();
 
   #structTreeLayer = null;
 
+<<<<<<< HEAD
+=======
+  #linkService = null;
+
+  #elements = [];
+
+  #hasAriaAttributesFromStructTree = false;
+
+>>>>>>> upstream/master
   constructor({
     div,
     accessibilityManager,
@@ -3088,15 +4447,30 @@ class AnnotationLayer {
     page,
     viewport,
     structTreeLayer,
+<<<<<<< HEAD
+=======
+    commentManager,
+    linkService,
+    annotationStorage,
+>>>>>>> upstream/master
   }) {
     this.div = div;
     this.#accessibilityManager = accessibilityManager;
     this.#annotationCanvasMap = annotationCanvasMap;
     this.#structTreeLayer = structTreeLayer || null;
+<<<<<<< HEAD
+=======
+    this.#linkService = linkService || null;
+    this.#annotationStorage = annotationStorage || new AnnotationStorage();
+>>>>>>> upstream/master
     this.page = page;
     this.viewport = viewport;
     this.zIndex = 0;
     this._annotationEditorUIManager = annotationEditorUIManager;
+<<<<<<< HEAD
+=======
+    this._commentManager = commentManager || null;
+>>>>>>> upstream/master
 
     if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING")) {
       // For testing purposes.
@@ -3115,6 +4489,7 @@ class AnnotationLayer {
     return this.#editableAnnotations.size > 0;
   }
 
+<<<<<<< HEAD
   async #appendElement(element, id) {
     const contentElement = element.firstChild || element;
     const annotationId = (contentElement.id = `${AnnotationPrefix}${id}`);
@@ -3135,6 +4510,8 @@ class AnnotationLayer {
     );
   }
 
+=======
+>>>>>>> upstream/master
   /**
    * Render a new annotation layer with all annotation elements.
    *
@@ -3147,15 +4524,28 @@ class AnnotationLayer {
     setLayerDimensions(layer, this.viewport);
 
     const popupToElements = new Map();
+<<<<<<< HEAD
     const elementParams = {
       data: null,
       layer,
       linkService: params.linkService,
+=======
+    const popupAnnotations = [];
+    const elementParams = {
+      data: null,
+      layer,
+      linkService: this.#linkService,
+>>>>>>> upstream/master
       downloadManager: params.downloadManager,
       imageResourcesPath: params.imageResourcesPath || "",
       renderForms: params.renderForms !== false,
       svgFactory: new DOMSVGFactory(),
+<<<<<<< HEAD
       annotationStorage: params.annotationStorage || new AnnotationStorage(),
+=======
+      annotationStorage: this.#annotationStorage,
+      enableComment: params.enableComment === true,
+>>>>>>> upstream/master
       enableScripting: params.enableScripting === true,
       hasJSActions: params.hasJSActions,
       fieldObjects: params.fieldObjects,
@@ -3169,8 +4559,12 @@ class AnnotationLayer {
       }
       const isPopupAnnotation = data.annotationType === AnnotationType.POPUP;
       if (!isPopupAnnotation) {
+<<<<<<< HEAD
         const { width, height } = getRectDims(data.rect);
         if (width <= 0 || height <= 0) {
+=======
+        if (data.rect[2] === data.rect[0] || data.rect[3] === data.rect[1]) {
+>>>>>>> upstream/master
           continue; // Ignore empty annotations.
         }
       } else {
@@ -3179,6 +4573,13 @@ class AnnotationLayer {
           // Ignore popup annotations without a corresponding annotation.
           continue;
         }
+<<<<<<< HEAD
+=======
+        if (!this._commentManager) {
+          popupAnnotations.push(data);
+          continue;
+        }
+>>>>>>> upstream/master
         elementParams.elements = elements;
       }
       elementParams.data = data;
@@ -3188,12 +4589,25 @@ class AnnotationLayer {
         continue;
       }
 
+<<<<<<< HEAD
       if (!isPopupAnnotation && data.popupRef) {
         const elements = popupToElements.get(data.popupRef);
         if (!elements) {
           popupToElements.set(data.popupRef, [element]);
         } else {
           elements.push(element);
+=======
+      if (!isPopupAnnotation) {
+        this.#elements.push(element);
+
+        if (data.popupRef) {
+          const elements = popupToElements.get(data.popupRef);
+          if (!elements) {
+            popupToElements.set(data.popupRef, [element]);
+          } else {
+            elements.push(element);
+          }
+>>>>>>> upstream/master
         }
       }
 
@@ -3201,7 +4615,10 @@ class AnnotationLayer {
       if (data.hidden) {
         rendered.style.visibility = "hidden";
       }
+<<<<<<< HEAD
       await this.#appendElement(rendered, data.id);
+=======
+>>>>>>> upstream/master
 
       if (element._isEditable) {
         this.#editableAnnotations.set(element.data.id, element);
@@ -3209,7 +4626,157 @@ class AnnotationLayer {
       }
     }
 
+<<<<<<< HEAD
     this.#setAnnotationCanvasMap();
+=======
+    await this.#addElementsToDOM();
+
+    for (const data of popupAnnotations) {
+      const elements = (elementParams.elements = popupToElements.get(data.id));
+      elementParams.data = data;
+      const element = AnnotationElementFactory.create(elementParams);
+      if (!element.isRenderable) {
+        continue;
+      }
+      const rendered = element.render();
+      element.contentElement.id = `${AnnotationPrefix}${data.id}`;
+      if (data.hidden) {
+        rendered.style.visibility = "hidden";
+      }
+      elements.at(-1).container.after(rendered);
+    }
+
+    this.#setAnnotationCanvasMap();
+  }
+
+  async #addElementsToDOM() {
+    if (this.#elements.length === 0) {
+      return;
+    }
+    // Clear the existing annotations in order to make sure comment buttons
+    // don't have a parent any longer.
+    this.div.replaceChildren();
+
+    const promises = [];
+    if (!this.#hasAriaAttributesFromStructTree) {
+      this.#hasAriaAttributesFromStructTree = true;
+      for (const {
+        contentElement,
+        data: { id },
+      } of this.#elements) {
+        const annotationId = (contentElement.id = `${AnnotationPrefix}${id}`);
+        promises.push(
+          this.#structTreeLayer
+            ?.getAriaAttributes(annotationId)
+            .then(ariaAttributes => {
+              if (ariaAttributes) {
+                for (const [key, value] of ariaAttributes) {
+                  contentElement.setAttribute(key, value);
+                }
+              }
+            })
+        );
+      }
+    }
+    this.#elements.sort(
+      (
+        {
+          data: {
+            rect: [a0, a1, a2, a3],
+          },
+        },
+        {
+          data: {
+            rect: [b0, b1, b2, b3],
+          },
+        }
+      ) => {
+        // We are in page coordinates, which has the origin at the
+        // bottom left.
+        if (a0 === a2 && a1 === a3) {
+          return +1;
+        }
+
+        if (b0 === b2 && b1 === b3) {
+          return -1;
+        }
+
+        const top1 = a3;
+        const bot1 = a1;
+        const mid1 = (a1 + a3) / 2;
+
+        const top2 = b3;
+        const bot2 = b1;
+        const mid2 = (b1 + b3) / 2;
+
+        if (mid1 >= top2 && mid2 <= bot1) {
+          return -1;
+        }
+
+        if (mid2 >= top1 && mid1 <= bot2) {
+          return +1;
+        }
+
+        const centerX1 = (a0 + a2) / 2;
+        const centerX2 = (b0 + b2) / 2;
+
+        return centerX1 - centerX2;
+      }
+    );
+
+    const fragment = document.createDocumentFragment();
+    for (const element of this.#elements) {
+      fragment.append(element.container);
+      if (this._commentManager) {
+        (
+          element.extraPopupElement?.popup || element.popup
+        )?.renderCommentButton();
+      } else if (element.extraPopupElement) {
+        fragment.append(element.extraPopupElement.render());
+      }
+    }
+    this.div.append(fragment);
+    await Promise.all(promises);
+    if (this.#accessibilityManager) {
+      for (const element of this.#elements) {
+        this.#accessibilityManager.addPointerInTextLayer(
+          element.contentElement,
+          /* isRemovable = */ false
+        );
+      }
+    }
+  }
+
+  /**
+   * Add link annotations to the annotation layer.
+   *
+   * @param {Array<Object>} annotations
+   * @param {IPDFLinkService} linkService
+   * @memberof AnnotationLayer
+   */
+  async addLinkAnnotations(annotations) {
+    const elementParams = {
+      data: null,
+      layer: this.div,
+      linkService: this.#linkService,
+      svgFactory: new DOMSVGFactory(),
+      parent: this,
+    };
+    for (const data of annotations) {
+      data.borderStyle ||= AnnotationLayer._defaultBorderStyle;
+
+      elementParams.data = data;
+      const element = AnnotationElementFactory.create(elementParams);
+
+      if (!element.isRenderable) {
+        continue;
+      }
+      element.render();
+      element.contentElement.id = `${AnnotationPrefix}${data.id}`;
+      this.#elements.push(element);
+    }
+    await this.#addElementsToDOM();
+>>>>>>> upstream/master
   }
 
   /**
@@ -3248,6 +4815,25 @@ class AnnotationLayer {
         firstChild.before(canvas);
       } else {
         firstChild.after(canvas);
+<<<<<<< HEAD
+=======
+      }
+
+      const editableAnnotation = this.#editableAnnotations.get(id);
+      if (!editableAnnotation) {
+        continue;
+      }
+      if (editableAnnotation._hasNoCanvas) {
+        // The canvas wasn't available when the annotation was created.
+        this._annotationEditorUIManager?.setMissingCanvas(
+          id,
+          element.id,
+          canvas
+        );
+        editableAnnotation._hasNoCanvas = false;
+      } else {
+        editableAnnotation.canvas = canvas;
+>>>>>>> upstream/master
       }
     }
     this.#annotationCanvasMap.clear();
@@ -3259,6 +4845,75 @@ class AnnotationLayer {
 
   getEditableAnnotation(id) {
     return this.#editableAnnotations.get(id);
+<<<<<<< HEAD
+=======
+  }
+
+  addFakeAnnotation(editor) {
+    const { div } = this;
+    const { id, rotation } = editor;
+    const element = new EditorAnnotationElement({
+      data: {
+        id,
+        rect: editor.getPDFRect(),
+        rotation,
+      },
+      editor,
+      layer: div,
+      parent: this,
+      enableComment: !!this._commentManager,
+      linkService: this.#linkService,
+      annotationStorage: this.#annotationStorage,
+    });
+    element.render();
+    element.contentElement.id = `${AnnotationPrefix}${id}`;
+    element.createOrUpdatePopup();
+    this.#elements.push(element);
+    return element;
+  }
+
+  removeAnnotation(id) {
+    const index = this.#elements.findIndex(el => el.data.id === id);
+    if (index < 0) {
+      return;
+    }
+    const [element] = this.#elements.splice(index, 1);
+    this.#accessibilityManager?.removePointerInTextLayer(
+      element.contentElement
+    );
+  }
+
+  updateFakeAnnotations(editors) {
+    if (editors.length === 0) {
+      return;
+    }
+    for (const editor of editors) {
+      editor.updateFakeAnnotationElement(this);
+    }
+    this.#addElementsToDOM();
+  }
+
+  togglePointerEvents(enabled = false) {
+    this.div.classList.toggle("disabled", !enabled);
+  }
+
+  /**
+   * @private
+   */
+  static get _defaultBorderStyle() {
+    return shadow(
+      this,
+      "_defaultBorderStyle",
+      Object.freeze({
+        width: 1,
+        rawWidth: 1,
+        style: AnnotationBorderStyleType.SOLID,
+        dashArray: [3],
+        horizontalCornerRadius: 0,
+        verticalCornerRadius: 0,
+      })
+    );
+>>>>>>> upstream/master
   }
 }
 

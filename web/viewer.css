@@ -35,6 +35,7 @@
   --doorhanger-icon-opacity: 0.9;
   --doorhanger-height: 8px;
 
+<<<<<<< HEAD
   --main-color: rgb(12 12 13);
   --body-bg-color: rgb(212 212 215);
   --progressBar-color: rgb(10 132 255);
@@ -85,12 +86,65 @@
   --loading-icon: url(images/loading.svg);
   --treeitem-expanded-icon: url(images/treeitem-expanded.svg);
   --treeitem-collapsed-icon: url(images/treeitem-collapsed.svg);
+=======
+  --main-color: light-dark(rgb(12 12 13), rgb(249 249 250));
+  --body-bg-color: light-dark(rgb(212 212 215), rgb(42 42 46));
+  --progressBar-color: light-dark(rgb(10 132 255), rgb(0 96 223));
+  --progressBar-bg-color: light-dark(rgb(221 221 222), rgb(40 40 43));
+  --progressBar-blend-color: light-dark(rgb(116 177 239), rgb(20 68 133));
+  --scrollbar-color: light-dark(auto, rgb(121 121 123));
+  --scrollbar-bg-color: light-dark(auto, rgb(35 35 39));
+  --toolbar-icon-bg-color: light-dark(rgb(0 0 0), rgb(255 255 255));
+  --toolbar-icon-hover-bg-color: light-dark(rgb(0 0 0), rgb(255 255 255));
+
+  --sidebar-narrow-bg-color: light-dark(
+    rgb(212 212 215 / 0.9),
+    rgb(42 42 46 / 0.9)
+  );
+  --sidebar-toolbar-bg-color: light-dark(rgb(245 246 247), rgb(50 50 52));
+  --toolbar-bg-color: light-dark(rgb(249 249 250), rgb(56 56 61));
+  --toolbar-border-color: light-dark(rgb(184 184 184), rgb(12 12 13));
+  --toolbar-box-shadow: 0 1px 0 var(--toolbar-border-color);
+  --toolbar-border-bottom: none;
+  --toolbarSidebar-box-shadow:
+    inset calc(-1px * var(--dir-factor)) 0 0 rgb(0 0 0 / 0.25),
+    0 1px 0 rgb(0 0 0 / 0.15), 0 0 1px rgb(0 0 0 / 0.1);
+  --toolbarSidebar-border-bottom: none;
+  --button-hover-color: color-mix(in srgb, currentColor 17%, transparent);
+  --toggled-btn-color: light-dark(rgb(0 0 0), rgb(255 255 255));
+  --toggled-btn-bg-color: rgb(0 0 0 / 0.3);
+  --toggled-hover-active-btn-color: rgb(0 0 0 / 0.4);
+  --toggled-hover-btn-outline: none;
+  --dropdown-btn-bg-color: light-dark(rgb(215 215 219), rgb(74 74 79));
+  --dropdown-btn-border: none;
+  --separator-color: rgb(0 0 0 / 0.3);
+  --field-color: light-dark(rgb(6 6 6), rgb(250 250 250));
+  --field-bg-color: light-dark(rgb(255 255 255), rgb(64 64 68));
+  --field-border-color: light-dark(rgb(187 187 188), rgb(115 115 115));
+  --doorhanger-bg-color: light-dark(rgb(255 255 255), #42414d);
+  --doorhanger-border-color: light-dark(rgb(12 12 13 / 0.2), rgb(39 39 43));
+  --doorhanger-hover-color: light-dark(rgb(12 12 13), rgb(249 249 250));
+  --doorhanger-separator-color: light-dark(rgb(222 222 222), rgb(92 92 97));
+  --dialog-button-border: none;
+  --dialog-button-bg-color: light-dark(rgb(12 12 13 / 0.1), rgb(92 92 97));
+  --dialog-button-hover-bg-color: light-dark(
+    rgb(12 12 13 / 0.3),
+    rgb(115 115 115)
+  );
+
+  --loading-icon: url(images/loading.svg);
+  --toolbarButton-editorComment-icon: url(images/comment-editButton.svg);
+>>>>>>> upstream/master
   --toolbarButton-editorFreeText-icon: url(images/toolbarButton-editorFreeText.svg);
   --toolbarButton-editorHighlight-icon: url(images/toolbarButton-editorHighlight.svg);
   --toolbarButton-editorInk-icon: url(images/toolbarButton-editorInk.svg);
   --toolbarButton-editorStamp-icon: url(images/toolbarButton-editorStamp.svg);
+<<<<<<< HEAD
+=======
+  --toolbarButton-editorSignature-icon: url(images/toolbarButton-editorSignature.svg);
+>>>>>>> upstream/master
   --toolbarButton-menuArrow-icon: url(images/toolbarButton-menuArrow.svg);
-  --toolbarButton-sidebarToggle-icon: url(images/toolbarButton-sidebarToggle.svg);
+  --toolbarButton-viewsManagerToggle-icon: url(images/toolbarButton-viewsManagerToggle.svg);
   --toolbarButton-secondaryToolbarToggle-icon: url(images/toolbarButton-secondaryToolbarToggle.svg);
   --toolbarButton-pageUp-icon: url(images/toolbarButton-pageUp.svg);
   --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown.svg);
@@ -129,6 +183,7 @@
   );
   --secondaryToolbarButton-documentProperties-icon: url(images/secondaryToolbarButton-documentProperties.svg);
   --editorParams-stampAddImage-icon: url(images/toolbarButton-zoomIn.svg);
+<<<<<<< HEAD
 }
 
 :root:dir(rtl) {
@@ -179,12 +234,22 @@
     --dialog-button-bg-color: rgb(92 92 97);
     --dialog-button-hover-bg-color: rgb(115 115 115);
   }
+=======
+  --comment-edit-button-icon: url(images/comment-editButton.svg);
+}
+
+:root:dir(rtl) {
+  --dir-factor: -1;
+  /*#if !MOZCENTRAL*/
+  --inline-start: right;
+  --inline-end: left;
+  /*#endif*/
+>>>>>>> upstream/master
 }
 
 @media screen and (forced-colors: active) {
   :root {
     --button-hover-color: Highlight;
-    --doorhanger-hover-bg-color: Highlight;
     --toolbar-icon-opacity: 1;
     --toolbar-icon-bg-color: ButtonText;
     --toolbar-icon-hover-bg-color: ButtonFace;
@@ -257,6 +322,25 @@ body {
   }
 }
 
+<<<<<<< HEAD
+=======
+/* The following class is used to hide an element but keep it available to
+ * for screen readers. */
+.visuallyHidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+>>>>>>> upstream/master
 .hidden,
 [hidden] {
   display: none !important;
@@ -290,6 +374,7 @@ body {
   height: 100%;
   position: relative;
   margin: 0;
+<<<<<<< HEAD
 }
 
 #sidebarContainer {
@@ -313,6 +398,8 @@ body {
 
 #outerContainer.sidebarOpen #sidebarContainer {
   inset-inline-start: 0;
+=======
+>>>>>>> upstream/master
 }
 
 #mainContainer {
@@ -346,11 +433,14 @@ body {
   transition-timing-function: var(--sidebar-transition-timing-function);
 }
 
+<<<<<<< HEAD
 #outerContainer.sidebarOpen #viewerContainer:not(.pdfPresentationMode) {
   inset-inline-start: var(--sidebar-width);
   transition-property: inset-inline-start;
 }
 
+=======
+>>>>>>> upstream/master
 #sidebarContainer :is(input, button, select) {
   font: message-box;
 }
@@ -375,6 +465,7 @@ body {
     #viewThumbnail::before {
       mask-image: var(--toolbarButton-viewThumbnail-icon);
     }
+<<<<<<< HEAD
 
     #viewOutline::before {
       mask-image: var(--toolbarButton-viewOutline-icon);
@@ -414,6 +505,28 @@ body {
   :is(#sidebarContainer, #viewerContainer, #loadingBar) {
   /* Improve responsiveness and avoid visual glitches when the sidebar is resized. */
   transition-duration: 0s;
+=======
+
+    #viewOutline::before {
+      mask-image: var(--toolbarButton-viewOutline-icon);
+      transform: scaleX(var(--dir-factor));
+    }
+
+    #viewAttachments::before {
+      mask-image: var(--toolbarButton-viewAttachments-icon);
+    }
+
+    #viewLayers::before {
+      mask-image: var(--toolbarButton-viewLayers-icon);
+    }
+  }
+
+  #toolbarSidebarRight {
+    width: auto;
+    height: 100%;
+    padding-inline-end: 2px;
+  }
+>>>>>>> upstream/master
 }
 
 .doorHanger,
@@ -513,6 +626,7 @@ body {
   box-sizing: border-box;
 }
 
+<<<<<<< HEAD
 .treeItemToggler::before {
   /* All matching images have a size of 16x16
    * All relevant containers have a size of 28x28 */
@@ -528,6 +642,10 @@ body {
 
 #sidebarToggleButton::before {
   mask-image: var(--toolbarButton-sidebarToggle-icon);
+=======
+#viewsManagerToggleButton::before {
+  mask-image: var(--toolbarButton-viewsManagerToggle-icon);
+>>>>>>> upstream/master
   transform: scaleX(var(--dir-factor));
 }
 
@@ -552,8 +670,14 @@ body {
   mask-image: var(--toolbarButton-zoomIn-icon);
 }
 
+<<<<<<< HEAD
 #presentationMode::before {
   mask-image: var(--toolbarButton-presentationMode-icon);
+=======
+#editorCommentButton::before {
+  mask-image: var(--toolbarButton-editorComment-icon);
+  transform: scaleX(var(--dir-factor));
+>>>>>>> upstream/master
 }
 
 #editorFreeTextButton::before {
@@ -572,24 +696,37 @@ body {
   mask-image: var(--toolbarButton-editorStamp-icon);
 }
 
+<<<<<<< HEAD
+=======
+#editorSignatureButton::before {
+  mask-image: var(--toolbarButton-editorSignature-icon);
+}
+
+>>>>>>> upstream/master
 #printButton::before {
   mask-image: var(--toolbarButton-print-icon);
 }
 
+<<<<<<< HEAD
 /*#if GENERIC*/
 #secondaryOpenFile::before {
   mask-image: var(--toolbarButton-openFile-icon);
 }
 /*#endif*/
 
+=======
+>>>>>>> upstream/master
 #downloadButton::before {
   mask-image: var(--toolbarButton-download-icon);
 }
 
+<<<<<<< HEAD
 #viewBookmark::before {
   mask-image: var(--toolbarButton-bookmark-icon);
 }
 
+=======
+>>>>>>> upstream/master
 #currentOutlineItem::before {
   mask-image: var(--toolbarButton-currentOutlineItem-icon);
   transform: scaleX(var(--dir-factor));
@@ -634,16 +771,27 @@ body {
 .toggleButton {
   display: inline;
 
+<<<<<<< HEAD
   &:is(:hover, :has(> input:focus-visible)) {
     color: var(--toggled-btn-color);
     background-color: var(--button-hover-color);
   }
 
+=======
+>>>>>>> upstream/master
   &:has(> input:checked) {
     color: var(--toggled-btn-color);
     background-color: var(--toggled-btn-bg-color);
   }
 
+<<<<<<< HEAD
+=======
+  &:is(:hover, :has(> input:focus-visible)) {
+    color: var(--toggled-btn-color);
+    background-color: var(--button-hover-color);
+  }
+
+>>>>>>> upstream/master
   & > input {
     position: absolute;
     top: 50%;
@@ -695,6 +843,7 @@ body {
 }
 
 .loadingInput {
+<<<<<<< HEAD
   position: relative;
 
   &::after {
@@ -870,6 +1019,39 @@ a:focus > .thumbnail > .thumbnailImage,
   }
 }
 
+=======
+  position: relative;
+
+  &::after {
+    position: absolute;
+    visibility: hidden;
+    display: none;
+    width: var(--icon-size);
+    height: var(--icon-size);
+
+    content: "";
+    background-color: var(--toolbar-icon-bg-color);
+    mask-size: cover;
+    mask-image: var(--loading-icon);
+  }
+
+  &.start::after {
+    inset-inline-start: 4px;
+  }
+
+  &.end::after {
+    inset-inline-end: 4px;
+  }
+}
+#outlineOptionsContainer {
+  display: none;
+
+  #sidebarContainer:has(#outlineView:not(.hidden)) & {
+    display: inline flex;
+  }
+}
+
+>>>>>>> upstream/master
 .dialogButton {
   width: auto;
   margin: 3px 4px 2px !important;
@@ -1071,7 +1253,10 @@ dialog :link {
     }
 
     &:is(:hover, :focus-visible) {
+<<<<<<< HEAD
       background-color: var(--doorhanger-hover-bg-color);
+=======
+>>>>>>> upstream/master
       color: var(--doorhanger-hover-color);
     }
 
@@ -1100,7 +1285,10 @@ dialog :link {
   }
 
   .menuContainer {
+<<<<<<< HEAD
     width: 100%;
+=======
+>>>>>>> upstream/master
     height: auto;
     max-height: calc(
       var(--viewer-container-height) - var(--toolbar-height) -
@@ -1113,13 +1301,25 @@ dialog :link {
   }
 
   .editorParamsToolbar {
+<<<<<<< HEAD
     height: auto;
     width: 220px;
+=======
+    --editor-toolbar-min-width: 220px;
+
+    height: auto;
+    min-width: var(--editor-toolbar-min-width);
+    width: max-content;
+>>>>>>> upstream/master
     position: absolute;
     z-index: 30000;
     cursor: default;
 
+<<<<<<< HEAD
     #editorStampAddImage::before {
+=======
+    :is(#editorStampAddImage, #editorSignatureAddSignature)::before {
+>>>>>>> upstream/master
       mask-image: var(--editorParams-stampAddImage-icon);
     }
 
@@ -1130,9 +1330,19 @@ dialog :link {
       font-style: normal;
       font-weight: 400;
       line-height: 150%;
+<<<<<<< HEAD
       color: var(--main-color);
       width: fit-content;
       inset-inline-start: 0;
+=======
+      width: fit-content;
+      inset-inline-start: 0;
+      color: var(--main-color);
+    }
+
+    button:is(:hover, :focus-visible) .editorParamsLabel {
+      color: var(--doorhanger-hover-color);
+>>>>>>> upstream/master
     }
 
     .editorParamsToolbarContainer {
@@ -1658,6 +1868,7 @@ dialog :link {
         animation: progressIndeterminate 1s linear infinite;
       }
     }
+<<<<<<< HEAD
   }
 }
 
@@ -1716,6 +1927,8 @@ dialog :link {
 
   #documentProperties::before {
     mask-image: var(--secondaryToolbarButton-documentProperties-icon);
+=======
+>>>>>>> upstream/master
   }
 }
 
@@ -1723,7 +1936,11 @@ dialog :link {
   #sidebarContainer {
     background-color: var(--sidebar-narrow-bg-color);
   }
+<<<<<<< HEAD
   #outerContainer.sidebarOpen #viewerContainer {
+=======
+  #outerContainer.viewsManagerOpen #viewerContainer {
+>>>>>>> upstream/master
     inset-inline-start: 0 !important;
   }
 }

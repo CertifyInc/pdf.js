@@ -13,11 +13,7 @@
  * limitations under the License.
  */
 
-import {
-  assert,
-  MissingPDFException,
-  UnexpectedResponseException,
-} from "../shared/util.js";
+import { assert, ResponseException } from "../shared/util.js";
 import { getFilenameFromContentDispositionHeader } from "./content_disposition.js";
 import { isPdfFile } from "./display_utils.js";
 
@@ -36,6 +32,14 @@ function createHeaders(isHttp, httpHeaders) {
   return headers;
 }
 
+<<<<<<< HEAD
+=======
+function getResponseOrigin(url) {
+  // Notably, null is distinct from "null" string (e.g. from file:-URLs).
+  return URL.parse(url)?.origin ?? null;
+}
+
+>>>>>>> upstream/master
 function validateRangeRequestCapabilities({
   responseHeaders,
   isHttp,
@@ -98,13 +102,11 @@ function extractFilenameFromHeader(responseHeaders) {
   return null;
 }
 
-function createResponseStatusError(status, url) {
-  if (status === 404 || (status === 0 && url.startsWith("file:"))) {
-    return new MissingPDFException('Missing PDF "' + url + '".');
-  }
-  return new UnexpectedResponseException(
+function createResponseError(status, url) {
+  return new ResponseException(
     `Unexpected server response (${status}) while retrieving PDF "${url}".`,
-    status
+    status,
+    /* missing = */ status === 404 || (status === 0 && url.startsWith("file:"))
   );
 }
 
@@ -114,8 +116,13 @@ function validateResponseStatus(status) {
 
 export {
   createHeaders,
+<<<<<<< HEAD
   createResponseStatusError,
+=======
+  createResponseError,
+>>>>>>> upstream/master
   extractFilenameFromHeader,
+  getResponseOrigin,
   validateRangeRequestCapabilities,
   validateResponseStatus,
 };

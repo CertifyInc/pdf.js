@@ -51,6 +51,10 @@ class Stream extends BaseStream {
     const strEnd = this.end;
 
     if (!length) {
+<<<<<<< HEAD
+=======
+      this.pos = strEnd;
+>>>>>>> upstream/master
       return bytes.subarray(pos, strEnd);
     }
     let end = pos + length;
@@ -81,6 +85,15 @@ class Stream extends BaseStream {
 
   makeSubStream(start, length, dict = null) {
     return new Stream(this.bytes.buffer, start, length, dict);
+  }
+
+  clone() {
+    return new Stream(
+      this.bytes.buffer,
+      this.start,
+      this.end - this.start,
+      this.dict.clone()
+    );
   }
 }
 

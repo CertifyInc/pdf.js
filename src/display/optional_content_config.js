@@ -15,7 +15,10 @@
 
 import {
   info,
+<<<<<<< HEAD
   objectFromMap,
+=======
+>>>>>>> upstream/master
   RenderingIntentFlag,
   unreachable,
   warn,
@@ -299,10 +302,13 @@ class OptionalContentConfig {
       return this.#order.slice();
     }
     return [...this.#groups.keys()];
+<<<<<<< HEAD
   }
 
   getGroups() {
     return this.#groups.size > 0 ? objectFromMap(this.#groups) : null;
+=======
+>>>>>>> upstream/master
   }
 
   getGroup(id) {
@@ -319,6 +325,13 @@ class OptionalContentConfig {
       hash.update(`${id}:${group.visible}`);
     }
     return (this.#cachedGetHash = hash.hexdigest());
+<<<<<<< HEAD
+=======
+  }
+
+  [Symbol.iterator]() {
+    return this.#groups.entries();
+>>>>>>> upstream/master
   }
 }
 

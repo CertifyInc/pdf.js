@@ -8,3 +8,7 @@ function test() {
   }
   "4";
 }
+<<<<<<< HEAD
+=======
+test();
+>>>>>>> upstream/master

@@ -101,11 +101,20 @@ describe("textLayer", function () {
     const getTransform = container => {
       const transform = [];
 
+<<<<<<< HEAD
       for (const span of container.childNodes) {
         const t = span.style.transform;
         expect(t).toMatch(/^scaleX\([\d.]+\)$/);
 
         transform.push(t);
+=======
+      for (const { style } of container.childNodes) {
+        transform.push({
+          fontHeight: style.getPropertyValue("--font-height"),
+          scaleX: style.getPropertyValue("--scale-x"),
+          rotate: style.getPropertyValue("--rotate"),
+        });
+>>>>>>> upstream/master
       }
       return transform;
     };

@@ -19,12 +19,16 @@ import {
   escapePDFName,
   escapeString,
   getSizeInBytes,
+<<<<<<< HEAD
   numberToString,
+=======
+>>>>>>> upstream/master
   parseXFAPath,
 } from "./core_utils.js";
 import { SimpleDOMNode, SimpleXMLParser } from "./xml_parser.js";
 import { Stream, StringStream } from "./stream.js";
 import { BaseStream } from "./base_stream.js";
+<<<<<<< HEAD
 import { calculateMD5 } from "./crypto.js";
 
 async function writeObject(ref, obj, buffer, { encrypt = null }) {
@@ -37,19 +41,45 @@ async function writeObject(ref, obj, buffer, { encrypt = null }) {
   } else if (Array.isArray(obj) || ArrayBuffer.isView(obj)) {
     await writeArray(obj, buffer, transform);
   }
+=======
+import { calculateMD5 } from "./calculate_md5.js";
+
+async function writeObject(
+  ref,
+  obj,
+  buffer,
+  { encrypt = null, encryptRef = null }
+) {
+  // Avoid to encrypt the encrypt dictionary.
+  const transform =
+    encrypt && encryptRef !== ref
+      ? encrypt.createCipherTransform(ref.num, ref.gen)
+      : null;
+  buffer.push(`${ref.num} ${ref.gen} obj\n`);
+  await writeValue(obj, buffer, transform);
+>>>>>>> upstream/master
   buffer.push("\nendobj\n");
 }
 
 async function writeDict(dict, buffer, transform) {
   buffer.push("<<");
-  for (const key of dict.getKeys()) {
+  for (const [key, rawObj] of dict.getRawEntries()) {
     buffer.push(` /${escapePDFName(key)} `);
+<<<<<<< HEAD
     await writeValue(dict.getRaw(key), buffer, transform);
+=======
+    await writeValue(rawObj, buffer, transform);
+>>>>>>> upstream/master
   }
   buffer.push(">>");
 }
 
 async function writeStream(stream, buffer, transform) {
+<<<<<<< HEAD
+=======
+  stream = stream.getOriginalStream();
+  stream.reset();
+>>>>>>> upstream/master
   let bytes = stream.getBytes();
   const { dict } = stream;
 
@@ -67,7 +97,11 @@ async function writeStream(stream, buffer, transform) {
   // The number 256 is arbitrary, but it should be reasonable.
   const MIN_LENGTH_FOR_COMPRESSING = 256;
 
+<<<<<<< HEAD
   if (bytes.length >= MIN_LENGTH_FOR_COMPRESSING || isFilterZeroFlateDecode) {
+=======
+  if (bytes.length >= MIN_LENGTH_FOR_COMPRESSING && !isFilterZeroFlateDecode) {
+>>>>>>> upstream/master
     try {
       const cs = new CompressionStream("deflate");
       const writer = cs.writable.getWriter();
@@ -120,14 +154,15 @@ async function writeStream(stream, buffer, transform) {
 
 async function writeArray(array, buffer, transform) {
   buffer.push("[");
-  let first = true;
-  for (const val of array) {
-    if (!first) {
+  for (let i = 0, ii = array.length; i < ii; i++) {
+    await writeValue(array[i], buffer, transform);
+    if (i < ii - 1) {
       buffer.push(" ");
-    } else {
-      first = false;
     }
+<<<<<<< HEAD
     await writeValue(val, buffer, transform);
+=======
+>>>>>>> upstream/master
   }
   buffer.push("]");
 }
@@ -145,7 +180,11 @@ async function writeValue(value, buffer, transform) {
     }
     buffer.push(`(${escapeString(value)})`);
   } else if (typeof value === "number") {
-    buffer.push(numberToString(value));
+    // Don't try to round numbers in general, it could lead to have degenerate
+    // matrices (e.g. [0.000008 0 0 0.000008 0 0]).
+    // The numbers must be "rounded" only when pdf.js is producing them and the
+    // current transformation matrix is well known.
+    buffer.push(value.toString());
   } else if (typeof value === "boolean") {
     buffer.push(value.toString());
   } else if (value instanceof Dict) {
@@ -168,28 +207,30 @@ function writeInt(number, size, offset, buffer) {
 }
 
 function writeString(string, offset, buffer) {
-  for (let i = 0, len = string.length; i < len; i++) {
+  const ii = string.length;
+  for (let i = 0; i < ii; i++) {
     buffer[offset + i] = string.charCodeAt(i) & 0xff;
   }
+  return offset + ii;
 }
 
 function computeMD5(filesize, xrefInfo) {
   const time = Math.floor(Date.now() / 1000);
   const filename = xrefInfo.filename || "";
-  const md5Buffer = [time.toString(), filename, filesize.toString()];
-  let md5BufferLen = md5Buffer.reduce((a, str) => a + str.length, 0);
-  for (const value of Object.values(xrefInfo.info)) {
-    md5Buffer.push(value);
-    md5BufferLen += value.length;
-  }
+  const md5Buffer = [
+    time.toString(),
+    filename,
+    filesize.toString(),
+    ...xrefInfo.infoMap.values(),
+  ];
+  const md5BufferLen = Math.sumPrecise(md5Buffer.map(str => str.length));
 
   const array = new Uint8Array(md5BufferLen);
   let offset = 0;
   for (const str of md5Buffer) {
-    writeString(str, offset, array);
-    offset += str.length;
+    offset = writeString(str, offset, array);
   }
-  return bytesToString(calculateMD5(array));
+  return bytesToString(calculateMD5(array, 0, array.length));
 }
 
 function writeXFADataForAcroform(str, changes) {
@@ -269,7 +310,11 @@ function updateXFA({ xfaData, xfaDatasetsRef, changes, xref }) {
   }
   const xfaDataStream = new StringStream(xfaData);
   xfaDataStream.dict = new Dict(xref);
+<<<<<<< HEAD
   xfaDataStream.dict.set("Type", Name.get("EmbeddedFile"));
+=======
+  xfaDataStream.dict.setIfName("Type", "EmbeddedFile");
+>>>>>>> upstream/master
 
   changes.put(xfaDatasetsRef, {
     data: xfaDataStream,
@@ -304,7 +349,11 @@ async function getXRefTable(xrefInfo, baseOffset, newRefs, newXref, buffer) {
   }
   computeIDs(baseOffset, xrefInfo, newXref);
   buffer.push("trailer\n");
+<<<<<<< HEAD
   await writeDict(newXref, buffer);
+=======
+  await writeDict(newXref, buffer, null);
+>>>>>>> upstream/master
   buffer.push("\nstartxref\n", baseOffset.toString(), "\n%%EOF\n");
 }
 
@@ -321,6 +370,7 @@ function getIndexes(newRefs) {
 }
 
 async function getXRefStreamTable(
+<<<<<<< HEAD
   xrefInfo,
   baseOffset,
   newRefs,
@@ -392,10 +442,157 @@ function getTrailerDict(xrefInfo, changes, useXrefStream) {
   }
   if (xrefInfo.encryptRef !== null) {
     newXref.set("Encrypt", xrefInfo.encryptRef);
+=======
+  xrefInfo,
+  baseOffset,
+  newRefs,
+  newXref,
+  buffer
+) {
+  const xrefTableData = [];
+  let maxOffset = 0;
+  let maxGen = 0;
+  for (const { ref, data, objStreamRef, index } of newRefs) {
+    let gen;
+    maxOffset = Math.max(maxOffset, baseOffset);
+    // The first number in each entry is the type (see 7.5.8.3):
+    //  0: free object
+    //  1: in-use object
+    //  2: compressed object
+    if (objStreamRef) {
+      gen = index;
+      xrefTableData.push([2, objStreamRef.num, gen]);
+    } else if (data !== null) {
+      gen = Math.min(ref.gen, 0xffff);
+      xrefTableData.push([1, baseOffset, gen]);
+      baseOffset += data.length;
+    } else {
+      gen = Math.min(ref.gen + 1, 0xffff);
+      xrefTableData.push([0, 0, gen]);
+    }
+    maxGen = Math.max(maxGen, gen);
+  }
+  newXref.set("Index", getIndexes(newRefs));
+  const offsetSize = getSizeInBytes(maxOffset);
+  const maxGenSize = getSizeInBytes(maxGen);
+  const sizes = [1, offsetSize, maxGenSize];
+  newXref.set("W", sizes);
+  computeIDs(baseOffset, xrefInfo, newXref);
+
+  const structSize = Math.sumPrecise(sizes);
+  const data = new Uint8Array(structSize * xrefTableData.length);
+  const stream = new Stream(data);
+  stream.dict = newXref;
+
+  let offset = 0;
+  for (const [type, objOffset, gen] of xrefTableData) {
+    offset = writeInt(type, sizes[0], offset, data);
+    offset = writeInt(objOffset, sizes[1], offset, data);
+    offset = writeInt(gen, sizes[2], offset, data);
+  }
+
+  await writeObject(xrefInfo.newRef, stream, buffer, {});
+  buffer.push("startxref\n", baseOffset.toString(), "\n%%EOF\n");
+}
+
+function computeIDs(baseOffset, xrefInfo, newXref) {
+  if (Array.isArray(xrefInfo.fileIds) && xrefInfo.fileIds.length > 0) {
+    const md5 = computeMD5(baseOffset, xrefInfo);
+    newXref.set("ID", [xrefInfo.fileIds[0] || md5, md5]);
+  }
+}
+
+function getTrailerDict(xrefInfo, changes, useXrefStream) {
+  const newXref = new Dict(null);
+  newXref.setIfDefined("Prev", xrefInfo?.startXRef);
+  const refForXrefTable = xrefInfo.newRef;
+  if (useXrefStream) {
+    changes.put(refForXrefTable, { data: "" });
+    newXref.set("Size", refForXrefTable.num + 1);
+    newXref.setIfName("Type", "XRef");
+  } else {
+    newXref.set("Size", refForXrefTable.num);
+  }
+  newXref.setIfDefined("Root", xrefInfo?.rootRef);
+  newXref.setIfDefined("Info", xrefInfo?.infoRef);
+  newXref.setIfDefined("Encrypt", xrefInfo?.encryptRef);
+
+  return newXref;
+}
+
+async function writeChanges(changes, xref, buffer = []) {
+  const newRefs = [];
+  for (const [ref, { data, objStreamRef, index }] of changes.items()) {
+    if (objStreamRef) {
+      newRefs.push({ ref, data, objStreamRef, index });
+      continue;
+    }
+    if (data === null || typeof data === "string") {
+      newRefs.push({ ref, data });
+      continue;
+    }
+    await writeObject(ref, data, buffer, xref);
+    newRefs.push({ ref, data: buffer.join("") });
+    buffer.length = 0;
+  }
+  return newRefs.sort((a, b) => /* compare the refs */ a.ref.num - b.ref.num);
+}
+
+async function incrementalUpdate({
+  originalData,
+  xrefInfo,
+  changes,
+  xref = null,
+  hasXfa = false,
+  xfaDatasetsRef = null,
+  hasXfaDatasetsEntry = false,
+  needAppearances,
+  acroFormRef = null,
+  acroForm = null,
+  xfaData = null,
+  useXrefStream = false,
+}) {
+  await updateAcroform({
+    xref,
+    acroForm,
+    acroFormRef,
+    hasXfa,
+    hasXfaDatasetsEntry,
+    xfaDatasetsRef,
+    needAppearances,
+    changes,
+  });
+
+  if (hasXfa) {
+    updateXFA({
+      xfaData,
+      xfaDatasetsRef,
+      changes,
+      xref,
+    });
+  }
+
+  const newXref = getTrailerDict(xrefInfo, changes, useXrefStream);
+  const buffer = [];
+  const newRefs = await writeChanges(changes, xref, buffer);
+  let baseOffset = originalData.length;
+  const lastByte = originalData.at(-1);
+  if (lastByte !== /* \n */ 0x0a && lastByte !== /* \r */ 0x0d) {
+    // Avoid to concatenate %%EOF with an object definition
+    buffer.push("\n");
+    baseOffset += 1;
+  }
+
+  for (const { data } of newRefs) {
+    if (data !== null) {
+      buffer.push(data);
+    }
+>>>>>>> upstream/master
   }
   return newXref;
 }
 
+<<<<<<< HEAD
 async function writeChanges(changes, xref, buffer = []) {
   const newRefs = [];
   for (const [ref, { data }] of changes.items()) {
@@ -469,6 +666,14 @@ async function incrementalUpdate({
     (a, str) => a + str.length,
     originalData.length
   );
+=======
+  await (useXrefStream
+    ? getXRefStreamTable(xrefInfo, baseOffset, newRefs, newXref, buffer)
+    : getXRefTable(xrefInfo, baseOffset, newRefs, newXref, buffer));
+
+  const totalLength =
+    originalData.length + Math.sumPrecise(buffer.map(str => str.length));
+>>>>>>> upstream/master
   const array = new Uint8Array(totalLength);
 
   // Original data
@@ -477,11 +682,14 @@ async function incrementalUpdate({
 
   // New data
   for (const str of buffer) {
-    writeString(str, offset, array);
-    offset += str.length;
+    offset = writeString(str, offset, array);
   }
 
   return array;
 }
 
+<<<<<<< HEAD
 export { incrementalUpdate, writeChanges, writeDict, writeObject };
+=======
+export { incrementalUpdate, writeChanges, writeDict, writeObject, writeValue };
+>>>>>>> upstream/master

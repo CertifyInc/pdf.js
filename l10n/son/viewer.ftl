@@ -65,6 +65,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Takadda mayrawey…
 pdfjs-document-properties-file-name = Tuku maa:
 pdfjs-document-properties-file-size = Tuku adadu:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -73,21 +74,27 @@ pdfjs-document-properties-kb = KB { $size_kb } (cebsu-ize { $size_b })
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = MB { $size_mb } (cebsu-ize { $size_b })
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Tiiramaa:
 pdfjs-document-properties-author = Hantumkaw:
 pdfjs-document-properties-subject = Dalil:
 pdfjs-document-properties-keywords = Kufalkalimawey:
 pdfjs-document-properties-creation-date = Teeyan han:
 pdfjs-document-properties-modification-date = Barmayan han:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Teekaw:
 pdfjs-document-properties-producer = PDF berandikaw:
 pdfjs-document-properties-version = PDF dumi:
 pdfjs-document-properties-page-count = Moo hinna:
 
+<<<<<<< HEAD
 ## Variables:
 ##   $width (Number) - the width of the (current) page
 ##   $height (Number) - the height of the (current) page
@@ -96,6 +103,8 @@ pdfjs-document-properties-page-count = Moo hinna:
 ##   $orientation (String) - the orientation of the (current) page
 
 
+=======
+>>>>>>> upstream/master
 ##
 
 pdfjs-document-properties-close-button = Daabu
@@ -166,9 +175,12 @@ pdfjs-page-scale-actual = Adadu cimi
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = Firka bangay kaŋ PDF goo ma zumandi.
@@ -194,6 +206,7 @@ pdfjs-password-invalid = Šennikufal laalo. Ceeci koyne taare.
 pdfjs-password-ok-button = Ayyo
 pdfjs-password-cancel-button = Naŋ
 pdfjs-web-fonts-disabled = Interneti šigirawey kay: ši hin ka goy nda PDF šigira hurantey.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -204,3 +217,5 @@ pdfjs-web-fonts-disabled = Interneti šigirawey kay: ši hin ka goy nda PDF šig
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

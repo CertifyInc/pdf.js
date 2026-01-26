@@ -71,6 +71,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Jami me gin acoya…
 pdfjs-document-properties-file-name = Nying pwail:
 pdfjs-document-properties-file-size = Dit pa pwail:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -79,16 +80,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Wiye:
 pdfjs-document-properties-author = Ngat mucoyo:
 pdfjs-document-properties-subject = Subjek:
 pdfjs-document-properties-keywords = Lok mapire tek:
 pdfjs-document-properties-creation-date = Nino dwe me cwec:
 pdfjs-document-properties-modification-date = Nino dwe me yub:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Lacwec:
 pdfjs-document-properties-producer = Layub PDF:
 pdfjs-document-properties-version = Kit PDF:
@@ -185,9 +191,12 @@ pdfjs-page-scale-actual = Dite kikome
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = Bal otime kun cano PDF.
@@ -213,6 +222,7 @@ pdfjs-password-invalid = Mung me donyo pe atir. Tim ber i tem doki.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Juki
 pdfjs-web-fonts-disabled = Kijuko dit pa coc me kakube woko: pe romo tic ki dit pa coc me PDF ma kiketo i kine.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -223,3 +233,5 @@ pdfjs-web-fonts-disabled = Kijuko dit pa coc me kakube woko: pe romo tic ki dit 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

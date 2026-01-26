@@ -25,12 +25,24 @@
 // eslint-disable-next-line max-len
 /** @typedef {import("../src/display/struct_tree_layer_builder.js").StructTreeLayerBuilder} StructTreeLayerBuilder */
 
+<<<<<<< HEAD
 import { AnnotationEditorType, FeatureTest } from "../../shared/util.js";
+=======
+import {
+  AnnotationEditorPrefix,
+  AnnotationEditorType,
+  FeatureTest,
+} from "../../shared/util.js";
+>>>>>>> upstream/master
 import { AnnotationEditor } from "./editor.js";
 import { FreeTextEditor } from "./freetext.js";
 import { HighlightEditor } from "./highlight.js";
 import { InkEditor } from "./ink.js";
 import { setLayerDimensions } from "../display_utils.js";
+<<<<<<< HEAD
+=======
+import { SignatureEditor } from "./signature.js";
+>>>>>>> upstream/master
 import { StampEditor } from "./stamp.js";
 
 /**
@@ -72,23 +84,51 @@ class AnnotationEditorLayer {
 
   #hadPointerDown = false;
 
+<<<<<<< HEAD
   #isCleaningUp = false;
 
   #isDisabling = false;
 
+=======
+  #isDisabling = false;
+
+  #isEnabling = false;
+
+  #drawingAC = null;
+
+  #focusedElement = null;
+
+>>>>>>> upstream/master
   #textLayer = null;
 
   #textSelectionAC = null;
 
+<<<<<<< HEAD
+=======
+  #textLayerDblClickAC = null;
+
+  #lastPointerDownTimestamp = -1;
+
+>>>>>>> upstream/master
   #uiManager;
 
   static _initialized = false;
 
   static #editorTypes = new Map(
+<<<<<<< HEAD
     [FreeTextEditor, InkEditor, StampEditor, HighlightEditor].map(type => [
       type._editorType,
       type,
     ])
+=======
+    [
+      FreeTextEditor,
+      InkEditor,
+      StampEditor,
+      HighlightEditor,
+      SignatureEditor,
+    ].map(type => [type._editorType, type])
+>>>>>>> upstream/master
   );
 
   /**
@@ -128,6 +168,13 @@ class AnnotationEditorLayer {
     this.#uiManager.addLayer(this);
   }
 
+<<<<<<< HEAD
+=======
+  updatePageIndex(newPageIndex) {
+    this.pageIndex = newPageIndex;
+  }
+
+>>>>>>> upstream/master
   get isEmpty() {
     return this.#editors.size === 0;
   }
@@ -140,10 +187,17 @@ class AnnotationEditorLayer {
 
   /**
    * Update the toolbar if it's required to reflect the tool currently used.
+<<<<<<< HEAD
    * @param {number} mode
    */
   updateToolbar(mode) {
     this.#uiManager.updateToolbar(mode);
+=======
+   * @param {Object} options
+   */
+  updateToolbar(options) {
+    this.#uiManager.updateToolbar(options);
+>>>>>>> upstream/master
   }
 
   /**
@@ -154,18 +208,28 @@ class AnnotationEditorLayer {
     this.#cleanup();
     switch (mode) {
       case AnnotationEditorType.NONE:
+<<<<<<< HEAD
+=======
+        this.div.classList.toggle("nonEditing", true);
+>>>>>>> upstream/master
         this.disableTextSelection();
         this.togglePointerEvents(false);
         this.toggleAnnotationLayerPointerEvents(true);
         this.disableClick();
         return;
       case AnnotationEditorType.INK:
+<<<<<<< HEAD
         // We always want to have an ink editor ready to draw in.
         this.addInkEditorIfNeeded(false);
 
         this.disableTextSelection();
         this.togglePointerEvents(true);
         this.disableClick();
+=======
+        this.disableTextSelection();
+        this.togglePointerEvents(true);
+        this.enableClick();
+>>>>>>> upstream/master
         break;
       case AnnotationEditorType.HIGHLIGHT:
         this.enableTextSelection();
@@ -180,11 +244,25 @@ class AnnotationEditorLayer {
 
     this.toggleAnnotationLayerPointerEvents(false);
     const { classList } = this.div;
+<<<<<<< HEAD
     for (const editorType of AnnotationEditorLayer.#editorTypes.values()) {
       classList.toggle(
         `${editorType._type}Editing`,
         mode === editorType._editorType
       );
+=======
+    classList.toggle("nonEditing", false);
+    if (mode === AnnotationEditorType.POPUP) {
+      classList.toggle("commentEditing", true);
+    } else {
+      classList.toggle("commentEditing", false);
+      for (const editorType of AnnotationEditorLayer.#editorTypes.values()) {
+        classList.toggle(
+          `${editorType._type}Editing`,
+          mode === editorType._editorType
+        );
+      }
+>>>>>>> upstream/master
     }
     this.div.hidden = false;
   }
@@ -193,6 +271,7 @@ class AnnotationEditorLayer {
     return textLayer === this.#textLayer?.div;
   }
 
+<<<<<<< HEAD
   addInkEditorIfNeeded(isCommitting) {
     if (this.#uiManager.getMode() !== AnnotationEditorType.INK) {
       // We don't want to add an ink editor if we're not in ink mode!
@@ -217,6 +296,8 @@ class AnnotationEditorLayer {
     editor.setInBackground();
   }
 
+=======
+>>>>>>> upstream/master
   /**
    * Set the editing state.
    * @param {boolean} isEditing
@@ -233,6 +314,13 @@ class AnnotationEditorLayer {
     this.#uiManager.addCommands(params);
   }
 
+<<<<<<< HEAD
+=======
+  cleanUndoStack(type) {
+    this.#uiManager.cleanUndoStack(type);
+  }
+
+>>>>>>> upstream/master
   toggleDrawing(enabled = false) {
     this.div.classList.toggle("drawing", !enabled);
   }
@@ -242,7 +330,17 @@ class AnnotationEditorLayer {
   }
 
   toggleAnnotationLayerPointerEvents(enabled = false) {
+<<<<<<< HEAD
     this.#annotationLayer?.div.classList.toggle("disabled", !enabled);
+=======
+    this.#annotationLayer?.togglePointerEvents(enabled);
+  }
+
+  get #allEditorsIterator() {
+    return this.#editors.size !== 0
+      ? this.#editors.values()
+      : this.#uiManager.getEditors(this.pageIndex);
+>>>>>>> upstream/master
   }
 
   /**
@@ -250,10 +348,21 @@ class AnnotationEditorLayer {
    * editor creation.
    */
   async enable() {
+<<<<<<< HEAD
     this.div.tabIndex = 0;
     this.togglePointerEvents(true);
     const annotationElementIds = new Set();
     for (const editor of this.#editors.values()) {
+=======
+    this.#isEnabling = true;
+    this.div.tabIndex = 0;
+    this.togglePointerEvents(true);
+    this.div.classList.toggle("nonEditing", false);
+    this.#textLayerDblClickAC?.abort();
+    this.#textLayerDblClickAC = null;
+    const annotationElementIds = new Set();
+    for (const editor of this.#allEditorsIterator) {
+>>>>>>> upstream/master
       editor.enableEditing();
       editor.show(true);
       if (editor.annotationElementId) {
@@ -262,6 +371,7 @@ class AnnotationEditorLayer {
       }
     }
 
+<<<<<<< HEAD
     if (!this.#annotationLayer) {
       return;
     }
@@ -283,6 +393,32 @@ class AnnotationEditorLayer {
       this.addOrRebuild(editor);
       editor.enableEditing();
     }
+=======
+    const annotationLayer = this.#annotationLayer;
+    if (annotationLayer) {
+      for (const editable of annotationLayer.getEditableAnnotations()) {
+        // The element must be hidden whatever its state is.
+        editable.hide();
+        if (this.#uiManager.isDeletedAnnotationElement(editable.data.id)) {
+          continue;
+        }
+        if (annotationElementIds.has(editable.data.id)) {
+          continue;
+        }
+        const editor = await this.deserialize(editable);
+        if (!editor) {
+          continue;
+        }
+        this.addOrRebuild(editor);
+        editor.enableEditing();
+      }
+    }
+    this.#isEnabling = false;
+    this.#uiManager._eventBus.dispatch("editorsrendered", {
+      source: this,
+      pageNumber: this.pageIndex + 1,
+    });
+>>>>>>> upstream/master
   }
 
   /**
@@ -292,6 +428,7 @@ class AnnotationEditorLayer {
     this.#isDisabling = true;
     this.div.tabIndex = -1;
     this.togglePointerEvents(false);
+<<<<<<< HEAD
     const changedAnnotations = new Map();
     const resetAnnotations = new Map();
     for (const editor of this.#editors.values()) {
@@ -315,6 +452,83 @@ class AnnotationEditorLayer {
       for (const editable of editables) {
         const { id } = editable.data;
         if (this.#uiManager.isDeletedAnnotationElement(id)) {
+=======
+    this.div.classList.toggle("nonEditing", true);
+    if (this.#textLayer && !this.#textLayerDblClickAC) {
+      this.#textLayerDblClickAC = new AbortController();
+      const signal = this.#uiManager.combinedSignal(this.#textLayerDblClickAC);
+      this.#textLayer.div.addEventListener(
+        "pointerdown",
+        e => {
+          // It's the default value in Fenix:
+          // https://searchfox.org/mozilla-central/rev/beba5cde846f944c4d709e75cbe499d17af880a4/modules/libpref/init/StaticPrefList.yaml#19064
+          // and in Chrome and Windows:
+          // https://source.chromium.org/chromium/chromium/src/+/main:ui/events/event_constants.h;drc=f0f5f3ceebb00da9363ccc7a1e2c0f17b6b383ba;l=115
+          const DBL_CLICK_THRESHOLD = 500;
+          const { clientX, clientY, timeStamp } = e;
+          const lastPointerDownTimestamp = this.#lastPointerDownTimestamp;
+          if (timeStamp - lastPointerDownTimestamp > DBL_CLICK_THRESHOLD) {
+            this.#lastPointerDownTimestamp = timeStamp;
+            return;
+          }
+          this.#lastPointerDownTimestamp = -1;
+          const { classList } = this.div;
+          classList.toggle("getElements", true);
+          const elements = document.elementsFromPoint(clientX, clientY);
+          classList.toggle("getElements", false);
+          if (!this.div.contains(elements[0])) {
+            return;
+          }
+          let id;
+          const regex = new RegExp(`^${AnnotationEditorPrefix}[0-9]+$`);
+          for (const element of elements) {
+            if (regex.test(element.id)) {
+              id = element.id;
+              break;
+            }
+          }
+          if (!id) {
+            return;
+          }
+          const editor = this.#editors.get(id);
+          if (editor?.annotationElementId === null) {
+            e.stopPropagation();
+            e.preventDefault();
+            editor.dblclick(e);
+          }
+        },
+        { signal, capture: true }
+      );
+    }
+
+    const annotationLayer = this.#annotationLayer;
+    const needFakeAnnotation = [];
+    if (annotationLayer) {
+      const changedAnnotations = new Map();
+      const resetAnnotations = new Map();
+      for (const editor of this.#allEditorsIterator) {
+        editor.disableEditing();
+        if (!editor.annotationElementId) {
+          needFakeAnnotation.push(editor);
+          continue;
+        }
+        if (editor.serialize() !== null) {
+          changedAnnotations.set(editor.annotationElementId, editor);
+          continue;
+        } else {
+          resetAnnotations.set(editor.annotationElementId, editor);
+        }
+        this.getEditableAnnotation(editor.annotationElementId)?.show();
+        editor.remove();
+      }
+
+      // Show the annotations that were hidden in enable().
+      const editables = annotationLayer.getEditableAnnotations();
+      for (const editable of editables) {
+        const { id } = editable.data;
+        if (this.#uiManager.isDeletedAnnotationElement(id)) {
+          editable.updateEdited({ deleted: true });
+>>>>>>> upstream/master
           continue;
         }
         let editor = resetAnnotations.get(id);
@@ -347,6 +561,10 @@ class AnnotationEditorLayer {
     }
     this.disableTextSelection();
     this.toggleAnnotationLayerPointerEvents(true);
+<<<<<<< HEAD
+=======
+    annotationLayer?.updateFakeAnnotations(needFakeAnnotation);
+>>>>>>> upstream/master
 
     this.#isDisabling = false;
   }
@@ -443,9 +661,15 @@ class AnnotationEditorLayer {
     this.div.addEventListener("pointerdown", this.pointerdown.bind(this), {
       signal,
     });
+<<<<<<< HEAD
     this.div.addEventListener("pointerup", this.pointerup.bind(this), {
       signal,
     });
+=======
+    const pointerup = this.pointerup.bind(this);
+    this.div.addEventListener("pointerup", pointerup, { signal });
+    this.div.addEventListener("pointercancel", pointerup, { signal });
+>>>>>>> upstream/master
   }
 
   disableClick() {
@@ -482,15 +706,22 @@ class AnnotationEditorLayer {
     this.#uiManager.removeEditor(editor);
     editor.div.remove();
     editor.isAttachedToDOM = false;
+<<<<<<< HEAD
 
     if (!this.#isCleaningUp) {
       this.addInkEditorIfNeeded(/* isCommitting = */ false);
     }
+=======
+>>>>>>> upstream/master
   }
 
   /**
    * An editor can have a different parent, for example after having
+<<<<<<< HEAD
    * being dragged and droped from a page to another.
+=======
+   * being dragged and dropped from a page to another.
+>>>>>>> upstream/master
    * @param {AnnotationEditor} editor
    */
   changeParent(editor) {
@@ -499,7 +730,11 @@ class AnnotationEditorLayer {
     }
 
     if (editor.parent && editor.annotationElementId) {
+<<<<<<< HEAD
       this.#uiManager.addDeletedAnnotationElement(editor.annotationElementId);
+=======
+      this.#uiManager.addDeletedAnnotationElement(editor);
+>>>>>>> upstream/master
       AnnotationEditor.deleteAnnotationElement(editor);
       editor.annotationElementId = null;
     }
@@ -533,7 +768,11 @@ class AnnotationEditorLayer {
 
     // The editor will be correctly moved into the DOM (see fixAndSetPosition).
     editor.fixAndSetPosition();
+<<<<<<< HEAD
     editor.onceAdded();
+=======
+    editor.onceAdded(/* focus = */ !this.#isEnabling);
+>>>>>>> upstream/master
     this.#uiManager.addToAnnotationStorage(editor);
     editor._reportTelemetry(editor.telemetryInitialData);
   }
@@ -602,6 +841,18 @@ class AnnotationEditorLayer {
     this.addCommands({ cmd, undo, mustExec: false });
   }
 
+<<<<<<< HEAD
+=======
+  getEditorByUID(uid) {
+    for (const editor of this.#editors.values()) {
+      if (editor.uid === uid) {
+        return editor;
+      }
+    }
+    return null;
+  }
+
+>>>>>>> upstream/master
   /**
    * Get an id for an editor.
    * @returns {string}
@@ -634,12 +885,21 @@ class AnnotationEditorLayer {
 
   /**
    * Paste some content into a new editor.
+<<<<<<< HEAD
    * @param {number} mode
    * @param {Object} params
    */
   pasteEditor(mode, params) {
     this.#uiManager.updateToolbar(mode);
     this.#uiManager.updateMode(mode);
+=======
+   * @param {Object} options
+   * @param {Object} params
+   */
+  async pasteEditor(options, params) {
+    this.updateToolbar(options);
+    await this.#uiManager.updateMode(options.mode);
+>>>>>>> upstream/master
 
     const { offsetX, offsetY } = this.#getCenterPoint();
     const id = this.getNextId();
@@ -660,7 +920,11 @@ class AnnotationEditorLayer {
   /**
    * Create a new editor
    * @param {Object} data
+<<<<<<< HEAD
    * @returns {AnnotationEditor | null}
+=======
+   * @returns {Promise<AnnotationEditor | null>}
+>>>>>>> upstream/master
    */
   async deserialize(data) {
     return (
@@ -695,8 +959,17 @@ class AnnotationEditorLayer {
     return editor;
   }
 
+<<<<<<< HEAD
   #getCenterPoint() {
     const { x, y, width, height } = this.div.getBoundingClientRect();
+=======
+  get boundingClientRect() {
+    return this.div.getBoundingClientRect();
+  }
+
+  #getCenterPoint() {
+    const { x, y, width, height } = this.boundingClientRect;
+>>>>>>> upstream/master
     const tlX = Math.max(0, x);
     const tlY = Math.max(0, y);
     const brX = Math.min(window.innerWidth, x + width);
@@ -714,8 +987,17 @@ class AnnotationEditorLayer {
   /**
    * Create and add a new editor.
    */
+<<<<<<< HEAD
   addNewEditor() {
     this.createAndAddNewEditor(this.#getCenterPoint(), /* isCentered = */ true);
+=======
+  addNewEditor(data = {}) {
+    this.createAndAddNewEditor(
+      this.#getCenterPoint(),
+      /* isCentered = */ true,
+      data
+    );
+>>>>>>> upstream/master
   }
 
   /**
@@ -766,12 +1048,30 @@ class AnnotationEditorLayer {
     }
     this.#hadPointerDown = false;
 
+<<<<<<< HEAD
+=======
+    if (
+      this.#currentEditorType?.isDrawer &&
+      this.#currentEditorType.supportMultipleDrawings
+    ) {
+      return;
+    }
+
+>>>>>>> upstream/master
     if (!this.#allowClick) {
       this.#allowClick = true;
       return;
     }
 
+<<<<<<< HEAD
     if (this.#uiManager.getMode() === AnnotationEditorType.STAMP) {
+=======
+    const currentMode = this.#uiManager.getMode();
+    if (
+      currentMode === AnnotationEditorType.STAMP ||
+      currentMode === AnnotationEditorType.SIGNATURE
+    ) {
+>>>>>>> upstream/master
       this.#uiManager.unselectAll();
       return;
     }
@@ -808,10 +1108,73 @@ class AnnotationEditorLayer {
 
     this.#hadPointerDown = true;
 
+<<<<<<< HEAD
+=======
+    if (this.#currentEditorType?.isDrawer) {
+      this.startDrawingSession(event);
+      return;
+    }
+
+>>>>>>> upstream/master
     const editor = this.#uiManager.getActive();
     this.#allowClick = !editor || editor.isEmpty();
   }
 
+<<<<<<< HEAD
+=======
+  startDrawingSession(event) {
+    this.div.focus({
+      preventScroll: true,
+    });
+    if (this.#drawingAC) {
+      this.#currentEditorType.startDrawing(this, this.#uiManager, false, event);
+      return;
+    }
+
+    this.#uiManager.setCurrentDrawingSession(this);
+    this.#drawingAC = new AbortController();
+    const signal = this.#uiManager.combinedSignal(this.#drawingAC);
+    this.div.addEventListener(
+      "blur",
+      ({ relatedTarget }) => {
+        if (relatedTarget && !this.div.contains(relatedTarget)) {
+          this.#focusedElement = null;
+          this.commitOrRemove();
+        }
+      },
+      { signal }
+    );
+    this.#currentEditorType.startDrawing(this, this.#uiManager, false, event);
+  }
+
+  pause(on) {
+    if (on) {
+      const { activeElement } = document;
+      if (this.div.contains(activeElement)) {
+        this.#focusedElement = activeElement;
+      }
+      return;
+    }
+    if (this.#focusedElement) {
+      setTimeout(() => {
+        this.#focusedElement?.focus();
+        this.#focusedElement = null;
+      }, 0);
+    }
+  }
+
+  endDrawingSession(isAborted = false) {
+    if (!this.#drawingAC) {
+      return null;
+    }
+    this.#uiManager.setCurrentDrawingSession(null);
+    this.#drawingAC.abort();
+    this.#drawingAC = null;
+    this.#focusedElement = null;
+    return this.#currentEditorType.endDrawing(isAborted);
+  }
+
+>>>>>>> upstream/master
   /**
    *
    * @param {AnnotationEditor} editor
@@ -828,10 +1191,32 @@ class AnnotationEditorLayer {
     return true;
   }
 
+<<<<<<< HEAD
+=======
+  commitOrRemove() {
+    if (this.#drawingAC) {
+      this.endDrawingSession();
+      return true;
+    }
+    return false;
+  }
+
+  onScaleChanging() {
+    if (!this.#drawingAC) {
+      return;
+    }
+    this.#currentEditorType.onScaleChangingWhenDrawing(this);
+  }
+
+>>>>>>> upstream/master
   /**
    * Destroy the main editor.
    */
   destroy() {
+<<<<<<< HEAD
+=======
+    this.commitOrRemove();
+>>>>>>> upstream/master
     if (this.#uiManager.getActive()?.parent === this) {
       // We need to commit the current editor before destroying the layer.
       this.#uiManager.commitOrRemove();
@@ -858,13 +1243,19 @@ class AnnotationEditorLayer {
     // When we're cleaning up, some editors are removed but we don't want
     // to add a new one which will induce an addition in this.#editors, hence
     // an infinite loop.
+<<<<<<< HEAD
     this.#isCleaningUp = true;
+=======
+>>>>>>> upstream/master
     for (const editor of this.#editors.values()) {
       if (editor.isEmpty()) {
         editor.remove();
       }
     }
+<<<<<<< HEAD
     this.#isCleaningUp = false;
+=======
+>>>>>>> upstream/master
   }
 
   /**
@@ -896,6 +1287,10 @@ class AnnotationEditorLayer {
 
     const oldRotation = this.viewport.rotation;
     const rotation = viewport.rotation;
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
     this.viewport = viewport;
     setLayerDimensions(this.div, { rotation });
     if (oldRotation !== rotation) {
@@ -903,7 +1298,10 @@ class AnnotationEditorLayer {
         editor.rotate(rotation);
       }
     }
+<<<<<<< HEAD
     this.addInkEditorIfNeeded(/* isCommitting = */ false);
+=======
+>>>>>>> upstream/master
   }
 
   /**

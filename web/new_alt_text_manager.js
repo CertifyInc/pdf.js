@@ -141,6 +141,18 @@ class NewAltTextManager {
     textarea.addEventListener("input", () => {
       this.#toggleTitleAndDisclaimer();
     });
+<<<<<<< HEAD
+=======
+    textarea.addEventListener("keydown", e => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === "Enter" &&
+        !saveButton.disabled
+      ) {
+        this.#save();
+      }
+    });
+>>>>>>> upstream/master
 
     eventBus._on("enableguessalttext", ({ value }) => {
       this.#toggleGuessAltText(value, /* isInitial = */ false);
@@ -440,6 +452,7 @@ class NewAltTextManager {
   }
 
   #finish() {
+<<<<<<< HEAD
     if (this.#overlayManager.active === this.#dialog) {
       this.#overlayManager.close(this.#dialog);
     }
@@ -447,6 +460,13 @@ class NewAltTextManager {
 
   #close() {
     const canvas = this.#imagePreview.firstChild;
+=======
+    this.#overlayManager.closeIfActive(this.#dialog);
+  }
+
+  #close() {
+    const canvas = this.#imagePreview.firstElementChild;
+>>>>>>> upstream/master
     canvas.remove();
     canvas.width = canvas.height = 0;
     this.#imageData = null;
@@ -460,6 +480,18 @@ class NewAltTextManager {
     this.#uiManager = null;
   }
 
+<<<<<<< HEAD
+=======
+  #extractWords(text) {
+    return new Set(
+      text
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/gu)
+        .filter(x => !!x)
+    );
+  }
+
+>>>>>>> upstream/master
   #save() {
     const altText = this.#textarea.value.trim();
     this.#currentEditor.altTextData = {
@@ -469,8 +501,13 @@ class NewAltTextManager {
     this.#currentEditor.altTextData.guessedAltText = this.#guessedAltText;
 
     if (this.#guessedAltText && this.#guessedAltText !== altText) {
+<<<<<<< HEAD
       const guessedWords = new Set(this.#guessedAltText.split(/\s+/));
       const words = new Set(altText.split(/\s+/));
+=======
+      const guessedWords = this.#extractWords(this.#guessedAltText);
+      const words = this.#extractWords(altText);
+>>>>>>> upstream/master
       this.#currentEditor._reportTelemetry({
         action: "pdfjs.image.alt_text.user_edit",
         data: {
@@ -612,7 +649,11 @@ class ImageAltTextSettings {
   async #download(isFromUI = false) {
     if (isFromUI) {
       this.#downloadModelButton.disabled = true;
+<<<<<<< HEAD
       const span = this.#downloadModelButton.firstChild;
+=======
+      const span = this.#downloadModelButton.firstElementChild;
+>>>>>>> upstream/master
       span.setAttribute(
         "data-l10n-id",
         "pdfjs-editor-alt-text-settings-downloading-model-button"
@@ -687,9 +728,13 @@ class ImageAltTextSettings {
   }
 
   #finish() {
+<<<<<<< HEAD
     if (this.#overlayManager.active === this.#dialog) {
       this.#overlayManager.close(this.#dialog);
     }
+=======
+    this.#overlayManager.closeIfActive(this.#dialog);
+>>>>>>> upstream/master
   }
 }
 

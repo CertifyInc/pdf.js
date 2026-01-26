@@ -59,7 +59,11 @@ describe("Text layer", () => {
       };
     }
 
+<<<<<<< HEAD
     beforeAll(() => {
+=======
+    beforeEach(() => {
+>>>>>>> upstream/master
       jasmine.addAsyncMatchers({
         // Check that a page has a selection containing the given text, with
         // some tolerance for extra characters before/after.
@@ -111,13 +115,22 @@ describe("Text layer", () => {
       describe("doesn't jump when hovering on an empty area", () => {
         let pages;
 
+<<<<<<< HEAD
         beforeAll(async () => {
+=======
+        beforeEach(async () => {
+>>>>>>> upstream/master
           pages = await loadAndWait(
             "tracemonkey.pdf",
             `.page[data-page-number = "1"] .endOfContent`
           );
         });
+<<<<<<< HEAD
         afterAll(async () => {
+=======
+
+        afterEach(async () => {
+>>>>>>> upstream/master
           await closePages(pages);
         });
 
@@ -217,15 +230,113 @@ describe("Text layer", () => {
         });
       });
 
+<<<<<<< HEAD
       describe("when selecting over a link", () => {
         let pages;
 
         beforeAll(async () => {
+=======
+      describe("doesn't jump when hovering on an empty area, with .markedContent", () => {
+        let pages;
+
+        beforeEach(async () => {
+          pages = await loadAndWait(
+            "chrome-text-selection-markedContent.pdf",
+            `.page[data-page-number = "1"] .endOfContent`
+          );
+        });
+
+        afterEach(async () => {
+          await closePages(pages);
+        });
+
+        it("in per-character selection mode", async () => {
+          await Promise.all(
+            pages.map(async ([browserName, page]) => {
+              const [positionStart, positionEnd] = await Promise.all([
+                getSpanRectFromText(
+                  page,
+                  1,
+                  "strengthen in the coming quarters as the railway projects under"
+                ).then(middlePosition),
+                getSpanRectFromText(
+                  page,
+                  1,
+                  "development enter the construction phase (estimated at around"
+                ).then(belowEndPosition),
+              ]);
+
+              await page.mouse.move(positionStart.x, positionStart.y);
+              await page.mouse.down();
+              await moveInSteps(page, positionStart, positionEnd, 20);
+              await page.mouse.up();
+
+              await expectAsync(page)
+                .withContext(`In ${browserName}`)
+                .toHaveRoughlySelected(
+                  "rs as the railway projects under\n" +
+                    "development enter the construction phase (estimated at "
+                );
+            })
+          );
+        });
+
+        it("in per-word selection mode", async () => {
+          await Promise.all(
+            pages.map(async ([browserName, page]) => {
+              const [positionStart, positionEnd] = await Promise.all([
+                getSpanRectFromText(
+                  page,
+                  1,
+                  "strengthen in the coming quarters as the railway projects under"
+                ).then(middlePosition),
+                getSpanRectFromText(
+                  page,
+                  1,
+                  "development enter the construction phase (estimated at around"
+                ).then(belowEndPosition),
+              ]);
+
+              // Puppeteer doesn't support emulating "double click and hold" for
+              // WebDriver BiDi, so we must manually dispatch a protocol action
+              // (see https://github.com/puppeteer/puppeteer/issues/13745).
+              await page.mainFrame().browsingContext.performActions([
+                {
+                  type: "pointer",
+                  id: "__puppeteer_mouse",
+                  actions: [
+                    { type: "pointerMove", ...positionStart },
+                    { type: "pointerDown", button: 0 },
+                    { type: "pointerUp", button: 0 },
+                    { type: "pointerDown", button: 0 },
+                  ],
+                },
+              ]);
+              await moveInSteps(page, positionStart, positionEnd, 20);
+              await page.mouse.up();
+
+              await expectAsync(page)
+                .withContext(`In ${browserName}`)
+                .toHaveRoughlySelected(
+                  "quarters as the railway projects under\n" +
+                    "development enter the construction phase (estimated at around"
+                );
+            })
+          );
+        });
+      });
+
+      describe("when selecting over a link", () => {
+        let pages;
+
+        beforeEach(async () => {
+>>>>>>> upstream/master
           pages = await loadAndWait(
             "annotation-link-text-popup.pdf",
             `.page[data-page-number = "1"] .endOfContent`
           );
         });
+<<<<<<< HEAD
         afterAll(async () => {
           await closePages(pages);
         });
@@ -236,6 +347,12 @@ describe("Text layer", () => {
             )
           )
         );
+=======
+
+        afterEach(async () => {
+          await closePages(pages);
+        });
+>>>>>>> upstream/master
 
         it("allows selecting within the link", async () => {
           await Promise.all(
@@ -353,7 +470,11 @@ describe("Text layer", () => {
       let browser;
       let page;
 
+<<<<<<< HEAD
       beforeAll(async () => {
+=======
+      beforeEach(async () => {
+>>>>>>> upstream/master
         // Chrome does not support simulating caret-based selection, so this
         // test only runs in Firefox.
         browser = await startBrowser({
@@ -374,7 +495,12 @@ describe("Text layer", () => {
           { timeout: 0 }
         );
       });
+<<<<<<< HEAD
       afterAll(async () => {
+=======
+
+      afterEach(async () => {
+>>>>>>> upstream/master
         await closeSinglePage(page);
         await browser.close();
       });
@@ -427,7 +553,11 @@ describe("Text layer", () => {
 
         await expectAsync(page)
           .withContext(`second selection`)
+<<<<<<< HEAD
           .toHaveRoughlySelected(/frequently .* We call such a se/s);
+=======
+          .toHaveRoughlySelected(/frequently .* We call such a s/s);
+>>>>>>> upstream/master
 
         await page.mouse.down();
         await moveInSteps(page, intermediateCaretPos, finalCaretPos, 20);
@@ -435,7 +565,11 @@ describe("Text layer", () => {
 
         await expectAsync(page)
           .withContext(`third selection`)
+<<<<<<< HEAD
           .toHaveRoughlySelected(/frequently .* We call such a se/s);
+=======
+          .toHaveRoughlySelected(/frequently .* We call such a s/s);
+>>>>>>> upstream/master
       });
     });
   });
@@ -444,7 +578,11 @@ describe("Text layer", () => {
     let browser;
     let page;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       // Only testing in Firefox because, while Chrome has a setting similar to
       // font.minimum-size.x-western, it is not exposed through its API.
       browser = await startBrowser({
@@ -463,7 +601,11 @@ describe("Text layer", () => {
       );
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closeSinglePage(page);
       await browser.close();
     });

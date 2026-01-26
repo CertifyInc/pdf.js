@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:web/pdf_single_page_viewer.js
 /* Copyright 2014 Mozilla Foundation
+========
+/* Copyright 2022 Mozilla Foundation
+>>>>>>>> upstream/master:src/core/cleanup_helper.js
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +17,7 @@
  * limitations under the License.
  */
 
+<<<<<<<< HEAD:web/pdf_single_page_viewer.js
 import { ScrollMode, SpreadMode } from "./ui_utils.js";
 import { PDFViewer } from "./pdf_viewer.js";
 
@@ -35,3 +40,21 @@ class PDFSinglePageViewer extends PDFViewer {
 }
 
 export { PDFSinglePageViewer };
+========
+import { clearPatternCaches } from "./pattern.js";
+import { clearPrimitiveCaches } from "./primitives.js";
+import { clearUnicodeCaches } from "./unicode.js";
+import { JpxImage } from "./jpx.js";
+
+function clearGlobalCaches() {
+  clearPatternCaches();
+  clearPrimitiveCaches();
+  clearUnicodeCaches();
+
+  // Remove the global `JpxImage` instance, since it may hold a reference to
+  // the WebAssembly module.
+  JpxImage.cleanup();
+}
+
+export { clearGlobalCaches };
+>>>>>>>> upstream/master:src/core/cleanup_helper.js

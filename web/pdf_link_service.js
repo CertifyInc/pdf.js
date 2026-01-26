@@ -16,6 +16,10 @@
 /** @typedef {import("./event_utils").EventBus} EventBus */
 /** @typedef {import("./interfaces").IPDFLinkService} IPDFLinkService */
 
+<<<<<<< HEAD
+=======
+import { isValidExplicitDest } from "pdfjs-lib";
+>>>>>>> upstream/master
 import { parseQueryString } from "./ui_utils.js";
 
 const DEFAULT_LINK_REL = "noopener noreferrer nofollow";
@@ -191,8 +195,23 @@ class PDFLinkService {
       destArray: explicitDest,
       ignoreDestinationZoom: this._ignoreDestinationZoom,
     });
+
+<<<<<<< HEAD
+=======
+    const ac = new AbortController();
+    this.eventBus._on(
+      "textlayerrendered",
+      evt => {
+        if (evt.pageNumber === pageNumber) {
+          evt.source.textLayer.div.focus();
+          ac.abort();
+        }
+      },
+      { signal: ac.signal }
+    );
   }
 
+>>>>>>> upstream/master
   /**
    * This method will, when available, also update the browser history.
    *
@@ -227,6 +246,25 @@ class PDFLinkService {
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Scrolls to a specific location in the PDF document.
+   * @param {number} pageNumber - The page number to scroll to.
+   * @param {number} x - The x-coordinate to scroll to in page coordinates.
+   * @param {number} y - The y-coordinate to scroll to in page coordinates.
+   * @param {Object} [options]
+   */
+  goToXY(pageNumber, x, y, options = {}) {
+    this.pdfViewer.scrollPageIntoView({
+      pageNumber,
+      destArray: [null, { name: "XYZ" }, x, y],
+      ignoreDestinationZoom: true,
+      ...options,
+    });
+  }
+
+  /**
+>>>>>>> upstream/master
    * Adds various attributes (href, title, target, rel) to hyperlinks.
    * @param {HTMLAnchorElement} link
    * @param {string} url
@@ -415,7 +453,11 @@ class PDFLinkService {
       }
     } catch {}
 
+<<<<<<< HEAD
     if (typeof dest === "string" || PDFLinkService.#isValidExplicitDest(dest)) {
+=======
+    if (typeof dest === "string" || isValidExplicitDest(dest)) {
+>>>>>>> upstream/master
       this.goToDestination(dest);
       return;
     }
@@ -481,6 +523,7 @@ class PDFLinkService {
       return; // The document was closed while the optional content resolved.
     }
     optionalContentConfig.setOCGState(action);
+<<<<<<< HEAD
 
     this.pdfViewer.optionalContentConfigPromise = Promise.resolve(
       optionalContentConfig
@@ -539,6 +582,12 @@ class PDFLinkService {
       }
     }
     return true;
+=======
+
+    this.pdfViewer.optionalContentConfigPromise = Promise.resolve(
+      optionalContentConfig
+    );
+>>>>>>> upstream/master
   }
 }
 

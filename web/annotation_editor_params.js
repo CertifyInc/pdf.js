@@ -27,6 +27,10 @@ import { AnnotationEditorParamsType } from "pdfjs-lib";
  * @property {HTMLButtonElement} editorStampAddImage
  * @property {HTMLInputElement} editorFreeHighlightThickness
  * @property {HTMLButtonElement} editorHighlightShowAll
+<<<<<<< HEAD
+=======
+ * @property {HTMLButtonElement} editorSignatureAddSignature
+>>>>>>> upstream/master
  */
 
 class AnnotationEditorParams {
@@ -51,9 +55,18 @@ class AnnotationEditorParams {
     editorStampAddImage,
     editorFreeHighlightThickness,
     editorHighlightShowAll,
+<<<<<<< HEAD
   }) {
     const dispatchEvent = (typeStr, value) => {
       this.eventBus.dispatch("switchannotationeditorparams", {
+=======
+    editorSignatureAddSignature,
+  }) {
+    const { eventBus } = this;
+
+    const dispatchEvent = (typeStr, value) => {
+      eventBus.dispatch("switchannotationeditorparams", {
+>>>>>>> upstream/master
         source: this,
         type: AnnotationEditorParamsType[typeStr],
         value,
@@ -75,7 +88,11 @@ class AnnotationEditorParams {
       dispatchEvent("INK_OPACITY", this.valueAsNumber);
     });
     editorStampAddImage.addEventListener("click", () => {
+<<<<<<< HEAD
       this.eventBus.dispatch("reporttelemetry", {
+=======
+      eventBus.dispatch("reporttelemetry", {
+>>>>>>> upstream/master
         source: this,
         details: {
           type: "editing",
@@ -92,8 +109,16 @@ class AnnotationEditorParams {
       this.setAttribute("aria-pressed", !checked);
       dispatchEvent("HIGHLIGHT_SHOW_ALL", !checked);
     });
+<<<<<<< HEAD
 
     this.eventBus._on("annotationeditorparamschanged", evt => {
+=======
+    editorSignatureAddSignature.addEventListener("click", () => {
+      dispatchEvent("CREATE");
+    });
+
+    eventBus._on("annotationeditorparamschanged", evt => {
+>>>>>>> upstream/master
       for (const [type, value] of evt.details) {
         switch (type) {
           case AnnotationEditorParamsType.FREETEXT_SIZE:
@@ -111,6 +136,15 @@ class AnnotationEditorParams {
           case AnnotationEditorParamsType.INK_OPACITY:
             editorInkOpacity.value = value;
             break;
+<<<<<<< HEAD
+=======
+          case AnnotationEditorParamsType.HIGHLIGHT_COLOR:
+            eventBus.dispatch("mainhighlightcolorpickerupdatecolor", {
+              source: this,
+              value,
+            });
+            break;
+>>>>>>> upstream/master
           case AnnotationEditorParamsType.HIGHLIGHT_THICKNESS:
             editorFreeHighlightThickness.value = value;
             break;

@@ -20,7 +20,11 @@
 // eslint-disable-next-line max-len
 /** @typedef {import("./text_accessibility.js").TextAccessibilityManager} TextAccessibilityManager */
 
+<<<<<<< HEAD
 import { normalizeUnicode, TextLayer } from "pdfjs-lib";
+=======
+import { normalizeUnicode, stopEvent, TextLayer } from "pdfjs-lib";
+>>>>>>> upstream/master
 import { removeNullCharacters } from "./ui_utils.js";
 
 /**
@@ -29,7 +33,18 @@ import { removeNullCharacters } from "./ui_utils.js";
  * @property {TextHighlighter} [highlighter] - Optional object that will handle
  *   highlighting text from the find controller.
  * @property {TextAccessibilityManager} [accessibilityManager]
+<<<<<<< HEAD
  * @property {function} [onAppend]
+=======
+ * @property {boolean} [enablePermissions]
+ * @property {function} [onAppend]
+ */
+
+/**
+ * @typedef {Object} TextLayerBuilderRenderOptions
+ * @property {PageViewport} viewport
+ * @property {Object} [textContentParams]
+>>>>>>> upstream/master
  */
 
 /**
@@ -39,6 +54,7 @@ import { removeNullCharacters } from "./ui_utils.js";
  */
 class TextLayerBuilder {
   #enablePermissions = false;
+<<<<<<< HEAD
 
   #onAppend = null;
 
@@ -63,6 +79,35 @@ class TextLayerBuilder {
     this.#enablePermissions = enablePermissions === true;
     this.#onAppend = onAppend;
 
+=======
+
+  #onAppend = null;
+
+  #renderingDone = false;
+
+  #textLayer = null;
+
+  static #textLayers = new Map();
+
+  static #selectionChangeAbortController = null;
+
+  /**
+   * @param {TextLayerBuilderOptions} options
+   */
+  constructor({
+    pdfPage,
+    highlighter = null,
+    accessibilityManager = null,
+    enablePermissions = false,
+    onAppend = null,
+  }) {
+    this.pdfPage = pdfPage;
+    this.highlighter = highlighter;
+    this.accessibilityManager = accessibilityManager;
+    this.#enablePermissions = enablePermissions === true;
+    this.#onAppend = onAppend;
+
+>>>>>>> upstream/master
     this.div = document.createElement("div");
     this.div.tabIndex = 0;
     this.div.className = "textLayer";
@@ -70,10 +115,17 @@ class TextLayerBuilder {
 
   /**
    * Renders the text layer.
+<<<<<<< HEAD
    * @param {PageViewport} viewport
    * @param {Object} [textContentParams]
    */
   async render(viewport, textContentParams = null) {
+=======
+   * @param {TextLayerBuilderRenderOptions} options
+   * @returns {Promise<void>}
+   */
+  async render({ viewport, textContentParams = null }) {
+>>>>>>> upstream/master
     if (this.#renderingDone && this.#textLayer) {
       this.#textLayer.update({
         viewport,
@@ -162,8 +214,12 @@ class TextLayerBuilder {
           removeNullCharacters(normalizeUnicode(selection.toString()))
         );
       }
+<<<<<<< HEAD
       event.preventDefault();
       event.stopPropagation();
+=======
+      stopEvent(event);
+>>>>>>> upstream/master
     });
 
     TextLayerBuilder.#textLayers.set(div, end);
@@ -298,12 +354,27 @@ class TextLayerBuilder {
         if (anchor.nodeType === Node.TEXT_NODE) {
           anchor = anchor.parentNode;
         }
+<<<<<<< HEAD
+=======
+        if (!modifyStart && range.endOffset === 0) {
+          do {
+            while (!anchor.previousSibling) {
+              anchor = anchor.parentNode;
+            }
+            anchor = anchor.previousSibling;
+          } while (!anchor.childNodes.length);
+        }
+>>>>>>> upstream/master
 
         const parentTextLayer = anchor.parentElement?.closest(".textLayer");
         const endDiv = this.#textLayers.get(parentTextLayer);
         if (endDiv) {
           endDiv.style.width = parentTextLayer.style.width;
           endDiv.style.height = parentTextLayer.style.height;
+<<<<<<< HEAD
+=======
+          endDiv.style.userSelect = "text";
+>>>>>>> upstream/master
           anchor.parentElement.insertBefore(
             endDiv,
             modifyStart ? anchor : anchor.nextSibling

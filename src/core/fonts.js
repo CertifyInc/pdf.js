@@ -60,7 +60,6 @@ import { CFFFont } from "./cff_font.js";
 import { FontRendererFactory } from "./font_renderer.js";
 import { getFontBasicMetrics } from "./metrics.js";
 import { GlyfTable } from "./glyf.js";
-import { IdentityCMap } from "./cmap.js";
 import { OpenTypeFileBuilder } from "./opentype_file_builder.js";
 import { readUint32 } from "./core_utils.js";
 import { Stream } from "./stream.js";
@@ -82,13 +81,14 @@ const EXPORT_DATA_PROPERTIES = [
   "black",
   "bold",
   "charProcOperatorList",
-  "composite",
   "cssFontInfo",
   "data",
   "defaultVMetrics",
   "defaultWidth",
   "descent",
+  "disableFontFace",
   "fallbackName",
+  "fontExtraProperties",
   "fontMatrix",
   "isInvalidPDFjsFont",
   "isType3Font",
@@ -98,22 +98,29 @@ const EXPORT_DATA_PROPERTIES = [
   "missingFile",
   "name",
   "remeasure",
+<<<<<<< HEAD
   "subtype",
   "systemFontInfo",
   "type",
+=======
+  "systemFontInfo",
+>>>>>>> upstream/master
   "vertical",
 ];
 
 const EXPORT_DATA_EXTRA_PROPERTIES = [
   "cMap",
+  "composite",
   "defaultEncoding",
   "differences",
   "isMonospace",
   "isSerifFont",
   "isSymbolicFont",
   "seacMap",
+  "subtype",
   "toFontChar",
   "toUnicode",
+  "type",
   "vmetrics",
   "widths",
 ];
@@ -485,6 +492,11 @@ function adjustMapping(charCodeToGlyphId, hasGlyph, newGlyphZeroId, toUnicode) {
   const isInPrivateArea = code =>
     (PRIVATE_USE_AREAS[0][0] <= code && code <= PRIVATE_USE_AREAS[0][1]) ||
     (PRIVATE_USE_AREAS[1][0] <= code && code <= PRIVATE_USE_AREAS[1][1]);
+<<<<<<< HEAD
+=======
+  let LIGATURE_TO_UNICODE = null;
+
+>>>>>>> upstream/master
   for (const originalCharCode in charCodeToGlyphId) {
     let glyphId = charCodeToGlyphId[originalCharCode];
     // For missing glyphs don't create the mappings so the glyph isn't
@@ -514,7 +526,27 @@ function adjustMapping(charCodeToGlyphId, hasGlyph, newGlyphZeroId, toUnicode) {
     // glyph ids to the correct unicode.
     let unicode = toUnicode.get(originalCharCode);
     if (typeof unicode === "string") {
+<<<<<<< HEAD
       unicode = unicode.codePointAt(0);
+=======
+      if (unicode.length === 1) {
+        unicode = unicode.codePointAt(0);
+      } else {
+        if (!LIGATURE_TO_UNICODE) {
+          LIGATURE_TO_UNICODE = new Map();
+          // The code range [0xfb00, 0xfb4f] contains some ligature characters
+          // but not all.
+          // See https://www.compart.com/en/unicode/block/U+FB00.
+          for (let i = 0xfb00; i <= 0xfb4f; i++) {
+            const normalized = String.fromCharCode(i).normalize("NFKD");
+            if (normalized.length > 1) {
+              LIGATURE_TO_UNICODE.set(normalized, i);
+            }
+          }
+        }
+        unicode = LIGATURE_TO_UNICODE.get(unicode) || unicode.codePointAt(0);
+      }
+>>>>>>> upstream/master
     }
     if (unicode && !isInPrivateArea(unicode) && !usedGlyphIds.has(glyphId)) {
       toUnicodeExtraMap.set(unicode, glyphId);
@@ -556,9 +588,7 @@ function getRanges(glyphs, toUnicodeExtraMap, numGlyphs) {
   if (codes.length === 0) {
     codes.push({ fontCharCode: 0, glyphId: 0 });
   }
-  codes.sort(function fontGetRangesSort(a, b) {
-    return a.fontCharCode - b.fontCharCode;
-  });
+  codes.sort((a, b) => a.fontCharCode - b.fontCharCode);
 
   // Split the sorted codes into ranges.
   const ranges = [];
@@ -952,11 +982,12 @@ function createNameTable(name, proto) {
  * decoding logics whatever type it is (assuming the font type is supported).
  */
 class Font {
-  constructor(name, file, properties) {
+  constructor(name, file, properties, evaluatorOptions) {
     this.name = name;
     this.psName = null;
     this.mimetype = null;
-    this.disableFontFace = false;
+    this.disableFontFace = evaluatorOptions.disableFontFace;
+    this.fontExtraProperties = evaluatorOptions.fontExtraProperties;
 
     this.loadedName = properties.loadedName;
     this.isType3Font = properties.isType3Font;
@@ -970,10 +1001,18 @@ class Font {
     // Fallback to checking the font name, in order to improve text-selection,
     // since the /Flags-entry is often wrong (fixes issue13845.pdf).
     if (!isSerifFont && !properties.isSimulatedFlags) {
+<<<<<<< HEAD
       const baseName = name.replaceAll(/[,_]/g, "-").split("-", 1)[0],
+=======
+      const stdFontMap = getStdFontMap(),
+        nonStdFontMap = getNonStdFontMap(),
+>>>>>>> upstream/master
         serifFonts = getSerifFonts();
-      for (const namePart of baseName.split("+")) {
-        if (serifFonts[namePart]) {
+      for (const namePart of name.split("+")) {
+        let fontName = namePart.replaceAll(/[,_]/g, "-");
+        fontName = stdFontMap[fontName] || nonStdFontMap[fontName] || fontName;
+        fontName = fontName.split("-", 1)[0];
+        if (serifFonts[fontName]) {
           isSerifFont = true;
           break;
         }
@@ -1089,9 +1128,10 @@ class Font {
           // Repair the TrueType file. It is can be damaged in the point of
           // view of the sanitizer
           data = this.checkAndRepair(name, file, properties);
-          if (this.isOpenType) {
-            adjustWidths(properties);
 
+          adjustWidths(properties);
+
+          if (this.isOpenType) {
             type = "OpenType";
           }
           break;
@@ -1123,21 +1163,28 @@ class Font {
     return shadow(this, "renderer", renderer);
   }
 
-  exportData(extraProperties = false) {
-    const exportDataProperties = extraProperties
-      ? [...EXPORT_DATA_PROPERTIES, ...EXPORT_DATA_EXTRA_PROPERTIES]
-      : EXPORT_DATA_PROPERTIES;
-
+  exportData() {
     const data = Object.create(null);
-    let property, value;
-    for (property of exportDataProperties) {
-      value = this[property];
+    for (const prop of EXPORT_DATA_PROPERTIES) {
+      const value = this[prop];
       // Ignore properties that haven't been explicitly set.
       if (value !== undefined) {
-        data[property] = value;
+        data[prop] = value;
       }
     }
-    return data;
+
+    if (!this.fontExtraProperties) {
+      return { data };
+    }
+
+    const extra = Object.create(null);
+    for (const prop of EXPORT_DATA_EXTRA_PROPERTIES) {
+      const value = this[prop];
+      if (value !== undefined) {
+        extra[prop] = value;
+      }
+    }
+    return { data, extra };
   }
 
   fallbackToSystemFont(properties) {
@@ -1757,20 +1804,23 @@ class Font {
       }
 
       // removing duplicate entries
-      mappings.sort(function (a, b) {
-        return a.charCode - b.charCode;
-      });
-      for (let i = 1; i < mappings.length; i++) {
-        if (mappings[i - 1].charCode === mappings[i].charCode) {
-          mappings.splice(i, 1);
-          i--;
+      mappings.sort((a, b) => a.charCode - b.charCode);
+      const finalMappings = [],
+        seenCharCodes = new Set();
+      for (const map of mappings) {
+        const { charCode } = map;
+
+        if (seenCharCodes.has(charCode)) {
+          continue;
         }
+        seenCharCodes.add(charCode);
+        finalMappings.push(map);
       }
 
       return {
         platformId: potentialTable.platformId,
         encodingId: potentialTable.encodingId,
-        mappings,
+        mappings: finalMappings,
         hasShortCmap,
       };
     }
@@ -2484,7 +2534,7 @@ class Font {
             }
           }
         }
-        // Adjusting stack not extactly, but just enough to get function id
+        // Adjusting stack not exactly, but just enough to get function id
         if (!inFDEF && !inELSE) {
           let stackDelta = 0;
           if (op <= 0x8e) {
@@ -2604,29 +2654,30 @@ class Font {
       header = readOpenTypeHeader(font);
       tables = readTables(font, header.numTables);
     }
-    let cff, cffFile;
 
     const isTrueType = !tables["CFF "];
     if (!isTrueType) {
+<<<<<<< HEAD
       const isComposite =
         properties.composite &&
         (properties.cidToGidMap?.length > 0 ||
           !(properties.cMap instanceof IdentityCMap));
+=======
+>>>>>>> upstream/master
       // OpenType font (skip composite fonts with non-default glyph mapping).
       if (
-        (header.version === "OTTO" && !isComposite) ||
+        (header.version === "OTTO" && !properties.composite) ||
         !tables.head ||
         !tables.hhea ||
         !tables.maxp ||
         !tables.post
       ) {
         // No major tables: throwing everything at `CFFFont`.
-        cffFile = new Stream(tables["CFF "].data);
-        cff = new CFFFont(cffFile, properties);
-
-        adjustWidths(properties);
-
-        return this.convert(name, cff, properties);
+        return this.convert(
+          name,
+          new CFFFont(new Stream(tables["CFF "].data), properties),
+          properties
+        );
       }
 
       delete tables.glyf;
@@ -2654,9 +2705,36 @@ class Font {
       throw new FormatError('Required "maxp" table is not found');
     }
 
+    let numGlyphsFromCFF;
+    if (!isTrueType) {
+      try {
+        // Trying to repair CFF file
+        const parser = new CFFParser(
+          new Stream(tables["CFF "].data),
+          properties,
+          SEAC_ANALYSIS_ENABLED
+        );
+        const cff = parser.parse();
+        cff.duplicateFirstGlyph();
+        const compiler = new CFFCompiler(cff);
+        tables["CFF "].data = compiler.compile();
+        numGlyphsFromCFF = cff.charStringCount;
+      } catch {
+        warn("Failed to compile font " + properties.loadedName);
+      }
+    }
+
     font.pos = (font.start || 0) + tables.maxp.offset;
     let version = font.getInt32();
+<<<<<<< HEAD
     const numGlyphs = font.getUint16();
+=======
+    const numGlyphs = numGlyphsFromCFF ?? font.getUint16();
+    if (version === 0x00005000 && tables.maxp.length !== 6) {
+      tables.maxp.data = tables.maxp.data.subarray(0, 6);
+      tables.maxp.length = 6;
+    }
+>>>>>>> upstream/master
 
     if (version !== 0x00010000 && version !== 0x00005000) {
       // https://learn.microsoft.com/en-us/typography/opentype/spec/maxp
@@ -2670,13 +2748,39 @@ class Font {
       writeUint32(tables.maxp.data, 0, version);
     }
 
+<<<<<<< HEAD
+=======
+    let isGlyphLocationsLong = int16(
+      tables.head.data[50],
+      tables.head.data[51]
+    );
+    if (tables.loca) {
+      const locaLength = isGlyphLocationsLong
+        ? (numGlyphs + 1) * 4
+        : (numGlyphs + 1) * 2;
+      if (tables.loca.length !== locaLength) {
+        warn("Incorrect 'loca' table length -- attempting to fix it.");
+        // The length of the loca table is wrong (see #13425), so we check if we
+        // have enough space to fix it.
+        const sortedTables = Object.values(tables)
+          .filter(Boolean)
+          .sort((a, b) => a.offset - b.offset);
+        const locaIndex = sortedTables.indexOf(tables.loca);
+        const nextTable = sortedTables[locaIndex + 1] || null;
+        if (nextTable && tables.loca.offset + locaLength < nextTable.offset) {
+          const previousPos = font.pos;
+          font.pos = font.start || 0;
+          font.skip(tables.loca.offset);
+          tables.loca.data = font.getBytes(locaLength);
+          tables.loca.length = locaLength;
+          font.pos = previousPos;
+        }
+      }
+    }
+
+>>>>>>> upstream/master
     if (properties.scaleFactors?.length === numGlyphs && isTrueType) {
       const { scaleFactors } = properties;
-      const isGlyphLocationsLong = int16(
-        tables.head.data[50],
-        tables.head.data[51]
-      );
-
       const glyphs = new GlyfTable({
         glyfTable: tables.glyf.data,
         isGlyphLocationsLong,
@@ -2691,7 +2795,7 @@ class Font {
 
       if (isLocationLong !== !!isGlyphLocationsLong) {
         tables.head.data[50] = 0;
-        tables.head.data[51] = isLocationLong ? 1 : 0;
+        isGlyphLocationsLong = tables.head.data[51] = isLocationLong ? 1 : 0;
       }
 
       const metrics = tables.hmtx.data;
@@ -2769,10 +2873,6 @@ class Font {
 
     let missingGlyphs = Object.create(null);
     if (isTrueType) {
-      const isGlyphLocationsLong = int16(
-        tables.head.data[50],
-        tables.head.data[51]
-      );
       const glyphsInfo = sanitizeGlyphLocations(
         tables.loca,
         tables.glyf,
@@ -3048,6 +3148,7 @@ class Font {
       }
     }
 
+<<<<<<< HEAD
     if (!isTrueType) {
       try {
         // Trying to repair CFF file
@@ -3066,6 +3167,8 @@ class Font {
       }
     }
 
+=======
+>>>>>>> upstream/master
     // Re-creating 'name' table
     if (!tables.name) {
       tables.name = {
@@ -3579,7 +3682,7 @@ class ErrorFont {
     return [chars];
   }
 
-  exportData(extraProperties = false) {
+  exportData() {
     return { error: this.error };
   }
 }

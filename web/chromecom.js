@@ -19,6 +19,11 @@ import { BaseExternalServices } from "./external_services.js";
 import { BasePreferences } from "./preferences.js";
 import { GenericL10n } from "./genericl10n.js";
 import { GenericScripting } from "./generic_scripting.js";
+import { SignatureStorage } from "./generic_signature_storage.js";
+
+// These strings are from chrome/app/resources/generated_resources_*.xtb.
+// eslint-disable-next-line sort-imports
+import i18nFileAccessLabels from "./chrome-i18n-allow-access-to-file-urls.json" with { type: "json" };
 
 // These strings are from chrome/app/resources/generated_resources_*.xtb.
 import i18nFileAccessLabels from "./chrome-i18n-allow-access-to-file-urls.json" with { type: "json" };
@@ -418,6 +423,13 @@ class ExternalServices extends BaseExternalServices {
 
   createScripting() {
     return new GenericScripting(AppOptions.get("sandboxBundleSrc"));
+<<<<<<< HEAD
+=======
+  }
+
+  createSignatureStorage(eventBus, signal) {
+    return new SignatureStorage(eventBus, signal);
+>>>>>>> upstream/master
   }
 }
 

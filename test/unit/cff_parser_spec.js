@@ -68,6 +68,7 @@ describe("CFFParser", function () {
   });
 
   beforeEach(function () {
+    fontData.reset();
     parser = new CFFParser(fontData, {}, SEAC_ANALYSIS_ENABLED);
     cff = parser.parse();
   });
@@ -168,6 +169,7 @@ describe("CFFParser", function () {
   });
 
   it("parses a CharString endchar with 4 args w/seac enabled", function () {
+    fontData.reset();
     const cffParser = new CFFParser(
       fontData,
       {},
@@ -197,6 +199,7 @@ describe("CFFParser", function () {
   });
 
   it("parses a CharString endchar with 4 args w/seac disabled", function () {
+    fontData.reset();
     const cffParser = new CFFParser(
       fontData,
       {},
@@ -479,9 +482,9 @@ describe("CFFCompiler", function () {
     expect(out).toEqual([
       2, // format
       0, // cid (high)
-      0, // cid (low)
+      1, // cid (low)
       0, // nLeft (high)
-      numGlyphs - 1, // nLeft (low)
+      numGlyphs - 2, // nLeft (low)
     ]);
   });
 

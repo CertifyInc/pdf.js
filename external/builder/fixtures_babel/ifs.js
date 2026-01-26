@@ -32,3 +32,7 @@ function f1() {
     "2";
   }
 }
+<<<<<<< HEAD
+=======
+f1();
+>>>>>>> upstream/master

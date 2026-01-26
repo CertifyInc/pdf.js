@@ -45,6 +45,16 @@ class PDFFindBar {
     this.findNextButton = options.findNextButton;
     this.eventBus = eventBus;
     this.#mainContainer = mainContainer;
+<<<<<<< HEAD
+=======
+
+    const checkedInputs = new Map([
+      [this.highlightAll, "highlightallchange"],
+      [this.caseSensitive, "casesensitivitychange"],
+      [this.entireWord, "entirewordchange"],
+      [this.matchDiacritics, "diacriticmatchingchange"],
+    ]);
+>>>>>>> upstream/master
 
     // Add event listeners to the DOM elements.
     this.toggleButton.addEventListener("click", () => {
@@ -55,11 +65,14 @@ class PDFFindBar {
       this.dispatchEvent("");
     });
 
-    this.bar.addEventListener("keydown", e => {
-      switch (e.keyCode) {
+    this.bar.addEventListener("keydown", ({ keyCode, shiftKey, target }) => {
+      switch (keyCode) {
         case 13: // Enter
-          if (e.target === this.findField) {
-            this.dispatchEvent("again", e.shiftKey);
+          if (target === this.findField) {
+            this.dispatchEvent("again", shiftKey);
+          } else if (checkedInputs.has(target)) {
+            target.checked = !target.checked;
+            this.dispatchEvent(/* evtName = */ checkedInputs.get(target));
           }
           break;
         case 27: // Escape
@@ -71,11 +84,11 @@ class PDFFindBar {
     this.findPreviousButton.addEventListener("click", () => {
       this.dispatchEvent("again", true);
     });
-
     this.findNextButton.addEventListener("click", () => {
       this.dispatchEvent("again", false);
     });
 
+<<<<<<< HEAD
     this.highlightAll.addEventListener("click", () => {
       this.dispatchEvent("highlightallchange");
     });
@@ -91,6 +104,13 @@ class PDFFindBar {
     this.matchDiacritics.addEventListener("click", () => {
       this.dispatchEvent("diacriticmatchingchange");
     });
+=======
+    for (const [elem, evtName] of checkedInputs) {
+      elem.addEventListener("click", () => {
+        this.dispatchEvent(evtName);
+      });
+    }
+>>>>>>> upstream/master
   }
 
   reset() {

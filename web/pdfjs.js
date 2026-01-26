@@ -21,27 +21,54 @@ const {
   AnnotationEditorUIManager,
   AnnotationLayer,
   AnnotationMode,
+<<<<<<< HEAD
   build,
   ColorPicker,
   createValidAbsoluteUrl,
+=======
+  AnnotationType,
+  applyOpacity,
+  build,
+  ColorPicker,
+  createValidAbsoluteUrl,
+  CSSConstants,
+>>>>>>> upstream/master
   DOMSVGFactory,
   DrawLayer,
   FeatureTest,
   fetchData,
+<<<<<<< HEAD
   getDocument,
   getFilenameFromUrl,
   getPdfFilenameFromUrl,
+=======
+  findContrastColor,
+  getDocument,
+  getFilenameFromUrl,
+  getPdfFilenameFromUrl,
+  getRGB,
+  getUuid,
+>>>>>>> upstream/master
   getXfaPageViewport,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,
   isDataScheme,
   isPdfFile,
+<<<<<<< HEAD
   MissingPDFException,
+=======
+  isValidExplicitDest,
+  MathClamp,
+>>>>>>> upstream/master
   noContextMenu,
   normalizeUnicode,
   OPS,
   OutputScale,
+<<<<<<< HEAD
+=======
+  PagesMapper,
+>>>>>>> upstream/master
   PasswordResponses,
   PDFDataRangeTransport,
   PDFDateString,
@@ -49,10 +76,23 @@ const {
   PermissionFlag,
   PixelsPerInch,
   RenderingCancelledException,
+<<<<<<< HEAD
   setLayerDimensions,
   shadow,
   TextLayer,
   UnexpectedResponseException,
+=======
+  renderRichText,
+  ResponseException,
+  setLayerDimensions,
+  shadow,
+  SignatureExtractor,
+  stopEvent,
+  SupportedImageMimeTypes,
+  TextLayer,
+  TouchManager,
+  updateUrlHash,
+>>>>>>> upstream/master
   Util,
   VerbosityLevel,
   version,
@@ -67,27 +107,54 @@ export {
   AnnotationEditorUIManager,
   AnnotationLayer,
   AnnotationMode,
+<<<<<<< HEAD
   build,
   ColorPicker,
   createValidAbsoluteUrl,
+=======
+  AnnotationType,
+  applyOpacity,
+  build,
+  ColorPicker,
+  createValidAbsoluteUrl,
+  CSSConstants,
+>>>>>>> upstream/master
   DOMSVGFactory,
   DrawLayer,
   FeatureTest,
   fetchData,
+<<<<<<< HEAD
   getDocument,
   getFilenameFromUrl,
   getPdfFilenameFromUrl,
+=======
+  findContrastColor,
+  getDocument,
+  getFilenameFromUrl,
+  getPdfFilenameFromUrl,
+  getRGB,
+  getUuid,
+>>>>>>> upstream/master
   getXfaPageViewport,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,
   isDataScheme,
   isPdfFile,
+<<<<<<< HEAD
   MissingPDFException,
+=======
+  isValidExplicitDest,
+  MathClamp,
+>>>>>>> upstream/master
   noContextMenu,
   normalizeUnicode,
   OPS,
   OutputScale,
+<<<<<<< HEAD
+=======
+  PagesMapper,
+>>>>>>> upstream/master
   PasswordResponses,
   PDFDataRangeTransport,
   PDFDateString,
@@ -95,10 +162,23 @@ export {
   PermissionFlag,
   PixelsPerInch,
   RenderingCancelledException,
+<<<<<<< HEAD
   setLayerDimensions,
   shadow,
   TextLayer,
   UnexpectedResponseException,
+=======
+  renderRichText,
+  ResponseException,
+  setLayerDimensions,
+  shadow,
+  SignatureExtractor,
+  stopEvent,
+  SupportedImageMimeTypes,
+  TextLayer,
+  TouchManager,
+  updateUrlHash,
+>>>>>>> upstream/master
   Util,
   VerbosityLevel,
   version,

@@ -14,10 +14,18 @@
  */
 
 const DOMCMapReaderFactory = null;
+<<<<<<< HEAD
+=======
+const DOMWasmFactory = null;
+>>>>>>> upstream/master
 const DOMStandardFontDataFactory = null;
 const NodeCanvasFactory = null;
 const NodeCMapReaderFactory = null;
 const NodeFilterFactory = null;
+<<<<<<< HEAD
+=======
+const NodeWasmFactory = null;
+>>>>>>> upstream/master
 const NodeStandardFontDataFactory = null;
 const PDFFetchStream = null;
 const PDFNetworkStream = null;
@@ -26,10 +34,18 @@ const PDFNodeStream = null;
 export {
   DOMCMapReaderFactory,
   DOMStandardFontDataFactory,
+<<<<<<< HEAD
+=======
+  DOMWasmFactory,
+>>>>>>> upstream/master
   NodeCanvasFactory,
   NodeCMapReaderFactory,
   NodeFilterFactory,
   NodeStandardFontDataFactory,
+<<<<<<< HEAD
+=======
+  NodeWasmFactory,
+>>>>>>> upstream/master
   PDFFetchStream,
   PDFNetworkStream,
   PDFNodeStream,

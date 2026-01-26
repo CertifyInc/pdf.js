@@ -19,11 +19,19 @@ describe("Text field", () => {
   describe("Empty text field", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("file_pdfjs_form.pdf", getSelector("7R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("file_pdfjs_form.pdf", getSelector("7R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 

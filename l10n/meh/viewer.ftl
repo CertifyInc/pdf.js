@@ -11,6 +11,7 @@ pdfjs-zoom-select =
     .title = Nasa´a ka´nu/Nasa´a luli
 pdfjs-open-file-button-label = Síne
 
+<<<<<<< HEAD
 ##  Secondary toolbar and context menu
 
 
@@ -21,6 +22,8 @@ pdfjs-open-file-button-label = Síne
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
 
+=======
+>>>>>>> upstream/master
 ## Variables:
 ##   $width (Number) - the width of the (current) page
 ##   $height (Number) - the height of the (current) page
@@ -47,18 +50,22 @@ pdfjs-print-progress-close-button = Nkuvi-ka
 
 pdfjs-findbar-button-label = Nánuku
 
+<<<<<<< HEAD
 ## Thumbnails panel item (tooltip and alt text for images)
 
 
 ## Find panel button title and messages
 
 
+=======
+>>>>>>> upstream/master
 ## Predefined zoom values
 
 # Variables:
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
@@ -85,3 +92,8 @@ pdfjs-password-cancel-button = Nkuvi-ka
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+## Password
+
+pdfjs-password-cancel-button = Nkuvi-ka
+>>>>>>> upstream/master

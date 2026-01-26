@@ -14,6 +14,10 @@
  */
 
 import { removeNullCharacters } from "./ui_utils.js";
+<<<<<<< HEAD
+=======
+import { stopEvent } from "pdfjs-lib";
+>>>>>>> upstream/master
 
 const TREEITEM_OFFSET_TOP = -100; // px
 const TREEITEM_SELECTED_CLASS = "selected";
@@ -39,10 +43,10 @@ class BaseTreeViewer {
     this._currentTreeItem = null;
 
     // Remove the tree from the DOM.
-    this.container.textContent = "";
+    this.container.replaceChildren();
     // Ensure that the left (right in RTL locales) margin is always reset,
     // to prevent incorrect tree alignment if a new document is opened.
-    this.container.classList.remove("treeWithDeepNesting");
+    this.container.classList.remove("withNesting");
   }
 
   /**
@@ -84,6 +88,7 @@ class BaseTreeViewer {
     if (hidden) {
       toggler.classList.add("treeItemsHidden");
     }
+<<<<<<< HEAD
     toggler.onclick = evt => {
       evt.stopPropagation();
       toggler.classList.toggle("treeItemsHidden");
@@ -93,6 +98,8 @@ class BaseTreeViewer {
         this._toggleTreeItem(div, shouldShowAll);
       }
     };
+=======
+>>>>>>> upstream/master
     div.prepend(toggler);
   }
 
@@ -128,9 +135,20 @@ class BaseTreeViewer {
    */
   _finishRendering(fragment, count, hasAnyNesting = false) {
     if (hasAnyNesting) {
-      this.container.classList.add("treeWithDeepNesting");
-
+      this.container.classList.add("withNesting");
       this._lastToggleIsShow = !fragment.querySelector(".treeItemsHidden");
+      this.container.addEventListener("click", e => {
+        const { target } = e;
+        if (!target.classList.contains("treeItemToggler")) {
+          return;
+        }
+        stopEvent(e);
+        target.classList.toggle("treeItemsHidden");
+        if (e.shiftKey) {
+          const shouldShowAll = !target.classList.contains("treeItemsHidden");
+          this._toggleTreeItem(this.container, shouldShowAll);
+        }
+      });
     }
     // Pause translation when inserting the tree into the DOM.
     this._l10n.pause();

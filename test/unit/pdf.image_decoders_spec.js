@@ -22,6 +22,21 @@ import { Jbig2Error, Jbig2Image } from "../../src/core/jbig2.js";
 import { JpegError, JpegImage } from "../../src/core/jpg.js";
 import { JpxError, JpxImage } from "../../src/core/jpx.js";
 
+<<<<<<< HEAD
+=======
+const expectedAPI = Object.freeze({
+  getVerbosityLevel,
+  Jbig2Error,
+  Jbig2Image,
+  JpegError,
+  JpegImage,
+  JpxError,
+  JpxImage,
+  setVerbosityLevel,
+  VerbosityLevel,
+});
+
+>>>>>>> upstream/master
 describe("pdfimage_api", function () {
   it("checks that the *official* PDF.js-image decoders API exposes the expected functionality", async function () {
     // eslint-disable-next-line no-unsanitized/method
@@ -33,6 +48,7 @@ describe("pdfimage_api", function () {
 
     // The imported Object contains an (automatically) inserted Symbol,
     // hence we copy the data to allow using a simple comparison below.
+<<<<<<< HEAD
     expect({ ...pdfimageAPI }).toEqual({
       getVerbosityLevel,
       Jbig2Error,
@@ -44,5 +60,12 @@ describe("pdfimage_api", function () {
       setVerbosityLevel,
       VerbosityLevel,
     });
+=======
+    expect({ ...pdfimageAPI }).toEqual(expectedAPI);
+
+    expect(Object.keys(globalThis.pdfjsImageDecoders).sort()).toEqual(
+      Object.keys(expectedAPI).sort()
+    );
+>>>>>>> upstream/master
   });
 });

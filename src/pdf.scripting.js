@@ -15,6 +15,7 @@
 
 import { initSandbox } from "./scripting_api/initialization.js";
 
+<<<<<<< HEAD
 /* eslint-disable-next-line no-unused-vars */
 const pdfjsVersion =
   typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_VERSION") : void 0;
@@ -22,6 +23,8 @@ const pdfjsVersion =
 const pdfjsBuild =
   typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_BUILD") : void 0;
 
+=======
+>>>>>>> upstream/master
 // To avoid problems with `export` statements in the QuickJS Javascript Engine,
 // we manually expose `pdfjsScripting` globally instead.
 globalThis.pdfjsScripting = { initSandbox };

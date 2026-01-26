@@ -17,7 +17,11 @@ import {
   awaitPromise,
   clearInput,
   closePages,
+<<<<<<< HEAD
   closeSinglePage,
+=======
+  getAnnotationSelector,
+>>>>>>> upstream/master
   getAnnotationStorage,
   getComputedStyleSelector,
   getFirstSerialized,
@@ -74,11 +78,19 @@ describe("Interaction", () => {
   describe("in 160F-2019.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("160F-2019.pdf", getSelector("416R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("160F-2019.pdf", getSelector("416R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -150,6 +162,7 @@ describe("Interaction", () => {
 
           await page.type(getSelector("416R"), "3.14159");
           await page.click(getSelector("419R"));
+<<<<<<< HEAD
 
           const valueFnStr = `${getQuerySelector("416R")}.value !== "3.14159"`;
           await page.waitForFunction(valueFnStr);
@@ -159,6 +172,14 @@ describe("Interaction", () => {
 
           const sum = await page.$eval(getSelector("427R"), el => el.value);
           expect(sum).withContext(`In ${browserName}`).toEqual("3,14");
+=======
+          await page.waitForFunction(
+            `${getQuerySelector("416R")}.value === "3,14"`
+          );
+          await page.waitForFunction(
+            `${getQuerySelector("427R")}.value === "3,14"`
+          );
+>>>>>>> upstream/master
         })
       );
     });
@@ -170,6 +191,7 @@ describe("Interaction", () => {
 
           await page.type(getSelector("448R"), "61803");
           await page.click(getSelector("419R"));
+<<<<<<< HEAD
 
           const valueOneFnStr = `${getQuerySelector("448R")}.value !== "61803"`;
           await page.waitForFunction(valueOneFnStr);
@@ -186,12 +208,23 @@ describe("Interaction", () => {
 
           text = await page.$eval(getSelector("448R"), el => el.value);
           expect(text).withContext(`In ${browserName}`).toEqual("61803");
+=======
+          await page.waitForFunction(
+            `${getQuerySelector("448R")}.value === "61.803,00"`
+          );
+
+          await page.click(getSelector("448R"));
+          await page.waitForFunction(
+            `${getQuerySelector("448R")}.value === "61803"`
+          );
+>>>>>>> upstream/master
 
           // Clear the textfield
           await clearInput(page, getSelector("448R"));
 
           await page.type(getSelector("448R"), "1.61803");
           await page.click(getSelector("419R"));
+<<<<<<< HEAD
 
           const valueThreeFnStr = `${getQuerySelector(
             "448R"
@@ -200,6 +233,11 @@ describe("Interaction", () => {
 
           text = await page.$eval(getSelector("448R"), el => el.value);
           expect(text).withContext(`In ${browserName}`).toEqual("1,62");
+=======
+          await page.waitForFunction(
+            `${getQuerySelector("448R")}.value === "1,62"`
+          );
+>>>>>>> upstream/master
         })
       );
     });
@@ -209,6 +247,7 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page]) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           const prevSum = await page.$eval(getSelector("427R"), el => el.value);
 
           await page.type(getSelector("422R"), "2.7182818");
@@ -227,6 +266,16 @@ describe("Interaction", () => {
 
           const sum = await page.$eval(getSelector("427R"), el => el.value);
           expect(sum).withContext(`In ${browserName}`).toEqual("5,86");
+=======
+          await page.type(getSelector("422R"), "2.7182818");
+          await page.keyboard.press("Tab");
+          await page.waitForFunction(
+            `${getQuerySelector("422R")}.value === "2,72"`
+          );
+          await page.waitForFunction(
+            `${getQuerySelector("427R")}.value === "2,72"`
+          );
+>>>>>>> upstream/master
         })
       );
     });
@@ -236,6 +285,7 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page]) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           let sum = await page.$eval(getSelector("471R"), el => el.value);
           expect(sum).withContext(`In ${browserName}`).toEqual("4,24");
 
@@ -251,6 +301,16 @@ describe("Interaction", () => {
 
           sum = await page.$eval(getSelector("471R"), el => el.value);
           expect(sum).withContext(`In ${browserName}`).toEqual("3,55");
+=======
+          await page.type(getSelector("436R"), "0.69314");
+          await page.keyboard.press("Escape");
+          await page.waitForFunction(
+            `${getQuerySelector("436R")}.value === "0.69314"`
+          );
+          await page.waitForFunction(
+            `${getQuerySelector("471R")}.value === "0,69"`
+          );
+>>>>>>> upstream/master
         })
       );
     });
@@ -260,6 +320,7 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page]) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           const prevSum = await page.$eval(getSelector("427R"), el => el.value);
 
           await page.type(getSelector("419R"), "0.577215");
@@ -273,6 +334,16 @@ describe("Interaction", () => {
 
           const sum = await page.$eval(getSelector("427R"), el => el.value);
           expect(sum).toEqual("6,44");
+=======
+          await page.type(getSelector("419R"), "0.577215");
+          await page.keyboard.press("Enter");
+          await page.waitForFunction(
+            `${getQuerySelector("419R")}.value === "0.577215"`
+          );
+          await page.waitForFunction(
+            `${getQuerySelector("427R")}.value === "0,58"`
+          );
+>>>>>>> upstream/master
         })
       );
     });
@@ -283,7 +354,11 @@ describe("Interaction", () => {
           await waitForScripting(page);
 
           // click on a radio button
+<<<<<<< HEAD
           await page.click("[data-annotation-id='449R']");
+=======
+          await page.click(getAnnotationSelector("449R"));
+>>>>>>> upstream/master
 
           // this field has no actions but it must be cleared on reset
           await page.type(getSelector("405R"), "employee");
@@ -292,7 +367,11 @@ describe("Interaction", () => {
           expect(checked).toEqual(true);
 
           // click on reset button
+<<<<<<< HEAD
           await page.click("[data-annotation-id='402R']");
+=======
+          await page.click(getAnnotationSelector("402R"));
+>>>>>>> upstream/master
 
           await Promise.all(
             ["416R", "422R", "419R", "405R"].map(id => {
@@ -329,11 +408,19 @@ describe("Interaction", () => {
   describe("in js-buttons.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("js-buttons.pdf", getSelector("80R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("js-buttons.pdf", getSelector("80R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -441,7 +528,11 @@ describe("Interaction", () => {
               await page.click(getSelector(id));
             }
 
+<<<<<<< HEAD
             await page.click("[data-annotation-id='97R']");
+=======
+            await page.click(getAnnotationSelector("97R"));
+>>>>>>> upstream/master
             await page.waitForFunction(
               `${getQuerySelector("80R")}.value !== ""`
             );
@@ -456,7 +547,11 @@ describe("Interaction", () => {
   describe("in doc_actions.pdf for printing", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("doc_actions.pdf", getSelector("47R"), null, {
         earlySetup: () => {
           // No need to trigger the print dialog.
@@ -465,6 +560,13 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
+=======
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+>>>>>>> upstream/master
     it("must execute WillPrint and DidPrint actions", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
@@ -488,7 +590,10 @@ describe("Interaction", () => {
           await page.waitForFunction(
             `${getQuerySelector("50R")}.value === "DidPrint"`
           );
+<<<<<<< HEAD
           await closeSinglePage(page);
+=======
+>>>>>>> upstream/master
         })
       );
     });
@@ -497,11 +602,19 @@ describe("Interaction", () => {
   describe("in doc_actions.pdf for saving", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("doc_actions.pdf", getSelector("47R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("doc_actions.pdf", getSelector("47R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -544,11 +657,19 @@ describe("Interaction", () => {
   describe("in doc_actions.pdf for page actions", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("doc_actions.pdf", getSelector("47R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("doc_actions.pdf", getSelector("47R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -601,11 +722,19 @@ describe("Interaction", () => {
   describe("in js-authors.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("js-authors.pdf", getSelector("25R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("js-authors.pdf", getSelector("25R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -618,7 +747,11 @@ describe("Interaction", () => {
             page,
             getSelector("25R"),
             async () => {
+<<<<<<< HEAD
               await page.click("[data-annotation-id='26R']");
+=======
+              await page.click(getAnnotationSelector("26R"));
+>>>>>>> upstream/master
             }
           );
           expect(text)
@@ -632,11 +765,19 @@ describe("Interaction", () => {
   describe("in listbox_actions.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("listbox_actions.pdf", getSelector("33R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("listbox_actions.pdf", getSelector("33R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -666,13 +807,21 @@ describe("Interaction", () => {
           await waitForScripting(page);
 
           // Click on ClearItems button.
+<<<<<<< HEAD
           await page.click("[data-annotation-id='34R']");
+=======
+          await page.click(getAnnotationSelector("34R"));
+>>>>>>> upstream/master
           await page.waitForFunction(
             `${getQuerySelector("30R")}.children.length === 0`
           );
 
           // Click on Restore button.
+<<<<<<< HEAD
           await page.click("[data-annotation-id='37R']");
+=======
+          await page.click(getAnnotationSelector("37R"));
+>>>>>>> upstream/master
           await page.waitForFunction(
             `${getQuerySelector("30R")}.children.length !== 0`
           );
@@ -708,7 +857,11 @@ describe("Interaction", () => {
             );
 
             // Click on AddItem button.
+<<<<<<< HEAD
             await page.click("[data-annotation-id='38R']");
+=======
+            await page.click(getAnnotationSelector("38R"));
+>>>>>>> upstream/master
 
             await page.waitForFunction(
               `${getQuerySelector("30R")}.children.length === ${len}`
@@ -737,7 +890,11 @@ describe("Interaction", () => {
           let len = 6;
           // Click on Restore button.
           await clearInput(page, getSelector("33R"));
+<<<<<<< HEAD
           await page.click("[data-annotation-id='37R']");
+=======
+          await page.click(getAnnotationSelector("37R"));
+>>>>>>> upstream/master
           await page.waitForFunction(
             `${getQuerySelector("30R")}.children.length === ${len}`
           );
@@ -748,7 +905,11 @@ describe("Interaction", () => {
             await page.type(getSelector("39R"), `${num}`);
 
             // Click on DeleteItem button.
+<<<<<<< HEAD
             await page.click("[data-annotation-id='36R']");
+=======
+            await page.click(getAnnotationSelector("36R"));
+>>>>>>> upstream/master
 
             await page.waitForFunction(
               `${getQuerySelector("30R")}.children.length === ${len}`
@@ -774,11 +935,19 @@ describe("Interaction", () => {
   describe("in js-colors.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("js-colors.pdf", getSelector("34R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("js-colors.pdf", getSelector("34R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -819,7 +988,11 @@ describe("Interaction", () => {
                 propName
               );
 
+<<<<<<< HEAD
               await page.click(`[data-annotation-id='${id}R']`);
+=======
+              await page.click(getAnnotationSelector(`${id}R`));
+>>>>>>> upstream/master
               await page.waitForFunction(
                 `${getComputedStyleSelector(
                   ref
@@ -847,11 +1020,19 @@ describe("Interaction", () => {
   describe("in issue13132.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue13132.pdf", getSelector("171R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue13132.pdf", getSelector("171R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -906,11 +1087,19 @@ describe("Interaction", () => {
   describe("Check field properties", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("evaljs.pdf", getSelector("55R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("evaljs.pdf", getSelector("55R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -929,7 +1118,11 @@ describe("Interaction", () => {
           );
 
           // Click on execute button to eval the above code.
+<<<<<<< HEAD
           await page.click("[data-annotation-id='57R']");
+=======
+          await page.click(getAnnotationSelector("57R"));
+>>>>>>> upstream/master
           await page.waitForFunction(`${getQuerySelector("56R")}.value !== ""`);
 
           const text = await page.$eval(getSelector("56R"), el => el.value);
@@ -960,7 +1153,11 @@ describe("Interaction", () => {
               `this.getField("Text2").display = display.${type};`
             );
 
+<<<<<<< HEAD
             await page.click("[data-annotation-id='57R']");
+=======
+            await page.click(getAnnotationSelector("57R"));
+>>>>>>> upstream/master
             await page.waitForFunction(
               `${getComputedStyleSelector(
                 "56R"
@@ -981,11 +1178,19 @@ describe("Interaction", () => {
   describe("in issue13269.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue13269.pdf", getSelector("27R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue13269.pdf", getSelector("27R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1016,6 +1221,7 @@ describe("Interaction", () => {
   describe("in secHandler.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("secHandler.pdf", getSelector("25R"));
     });
@@ -1023,6 +1229,16 @@ describe("Interaction", () => {
     afterAll(async () => {
       await closePages(pages);
     });
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("secHandler.pdf", getSelector("25R"));
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+>>>>>>> upstream/master
     it("must print securityHandler value in a text field", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
@@ -1032,7 +1248,11 @@ describe("Interaction", () => {
             page,
             getSelector("25R"),
             async () => {
+<<<<<<< HEAD
               await page.click("[data-annotation-id='26R']");
+=======
+              await page.click(getAnnotationSelector("26R"));
+>>>>>>> upstream/master
             }
           );
           expect(text).withContext(`In ${browserName}`).toEqual("Standard");
@@ -1044,7 +1264,11 @@ describe("Interaction", () => {
   describe("in issue14307.pdf (1)", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("issue14307.pdf", getSelector("30R"));
       pages.map(async ([, page]) => {
         page.on("dialog", async dialog => {
@@ -1053,13 +1277,18 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check input for US zip format", async () => {
       // Run the tests sequentially to avoid any focus issues between the two
       // browsers when an alert is displayed.
+<<<<<<< HEAD
       for (const [browserName, page] of pages) {
         await waitForScripting(page);
 
@@ -1092,6 +1321,28 @@ describe("Interaction", () => {
 
         text = await page.$eval(getSelector(`29R`), el => el.value);
         expect(text).withContext(`In ${browserName}`).toEqual("12345");
+=======
+      for (const [, page] of pages) {
+        await waitForScripting(page);
+
+        await page.focus(getSelector("29R"));
+        await typeAndWaitForSandbox(page, getSelector("29R"), "12A");
+        await page.waitForFunction(`${getQuerySelector("29R")}.value === "12"`);
+
+        await page.focus(getSelector("29R"));
+        await typeAndWaitForSandbox(page, getSelector("29R"), "34");
+        await page.click(getAnnotationSelector("30R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(`${getQuerySelector("29R")}.value === ""`);
+
+        await page.focus(getSelector("29R"));
+        await typeAndWaitForSandbox(page, getSelector("29R"), "12345");
+        await page.click(getAnnotationSelector("30R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(
+          `${getQuerySelector("29R")}.value === "12345"`
+        );
+>>>>>>> upstream/master
       }
     });
   });
@@ -1099,7 +1350,11 @@ describe("Interaction", () => {
   describe("in issue14307.pdf (2)", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("issue14307.pdf", getSelector("30R"));
       pages.map(async ([, page]) => {
         page.on("dialog", async dialog => {
@@ -1108,13 +1363,18 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check input for US phone number (long) format", async () => {
       // Run the tests sequentially to avoid any focus issues between the two
       // browsers when an alert is displayed.
+<<<<<<< HEAD
       for (const [browserName, page] of pages) {
         await waitForScripting(page);
 
@@ -1147,6 +1407,30 @@ describe("Interaction", () => {
 
         text = await page.$eval(getSelector("30R"), el => el.value);
         expect(text).withContext(`In ${browserName}`).toEqual("(123) 456-7890");
+=======
+      for (const [, page] of pages) {
+        await waitForScripting(page);
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "(123) 456A");
+        await page.waitForFunction(
+          `${getQuerySelector("30R")}.value === "(123) 456"`
+        );
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "-789");
+        await page.click(getAnnotationSelector("29R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(`${getQuerySelector("30R")}.value === ""`);
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "(123) 456-7890");
+        await page.click(getAnnotationSelector("29R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(
+          `${getQuerySelector("30R")}.value === "(123) 456-7890"`
+        );
+>>>>>>> upstream/master
       }
     });
   });
@@ -1154,7 +1438,11 @@ describe("Interaction", () => {
   describe("in issue14307.pdf (3)", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("issue14307.pdf", getSelector("30R"));
       pages.map(async ([, page]) => {
         page.on("dialog", async dialog => {
@@ -1163,13 +1451,18 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check input for US phone number (short) format", async () => {
       // Run the tests sequentially to avoid any focus issues between the two
       // browsers when an alert is displayed.
+<<<<<<< HEAD
       for (const [browserName, page] of pages) {
         await waitForScripting(page);
 
@@ -1202,6 +1495,30 @@ describe("Interaction", () => {
 
         text = await page.$eval(getSelector("30R"), el => el.value);
         expect(text).withContext(`In ${browserName}`).toEqual("123-4567");
+=======
+      for (const [, page] of pages) {
+        await waitForScripting(page);
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "123A");
+        await page.waitForFunction(
+          `${getQuerySelector("30R")}.value === "123"`
+        );
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "-456");
+        await page.click(getAnnotationSelector("29R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(`${getQuerySelector("30R")}.value === ""`);
+
+        await page.focus(getSelector("30R"));
+        await typeAndWaitForSandbox(page, getSelector("30R"), "123-4567");
+        await page.click(getAnnotationSelector("29R"));
+        await waitForSandboxTrip(page);
+        await page.waitForFunction(
+          `${getQuerySelector("30R")}.value === "123-4567"`
+        );
+>>>>>>> upstream/master
       }
     });
   });
@@ -1209,7 +1526,11 @@ describe("Interaction", () => {
   describe("in issue14862.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("issue14862.pdf", getSelector("27R"));
       pages.map(async ([, page]) => {
         page.on("dialog", async dialog => {
@@ -1218,7 +1539,11 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1266,6 +1591,7 @@ describe("Interaction", () => {
           await page.waitForFunction(
             `${getQuerySelector("27R")}.value === "HEAO "`
           );
+<<<<<<< HEAD
 
           // The typing actions in the first textbox caused sandbox events to be
           // queued. We don't close the document between tests, so we have to
@@ -1273,6 +1599,8 @@ describe("Interaction", () => {
           // through to the following test.
           await page.click(getSelector("28R"));
           await waitForSandboxTrip(page);
+=======
+>>>>>>> upstream/master
         })
       );
     });
@@ -1292,7 +1620,11 @@ describe("Interaction", () => {
           // The action triggers a `calculateNow` which in turn triggers a
           // `resetForm (inducing a `calculateNow`) and a `calculateNow`.
           // Without infinite loop prevention the field would be empty.
+<<<<<<< HEAD
           await page.click("[data-annotation-id='31R']");
+=======
+          await page.click(getAnnotationSelector("31R"));
+>>>>>>> upstream/master
           await page.waitForFunction(
             `${getQuerySelector("28R")}.value === "123"`
           );
@@ -1304,7 +1636,11 @@ describe("Interaction", () => {
   describe("in issue14705.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait("issue14705.pdf", getSelector("29R"));
       pages.map(async ([, page]) => {
         page.on("dialog", async dialog => {
@@ -1313,7 +1649,11 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1348,11 +1688,19 @@ describe("Interaction", () => {
   describe("in bug1766987.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1766987.pdf", getSelector("75R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1766987.pdf", getSelector("75R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1380,11 +1728,19 @@ describe("Interaction", () => {
   describe("in issue15053.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue15053.pdf", getSelector("44R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue15053.pdf", getSelector("44R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1393,8 +1749,16 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page]) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           let visibility = await page.$eval(
             "[data-annotation-id='35R']",
+=======
+          const textWidgetSelector = getAnnotationSelector("35R");
+          const pushButtonSelector = getAnnotationSelector("51R");
+
+          let visibility = await page.$eval(
+            textWidgetSelector,
+>>>>>>> upstream/master
             el => getComputedStyle(el).visibility
           );
           expect(visibility)
@@ -1402,7 +1766,11 @@ describe("Interaction", () => {
             .toEqual("visible");
 
           visibility = await page.$eval(
+<<<<<<< HEAD
             "[data-annotation-id='51R']",
+=======
+            pushButtonSelector,
+>>>>>>> upstream/master
             el => getComputedStyle(el).visibility
           );
           expect(visibility)
@@ -1411,17 +1779,29 @@ describe("Interaction", () => {
 
           await page.click(getSelector("44R"));
           await page.waitForFunction(
+<<<<<<< HEAD
             `document.querySelector("[data-annotation-id='35R']").style.visibility === "hidden"`
           );
 
           visibility = await page.$eval(
             "[data-annotation-id='35R']",
+=======
+            `document.querySelector('${textWidgetSelector}').style.visibility === "hidden"`
+          );
+
+          visibility = await page.$eval(
+            textWidgetSelector,
+>>>>>>> upstream/master
             el => getComputedStyle(el).visibility
           );
           expect(visibility).withContext(`In ${browserName}`).toEqual("hidden");
 
           visibility = await page.$eval(
+<<<<<<< HEAD
             "[data-annotation-id='51R']",
+=======
+            pushButtonSelector,
+>>>>>>> upstream/master
             el => getComputedStyle(el).visibility
           );
           expect(visibility).withContext(`In ${browserName}`).toEqual("hidden");
@@ -1433,11 +1813,19 @@ describe("Interaction", () => {
   describe("in bug1675139.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1675139.pdf", getSelector("48R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1675139.pdf", getSelector("48R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1463,7 +1851,11 @@ describe("Interaction", () => {
                   return rotation === (360 + ((360 - (b + a)) % 360)) % 360;
                 },
                 {},
+<<<<<<< HEAD
                 `[data-annotation-id='${ref}R']`,
+=======
+                getAnnotationSelector(`${ref}R`),
+>>>>>>> upstream/master
                 base,
                 angle
               );
@@ -1479,11 +1871,19 @@ describe("Interaction", () => {
   describe("in issue15092.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue15092.pdf", getSelector("39R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue15092.pdf", getSelector("39R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1514,11 +1914,19 @@ describe("Interaction", () => {
   describe("in bug1782564.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1782564.pdf", getSelector("7R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1782564.pdf", getSelector("7R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1559,11 +1967,19 @@ describe("Interaction", () => {
   describe("in bug1802888.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1802888.pdf", getSelector("30R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1802888.pdf", getSelector("30R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1589,11 +2005,19 @@ describe("Interaction", () => {
   describe("in issue15753.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue15753.pdf", getSelector("27R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue15753.pdf", getSelector("27R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1634,11 +2058,19 @@ describe("Interaction", () => {
   describe("in issue15815.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue15815.pdf", getSelector("24R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue15815.pdf", getSelector("24R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1668,7 +2100,11 @@ describe("Interaction", () => {
           for (const exportValue of ["x3", "x2", "x1"]) {
             await clearInput(page, getSelector("27R"));
             await page.type(getSelector("27R"), exportValue);
+<<<<<<< HEAD
             await page.click("[data-annotation-id='28R']");
+=======
+            await page.click(getAnnotationSelector("28R"));
+>>>>>>> upstream/master
             await page.waitForFunction(
               `${getQuerySelector("24R")}.value === "${exportValue}"`
             );
@@ -1681,11 +2117,19 @@ describe("Interaction", () => {
   describe("in issue15818.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue15818.pdf", getSelector("27R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue15818.pdf", getSelector("27R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1728,7 +2172,11 @@ describe("Interaction", () => {
   describe("in autoprint.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       // Autoprinting is triggered by the `Open` event, which is one of the
       // first events to be dispatched to the sandbox, even before scripting
       // is reported to be ready. It's therefore important that `loadAndWait`
@@ -1757,7 +2205,11 @@ describe("Interaction", () => {
       });
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1779,11 +2231,19 @@ describe("Interaction", () => {
   describe("in bug1811694.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1811694.pdf", getSelector("25R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1811694.pdf", getSelector("25R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1811,11 +2271,19 @@ describe("Interaction", () => {
   describe("in bug1811510.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1811510.pdf", getSelector("22R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1811510.pdf", getSelector("22R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1851,11 +2319,19 @@ describe("Interaction", () => {
   describe("in issue16067.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue16067.pdf", getSelector("6R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue16067.pdf", getSelector("6R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1886,11 +2362,19 @@ describe("Interaction", () => {
   describe("in bug1825002.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1825002.pdf", getSelector("23R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1825002.pdf", getSelector("23R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1940,11 +2424,19 @@ describe("Interaction", () => {
   describe("in bug1844576.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1844576.pdf", getSelector("9R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1844576.pdf", getSelector("9R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -1953,27 +2445,45 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page]) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           const hasVisibleCanvas = await page.$eval(
             `[data-annotation-id="9R"] > canvas`,
+=======
+          const selector = getAnnotationSelector("9R");
+          const hasVisibleCanvas = await page.$eval(
+            `${selector} > canvas`,
+>>>>>>> upstream/master
             elem => elem && !elem.hasAttribute("hidden")
           );
           expect(hasVisibleCanvas)
             .withContext(`In ${browserName}`)
             .toEqual(true);
 
+<<<<<<< HEAD
           const hasHiddenInput = await page.$eval(
             `[data-annotation-id="9R"] > input`,
             elem => elem?.hasAttribute("hidden")
+=======
+          const hasHiddenInput = await page.$eval(`${selector} > input`, elem =>
+            elem?.hasAttribute("hidden")
+>>>>>>> upstream/master
           );
           expect(hasHiddenInput).withContext(`In ${browserName}`).toEqual(true);
 
           await page.click(getSelector("12R"));
+<<<<<<< HEAD
           await page.waitForSelector(
             `[data-annotation-id="9R"] > canvas[hidden]`
           );
 
           const hasHiddenCanvas = await page.$eval(
             `[data-annotation-id="9R"] > canvas`,
+=======
+          await page.waitForSelector(`${selector} > canvas[hidden]`);
+
+          const hasHiddenCanvas = await page.$eval(
+            `${selector} > canvas`,
+>>>>>>> upstream/master
             elem => elem?.hasAttribute("hidden")
           );
           expect(hasHiddenCanvas)
@@ -1981,7 +2491,11 @@ describe("Interaction", () => {
             .toEqual(true);
 
           const hasVisibleInput = await page.$eval(
+<<<<<<< HEAD
             `[data-annotation-id="9R"] > input`,
+=======
+            `${selector} > input`,
+>>>>>>> upstream/master
             elem => elem && !elem.hasAttribute("hidden")
           );
           expect(hasVisibleInput)
@@ -1995,14 +2509,22 @@ describe("Interaction", () => {
   describe("in annotation_hidden_noview.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       pages = await loadAndWait(
         "annotation_hidden_noview.pdf",
         getSelector("11R")
       );
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2054,11 +2576,19 @@ describe("Interaction", () => {
   describe("in issue16863.pdf", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue16863.pdf", getSelector("334R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue16863.pdf", getSelector("334R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2118,7 +2648,11 @@ describe("Interaction", () => {
     let pages;
     let otherPages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
+=======
+    beforeEach(async () => {
+>>>>>>> upstream/master
       otherPages = await Promise.all(
         global.integrationSessions.map(async session =>
           session.browser.newPage()
@@ -2127,7 +2661,11 @@ describe("Interaction", () => {
       pages = await loadAndWait("evaljs.pdf", getSelector("55R"));
     });
 
+<<<<<<< HEAD
     afterAll(async () => {
+=======
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
       await Promise.all(otherPages.map(page => page.close()));
     });
@@ -2161,11 +2699,19 @@ describe("Interaction", () => {
   describe("Textfield with a Blur callback", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1863910.pdf", getSelector("25R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1863910.pdf", getSelector("25R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2193,11 +2739,19 @@ describe("Interaction", () => {
   describe("Radio button without T value", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1860602.pdf", getSelector("22R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1860602.pdf", getSelector("22R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2250,11 +2804,19 @@ describe("Interaction", () => {
   describe("Textfield with a number and some decimals", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue17540.pdf", getSelector("15R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue17540.pdf", getSelector("15R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2283,11 +2845,19 @@ describe("Interaction", () => {
   describe("Textfield with a zip code starting with 0", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1889122.pdf", getSelector("24R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1889122.pdf", getSelector("24R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2311,11 +2881,19 @@ describe("Interaction", () => {
   describe("Value of event.change when a choice list is modified", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue17998.pdf", getSelector("7R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue17998.pdf", getSelector("7R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2345,11 +2923,19 @@ describe("Interaction", () => {
   describe("PageOpen and PageClose actions in fields", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue18305.pdf", getSelector("7R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue18305.pdf", getSelector("7R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2358,7 +2944,11 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page], i) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           const buttonSelector = `[data-annotation-id="25R"`;
+=======
+          const buttonSelector = getAnnotationSelector("25R");
+>>>>>>> upstream/master
           await page.waitForSelector(buttonSelector, {
             timeout: 0,
           });
@@ -2390,11 +2980,19 @@ describe("Interaction", () => {
   describe("Compute product of different fields", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue18536.pdf", getSelector("34R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue18536.pdf", getSelector("34R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2427,11 +3025,19 @@ describe("Interaction", () => {
   describe("Calculate field value even if one callback throws", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("issue18561.pdf", getSelector("24R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("issue18561.pdf", getSelector("24R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2455,11 +3061,19 @@ describe("Interaction", () => {
   describe("Correctly format numbers", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1918115.pdf", getSelector("33R"));
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1918115.pdf", getSelector("33R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2468,9 +3082,13 @@ describe("Interaction", () => {
         pages.map(async ([browserName, page], i) => {
           await waitForScripting(page);
 
+<<<<<<< HEAD
           const inputSelector = getSelector("33R");
           await page.click(inputSelector);
           await page.type(inputSelector, "7");
+=======
+          await typeAndWaitForSandbox(page, getSelector("33R"), "7");
+>>>>>>> upstream/master
           await page.click(getSelector("34R"));
           await page.waitForFunction(
             `${getQuerySelector("35R")}.value === "324,00"`
@@ -2483,11 +3101,19 @@ describe("Interaction", () => {
   describe("Change radio property", () => {
     let pages;
 
+<<<<<<< HEAD
     beforeAll(async () => {
       pages = await loadAndWait("bug1922766.pdf", "[data-annotation-id='44R']");
     });
 
     afterAll(async () => {
+=======
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1922766.pdf", getAnnotationSelector("44R"));
+    });
+
+    afterEach(async () => {
+>>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -2509,6 +3135,7 @@ describe("Interaction", () => {
             }
           };
           await checkColor([255, 0, 0]);
+<<<<<<< HEAD
           await page.click("[data-annotation-id='44R']");
           await checkColor([0, 0, 255]);
           await page.click("[data-annotation-id='44R']");
@@ -2517,9 +3144,270 @@ describe("Interaction", () => {
           await page.click("[data-annotation-id='43R']");
           await waitForSandboxTrip(page);
           await page.click("[data-annotation-id='44R']");
+=======
+          await page.click(getAnnotationSelector("44R"));
+          await checkColor([0, 0, 255]);
+          await page.click(getAnnotationSelector("44R"));
+          await checkColor([255, 0, 0]);
+
+          await page.click(getAnnotationSelector("43R"));
+          await waitForSandboxTrip(page);
+          await page.click(getAnnotationSelector("44R"));
+>>>>>>> upstream/master
           await checkColor([0, 0, 255]);
         })
       );
     });
   });
+<<<<<<< HEAD
+=======
+
+  describe("Date creation must be timezone consistent", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("bug1934157.pdf", getAnnotationSelector("24R"));
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that date entered by the user is consistent", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await waitForScripting(page);
+
+          await page.emulateTimezone("Pacific/Honolulu");
+
+          const expectedDate = "02/01/2000";
+          await page.type(getSelector("24R"), expectedDate);
+          await page.click(getSelector("25R"));
+          await waitForSandboxTrip(page);
+
+          const date = await page.$eval(getSelector("24R"), el => el.value);
+          expect(date).withContext(`In ${browserName}`).toEqual(expectedDate);
+        })
+      );
+    });
+  });
+
+  describe("Skip throwing actions (issue 19505)", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("issue19505.pdf", getAnnotationSelector("24R"));
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that date entered are in the input", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await waitForScripting(page);
+
+          const fieldSelector = getSelector("24R");
+          for (const c of "Hello World") {
+            await page.type(fieldSelector, c);
+            await waitForSandboxTrip(page);
+          }
+
+          const value = await page.$eval(fieldSelector, el => el.value);
+          expect(value).withContext(`In ${browserName}`).toEqual("Hello World");
+        })
+      );
+    });
+  });
+
+  describe("Date HTML element", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("dates.pdf", getAnnotationSelector("26R"));
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that the inputs are correct", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await waitForScripting(page);
+          await waitForSandboxTrip(page);
+
+          const firstInputSelector = `${getAnnotationSelector("26R")} > input`;
+          await page.waitForSelector(`${firstInputSelector}[type="text"]`);
+          await page.click(firstInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(`${firstInputSelector}[type="date"]`);
+          await page.$eval(firstInputSelector, el => {
+            el.value = "1975-03-16";
+          });
+
+          const secondInputSelector = `${getAnnotationSelector("27R")} > input`;
+          await page.waitForSelector(`${secondInputSelector}[type="text"]`);
+          await page.click(secondInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(`${secondInputSelector}[type="time"]`);
+          await page.$eval(secondInputSelector, el => {
+            el.value = "01:23:45";
+          });
+
+          const thirdInputSelector = `${getAnnotationSelector("28R")} > input`;
+          await page.waitForSelector(`${thirdInputSelector}[type="text"]`);
+          await page.click(thirdInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(
+            `${thirdInputSelector}[type="datetime-local"]`
+          );
+          await page.$eval(thirdInputSelector, el => {
+            el.value = "1975-03-16T01:23:45";
+          });
+
+          const firstInputValue = await page.$eval(
+            firstInputSelector,
+            el => el.value
+          );
+          expect(firstInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("16-Mar-75");
+
+          const secondInputValue = await page.$eval(
+            secondInputSelector,
+            el => el.value
+          );
+          expect(secondInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("01:23:45");
+
+          await page.click(firstInputSelector);
+          await waitForSandboxTrip(page);
+
+          const thirdInputValue = await page.$eval(
+            thirdInputSelector,
+            el => el.value
+          );
+          expect(thirdInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("3/16/1975 01:23");
+        })
+      );
+    });
+  });
+
+  describe("Date HTML element in different timezone", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait(
+        "dates.pdf",
+        getAnnotationSelector("26R"),
+        null,
+        null,
+        async page => {
+          // Make sure that 00:00 UTC is the day before in the local timezone.
+          await page.emulateTimezone("Pacific/Niue");
+        }
+      );
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that the inputs are correct", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await waitForScripting(page);
+          await waitForSandboxTrip(page);
+
+          const firstInputSelector = `${getAnnotationSelector("26R")} > input`;
+          await page.waitForSelector(`${firstInputSelector}[type="text"]`);
+          await page.click(firstInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(`${firstInputSelector}[type="date"]`);
+          await page.$eval(firstInputSelector, el => {
+            el.value = "2025-10-05";
+          });
+          const secondInputSelector = `${getAnnotationSelector("27R")} > input`;
+          await page.waitForSelector(`${secondInputSelector}[type="text"]`);
+          await page.click(secondInputSelector);
+          await waitForSandboxTrip(page);
+          const firstInputValue = await page.$eval(
+            firstInputSelector,
+            el => el.value
+          );
+          expect(firstInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("05-Oct-25");
+        })
+      );
+    });
+  });
+
+  describe("Date HTML element with initial values", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("dates_save.pdf", getAnnotationSelector("26R"));
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that the inputs are correct", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await waitForScripting(page);
+          await waitForSandboxTrip(page);
+
+          const firstInputSelector = `${getAnnotationSelector("26R")} > input`;
+          await page.waitForSelector(`${firstInputSelector}[type="text"]`);
+          await page.click(firstInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(`${firstInputSelector}[type="date"]`);
+          const firstInputValue = await page.$eval(
+            firstInputSelector,
+            el => el.value
+          );
+          expect(firstInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("2025-07-01");
+
+          const secondInputSelector = `${getAnnotationSelector("27R")} > input`;
+          await page.waitForSelector(`${secondInputSelector}[type="text"]`);
+          await page.click(secondInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(`${secondInputSelector}[type="time"]`);
+          const secondInputValue = await page.$eval(
+            secondInputSelector,
+            el => el.value
+          );
+          expect(secondInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("00:34:56");
+
+          const thirdInputSelector = `${getAnnotationSelector("28R")} > input`;
+          await page.waitForSelector(`${thirdInputSelector}[type="text"]`);
+          await page.click(thirdInputSelector);
+          await waitForSandboxTrip(page);
+          await page.waitForSelector(
+            `${thirdInputSelector}[type="datetime-local"]`
+          );
+          const thirdInputValue = await page.$eval(
+            thirdInputSelector,
+            el => el.value
+          );
+          expect(thirdInputValue)
+            .withContext(`In ${browserName}`)
+            .toEqual("2025-07-02T12:34");
+        })
+      );
+    });
+  });
+>>>>>>> upstream/master
 });

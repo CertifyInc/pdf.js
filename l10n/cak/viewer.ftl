@@ -96,6 +96,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Taq richinil wuj…
 pdfjs-document-properties-file-name = Rub'i' yakb'äl:
 pdfjs-document-properties-file-size = Runimilem yakb'äl:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -104,16 +105,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = B'i'aj:
 pdfjs-document-properties-author = B'anel:
 pdfjs-document-properties-subject = Taqikil:
 pdfjs-document-properties-keywords = Kixe'el taq tzij:
 pdfjs-document-properties-creation-date = Ruq'ijul xtz'uk:
 pdfjs-document-properties-modification-date = Ruq'ijul xjalwachïx:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Q'inonel:
 pdfjs-document-properties-producer = PDF b'anöy:
 pdfjs-document-properties-version = PDF ruwäch:
@@ -241,10 +247,13 @@ pdfjs-rendering-error = Xk'ulwachitäj jun sachoj toq ninuk'wachij ri ruxaq.
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -269,12 +278,19 @@ pdfjs-editor-free-text-button-label = Rucholajem tz'ib'
 pdfjs-editor-ink-button =
     .title = Tiwachib'ëx
 pdfjs-editor-ink-button-label = Tiwachib'ëx
+<<<<<<< HEAD
+=======
+
+##
+
+>>>>>>> upstream/master
 # Editor Parameters
 pdfjs-editor-free-text-color-input = B'onil
 pdfjs-editor-free-text-size-input = Nimilem
 pdfjs-editor-ink-color-input = B'onil
 pdfjs-editor-ink-thickness-input = Rupimil
 pdfjs-editor-ink-opacity-input = Q'equmal
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = Nuk'unel tz'ib'atzij
 pdfjs-free-text-default-content = Titikitisäx rutz'ib'axik…
@@ -289,3 +305,5 @@ pdfjs-ink-canvas =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

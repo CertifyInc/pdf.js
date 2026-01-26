@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { DateFormats, TimeFormats } from "../shared/scripting_utils.js";
 import { GlobalConstants } from "./constants.js";
 
 class AForm {
@@ -21,23 +22,6 @@ class AForm {
     this._app = app;
     this._util = util;
     this._color = color;
-    this._dateFormats = [
-      "m/d",
-      "m/d/yy",
-      "mm/dd/yy",
-      "mm/yy",
-      "d-mmm",
-      "d-mmm-yy",
-      "dd-mmm-yy",
-      "yy-mm-dd",
-      "mmm-yy",
-      "mmmm-yy",
-      "mmm d, yyyy",
-      "mmmm d, yyyy",
-      "m/d/yy h:MM tt",
-      "m/d/yy HH:MM",
-    ];
-    this._timeFormats = ["HH:MM", "h:MM tt", "HH:MM:ss", "h:MM:ss tt"];
 
     // The e-mail address regex below originates from:
     // https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
@@ -52,17 +36,27 @@ class AForm {
     return event.target ? `[ ${event.target.name} ]` : "";
   }
 
+<<<<<<< HEAD
   _parseDate(cFormat, cDate, strict = false) {
     let date = null;
     try {
       date = this._util._scand(cFormat, cDate, strict);
+=======
+  _parseDate(cFormat, cDate) {
+    let date = null;
+    try {
+      date = this._util._scand(cFormat, cDate, /* strict = */ false);
+>>>>>>> upstream/master
     } catch {}
     if (date) {
       return date;
     }
+<<<<<<< HEAD
     if (strict) {
       return null;
     }
+=======
+>>>>>>> upstream/master
 
     date = Date.parse(cDate);
     return isNaN(date) ? null : new Date(date);
@@ -277,9 +271,7 @@ class AForm {
   }
 
   AFDate_Format(pdf) {
-    if (pdf >= 0 && pdf < this._dateFormats.length) {
-      this.AFDate_FormatEx(this._dateFormats[pdf]);
-    }
+    this.AFDate_FormatEx(DateFormats[pdf] ?? pdf);
   }
 
   AFDate_KeystrokeEx(cFormat) {
@@ -305,8 +297,8 @@ class AForm {
   }
 
   AFDate_Keystroke(pdf) {
-    if (pdf >= 0 && pdf < this._dateFormats.length) {
-      this.AFDate_KeystrokeEx(this._dateFormats[pdf]);
+    if (pdf >= 0 && pdf < DateFormats.length) {
+      this.AFDate_KeystrokeEx(DateFormats[pdf]);
     }
   }
 
@@ -392,10 +384,8 @@ class AForm {
       AVG: args => args.reduce((acc, value) => acc + value, 0) / args.length,
       SUM: args => args.reduce((acc, value) => acc + value, 0),
       PRD: args => args.reduce((acc, value) => acc * value, 1),
-      MIN: args =>
-        args.reduce((acc, value) => Math.min(acc, value), Number.MAX_VALUE),
-      MAX: args =>
-        args.reduce((acc, value) => Math.max(acc, value), Number.MIN_VALUE),
+      MIN: args => Math.min(...args),
+      MAX: args => Math.max(...args),
     };
 
     if (!(cFunction in actions)) {
@@ -465,22 +455,37 @@ class AForm {
     // specific to the format because the user could enter 1234567 when the
     // format is 999-9999.
     const simplifiedFormatStr = cMask.replaceAll(/[^9AOX]/g, "");
+<<<<<<< HEAD
     this.#AFSpecial_KeystrokeEx_helper(simplifiedFormatStr, false);
+=======
+    this.#AFSpecial_KeystrokeEx_helper(simplifiedFormatStr, null, false);
+>>>>>>> upstream/master
     if (event.rc) {
       return;
     }
 
     event.rc = true;
+<<<<<<< HEAD
     this.#AFSpecial_KeystrokeEx_helper(cMask, true);
   }
 
   #AFSpecial_KeystrokeEx_helper(cMask, warn) {
+=======
+    this.#AFSpecial_KeystrokeEx_helper(cMask, null, true);
+  }
+
+  #AFSpecial_KeystrokeEx_helper(cMask, value, warn) {
+>>>>>>> upstream/master
     if (!cMask) {
       return;
     }
 
     const event = globalThis.event;
+<<<<<<< HEAD
     const value = this.AFMergeChange(event);
+=======
+    value ||= this.AFMergeChange(event);
+>>>>>>> upstream/master
     if (!value) {
       return;
     }
@@ -563,7 +568,8 @@ class AForm {
     const event = globalThis.event;
     psf = this.AFMakeNumber(psf);
 
-    let formatStr;
+    let value = this.AFMergeChange(event);
+    let formatStr, secondFormatStr;
     switch (psf) {
       case 0:
         formatStr = "99999";
@@ -572,11 +578,16 @@ class AForm {
         formatStr = "99999-9999";
         break;
       case 2:
+<<<<<<< HEAD
         const value = this.AFMergeChange(event);
         formatStr =
           value.startsWith("(") || (value.length > 7 && /^\p{N}+$/.test(value))
             ? "(999) 999-9999"
             : "999-9999";
+=======
+        formatStr = "999-9999";
+        secondFormatStr = "(999) 999-9999";
+>>>>>>> upstream/master
         break;
       case 3:
         formatStr = "999-99-9999";
@@ -584,8 +595,36 @@ class AForm {
       default:
         throw new Error("Invalid psf in AFSpecial_Keystroke");
     }
+    const formats = secondFormatStr
+      ? [formatStr, secondFormatStr]
+      : [formatStr];
+    for (const format of formats) {
+      this.#AFSpecial_KeystrokeEx_helper(format, value, false);
+      if (event.rc) {
+        return;
+      }
+      event.rc = true;
+    }
 
-    this.AFSpecial_KeystrokeEx(formatStr);
+    const re = /([-()]|\s)+/g;
+    value = value.replaceAll(re, "");
+    for (const format of formats) {
+      this.#AFSpecial_KeystrokeEx_helper(
+        format.replaceAll(re, ""),
+        value,
+        false
+      );
+      if (event.rc) {
+        return;
+      }
+      event.rc = true;
+    }
+
+    this.AFSpecial_KeystrokeEx(
+      ((secondFormatStr && value.match(/\d/g)) || []).length > 7
+        ? secondFormatStr
+        : formatStr
+    );
   }
 
   AFTime_FormatEx(cFormat) {
@@ -593,9 +632,7 @@ class AForm {
   }
 
   AFTime_Format(pdf) {
-    if (pdf >= 0 && pdf < this._timeFormats.length) {
-      this.AFDate_FormatEx(this._timeFormats[pdf]);
-    }
+    this.AFDate_FormatEx(TimeFormats[pdf] ?? pdf);
   }
 
   AFTime_KeystrokeEx(cFormat) {
@@ -603,8 +640,8 @@ class AForm {
   }
 
   AFTime_Keystroke(pdf) {
-    if (pdf >= 0 && pdf < this._timeFormats.length) {
-      this.AFDate_KeystrokeEx(this._timeFormats[pdf]);
+    if (pdf >= 0 && pdf < TimeFormats.length) {
+      this.AFDate_KeystrokeEx(TimeFormats[pdf]);
     }
   }
 

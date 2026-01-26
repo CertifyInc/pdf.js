@@ -89,6 +89,7 @@ class PasswordPrompt {
   }
 
   async close() {
+<<<<<<< HEAD
     if (this.overlayManager.active === this.dialog) {
       this.overlayManager.close(this.dialog);
     }
@@ -101,6 +102,18 @@ class PasswordPrompt {
     }
   }
 
+=======
+    this.overlayManager.closeIfActive(this.dialog);
+  }
+
+  #verify() {
+    const password = this.input.value;
+    if (password?.length > 0) {
+      this.#invokeCallback(password);
+    }
+  }
+
+>>>>>>> upstream/master
   #cancel() {
     this.#invokeCallback(new Error("PasswordPrompt cancelled."));
     this.#activeCapability.resolve();

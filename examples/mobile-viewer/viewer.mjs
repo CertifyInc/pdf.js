@@ -91,10 +91,17 @@ const PDFViewerApplication = {
         let key = "pdfjs-loading-error";
         if (reason instanceof pdfjsLib.InvalidPDFException) {
           key = "pdfjs-invalid-file-error";
+<<<<<<< HEAD
         } else if (reason instanceof pdfjsLib.MissingPDFException) {
           key = "pdfjs-missing-file-error";
         } else if (reason instanceof pdfjsLib.UnexpectedResponseException) {
           key = "pdfjs-unexpected-response-error";
+=======
+        } else if (reason instanceof pdfjsLib.ResponseException) {
+          key = reason.missing
+            ? "pdfjs-missing-file-error"
+            : "pdfjs-unexpected-response-error";
+>>>>>>> upstream/master
         }
         self.l10n.get(key).then(msg => {
           self.error(msg, { message: reason?.message });

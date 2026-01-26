@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Dokumenta īstatiejumi…
 pdfjs-document-properties-file-name = Faila nūsaukums:
 pdfjs-document-properties-file-size = Faila izmārs:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } biti)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } biti)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Nūsaukums:
 pdfjs-document-properties-author = Autors:
 pdfjs-document-properties-subject = Tema:
 pdfjs-document-properties-keywords = Atslāgi vuordi:
 pdfjs-document-properties-creation-date = Izveides datums:
 pdfjs-document-properties-modification-date = lobuošonys datums:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Radeituojs:
 pdfjs-document-properties-producer = PDF producents:
 pdfjs-document-properties-version = PDF verseja:
@@ -206,9 +212,12 @@ pdfjs-page-scale-actual = Patīsais izmārs
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = Īluodejūt PDF nūtyka klaida.
@@ -234,6 +243,7 @@ pdfjs-password-invalid = Napareiza parole, raugit vēļreiz.
 pdfjs-password-ok-button = Labi
 pdfjs-password-cancel-button = Atceļt
 pdfjs-web-fonts-disabled = Šķārsteikla fonti nav aktivizāti: Navar īgult PDF fontus.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -244,3 +254,5 @@ pdfjs-web-fonts-disabled = Šķārsteikla fonti nav aktivizāti: Navar īgult PD
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

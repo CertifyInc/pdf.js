@@ -80,6 +80,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = ලේඛනයේ ගුණාංග…
 pdfjs-document-properties-file-name = ගොනුවේ නම:
 pdfjs-document-properties-file-size = ගොනුවේ ප්‍රමාණය:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -88,16 +89,21 @@ pdfjs-document-properties-kb = කි.බ. { $size_kb } (බයිට { $size_b 
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = මෙ.බ. { $size_mb } (බයිට { $size_b })
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = සිරැසිය:
 pdfjs-document-properties-author = කතෘ:
 pdfjs-document-properties-subject = මාතෘකාව:
 pdfjs-document-properties-keywords = මූල පද:
 pdfjs-document-properties-creation-date = සෑදූ දිනය:
 pdfjs-document-properties-modification-date = සංශෝධිත දිනය:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = නිර්මාතෘ:
 pdfjs-document-properties-producer = පීඩීඑෆ් සම්පාදක:
 pdfjs-document-properties-version = පීඩීඑෆ් අනුවාදය:
@@ -182,7 +188,11 @@ pdfjs-find-highlight-checkbox = සියල්ල උද්දීපනය
 pdfjs-find-entire-word-checkbox-label = සමස්ත වචන
 pdfjs-find-reached-top = ලේඛනයේ මුදුනට ළඟා විය, පහළ සිට ඉහළට
 pdfjs-find-reached-bottom = ලේඛනයේ අවසානයට ළඟා විය, ඉහළ සිට පහළට
+<<<<<<< HEAD
 pdfjs-find-not-found = වැකිකඩ හමු නොවිණි
+=======
+pdfjs-find-not-found = වැකිකඩ හමු නොවුණි
+>>>>>>> upstream/master
 
 ## Predefined zoom values
 
@@ -207,6 +217,7 @@ pdfjs-invalid-file-error = වලංගු නොවන හෝ හානිව�
 pdfjs-missing-file-error = මඟහැරුණු පීඩීඑෆ් ගොනුවකි.
 pdfjs-unexpected-response-error = අනපේක්‍ෂිත සේවාදායක ප්‍රතිචාරයකි.
 
+<<<<<<< HEAD
 ## Annotations
 
 # Variables:
@@ -214,6 +225,8 @@ pdfjs-unexpected-response-error = අනපේක්‍ෂිත සේවාද
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
 
+=======
+>>>>>>> upstream/master
 ## Password
 
 pdfjs-password-label = මෙම පීඩීඑෆ් ගොනුව විවෘත කිරීමට මුරපදය යොදන්න.
@@ -234,9 +247,12 @@ pdfjs-editor-stamp-button =
     .title = රූප සංස්කරණය හෝ එක් කරන්න
 pdfjs-editor-stamp-button-label = රූප සංස්කරණය හෝ එක් කරන්න
 
+<<<<<<< HEAD
 ## Remove button for the various kind of editor.
 
 
+=======
+>>>>>>> upstream/master
 ##
 
 # Editor Parameters
@@ -244,13 +260,17 @@ pdfjs-editor-free-text-color-input = වර්ණය
 pdfjs-editor-free-text-size-input = තරම
 pdfjs-editor-ink-color-input = වර්ණය
 pdfjs-editor-ink-thickness-input = ඝණකම
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = වදන් සකසනය
 pdfjs-free-text-default-content = ලිවීීම අරඹන්න…
+=======
+>>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-mark-decorative-description = මෙය දාර හෝ දිය සලකුණු වැනි අලංකාර රූප සඳහා භාවිතා වේ.
+<<<<<<< HEAD
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
@@ -269,3 +289,5 @@ pdfjs-editor-alt-text-mark-decorative-description = මෙය දාර හෝ �
 
 ## Image alt-text settings
 
+=======
+>>>>>>> upstream/master

@@ -19,6 +19,10 @@ import { BaseCanvasFactory } from "./canvas_factory.js";
 import { BaseCMapReaderFactory } from "./cmap_reader_factory.js";
 import { BaseFilterFactory } from "./filter_factory.js";
 import { BaseStandardFontDataFactory } from "./standard_fontdata_factory.js";
+<<<<<<< HEAD
+=======
+import { BaseWasmFactory } from "./wasm_factory.js";
+>>>>>>> upstream/master
 
 if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
   throw new Error(
@@ -26,6 +30,7 @@ if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
   );
 }
 
+<<<<<<< HEAD
 if (
   typeof PDFJSDev !== "undefined" &&
   !PDFJSDev.test("SKIP_BABEL") &&
@@ -63,6 +68,54 @@ if (
       globalThis.Path2D = canvas.Path2D;
     } else {
       warn("Cannot polyfill `Path2D`, rendering may be broken.");
+=======
+if (isNodeJS) {
+  if (typeof PDFJSDev === "undefined" || PDFJSDev.test("SKIP_BABEL")) {
+    warn("Please use the `legacy` build in Node.js environments.");
+  } else {
+    let canvas;
+    try {
+      const require = process
+        .getBuiltinModule("module")
+        .createRequire(import.meta.url);
+
+      try {
+        canvas = require("@napi-rs/canvas");
+      } catch (ex) {
+        warn(`Cannot load "@napi-rs/canvas" package: "${ex}".`);
+      }
+    } catch (ex) {
+      warn(`Cannot access the \`require\` function: "${ex}".`);
+    }
+
+    if (!globalThis.DOMMatrix) {
+      if (canvas?.DOMMatrix) {
+        globalThis.DOMMatrix = canvas.DOMMatrix;
+      } else {
+        warn("Cannot polyfill `DOMMatrix`, rendering may be broken.");
+      }
+    }
+    if (!globalThis.ImageData) {
+      if (canvas?.ImageData) {
+        globalThis.ImageData = canvas.ImageData;
+      } else {
+        warn("Cannot polyfill `ImageData`, rendering may be broken.");
+      }
+    }
+    if (!globalThis.Path2D) {
+      if (canvas?.Path2D) {
+        globalThis.Path2D = canvas.Path2D;
+      } else {
+        warn("Cannot polyfill `Path2D`, rendering may be broken.");
+      }
+    }
+    if (!globalThis.navigator?.language) {
+      globalThis.navigator = {
+        language: "en-US",
+        platform: "",
+        userAgent: "",
+      };
+>>>>>>> upstream/master
     }
   }
 }
@@ -104,6 +157,18 @@ class NodeStandardFontDataFactory extends BaseStandardFontDataFactory {
   async _fetch(url) {
     return fetchData(url);
   }
+<<<<<<< HEAD
+=======
+}
+
+class NodeWasmFactory extends BaseWasmFactory {
+  /**
+   * @ignore
+   */
+  async _fetch(url) {
+    return fetchData(url);
+  }
+>>>>>>> upstream/master
 }
 
 export {
@@ -112,4 +177,5 @@ export {
   NodeCMapReaderFactory,
   NodeFilterFactory,
   NodeStandardFontDataFactory,
+  NodeWasmFactory,
 };

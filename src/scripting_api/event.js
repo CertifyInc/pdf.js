@@ -14,7 +14,10 @@
  */
 
 import {
+<<<<<<< HEAD
   serializeError,
+=======
+>>>>>>> upstream/master
   USERACTIVATION_CALLBACKID,
   USERACTIVATION_MAXTIME_VALIDITY,
 } from "./app_utils.js";
@@ -311,12 +314,16 @@ class EventDispatcher {
     const source = this._objects[first];
     globalThis.event = new Event({});
 
+<<<<<<< HEAD
     try {
       this.runCalculate(source, globalThis.event);
     } catch (error) {
       this._isCalculating = false;
       throw error;
     }
+=======
+    this.runCalculate(source, globalThis.event);
+>>>>>>> upstream/master
 
     this._isCalculating = false;
   }
@@ -345,6 +352,7 @@ class EventDispatcher {
       event.value = null;
       const target = this._objects[targetId];
       let savedValue = target.obj._getValue();
+<<<<<<< HEAD
       try {
         this.runActions(source, target, event, "Calculate");
       } catch (error) {
@@ -354,6 +362,10 @@ class EventDispatcher {
         this._externalCall("send", [serializedError]);
         continue;
       }
+=======
+      this.runActions(source, target, event, "Calculate");
+
+>>>>>>> upstream/master
       if (!event.rc) {
         continue;
       }

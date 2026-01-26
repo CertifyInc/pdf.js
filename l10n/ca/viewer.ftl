@@ -98,6 +98,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Propietats del document…
 pdfjs-document-properties-file-name = Nom del fitxer:
 pdfjs-document-properties-file-size = Mida del fitxer:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -106,16 +107,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Títol:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Assumpte:
 pdfjs-document-properties-keywords = Paraules clau:
 pdfjs-document-properties-creation-date = Data de creació:
 pdfjs-document-properties-modification-date = Data de modificació:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Creador:
 pdfjs-document-properties-producer = Generador de PDF:
 pdfjs-document-properties-version = Versió de PDF:
@@ -243,10 +249,13 @@ pdfjs-rendering-error = S'ha produït un error mentre es renderitzava la pàgina
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -272,9 +281,12 @@ pdfjs-editor-ink-button =
     .title = Dibuixa
 pdfjs-editor-ink-button-label = Dibuixa
 
+<<<<<<< HEAD
 ## Remove button for the various kind of editor.
 
 
+=======
+>>>>>>> upstream/master
 ##
 
 # Editor Parameters
@@ -283,6 +295,7 @@ pdfjs-editor-free-text-size-input = Mida
 pdfjs-editor-ink-color-input = Color
 pdfjs-editor-ink-thickness-input = Gruix
 pdfjs-editor-ink-opacity-input = Opacitat
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = Editor de text
 pdfjs-free-text-default-content = Escriviu…
@@ -311,3 +324,13 @@ pdfjs-ink-canvas =
 
 ## Image alt-text settings
 
+=======
+
+## Alt-text dialog
+
+pdfjs-editor-alt-text-cancel-button = Cancel·la
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Cancel·la
+>>>>>>> upstream/master
