@@ -27,30 +27,6 @@ import { Dict, isName, Ref, RefSet } from "./primitives.js";
 import { BaseStream } from "./base_stream.js";
 
 const PDF_VERSION_REGEXP = /^[1-9]\.\d$/;
-<<<<<<< HEAD
-=======
-const MAX_INT_32 = 2 ** 31 - 1;
-const MIN_INT_32 = -(2 ** 31);
-
-const IDENTITY_MATRIX = [1, 0, 0, 1, 0, 0];
-
-const RESOURCES_KEYS_OPERATOR_LIST = [
-  "ColorSpace",
-  "ExtGState",
-  "Font",
-  "Pattern",
-  "Properties",
-  "Shading",
-  "XObject",
-];
-
-const RESOURCES_KEYS_TEXT_CONTENT = [
-  "ExtGState",
-  "Font",
-  "Properties",
-  "XObject",
-];
->>>>>>> upstream/master
 
 function getLookupTableFactory(initializer) {
   let lookup;
@@ -123,19 +99,6 @@ function arrayBuffersToBytes(arr) {
     pos += item.byteLength;
   }
   return data;
-<<<<<<< HEAD
-=======
-}
-
-async function fetchBinaryData(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch file "${url}" with "${response.statusText}".`
-    );
-  }
-  return new Uint8Array(await response.arrayBuffer());
->>>>>>> upstream/master
 }
 
 /**
@@ -252,10 +215,6 @@ function readInt8(data, offset) {
   return (data[offset] << 24) >> 24;
 }
 
-function readInt16(data, offset) {
-  return ((data[offset] << 24) | (data[offset + 1] << 16)) >> 16;
-}
-
 function readUint16(data, offset) {
   return (data[offset] << 8) | data[offset + 1];
 }
@@ -309,11 +268,7 @@ function isNumberArray(arr, len) {
   // BigInt64Array/BigUint64Array types (their elements aren't "number").
   return (
     ArrayBuffer.isView(arr) &&
-<<<<<<< HEAD
     (arr.length === 0 || typeof arr[0] === "number") &&
-=======
-    !(arr instanceof BigInt64Array || arr instanceof BigUint64Array) &&
->>>>>>> upstream/master
     (len === null || arr.length === len)
   );
 }
@@ -434,16 +389,9 @@ function _collectJS(entry, xref, list, parents) {
       } else if (typeof js === "string") {
         code = js;
       }
-<<<<<<< HEAD
       code &&= stringToPDFString(code).replaceAll("\x00", "");
-=======
-      code &&= stringToPDFString(
-        code,
-        /* keepEscapeSequence = */ true
-      ).replaceAll("\x00", "");
->>>>>>> upstream/master
       if (code) {
-        list.push(code.trim());
+        list.push(code);
       }
     }
     _collectJS(entry.getRaw("Next"), xref, list, parents);
@@ -649,16 +597,6 @@ function recoverJsURL(str) {
 }
 
 function numberToString(value) {
-<<<<<<< HEAD
-=======
-  if (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) {
-    assert(
-      typeof value === "number",
-      `numberToString - the value (${value}) should be a number.`
-    );
-  }
-
->>>>>>> upstream/master
   if (Number.isInteger(value)) {
     return value.toString();
   }
@@ -696,27 +634,12 @@ function getNewAnnotationsMap(annotationStorage) {
   return newAnnotationsByPage.size > 0 ? newAnnotationsByPage : null;
 }
 
-<<<<<<< HEAD
 function stringToAsciiOrUTF16BE(str) {
-=======
-// If the string is null or undefined then it is returned as is.
-function stringToAsciiOrUTF16BE(str) {
-  if (str === null || str === undefined) {
-    return str;
-  }
->>>>>>> upstream/master
   return isAscii(str) ? str : stringToUTF16String(str, /* bigEndian = */ true);
 }
 
 function isAscii(str) {
-<<<<<<< HEAD
   return /^[\x00-\x7F]*$/.test(str);
-=======
-  if (typeof str !== "string") {
-    return false;
-  }
-  return !str || /^[\x00-\x7F]*$/.test(str);
->>>>>>> upstream/master
 }
 
 function stringToUTF16HexString(str) {
@@ -776,20 +699,12 @@ export {
   encodeToXmlString,
   escapePDFName,
   escapeString,
-<<<<<<< HEAD
-=======
-  fetchBinaryData,
->>>>>>> upstream/master
   getInheritableProperty,
   getLookupTableFactory,
   getNewAnnotationsMap,
   getParentToUpdate,
   getRotationMatrix,
   getSizeInBytes,
-<<<<<<< HEAD
-=======
-  IDENTITY_MATRIX,
->>>>>>> upstream/master
   isAscii,
   isBooleanArray,
   isNumberArray,
@@ -798,29 +713,15 @@ export {
   lookupMatrix,
   lookupNormalRect,
   lookupRect,
-<<<<<<< HEAD
-=======
-  MAX_INT_32,
-  MIN_INT_32,
->>>>>>> upstream/master
   MissingDataException,
   numberToString,
   ParserEOFException,
   parseXFAPath,
   PDF_VERSION_REGEXP,
-<<<<<<< HEAD
-=======
-  readInt16,
->>>>>>> upstream/master
   readInt8,
   readUint16,
   readUint32,
   recoverJsURL,
-<<<<<<< HEAD
-=======
-  RESOURCES_KEYS_OPERATOR_LIST,
-  RESOURCES_KEYS_TEXT_CONTENT,
->>>>>>> upstream/master
   stringToAsciiOrUTF16BE,
   stringToUTF16HexString,
   stringToUTF16String,

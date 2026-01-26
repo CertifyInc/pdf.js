@@ -15,7 +15,6 @@
 
 /** @typedef {import("./interfaces").IL10n} IL10n */
 
-<<<<<<< HEAD
 import { FluentBundle, FluentResource } from "fluent-bundle";
 import { DOMLocalization } from "fluent-dom";
 import { fetchData } from "pdfjs-lib";
@@ -24,35 +23,6 @@ import { L10n } from "./l10n.js";
 function createBundle(lang, text) {
   const resource = new FluentResource(text);
   const bundle = new FluentBundle(lang);
-=======
-import { FeatureTest, fetchData } from "pdfjs-lib";
-import { FluentBundle, FluentResource } from "fluent-bundle";
-import { DOMLocalization } from "fluent-dom";
-import { L10n } from "./l10n.js";
-
-function PLATFORM() {
-  const { isAndroid, isLinux, isMac, isWindows } = FeatureTest.platform;
-  if (isLinux) {
-    return "linux";
-  }
-  if (isWindows) {
-    return "windows";
-  }
-  if (isMac) {
-    return "macos";
-  }
-  if (isAndroid) {
-    return "android";
-  }
-  return "other";
-}
-
-function createBundle(lang, text) {
-  const resource = new FluentResource(text);
-  const bundle = new FluentBundle(lang, {
-    functions: { PLATFORM },
-  });
->>>>>>> upstream/master
   const errors = bundle.addResource(resource);
   if (errors.length) {
     console.error("L10n errors", errors);
@@ -100,19 +70,8 @@ class GenericL10n extends L10n {
       }
       langs.push(defaultLang);
     }
-<<<<<<< HEAD
     for (const lang of langs) {
       const bundle = await this.#createBundle(lang, baseURL, paths);
-=======
-    // Trigger fetching of bundles in parallel, to reduce overall load time.
-    const bundles = langs.map(lang => [
-      lang,
-      this.#createBundle(lang, baseURL, paths),
-    ]);
-
-    for (const [lang, bundlePromise] of bundles) {
-      const bundle = await bundlePromise;
->>>>>>> upstream/master
       if (bundle) {
         yield bundle;
       } else if (lang === "en-us") {
@@ -137,14 +96,7 @@ class GenericL10n extends L10n {
       const { href } = document.querySelector(`link[type="application/l10n"]`);
       const paths = await fetchData(href, /* type = */ "json");
 
-<<<<<<< HEAD
       return { baseURL: href.replace(/[^/]*$/, "") || "./", paths };
-=======
-      return {
-        baseURL: href.substring(0, href.lastIndexOf("/") + 1) || "./",
-        paths,
-      };
->>>>>>> upstream/master
     } catch {}
     return { baseURL: "./", paths: Object.create(null) };
   }

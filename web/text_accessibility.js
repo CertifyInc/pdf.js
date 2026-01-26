@@ -238,7 +238,6 @@ class TextAccessibilityManager {
       return id;
     }
 
-<<<<<<< HEAD
     const elementToCompare = contentElement || element;
     const index = binarySearchFirstItem(
       children,
@@ -247,12 +246,6 @@ class TextAccessibilityManager {
           elementToCompare,
           node
         ) < 0
-=======
-    const index = binarySearchFirstItem(
-      children,
-      node =>
-        TextAccessibilityManager.#compareElementPositions(element, node) < 0
->>>>>>> upstream/master
     );
 
     if (index === 0) {

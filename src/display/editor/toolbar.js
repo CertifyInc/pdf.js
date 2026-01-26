@@ -13,11 +13,7 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
 import { noContextMenu } from "../display_utils.js";
-=======
-import { noContextMenu, stopEvent } from "../display_utils.js";
->>>>>>> upstream/master
 
 class EditorToolbar {
   #toolbar = null;
@@ -30,15 +26,6 @@ class EditorToolbar {
 
   #altText = null;
 
-<<<<<<< HEAD
-=======
-  #comment = null;
-
-  #commentButtonDivider = null;
-
-  #signatureDescriptionButton = null;
-
->>>>>>> upstream/master
   static #l10nRemove = null;
 
   constructor(editor) {
@@ -49,10 +36,6 @@ class EditorToolbar {
       highlight: "pdfjs-editor-remove-highlight-button",
       ink: "pdfjs-editor-remove-ink-button",
       stamp: "pdfjs-editor-remove-stamp-button",
-<<<<<<< HEAD
-=======
-      signature: "pdfjs-editor-remove-signature-button",
->>>>>>> upstream/master
     });
   }
 
@@ -60,22 +43,11 @@ class EditorToolbar {
     const editToolbar = (this.#toolbar = document.createElement("div"));
     editToolbar.classList.add("editToolbar", "hidden");
     editToolbar.setAttribute("role", "toolbar");
-<<<<<<< HEAD
     const signal = this.#editor._uiManager._signal;
     editToolbar.addEventListener("contextmenu", noContextMenu, { signal });
     editToolbar.addEventListener("pointerdown", EditorToolbar.#pointerDown, {
       signal,
     });
-=======
-
-    const signal = this.#editor._uiManager._signal;
-    if (signal instanceof AbortSignal && !signal.aborted) {
-      editToolbar.addEventListener("contextmenu", noContextMenu, { signal });
-      editToolbar.addEventListener("pointerdown", EditorToolbar.#pointerDown, {
-        signal,
-      });
-    }
->>>>>>> upstream/master
 
     const buttons = (this.#buttons = document.createElement("div"));
     buttons.className = "buttons";
@@ -94,11 +66,8 @@ class EditorToolbar {
       }% + var(--editor-toolbar-vert-offset))`;
     }
 
-<<<<<<< HEAD
     this.#addDeleteButton();
 
-=======
->>>>>>> upstream/master
     return editToolbar;
   }
 
@@ -112,22 +81,14 @@ class EditorToolbar {
 
   #focusIn(e) {
     this.#editor._focusEventsAllowed = false;
-<<<<<<< HEAD
     e.preventDefault();
     e.stopPropagation();
-=======
-    stopEvent(e);
->>>>>>> upstream/master
   }
 
   #focusOut(e) {
     this.#editor._focusEventsAllowed = true;
-<<<<<<< HEAD
     e.preventDefault();
     e.stopPropagation();
-=======
-    stopEvent(e);
->>>>>>> upstream/master
   }
 
   #addListenersToElement(element) {
@@ -135,12 +96,6 @@ class EditorToolbar {
     // the mouse, we don't want to trigger any focus events on
     // the editor.
     const signal = this.#editor._uiManager._signal;
-<<<<<<< HEAD
-=======
-    if (!(signal instanceof AbortSignal) || signal.aborted) {
-      return false;
-    }
->>>>>>> upstream/master
     element.addEventListener("focusin", this.#focusIn.bind(this), {
       capture: true,
       signal,
@@ -150,10 +105,6 @@ class EditorToolbar {
       signal,
     });
     element.addEventListener("contextmenu", noContextMenu, { signal });
-<<<<<<< HEAD
-=======
-    return true;
->>>>>>> upstream/master
   }
 
   hide() {
@@ -164,7 +115,6 @@ class EditorToolbar {
   show() {
     this.#toolbar.classList.remove("hidden");
     this.#altText?.shown();
-<<<<<<< HEAD
   }
 
   #addDeleteButton() {
@@ -182,27 +132,6 @@ class EditorToolbar {
       },
       { signal: _uiManager._signal }
     );
-=======
-    this.#comment?.shown();
-  }
-
-  addDeleteButton() {
-    const { editorType, _uiManager } = this.#editor;
-
-    const button = document.createElement("button");
-    button.classList.add("basic", "deleteButton");
-    button.tabIndex = 0;
-    button.setAttribute("data-l10n-id", EditorToolbar.#l10nRemove[editorType]);
-    if (this.#addListenersToElement(button)) {
-      button.addEventListener(
-        "click",
-        e => {
-          _uiManager.delete();
-        },
-        { signal: _uiManager._signal }
-      );
-    }
->>>>>>> upstream/master
     this.#buttons.append(button);
   }
 
@@ -215,7 +144,6 @@ class EditorToolbar {
   async addAltText(altText) {
     const button = await altText.render();
     this.#addListenersToElement(button);
-<<<<<<< HEAD
     this.#buttons.prepend(button, this.#divider);
     this.#altText = altText;
   }
@@ -225,105 +153,6 @@ class EditorToolbar {
     const button = colorPicker.renderButton();
     this.#addListenersToElement(button);
     this.#buttons.prepend(button, this.#divider);
-=======
-    this.#buttons.append(button, this.#divider);
-    this.#altText = altText;
-  }
-
-  addComment(comment, beforeElement = null) {
-    if (this.#comment) {
-      return;
-    }
-    const button = comment.renderForToolbar();
-    if (!button) {
-      return;
-    }
-    this.#addListenersToElement(button);
-    const divider = (this.#commentButtonDivider = this.#divider);
-    if (!beforeElement) {
-      this.#buttons.append(button, divider);
-    } else {
-      this.#buttons.insertBefore(button, beforeElement);
-      this.#buttons.insertBefore(divider, beforeElement);
-    }
-    this.#comment = comment;
-    comment.toolbar = this;
-  }
-
-  addColorPicker(colorPicker) {
-    if (this.#colorPicker) {
-      return;
-    }
-    this.#colorPicker = colorPicker;
-    const button = colorPicker.renderButton();
-    this.#addListenersToElement(button);
-    this.#buttons.append(button, this.#divider);
-  }
-
-  async addEditSignatureButton(signatureManager) {
-    const button = (this.#signatureDescriptionButton =
-      await signatureManager.renderEditButton(this.#editor));
-    this.#addListenersToElement(button);
-    this.#buttons.append(button, this.#divider);
-  }
-
-  removeButton(name) {
-    switch (name) {
-      case "comment":
-        this.#comment?.removeToolbarCommentButton();
-        this.#comment = null;
-        this.#commentButtonDivider?.remove();
-        this.#commentButtonDivider = null;
-        break;
-    }
-  }
-
-  async addButton(name, tool) {
-    switch (name) {
-      case "colorPicker":
-        if (tool) {
-          this.addColorPicker(tool);
-        }
-        break;
-      case "altText":
-        if (tool) {
-          await this.addAltText(tool);
-        }
-        break;
-      case "editSignature":
-        if (tool) {
-          await this.addEditSignatureButton(tool);
-        }
-        break;
-      case "delete":
-        this.addDeleteButton();
-        break;
-      case "comment":
-        if (tool) {
-          this.addComment(tool);
-        }
-        break;
-    }
-  }
-
-  async addButtonBefore(name, tool, beforeSelector) {
-    if (!tool && name === "comment") {
-      return;
-    }
-    const beforeElement = this.#buttons.querySelector(beforeSelector);
-    if (!beforeElement) {
-      return;
-    }
-    if (name === "comment") {
-      this.addComment(tool, beforeElement);
-    }
-  }
-
-  updateEditSignatureButton(description) {
-    if (this.#signatureDescriptionButton) {
-      this.#signatureDescriptionButton.title = description;
-    }
->>>>>>> upstream/master
   }
 
   remove() {
@@ -333,11 +162,7 @@ class EditorToolbar {
   }
 }
 
-<<<<<<< HEAD
 class HighlightToolbar {
-=======
-class FloatingToolbar {
->>>>>>> upstream/master
   #buttons = null;
 
   #toolbar = null;
@@ -352,47 +177,15 @@ class FloatingToolbar {
     const editToolbar = (this.#toolbar = document.createElement("div"));
     editToolbar.className = "editToolbar";
     editToolbar.setAttribute("role", "toolbar");
-<<<<<<< HEAD
     editToolbar.addEventListener("contextmenu", noContextMenu, {
       signal: this.#uiManager._signal,
     });
-=======
-
-    const signal = this.#uiManager._signal;
-    if (signal instanceof AbortSignal && !signal.aborted) {
-      editToolbar.addEventListener("contextmenu", noContextMenu, {
-        signal,
-      });
-    }
->>>>>>> upstream/master
 
     const buttons = (this.#buttons = document.createElement("div"));
     buttons.className = "buttons";
     editToolbar.append(buttons);
 
-<<<<<<< HEAD
     this.#addHighlightButton();
-=======
-    if (this.#uiManager.hasCommentManager()) {
-      this.#makeButton(
-        "commentButton",
-        `pdfjs-comment-floating-button`,
-        "pdfjs-comment-floating-button-label",
-        () => {
-          this.#uiManager.commentSelection("floating_button");
-        }
-      );
-    }
-
-    this.#makeButton(
-      "highlightButton",
-      `pdfjs-highlight-floating-button1`,
-      "pdfjs-highlight-floating-button-label",
-      () => {
-        this.#uiManager.highlightSelection("floating_button");
-      }
-    );
->>>>>>> upstream/master
 
     return editToolbar;
   }
@@ -434,7 +227,6 @@ class FloatingToolbar {
     this.#toolbar.remove();
   }
 
-<<<<<<< HEAD
   #addHighlightButton() {
     const button = document.createElement("button");
     button.className = "highlightButton";
@@ -453,28 +245,8 @@ class FloatingToolbar {
       },
       { signal }
     );
-=======
-  #makeButton(buttonClass, l10nId, labelL10nId, clickHandler) {
-    const button = document.createElement("button");
-    button.classList.add("basic", buttonClass);
-    button.tabIndex = 0;
-    button.setAttribute("data-l10n-id", l10nId);
-    const span = document.createElement("span");
-    button.append(span);
-    span.className = "visuallyHidden";
-    span.setAttribute("data-l10n-id", labelL10nId);
-    const signal = this.#uiManager._signal;
-    if (signal instanceof AbortSignal && !signal.aborted) {
-      button.addEventListener("contextmenu", noContextMenu, { signal });
-      button.addEventListener("click", clickHandler, { signal });
-    }
->>>>>>> upstream/master
     this.#buttons.append(button);
   }
 }
 
-<<<<<<< HEAD
 export { EditorToolbar, HighlightToolbar };
-=======
-export { EditorToolbar, FloatingToolbar };
->>>>>>> upstream/master

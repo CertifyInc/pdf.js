@@ -67,5 +67,8 @@
   "engines": {
     "node": ">=20.16.0 || >=22.3.0"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "gulplog": "^2.2.0"
+  }
 }

@@ -77,12 +77,7 @@ function convertRGBToRGBA({
   height,
 }) {
   let i = 0;
-<<<<<<< HEAD
   const len32 = src.length >> 2;
-=======
-  const len = width * height * 3;
-  const len32 = len >> 2;
->>>>>>> upstream/master
   const src32 = new Uint32Array(src.buffer, srcPos, len32);
 
   if (FeatureTest.isLittleEndian) {
@@ -99,11 +94,7 @@ function convertRGBToRGBA({
       dest[destPos + 3] = (s3 >>> 8) | 0xff000000;
     }
 
-<<<<<<< HEAD
     for (let j = i * 4, jj = src.length; j < jj; j += 3) {
-=======
-    for (let j = i * 4, jj = srcPos + len; j < jj; j += 3) {
->>>>>>> upstream/master
       dest[destPos++] =
         src[j] | (src[j + 1] << 8) | (src[j + 2] << 16) | 0xff000000;
     }
@@ -119,21 +110,13 @@ function convertRGBToRGBA({
       dest[destPos + 3] = (s3 << 8) | 0xff;
     }
 
-<<<<<<< HEAD
     for (let j = i * 4, jj = src.length; j < jj; j += 3) {
-=======
-    for (let j = i * 4, jj = srcPos + len; j < jj; j += 3) {
->>>>>>> upstream/master
       dest[destPos++] =
         (src[j] << 24) | (src[j + 1] << 16) | (src[j + 2] << 8) | 0xff;
     }
   }
 
-<<<<<<< HEAD
   return { srcPos, destPos };
-=======
-  return { srcPos: srcPos + len, destPos };
->>>>>>> upstream/master
 }
 
 function grayToRGBA(src, dest) {

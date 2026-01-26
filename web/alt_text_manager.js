@@ -87,18 +87,6 @@ class AltTextManager {
     saveButton.addEventListener("click", this.#save.bind(this));
     optionDescription.addEventListener("change", onUpdateUIState);
     optionDecorative.addEventListener("change", onUpdateUIState);
-<<<<<<< HEAD
-=======
-    textarea.addEventListener("keydown", e => {
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        e.key === "Enter" &&
-        !saveButton.disabled
-      ) {
-        this.#save();
-      }
-    });
->>>>>>> upstream/master
 
     this.#overlayManager.register(dialog);
   }
@@ -257,13 +245,9 @@ class AltTextManager {
   }
 
   #finish() {
-<<<<<<< HEAD
     if (this.#overlayManager.active === this.#dialog) {
       this.#overlayManager.close(this.#dialog);
     }
-=======
-    this.#overlayManager.closeIfActive(this.#dialog);
->>>>>>> upstream/master
   }
 
   #close() {

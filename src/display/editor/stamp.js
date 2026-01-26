@@ -13,22 +13,12 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
 import {
   AnnotationEditorType,
   AnnotationPrefix,
   shadow,
 } from "../../shared/util.js";
 import { OutputScale, PixelsPerInch } from "../display_utils.js";
-=======
-import { AnnotationEditorType, AnnotationPrefix } from "../../shared/util.js";
-import {
-  ColorScheme,
-  OutputScale,
-  PixelsPerInch,
-  SupportedImageMimeTypes,
-} from "../display_utils.js";
->>>>>>> upstream/master
 import { AnnotationEditor } from "./editor.js";
 import { StampAnnotationElement } from "../annotation_layer.js";
 
@@ -50,11 +40,7 @@ class StampEditor extends AnnotationEditor {
 
   #canvas = null;
 
-<<<<<<< HEAD
   #observer = null;
-=======
-  #missingCanvas = false;
->>>>>>> upstream/master
 
   #resizeTimeoutId = null;
 
@@ -70,10 +56,6 @@ class StampEditor extends AnnotationEditor {
     super({ ...params, name: "stampEditor" });
     this.#bitmapUrl = params.bitmapUrl;
     this.#bitmapFile = params.bitmapFile;
-<<<<<<< HEAD
-=======
-    this.defaultL10nId = "pdfjs-editor-stamp-editor";
->>>>>>> upstream/master
   }
 
   /** @inheritdoc */
@@ -81,7 +63,6 @@ class StampEditor extends AnnotationEditor {
     AnnotationEditor.initialize(l10n, uiManager);
   }
 
-<<<<<<< HEAD
   static get supportedTypes() {
     // See https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
     // to know which types are supported by the browser.
@@ -110,25 +91,13 @@ class StampEditor extends AnnotationEditor {
   /** @inheritdoc */
   static isHandlingMimeForPasting(mime) {
     return this.supportedTypes.includes(mime);
-=======
-  /** @inheritdoc */
-  static isHandlingMimeForPasting(mime) {
-    return SupportedImageMimeTypes.includes(mime);
->>>>>>> upstream/master
   }
 
   /** @inheritdoc */
   static paste(item, parent) {
-<<<<<<< HEAD
     parent.pasteEditor(AnnotationEditorType.STAMP, {
       bitmapFile: item.getAsFile(),
     });
-=======
-    parent.pasteEditor(
-      { mode: AnnotationEditorType.STAMP },
-      { bitmapFile: item.getAsFile() }
-    );
->>>>>>> upstream/master
   }
 
   /** @inheritdoc */
@@ -182,15 +151,8 @@ class StampEditor extends AnnotationEditor {
       this._uiManager.useNewAltTextFlow &&
       this.#bitmap
     ) {
-<<<<<<< HEAD
       this._editToolbar.hide();
       this._uiManager.editAltText(this, /* firstTime = */ true);
-=======
-      this.addEditToolbar().then(() => {
-        this._editToolbar.hide();
-        this._uiManager.editAltText(this, /* firstTime = */ true);
-      });
->>>>>>> upstream/master
       return;
     }
 
@@ -296,11 +258,7 @@ class StampEditor extends AnnotationEditor {
       document.body.append(input);
     }
     input.type = "file";
-<<<<<<< HEAD
     input.accept = StampEditor.supportedTypesStr;
-=======
-    input.accept = SupportedImageMimeTypes.join(",");
->>>>>>> upstream/master
     const signal = this._uiManager._signal;
     this.#bitmapPromise = new Promise(resolve => {
       input.addEventListener(
@@ -347,11 +305,8 @@ class StampEditor extends AnnotationEditor {
       this._uiManager.imageManager.deleteId(this.#bitmapId);
       this.#canvas?.remove();
       this.#canvas = null;
-<<<<<<< HEAD
       this.#observer?.disconnect();
       this.#observer = null;
-=======
->>>>>>> upstream/master
       if (this.#resizeTimeoutId) {
         clearTimeout(this.#resizeTimeoutId);
         this.#resizeTimeoutId = null;
@@ -387,17 +342,9 @@ class StampEditor extends AnnotationEditor {
   }
 
   /** @inheritdoc */
-<<<<<<< HEAD
   onceAdded() {
     this._isDraggable = true;
     this.div.focus();
-=======
-  onceAdded(focus) {
-    this._isDraggable = true;
-    if (focus) {
-      this.div.focus();
-    }
->>>>>>> upstream/master
   }
 
   /** @inheritdoc */
@@ -407,24 +354,11 @@ class StampEditor extends AnnotationEditor {
       this.#bitmap ||
       this.#bitmapUrl ||
       this.#bitmapFile ||
-<<<<<<< HEAD
       this.#bitmapId
-=======
-      this.#bitmapId ||
-      this.#missingCanvas
->>>>>>> upstream/master
     );
   }
 
   /** @inheritdoc */
-<<<<<<< HEAD
-=======
-  get toolbarButtons() {
-    return [["altText", this.createAltText()]];
-  }
-
-  /** @inheritdoc */
->>>>>>> upstream/master
   get isResizable() {
     return true;
   }
@@ -436,18 +370,13 @@ class StampEditor extends AnnotationEditor {
     }
 
     let baseX, baseY;
-<<<<<<< HEAD
     if (this.width) {
-=======
-    if (this._isCopy) {
->>>>>>> upstream/master
       baseX = this.x;
       baseY = this.y;
     }
 
     super.render();
     this.div.hidden = true;
-<<<<<<< HEAD
     this.div.setAttribute("role", "figure");
 
     this.addAltTextButton();
@@ -472,67 +401,6 @@ class StampEditor extends AnnotationEditor {
     return this.div;
   }
 
-=======
-
-    this.createAltText();
-
-    if (!this.#missingCanvas) {
-      if (this.#bitmap) {
-        this.#createCanvas();
-      } else {
-        this.#getBitmap();
-      }
-    }
-
-    if (this._isCopy) {
-      this._moveAfterPaste(baseX, baseY);
-    }
-
-    this._uiManager.addShouldRescale(this);
-
-    return this.div;
-  }
-
-  setCanvas(annotationElementId, canvas) {
-    const { id: bitmapId, bitmap } = this._uiManager.imageManager.getFromCanvas(
-      annotationElementId,
-      canvas
-    );
-    canvas.remove();
-    if (bitmapId && this._uiManager.imageManager.isValidId(bitmapId)) {
-      this.#bitmapId = bitmapId;
-      if (bitmap) {
-        this.#bitmap = bitmap;
-      }
-      this.#missingCanvas = false;
-      this.#createCanvas();
-    }
-  }
-
-  /** @inheritdoc */
-  _onResized() {
-    // We used a CSS-zoom during the resizing, but now it's resized we can
-    // rescale correctly the bitmap to fit the new dimensions.
-    this.onScaleChanging();
-  }
-
-  onScaleChanging() {
-    if (!this.parent) {
-      return;
-    }
-    if (this.#resizeTimeoutId !== null) {
-      clearTimeout(this.#resizeTimeoutId);
-    }
-    // The user's zooming the page, there is no need to redraw the bitmap at
-    // each step, hence we wait a bit before redrawing it.
-    const TIME_TO_WAIT = 200;
-    this.#resizeTimeoutId = setTimeout(() => {
-      this.#resizeTimeoutId = null;
-      this.#drawBitmap();
-    }, TIME_TO_WAIT);
-  }
-
->>>>>>> upstream/master
   #createCanvas() {
     const { div } = this;
     let { width, height } = this.#bitmap;
@@ -545,11 +413,7 @@ class StampEditor extends AnnotationEditor {
       width > MAX_RATIO * pageWidth ||
       height > MAX_RATIO * pageHeight
     ) {
-<<<<<<< HEAD
       // If the the image is too big compared to the page dimensions
-=======
-      // If the image is too big compared to the page dimensions
->>>>>>> upstream/master
       // (more than MAX_RATIO) then we scale it down.
       const factor = Math.min(
         (MAX_RATIO * pageWidth) / width,
@@ -558,34 +422,17 @@ class StampEditor extends AnnotationEditor {
       width *= factor;
       height *= factor;
     }
-<<<<<<< HEAD
     const [parentWidth, parentHeight] = this.parentDimensions;
     this.setDims(
       (width * parentWidth) / pageWidth,
       (height * parentHeight) / pageHeight
     );
-=======
->>>>>>> upstream/master
 
     this._uiManager.enableWaiting(false);
     const canvas = (this.#canvas = document.createElement("canvas"));
     canvas.setAttribute("role", "img");
     this.addContainer(canvas);
 
-<<<<<<< HEAD
-=======
-    this.width = width / pageWidth;
-    this.height = height / pageHeight;
-    this.setDims();
-
-    if (this._initialOptions?.isCentered) {
-      this.center();
-    } else {
-      this.fixAndSetPosition();
-    }
-    this._initialOptions = null;
-
->>>>>>> upstream/master
     if (
       !this._uiManager.useNewAltTextWhenAddingImage ||
       !this._uiManager.useNewAltTextFlow ||
@@ -593,12 +440,8 @@ class StampEditor extends AnnotationEditor {
     ) {
       div.hidden = false;
     }
-<<<<<<< HEAD
     this.#drawBitmap(width, height);
     this.#createObserver();
-=======
-    this.#drawBitmap();
->>>>>>> upstream/master
     if (!this.#hasBeenAddedInUndoStack) {
       this.parent.addUndoableEditor(this);
       this.#hasBeenAddedInUndoStack = true;
@@ -611,14 +454,7 @@ class StampEditor extends AnnotationEditor {
       action: "inserted_image",
     });
     if (this.#bitmapFileName) {
-<<<<<<< HEAD
       canvas.setAttribute("aria-label", this.#bitmapFileName);
-=======
-      this.div.setAttribute("aria-description", this.#bitmapFileName);
-    }
-    if (!this.annotationElementId) {
-      this._uiManager.a11yAlert("pdfjs-editor-stamp-added-alert");
->>>>>>> upstream/master
     }
   }
 
@@ -668,11 +504,7 @@ class StampEditor extends AnnotationEditor {
         black = "#cfcfd8";
       if (this._uiManager.hcmFilter !== "none") {
         black = "black";
-<<<<<<< HEAD
       } else if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
-=======
-      } else if (ColorScheme.isDarkMode) {
->>>>>>> upstream/master
         white = "#8f8f9d";
         black = "#42414d";
       }
@@ -752,7 +584,6 @@ class StampEditor extends AnnotationEditor {
     return { canvas, width, height, imageData };
   }
 
-<<<<<<< HEAD
   /**
    * When the dimensions of the div change the inner canvas must
    * renew its dimensions, hence it must redraw its own contents.
@@ -784,8 +615,6 @@ class StampEditor extends AnnotationEditor {
     }, TIME_TO_WAIT);
   }
 
-=======
->>>>>>> upstream/master
   #scaleBitmap(width, height) {
     const { width: bitmapWidth, height: bitmapHeight } = this.#bitmap;
 
@@ -831,33 +660,18 @@ class StampEditor extends AnnotationEditor {
     return bitmap;
   }
 
-<<<<<<< HEAD
   #drawBitmap(width, height) {
     const outputScale = new OutputScale();
     const scaledWidth = Math.ceil(width * outputScale.sx);
     const scaledHeight = Math.ceil(height * outputScale.sy);
 
     const canvas = this.#canvas;
-=======
-  #drawBitmap() {
-    const [parentWidth, parentHeight] = this.parentDimensions;
-    const { width, height } = this;
-    const outputScale = new OutputScale();
-    const scaledWidth = Math.ceil(width * parentWidth * outputScale.sx);
-    const scaledHeight = Math.ceil(height * parentHeight * outputScale.sy);
-    const canvas = this.#canvas;
-
->>>>>>> upstream/master
     if (
       !canvas ||
       (canvas.width === scaledWidth && canvas.height === scaledHeight)
     ) {
       return;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/master
     canvas.width = scaledWidth;
     canvas.height = scaledHeight;
 
@@ -880,14 +694,11 @@ class StampEditor extends AnnotationEditor {
     );
   }
 
-<<<<<<< HEAD
   /** @inheritdoc */
   getImageForAltText() {
     return this.#canvas;
   }
 
-=======
->>>>>>> upstream/master
   #serializeBitmap(toUrl) {
     if (toUrl) {
       if (this.#isSvg) {
@@ -935,7 +746,6 @@ class StampEditor extends AnnotationEditor {
     return structuredClone(this.#bitmap);
   }
 
-<<<<<<< HEAD
   /**
    * Create the resize observer.
    */
@@ -968,30 +778,10 @@ class StampEditor extends AnnotationEditor {
     if (data instanceof StampAnnotationElement) {
       const {
         data: { rect, rotation, id, structParent, popupRef },
-=======
-  /** @inheritdoc */
-  static async deserialize(data, parent, uiManager) {
-    let initialData = null;
-    let missingCanvas = false;
-    if (data instanceof StampAnnotationElement) {
-      const {
-        data: {
-          rect,
-          rotation,
-          id,
-          structParent,
-          popupRef,
-          richText,
-          contentsObj,
-          creationDate,
-          modificationDate,
-        },
->>>>>>> upstream/master
         container,
         parent: {
           page: { pageNumber },
         },
-<<<<<<< HEAD
       } = data;
       const canvas = container.querySelector("canvas");
       const imageData = uiManager.imageManager.getFromCanvas(
@@ -999,22 +789,6 @@ class StampEditor extends AnnotationEditor {
         canvas
       );
       canvas.remove();
-=======
-        canvas,
-      } = data;
-      let bitmapId, bitmap;
-      if (canvas) {
-        delete data.canvas;
-        ({ id: bitmapId, bitmap } = uiManager.imageManager.getFromCanvas(
-          container.id,
-          canvas
-        ));
-        canvas.remove();
-      } else {
-        missingCanvas = true;
-        data._hasNoCanvas = true;
-      }
->>>>>>> upstream/master
 
       // When switching to edit mode, we wait for the structure tree to be
       // ready (see pdf_viewer.js), so it's fine to use getAriaAttributesSync.
@@ -1025,20 +799,11 @@ class StampEditor extends AnnotationEditor {
 
       initialData = data = {
         annotationType: AnnotationEditorType.STAMP,
-<<<<<<< HEAD
         bitmapId: imageData.id,
         bitmap: imageData.bitmap,
         pageIndex: pageNumber - 1,
         rect: rect.slice(0),
         rotation,
-=======
-        bitmapId,
-        bitmap,
-        pageIndex: pageNumber - 1,
-        rect: rect.slice(0),
-        rotation,
-        annotationElementId: id,
->>>>>>> upstream/master
         id,
         deleted: false,
         accessibilityData: {
@@ -1048,26 +813,12 @@ class StampEditor extends AnnotationEditor {
         isSvg: false,
         structParent,
         popupRef,
-<<<<<<< HEAD
-=======
-        richText,
-        comment: contentsObj?.str || null,
-        creationDate,
-        modificationDate,
->>>>>>> upstream/master
       };
     }
     const editor = await super.deserialize(data, parent, uiManager);
     const { rect, bitmap, bitmapUrl, bitmapId, isSvg, accessibilityData } =
       data;
-<<<<<<< HEAD
     if (bitmapId && uiManager.imageManager.isValidId(bitmapId)) {
-=======
-    if (missingCanvas) {
-      uiManager.addMissingCanvas(data.id, editor);
-      editor.#missingCanvas = true;
-    } else if (bitmapId && uiManager.imageManager.isValidId(bitmapId)) {
->>>>>>> upstream/master
       editor.#bitmapId = bitmapId;
       if (bitmap) {
         editor.#bitmap = bitmap;
@@ -1081,20 +832,11 @@ class StampEditor extends AnnotationEditor {
     editor.width = (rect[2] - rect[0]) / parentWidth;
     editor.height = (rect[3] - rect[1]) / parentHeight;
 
-<<<<<<< HEAD
     editor.annotationElementId = data.id || null;
-=======
->>>>>>> upstream/master
     if (accessibilityData) {
       editor.altTextData = accessibilityData;
     }
     editor._initialData = initialData;
-<<<<<<< HEAD
-=======
-    if (data.comment) {
-      editor.setCommentData(data);
-    }
->>>>>>> upstream/master
     // No need to be add in the undo stack if the editor is created from an
     // existing one.
     editor.#hasBeenAddedInUndoStack = !!initialData;
@@ -1112,7 +854,6 @@ class StampEditor extends AnnotationEditor {
       return this.serializeDeleted();
     }
 
-<<<<<<< HEAD
     const serialized = {
       annotationType: AnnotationEditorType.STAMP,
       bitmapId: this.#bitmapId,
@@ -1122,13 +863,6 @@ class StampEditor extends AnnotationEditor {
       isSvg: this.#isSvg,
       structTreeParentId: this._structTreeParentId,
     };
-=======
-    const serialized = Object.assign(super.serialize(isForCopying), {
-      bitmapId: this.#bitmapId,
-      isSvg: this.#isSvg,
-    });
-    this.addComment(serialized);
->>>>>>> upstream/master
 
     if (isForCopying) {
       // We don't know what's the final destination (this pdf or another one)
@@ -1136,10 +870,6 @@ class StampEditor extends AnnotationEditor {
       // hence we serialize the bitmap to a data url.
       serialized.bitmapUrl = this.#serializeBitmap(/* toUrl = */ true);
       serialized.accessibilityData = this.serializeAltText(true);
-<<<<<<< HEAD
-=======
-      serialized.isCopy = true;
->>>>>>> upstream/master
       return serialized;
     }
 
@@ -1159,15 +889,8 @@ class StampEditor extends AnnotationEditor {
         serialized.accessibilityData.structParent =
           this._initialData.structParent ?? -1;
       }
-<<<<<<< HEAD
     }
     serialized.id = this.annotationElementId;
-=======
-      serialized.id = this.annotationElementId;
-      delete serialized.bitmapId;
-      return serialized;
-    }
->>>>>>> upstream/master
 
     if (context === null) {
       return serialized;
@@ -1198,52 +921,27 @@ class StampEditor extends AnnotationEditor {
 
   #hasElementChanged(serialized) {
     const {
-<<<<<<< HEAD
       rect,
-=======
->>>>>>> upstream/master
       pageIndex,
       accessibilityData: { altText },
     } = this._initialData;
 
-<<<<<<< HEAD
     const isSameRect = serialized.rect.every(
       (x, i) => Math.abs(x - rect[i]) < 1
     );
-=======
->>>>>>> upstream/master
     const isSamePageIndex = serialized.pageIndex === pageIndex;
     const isSameAltText = (serialized.accessibilityData?.alt || "") === altText;
 
     return {
-<<<<<<< HEAD
       isSame: isSameRect && isSamePageIndex && isSameAltText,
-=======
-      isSame:
-        !this.hasEditedComment &&
-        !this._hasBeenMoved &&
-        !this._hasBeenResized &&
-        isSamePageIndex &&
-        isSameAltText,
->>>>>>> upstream/master
       isSameAltText,
     };
   }
 
   /** @inheritdoc */
   renderAnnotationElement(annotation) {
-<<<<<<< HEAD
     annotation.updateEdited({
       rect: this.getRect(0, 0),
-=======
-    if (this.deleted) {
-      annotation.hide();
-      return null;
-    }
-    annotation.updateEdited({
-      rect: this.getPDFRect(),
-      popup: this.comment,
->>>>>>> upstream/master
     });
 
     return null;

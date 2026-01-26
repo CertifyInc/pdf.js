@@ -16,7 +16,6 @@
 import { createActionsMap, FieldType, getFieldType } from "./common.js";
 import { Color } from "./color.js";
 import { PDFObject } from "./pdf_object.js";
-import { serializeError } from "./app_utils.js";
 
 class Field extends PDFObject {
   constructor(data) {
@@ -86,12 +85,6 @@ class Field extends PDFObject {
     this._fieldType = getFieldType(this._actions);
     this._siblings = data.siblings || null;
     this._rotation = data.rotation || 0;
-<<<<<<< HEAD
-=======
-    this._datetimeFormat = data.datetimeFormat || null;
-    this._hasDateOrTime = !!data.hasDatetimeHTML;
-    this._util = data.util;
->>>>>>> upstream/master
 
     this._globalEval = data.globalEval;
     this._appObjects = data.appObjects;
@@ -252,19 +245,6 @@ class Field extends PDFObject {
       return;
     }
 
-<<<<<<< HEAD
-=======
-    if (this._hasDateOrTime && value) {
-      const date = this._util.scand(this._datetimeFormat, value);
-      if (date) {
-        this._originalValue = date.valueOf();
-        value = this._util.printd(this._datetimeFormat, date);
-        this._value = !isNaN(value) ? parseFloat(value) : value;
-        return;
-      }
-    }
-
->>>>>>> upstream/master
     if (
       value === "" ||
       typeof value !== "string" ||
@@ -281,13 +261,6 @@ class Field extends PDFObject {
     this._value = !isNaN(_value) ? parseFloat(_value) : value;
   }
 
-<<<<<<< HEAD
-=======
-  get _initialValue() {
-    return (this._hasDateOrTime && this._originalValue) || null;
-  }
-
->>>>>>> upstream/master
   _getValue() {
     return this._originalValue ?? this.value;
   }
@@ -579,15 +552,14 @@ class Field extends PDFObject {
     }
 
     const actions = this._actions.get(eventName);
-    for (const action of actions) {
-      try {
+    try {
+      for (const action of actions) {
         // Action evaluation must happen in the global scope
         this._globalEval(action);
-      } catch (error) {
-        const serializedError = serializeError(error);
-        serializedError.value = `Error when executing "${eventName}" for field "${this._id}"\n${serializedError.value}`;
-        this._send(serializedError);
       }
+    } catch (error) {
+      event.rc = false;
+      throw error;
     }
 
     return true;

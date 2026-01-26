@@ -18,10 +18,12 @@ import { AppOptions } from "./app_options.js";
 import { LinkTarget } from "./pdf_link_service.js";
 import { PDFViewerApplication } from "./app.js";
 
-const AppConstants =
-  typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")
-    ? { LinkTarget, RenderingStates, ScrollMode, SpreadMode }
-    : null;
+/* eslint-disable-next-line no-unused-vars */
+const pdfjsVersion =
+  typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_VERSION") : void 0;
+/* eslint-disable-next-line no-unused-vars */
+const pdfjsBuild =
+  typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_BUILD") : void 0;
 
 const AppConstants =
   typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")
@@ -38,10 +40,6 @@ function getViewerConfiguration() {
     principalContainer: document.getElementById("mainContainer"),
     mainContainer: document.getElementById("viewerContainer"),
     viewerContainer: document.getElementById("viewer"),
-<<<<<<< HEAD
-=======
-    viewerAlert: document.getElementById("viewer-alert"),
->>>>>>> upstream/master
     toolbar: {
       container: document.getElementById("toolbarContainer"),
       numPages: document.getElementById("numPages"),
@@ -53,13 +51,6 @@ function getViewerConfiguration() {
       zoomIn: document.getElementById("zoomInButton"),
       zoomOut: document.getElementById("zoomOutButton"),
       print: document.getElementById("printButton"),
-<<<<<<< HEAD
-=======
-      editorCommentButton: document.getElementById("editorCommentButton"),
-      editorCommentParamsToolbar: document.getElementById(
-        "editorCommentParamsToolbar"
-      ),
->>>>>>> upstream/master
       editorFreeTextButton: document.getElementById("editorFreeTextButton"),
       editorFreeTextParamsToolbar: document.getElementById(
         "editorFreeTextParamsToolbar"
@@ -77,13 +68,6 @@ function getViewerConfiguration() {
       editorStampParamsToolbar: document.getElementById(
         "editorStampParamsToolbar"
       ),
-<<<<<<< HEAD
-=======
-      editorSignatureButton: document.getElementById("editorSignatureButton"),
-      editorSignatureParamsToolbar: document.getElementById(
-        "editorSignatureParamsToolbar"
-      ),
->>>>>>> upstream/master
       download: document.getElementById("downloadButton"),
     },
     secondaryToolbar: {
@@ -118,9 +102,9 @@ function getViewerConfiguration() {
       ),
       documentPropertiesButton: document.getElementById("documentProperties"),
     },
-    viewsManager: {
+    sidebar: {
+      // Divs (and sidebar button)
       outerContainer: document.getElementById("outerContainer"),
-<<<<<<< HEAD
       sidebarContainer: document.getElementById("sidebarContainer"),
       toggleButton: document.getElementById("sidebarToggleButton"),
       resizer: document.getElementById("sidebarResizer"),
@@ -136,42 +120,6 @@ function getViewerConfiguration() {
       layersView: document.getElementById("layersView"),
       // View-specific options
       currentOutlineItemButton: document.getElementById("currentOutlineItem"),
-=======
-      toggleButton: document.getElementById("viewsManagerToggleButton"),
-      sidebarContainer: document.getElementById("viewsManager"),
-      resizer: document.getElementById("viewsManagerResizer"),
-      thumbnailButton: document.getElementById("thumbnailsViewMenu"),
-      outlineButton: document.getElementById("outlinesViewMenu"),
-      attachmentsButton: document.getElementById("attachmentsViewMenu"),
-      layersButton: document.getElementById("layersViewMenu"),
-      viewsManagerSelectorButton: document.getElementById(
-        "viewsManagerSelectorButton"
-      ),
-      viewsManagerSelectorOptions: document.getElementById(
-        "viewsManagerSelectorOptions"
-      ),
-      thumbnailsView: document.getElementById("thumbnailsView"),
-      outlinesView: document.getElementById("outlinesView"),
-      attachmentsView: document.getElementById("attachmentsView"),
-      layersView: document.getElementById("layersView"),
-      viewsManagerAddFileButton: document.getElementById(
-        "viewsManagerAddFileButton"
-      ),
-      viewsManagerCurrentOutlineButton: document.getElementById(
-        "viewsManagerCurrentOutlineButton"
-      ),
-      viewsManagerHeaderLabel: document.getElementById(
-        "viewsManagerHeaderLabel"
-      ),
-      manageMenu: {
-        button: document.getElementById("viewsManagerStatusActionButton"),
-        menu: document.getElementById("viewsManagerStatusActionOptions"),
-        copy: document.getElementById("viewsManagerStatusActionCopy"),
-        cut: document.getElementById("viewsManagerStatusActionCut"),
-        delete: document.getElementById("viewsManagerStatusActionDelete"),
-        saveAs: document.getElementById("viewsManagerStatusActionSaveAs"),
-      },
->>>>>>> upstream/master
     },
     findBar: {
       bar: document.getElementById("findbar"),
@@ -262,94 +210,19 @@ function getViewerConfiguration() {
       ),
       closeButton: document.getElementById("altTextSettingsCloseButton"),
     },
-<<<<<<< HEAD
     annotationEditorParams: {
-=======
-    addSignatureDialog: {
-      dialog: document.getElementById("addSignatureDialog"),
-      panels: document.getElementById("addSignatureActionContainer"),
-      typeButton: document.getElementById("addSignatureTypeButton"),
-      typeInput: document.getElementById("addSignatureTypeInput"),
-      drawButton: document.getElementById("addSignatureDrawButton"),
-      drawSVG: document.getElementById("addSignatureDraw"),
-      drawPlaceholder: document.getElementById("addSignatureDrawPlaceholder"),
-      drawThickness: document.getElementById("addSignatureDrawThickness"),
-      imageButton: document.getElementById("addSignatureImageButton"),
-      imageSVG: document.getElementById("addSignatureImage"),
-      imagePlaceholder: document.getElementById("addSignatureImagePlaceholder"),
-      imagePicker: document.getElementById("addSignatureFilePicker"),
-      imagePickerLink: document.getElementById("addSignatureImageBrowse"),
-      description: document.getElementById("addSignatureDescription"),
-      clearButton: document.getElementById("clearSignatureButton"),
-      saveContainer: document.getElementById("addSignatureSaveContainer"),
-      saveCheckbox: document.getElementById("addSignatureSaveCheckbox"),
-      errorBar: document.getElementById("addSignatureError"),
-      errorTitle: document.getElementById("addSignatureErrorTitle"),
-      errorDescription: document.getElementById("addSignatureErrorDescription"),
-      errorCloseButton: document.getElementById("addSignatureErrorCloseButton"),
-      cancelButton: document.getElementById("addSignatureCancelButton"),
-      addButton: document.getElementById("addSignatureAddButton"),
-    },
-    editSignatureDialog: {
-      dialog: document.getElementById("editSignatureDescriptionDialog"),
-      description: document.getElementById("editSignatureDescription"),
-      editSignatureView: document.getElementById("editSignatureView"),
-      cancelButton: document.getElementById("editSignatureCancelButton"),
-      updateButton: document.getElementById("editSignatureUpdateButton"),
-    },
-    annotationEditorParams: {
-      editorCommentsSidebar: document.getElementById("editorCommentsSidebar"),
-      editorCommentsSidebarCount: document.getElementById(
-        "editorCommentsSidebarCount"
-      ),
-      editorCommentsSidebarTitle: document.getElementById(
-        "editorCommentsSidebarTitle"
-      ),
-      editorCommentsSidebarCloseButton: document.getElementById(
-        "editorCommentsSidebarCloseButton"
-      ),
-      editorCommentsSidebarList: document.getElementById(
-        "editorCommentsSidebarList"
-      ),
-      editorCommentsSidebarResizer: document.getElementById(
-        "editorCommentsSidebarResizer"
-      ),
->>>>>>> upstream/master
       editorFreeTextFontSize: document.getElementById("editorFreeTextFontSize"),
       editorFreeTextColor: document.getElementById("editorFreeTextColor"),
       editorInkColor: document.getElementById("editorInkColor"),
       editorInkThickness: document.getElementById("editorInkThickness"),
       editorInkOpacity: document.getElementById("editorInkOpacity"),
       editorStampAddImage: document.getElementById("editorStampAddImage"),
-<<<<<<< HEAD
-=======
-      editorSignatureAddSignature: document.getElementById(
-        "editorSignatureAddSignature"
-      ),
->>>>>>> upstream/master
       editorFreeHighlightThickness: document.getElementById(
         "editorFreeHighlightThickness"
       ),
       editorHighlightShowAll: document.getElementById("editorHighlightShowAll"),
     },
     printContainer: document.getElementById("printContainer"),
-<<<<<<< HEAD
-=======
-    editorUndoBar: {
-      container: document.getElementById("editorUndoBar"),
-      message: document.getElementById("editorUndoBarMessage"),
-      undoButton: document.getElementById("editorUndoBarUndoButton"),
-      closeButton: document.getElementById("editorUndoBarCloseButton"),
-    },
-    editCommentDialog: {
-      dialog: document.getElementById("commentManagerDialog"),
-      toolbar: document.getElementById("commentManagerToolbar"),
-      title: document.getElementById("commentManagerTitle"),
-      textInput: document.getElementById("commentManagerTextInput"),
-      cancelButton: document.getElementById("commentManagerCancelButton"),
-      saveButton: document.getElementById("commentManagerSaveButton"),
-    },
->>>>>>> upstream/master
   };
 }
 
@@ -375,7 +248,6 @@ function webViewerLoad() {
     } catch (ex) {
       // The viewer could be in e.g. a cross-origin <iframe> element,
       // fallback to dispatching the event at the current `document`.
-<<<<<<< HEAD
       console.error(`webviewerloaded: ${ex}`);
       document.dispatchEvent(event);
     }
@@ -385,11 +257,6 @@ function webViewerLoad() {
     );
 
     PDFViewerApplication.run(config);
-=======
-      console.error("webviewerloaded:", ex);
-      document.dispatchEvent(event);
-    }
->>>>>>> upstream/master
   }
   PDFViewerApplication.run(config);
 }
@@ -408,13 +275,7 @@ if (
 }
 
 export {
-<<<<<<< HEAD
   AppConstants as PDFViewerApplicationConstants,
   AppOptions as PDFViewerApplicationOptions,
   PDFViewerApplication,
-=======
-  PDFViewerApplication,
-  AppConstants as PDFViewerApplicationConstants,
-  AppOptions as PDFViewerApplicationOptions,
->>>>>>> upstream/master
 };

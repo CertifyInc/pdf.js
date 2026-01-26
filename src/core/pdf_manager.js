@@ -13,10 +13,6 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-=======
-import { CmykICCBasedCS, IccColorSpace } from "./icc_colorspace.js";
->>>>>>> upstream/master
 import {
   createValidAbsoluteUrl,
   FeatureTest,
@@ -24,12 +20,7 @@ import {
   warn,
 } from "../shared/util.js";
 import { ChunkedStreamManager } from "./chunked_stream.js";
-import { ImageResizer } from "./image_resizer.js";
-import { JBig2WasmImage } from "./jbig2_wasm.js";
-import { JpegStream } from "./jpeg_stream.js";
-import { JpxImage } from "./jpx.js";
 import { MissingDataException } from "./core_utils.js";
-import { OperatorList } from "./operator_list.js";
 import { PDFDocument } from "./document.js";
 import { Stream } from "./stream.js";
 
@@ -45,29 +36,13 @@ function parseDocBaseUrl(url) {
 }
 
 class BasePdfManager {
-<<<<<<< HEAD
   constructor(args) {
-=======
-  constructor({
-    // source,
-    // disableAutoFetch,
-    docBaseUrl,
-    docId,
-    enableXfa,
-    evaluatorOptions,
-    handler,
-    // length,
-    password,
-    // rangeChunkSize,
-  }) {
->>>>>>> upstream/master
     if (
       (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) &&
       this.constructor === BasePdfManager
     ) {
       unreachable("Cannot initialize BasePdfManager.");
     }
-<<<<<<< HEAD
     this._docBaseUrl = parseDocBaseUrl(args.docBaseUrl);
     this._docId = args.docId;
     this._password = args.password;
@@ -80,31 +55,6 @@ class BasePdfManager {
     args.evaluatorOptions.isImageDecoderSupported &&=
       FeatureTest.isImageDecoderSupported;
     this.evaluatorOptions = Object.freeze(args.evaluatorOptions);
-=======
-    this._docBaseUrl = parseDocBaseUrl(docBaseUrl);
-    this._docId = docId;
-    this._password = password;
-    this.enableXfa = enableXfa;
-
-    // Check `OffscreenCanvas` and `ImageDecoder` support once,
-    // rather than repeatedly throughout the worker-thread code.
-    evaluatorOptions.isOffscreenCanvasSupported &&=
-      FeatureTest.isOffscreenCanvasSupported;
-    evaluatorOptions.isImageDecoderSupported &&=
-      FeatureTest.isImageDecoderSupported;
-    this.evaluatorOptions = Object.freeze(evaluatorOptions);
-
-    // Initialize image-options once per document.
-    ImageResizer.setOptions(evaluatorOptions);
-    JpegStream.setOptions(evaluatorOptions);
-    OperatorList.setOptions(evaluatorOptions);
-
-    const options = { ...evaluatorOptions, handler };
-    JpxImage.setOptions(options);
-    IccColorSpace.setOptions(options);
-    CmykICCBasedCS.setOptions(options);
-    JBig2WasmImage.setOptions(options);
->>>>>>> upstream/master
   }
 
   get docId() {
@@ -119,13 +69,10 @@ class BasePdfManager {
     return this._docBaseUrl;
   }
 
-<<<<<<< HEAD
   get catalog() {
     return this.pdfDocument.catalog;
   }
 
-=======
->>>>>>> upstream/master
   ensureDoc(prop, args) {
     return this.ensure(this.pdfDocument, prop, args);
   }
@@ -144,6 +91,18 @@ class BasePdfManager {
 
   fontFallback(id, handler) {
     return this.pdfDocument.fontFallback(id, handler);
+  }
+
+  loadXfaFonts(handler, task) {
+    return this.pdfDocument.loadXfaFonts(handler, task);
+  }
+
+  loadXfaImages() {
+    return this.pdfDocument.loadXfaImages();
+  }
+
+  serializeXfaData(annotationStorage) {
+    return this.pdfDocument.serializeXfaData(annotationStorage);
   }
 
   cleanup(manuallyTriggered = false) {

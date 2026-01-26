@@ -699,7 +699,6 @@ class CMapFactory {
     if (encoding instanceof Name) {
       return createBuiltInCMap(encoding.name, fetchBuiltInCMap);
     } else if (encoding instanceof BaseStream) {
-<<<<<<< HEAD
       const parsedCMap = await parseCMap(
         /* cMap = */ new CMap(),
         /* lexer = */ new Lexer(encoding),
@@ -710,24 +709,6 @@ class CMapFactory {
       if (parsedCMap.isIdentityCMap) {
         return createBuiltInCMap(parsedCMap.name, fetchBuiltInCMap);
       }
-=======
-      if (encoding.isAsync) {
-        const bytes = await encoding.asyncGetBytes();
-        if (bytes) {
-          encoding = new Stream(bytes, 0, bytes.length, encoding.dict);
-        }
-      }
-      const parsedCMap = await parseCMap(
-        /* cMap = */ new CMap(),
-        /* lexer = */ new Lexer(encoding),
-        fetchBuiltInCMap,
-        useCMap
-      );
-
-      if (parsedCMap.isIdentityCMap) {
-        return createBuiltInCMap(parsedCMap.name, fetchBuiltInCMap);
-      }
->>>>>>> upstream/master
       return parsedCMap;
     }
     throw new Error("Encoding required.");

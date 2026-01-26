@@ -19,7 +19,6 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
   if (
     typeof PDFJSDev !== "undefined" &&
     PDFJSDev.test("LIB") &&
-<<<<<<< HEAD
     typeof navigator === "undefined"
   ) {
     globalThis.navigator = Object.create(null);
@@ -27,18 +26,6 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
   const userAgent = navigator.userAgent || "";
   const platform = navigator.platform || "";
   const maxTouchPoints = navigator.maxTouchPoints || 1;
-=======
-    !globalThis.navigator?.language
-  ) {
-    globalThis.navigator = {
-      language: "en-US",
-      maxTouchPoints: 1,
-      platform: "",
-      userAgent: "",
-    };
-  }
-  const { maxTouchPoints, platform, userAgent } = navigator;
->>>>>>> upstream/master
 
   const isAndroid = /Android/.test(userAgent);
   const isIOS =
@@ -109,14 +96,6 @@ const defaultOptions = {
         : null,
     kind: OptionKind.BROWSER,
   },
-<<<<<<< HEAD
-=======
-  maxCanvasDim: {
-    /** @type {number} */
-    value: 32767,
-    kind: OptionKind.BROWSER + OptionKind.VIEWER,
-  },
->>>>>>> upstream/master
   nimbusDataStr: {
     /** @type {string} */
     value: "",
@@ -152,14 +131,6 @@ const defaultOptions = {
     value: true,
     kind: OptionKind.BROWSER,
   },
-<<<<<<< HEAD
-=======
-  supportsPrinting: {
-    /** @type {boolean} */
-    value: true,
-    kind: OptionKind.BROWSER,
-  },
->>>>>>> upstream/master
   toolbarDensity: {
     /** @type {number} */
     value: 0, // 0 = "normal", 1 = "compact", 2 = "touch"
@@ -182,19 +153,6 @@ const defaultOptions = {
   annotationMode: {
     /** @type {number} */
     value: 2,
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
-  capCanvasAreaFactor: {
-    /** @type {number} */
-    value: 200,
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
-  commentLearnMoreUrl: {
-    /** @type {string} */
-    value:
-      typeof PDFJSDev === "undefined" || PDFJSDev.test("MOZCENTRAL")
-        ? "https://support.mozilla.org/%LOCALE%/kb/view-pdf-files-firefox-or-choose-another-viewer#w_add-a-comment-to-a-pdf"
-        : "",
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   },
   cursorToolOnLoad: {
@@ -237,24 +195,6 @@ const defaultOptions = {
     value: true,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE + OptionKind.EVENT_DISPATCH,
   },
-<<<<<<< HEAD
-=======
-  enableAutoLinking: {
-    /** @type {boolean} */
-    value: true,
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
-  enableComment: {
-    /** @type {boolean} */
-    value: typeof PDFJSDev === "undefined",
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
-  enableDetailCanvas: {
-    /** @type {boolean} */
-    value: true,
-    kind: OptionKind.VIEWER,
-  },
->>>>>>> upstream/master
   enableGuessAltText: {
     /** @type {boolean} */
     value: true,
@@ -273,14 +213,6 @@ const defaultOptions = {
     value: true,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   },
-<<<<<<< HEAD
-=======
-  enableOptimizedPartialRendering: {
-    /** @type {boolean} */
-    value: false,
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
->>>>>>> upstream/master
   enablePermissions: {
     /** @type {boolean} */
     value: false,
@@ -296,19 +228,6 @@ const defaultOptions = {
     value: typeof PDFJSDev === "undefined" || !PDFJSDev.test("CHROME"),
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   },
-<<<<<<< HEAD
-=======
-  enableSignatureEditor: {
-    /** @type {boolean} */
-    value: typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING"),
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
-  enableSplitMerge: {
-    /** @type {boolean} */
-    value: typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING"),
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
->>>>>>> upstream/master
   enableUpdatedAddImage: {
     // We'll probably want to make some experiments before enabling this
     // in Firefox release, but it has to be temporary.
@@ -329,13 +248,7 @@ const defaultOptions = {
   },
   highlightEditorColors: {
     /** @type {string} */
-<<<<<<< HEAD
     value: "yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F",
-=======
-    value:
-      "yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F," +
-      "yellow_HCM=#FFFFCC,green_HCM=#53FFBC,blue_HCM=#80EBFF,pink_HCM=#F6B8FF,red_HCM=#C50043",
->>>>>>> upstream/master
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   },
   historyUpdateUrl: {
@@ -361,14 +274,6 @@ const defaultOptions = {
     value: 2 ** 25,
     kind: OptionKind.VIEWER,
   },
-<<<<<<< HEAD
-=======
-  minDurationToUpdateCanvas: {
-    /** @type {number} */
-    value: 500, // ms
-    kind: OptionKind.VIEWER,
-  },
->>>>>>> upstream/master
   forcePageColors: {
     /** @type {boolean} */
     value: false,
@@ -414,14 +319,6 @@ const defaultOptions = {
     value: 1,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   },
-<<<<<<< HEAD
-=======
-  viewerCssTheme: {
-    /** @type {number} */
-    value: typeof PDFJSDev !== "undefined" && PDFJSDev.test("CHROME") ? 2 : 0,
-    kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
-  },
->>>>>>> upstream/master
   viewOnLoad: {
     /** @type {boolean} */
     value: 0,
@@ -466,17 +363,7 @@ const defaultOptions = {
   },
   docBaseUrl: {
     /** @type {string} */
-<<<<<<< HEAD
     value: typeof PDFJSDev === "undefined" ? document.URL.split("#", 1)[0] : "",
-=======
-    value:
-      typeof PDFJSDev === "undefined"
-        ? // NOTE: We cannot use the `updateUrlHash` function here, because of
-          // the default preferences generation (see `gulpfile.mjs`).
-          // However, the following line is *only* used in development mode.
-          document.URL.split("#", 1)[0]
-        : "",
->>>>>>> upstream/master
     kind: OptionKind.API,
   },
   enableHWA: {
@@ -492,17 +379,6 @@ const defaultOptions = {
   fontExtraProperties: {
     /** @type {boolean} */
     value: false,
-    kind: OptionKind.API,
-  },
-  iccUrl: {
-    /** @type {string} */
-    value:
-      // eslint-disable-next-line no-nested-ternary
-      typeof PDFJSDev === "undefined"
-        ? "../external/iccs/"
-        : PDFJSDev.test("MOZCENTRAL")
-          ? "resource://pdf.js/web/iccs/"
-          : "../web/iccs/",
     kind: OptionKind.API,
   },
   isEvalSupported: {
@@ -555,21 +431,10 @@ const defaultOptions = {
     value: 1,
     kind: OptionKind.API,
   },
-  wasmUrl: {
-    /** @type {string} */
-    value:
-      typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")
-        ? "resource://pdf.js/web/wasm/"
-        : "../web/wasm/",
-    kind: OptionKind.API,
-  },
 
   workerPort: {
     /** @type {Object} */
-    value:
-      typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")
-        ? globalThis.pdfjsPreloadedWorker || null
-        : null,
+    value: null,
     kind: OptionKind.WORKER,
   },
   workerSrc: {
@@ -601,14 +466,11 @@ if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("MOZCENTRAL")) {
         : "../build/pdf.sandbox.mjs",
     kind: OptionKind.VIEWER,
   };
-<<<<<<< HEAD
   defaultOptions.viewerCssTheme = {
     /** @type {number} */
     value: typeof PDFJSDev !== "undefined" && PDFJSDev.test("CHROME") ? 2 : 0,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE,
   };
-=======
->>>>>>> upstream/master
   defaultOptions.enableFakeMLManager = {
     /** @type {boolean} */
     value: true,

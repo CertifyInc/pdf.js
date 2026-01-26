@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/core/cleanup_helper.js
 /* Copyright 2022 Mozilla Foundation
-========
-/* Copyright 2024 Mozilla Foundation
->>>>>>>> upstream/master:src/display/editor/drawers/contour.js
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +13,6 @@
  * limitations under the License.
  */
 
-<<<<<<<< HEAD:src/core/cleanup_helper.js
 import { clearPatternCaches } from "./pattern.js";
 import { clearPrimitiveCaches } from "./primitives.js";
 import { clearUnicodeCaches } from "./unicode.js";
@@ -34,18 +29,3 @@ function clearGlobalCaches() {
 }
 
 export { clearGlobalCaches };
-========
-import { InkDrawOutline } from "./inkdraw.js";
-
-class ContourDrawOutline extends InkDrawOutline {
-  toSVGPath() {
-    let path = super.toSVGPath();
-    if (!path.endsWith("Z")) {
-      path += "Z";
-    }
-    return path;
-  }
-}
-
-export { ContourDrawOutline };
->>>>>>>> upstream/master:src/display/editor/drawers/contour.js

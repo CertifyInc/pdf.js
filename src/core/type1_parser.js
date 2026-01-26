@@ -41,11 +41,7 @@ const COMMAND_MAP = {
 };
 
 /**
-<<<<<<< HEAD
  * CharStrings are encoded following the the CharString Encoding sequence
-=======
- * CharStrings are encoded following the CharString Encoding sequence
->>>>>>> upstream/master
  * describe in Chapter 6 of the "Adobe Type1 Font Format" specification.
  * The value in a byte indicates a command, a number, or subsequent bytes
  * that are to be interpreted in a special way.

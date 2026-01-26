@@ -29,6 +29,7 @@ const FindState = {
 
 const FIND_TIMEOUT = 250; // ms
 const MATCH_SCROLL_OFFSET_TOP = -50; // px
+const MATCH_SCROLL_OFFSET_LEFT = -400; // px
 
 const CHARACTERS_TO_NORMALIZE = {
   "\u2010": "-", // Hyphen
@@ -77,12 +78,8 @@ const DIACRITICS_EXCEPTION = new Set([
 let DIACRITICS_EXCEPTION_STR; // Lazily initialized, see below.
 
 const DIACRITICS_REG_EXP = /\p{M}+/gu;
-<<<<<<< HEAD
 const SPECIAL_CHARS_REG_EXP =
   /([.*+?^${}()|[\]\\])|(\p{P})|(\s+)|(\p{M})|(\p{L})/gu;
-=======
-const SPECIAL_CHARS_REG_EXP = /([+^$|])|(\p{P}+)|(\s+)|(\p{M})|(\p{L})/gu;
->>>>>>> upstream/master
 const NOT_DIACRITIC_FROM_END_REG_EXP = /([^\p{M}])\p{M}*$/u;
 const NOT_DIACRITIC_FROM_START_REG_EXP = /^\p{M}*([^\p{M}])/u;
 
@@ -100,11 +97,7 @@ const NFKC_CHARS_TO_NORMALIZE = new Map();
 let noSyllablesRegExp = null;
 let withSyllablesRegExp = null;
 
-<<<<<<< HEAD
 function normalize(text) {
-=======
-function normalize(text, options = {}) {
->>>>>>> upstream/master
   // The diacritics in the text or in the query can be composed or not.
   // So we use a decomposed text using NFD (and the same for the query)
   // in order to be sure that diacritics are in the same order.
@@ -124,20 +117,10 @@ function normalize(text, options = {}) {
     }
   }
 
-<<<<<<< HEAD
   let normalizationRegex;
   if (syllablePositions.length === 0 && noSyllablesRegExp) {
     normalizationRegex = noSyllablesRegExp;
   } else if (syllablePositions.length > 0 && withSyllablesRegExp) {
-=======
-  const hasSyllables = syllablePositions.length > 0;
-  const ignoreDashEOL = options.ignoreDashEOL ?? false;
-
-  let normalizationRegex;
-  if (!hasSyllables && noSyllablesRegExp) {
-    normalizationRegex = noSyllablesRegExp;
-  } else if (hasSyllables && withSyllablesRegExp) {
->>>>>>> upstream/master
     normalizationRegex = withSyllablesRegExp;
   } else {
     // Compile the regular expression for text normalization once.
@@ -148,7 +131,6 @@ function normalize(text, options = {}) {
     // 30A0-30FF: Katakana
     const CJK = "(?:\\p{Ideographic}|[\u3040-\u30FF])";
     const HKDiacritics = "(?:\u3099|\u309A)";
-<<<<<<< HEAD
     const CompoundWord = "\\p{Ll}-\\n\\p{Lu}";
     const regexp = `([${replace}])|([${toNormalizeWithNFKC}])|(${HKDiacritics}\\n)|(\\p{M}+(?:-\\n)?)|(${CompoundWord})|(\\S-\\n)|(${CJK}\\n)|(\\n)`;
 
@@ -165,35 +147,6 @@ function normalize(text, options = {}) {
         regexp + `|(${FIRST_CHAR_SYLLABLES_REG_EXP})`,
         "gum"
       );
-=======
-    const BrokenWord = `\\p{Ll}-\\n(?=\\p{Ll})|\\p{Lu}-\\n(?=\\p{L})`;
-
-    const regexps = [
-      /* p1 */ `[${replace}]`,
-      /* p2 */ `[${toNormalizeWithNFKC}]`,
-      /* p3 */ `${HKDiacritics}\\n`,
-      /* p4 */ "\\p{M}+(?:-\\n)?",
-      /* p5 */ `${BrokenWord}`,
-      /* p6 */ "\\S-\\n",
-      /* p7 */ `${CJK}\\n`,
-      /* p8 */ "\\n",
-      /* p9 */ hasSyllables
-        ? FIRST_CHAR_SYLLABLES_REG_EXP
-        : // Most of the syllables belong to Hangul so there are no need
-          // to search for them in a non-Hangul document.
-          // We use the \0 in order to have the same number of groups.
-          "\\u0000",
-    ];
-    normalizationRegex = new RegExp(
-      regexps.map(r => `(${r})`).join("|"),
-      "gum"
-    );
-
-    if (hasSyllables) {
-      withSyllablesRegExp = normalizationRegex;
-    } else {
-      noSyllablesRegExp = normalizationRegex;
->>>>>>> upstream/master
     }
   }
 
@@ -231,11 +184,7 @@ function normalize(text, options = {}) {
   }
 
   let normalized = text.normalize("NFD");
-<<<<<<< HEAD
   const positions = [[0, 0]];
-=======
-  const positions = [0, 0];
->>>>>>> upstream/master
   let rawDiacriticsIndex = 0;
   let syllableIndex = 0;
   let shift = 0;
@@ -252,11 +201,7 @@ function normalize(text, options = {}) {
         const replacement = CHARACTERS_TO_NORMALIZE[p1];
         const jj = replacement.length;
         for (let j = 1; j < jj; j++) {
-<<<<<<< HEAD
           positions.push([i - shift + j, shift - j]);
-=======
-          positions.push(i - shift + j, shift - j);
->>>>>>> upstream/master
         }
         shift -= jj - 1;
         return replacement;
@@ -271,11 +216,7 @@ function normalize(text, options = {}) {
         }
         const jj = replacement.length;
         for (let j = 1; j < jj; j++) {
-<<<<<<< HEAD
           positions.push([i - shift + j, shift - j]);
-=======
-          positions.push(i - shift + j, shift - j);
->>>>>>> upstream/master
         }
         shift -= jj - 1;
         return replacement;
@@ -292,21 +233,13 @@ function normalize(text, options = {}) {
         } else {
           // i is the position of the first diacritic
           // so (i - 1) is the position for the letter before.
-<<<<<<< HEAD
           positions.push([i - 1 - shift + 1, shift - 1]);
-=======
-          positions.push(i - 1 - shift + 1, shift - 1);
->>>>>>> upstream/master
           shift -= 1;
           shiftOrigin += 1;
         }
 
         // End-of-line.
-<<<<<<< HEAD
         positions.push([i - shift + 1, shift]);
-=======
-        positions.push(i - shift + 1, shift);
->>>>>>> upstream/master
         shiftOrigin += 1;
         eol += 1;
 
@@ -328,11 +261,7 @@ function normalize(text, options = {}) {
         for (let j = 1; j <= jj; j++) {
           // i is the position of the first diacritic
           // so (i - 1) is the position for the letter before.
-<<<<<<< HEAD
           positions.push([i - 1 - shift + j, shift - j]);
-=======
-          positions.push(i - 1 - shift + j, shift - j);
->>>>>>> upstream/master
         }
         shift -= jj;
         shiftOrigin += jj;
@@ -341,11 +270,7 @@ function normalize(text, options = {}) {
           // Diacritics are followed by a -\n.
           // See comments in `if (p6)` block.
           i += len - 1;
-<<<<<<< HEAD
           positions.push([i - shift + 1, 1 + shift]);
-=======
-          positions.push(i - shift + 1, 1 + shift);
->>>>>>> upstream/master
           shift += 1;
           shiftOrigin += 1;
           eol += 1;
@@ -356,7 +281,6 @@ function normalize(text, options = {}) {
       }
 
       if (p5) {
-<<<<<<< HEAD
         // Compound word with a line break after the hyphen.
         positions.push([i - shift + 3, 1 + shift]);
         shift += 1;
@@ -378,35 +302,6 @@ function normalize(text, options = {}) {
         shiftOrigin += 1;
         eol += 1;
         return p6.slice(0, -2);
-=======
-        if (ignoreDashEOL) {
-          // Keep the - but remove the EOL.
-          shiftOrigin += 1;
-          eol += 1;
-          return p5.slice(0, -1);
-        }
-        // In "X-\ny", "-\n" is removed because an hyphen at the end of a line
-        // between two letters is likely here to mark a break in a word.
-        // If X is encoded with UTF-32 then it can have a length greater than 1.
-        // The \n isn't in the original text so here y = i, n = X.len - 2 and
-        // o = X.len - 1.
-        const len = p5.length - 2;
-        positions.push(i - shift + len, 1 + shift);
-        shift += 1;
-        shiftOrigin += 1;
-        eol += 1;
-        return p5.slice(0, -2);
-      }
-
-      if (p6) {
-        // A - following a non-space character that is not detected as the
-        // hyphen breaking a word in two lines needs to be preserved. It could
-        // be, for example, in a compound word or in a date.
-        // Only remove the newline.
-        shiftOrigin += 1;
-        eol += 1;
-        return p6.slice(0, -1);
->>>>>>> upstream/master
       }
 
       if (p7) {
@@ -414,11 +309,7 @@ function normalize(text, options = {}) {
         // white space.
         // A CJK can be encoded in UTF-32, hence their length isn't always 1.
         const len = p7.length - 1;
-<<<<<<< HEAD
         positions.push([i - shift + len, shift]);
-=======
-        positions.push(i - shift + len, shift);
->>>>>>> upstream/master
         shiftOrigin += 1;
         eol += 1;
         return p7.slice(0, -1);
@@ -427,33 +318,21 @@ function normalize(text, options = {}) {
       if (p8) {
         // eol is replaced by space: "foo\nbar" is likely equivalent to
         // "foo bar".
-<<<<<<< HEAD
         positions.push([i - shift + 1, shift - 1]);
-=======
-        positions.push(i - shift + 1, shift - 1);
->>>>>>> upstream/master
         shift -= 1;
         shiftOrigin += 1;
         eol += 1;
         return " ";
       }
 
-<<<<<<< HEAD
       // p8
-=======
-      // p9
->>>>>>> upstream/master
       if (i + eol === syllablePositions[syllableIndex]?.[1]) {
         // A syllable (1 char) is replaced with several chars (n) so
         // newCharsLen = n - 1.
         const newCharLen = syllablePositions[syllableIndex][0] - 1;
         ++syllableIndex;
         for (let j = 1; j <= newCharLen; j++) {
-<<<<<<< HEAD
           positions.push([i - (shift - j), shift - j]);
-=======
-          positions.push(i - (shift - j), shift - j);
->>>>>>> upstream/master
         }
         shift -= newCharLen;
         shiftOrigin += newCharLen;
@@ -462,21 +341,9 @@ function normalize(text, options = {}) {
     }
   );
 
-<<<<<<< HEAD
   positions.push([normalized.length, shift]);
 
   return [normalized, positions, hasDiacritics];
-=======
-  positions.push(normalized.length, shift);
-  const starts = new Uint32Array(positions.length >> 1);
-  const shifts = new Int32Array(positions.length >> 1);
-  for (let i = 0, ii = positions.length; i < ii; i += 2) {
-    starts[i >> 1] = positions[i];
-    shifts[i >> 1] = positions[i + 1];
-  }
-
-  return [normalized, [starts, shifts], hasDiacritics];
->>>>>>> upstream/master
 }
 
 // Determine the original, non-normalized, match index such that highlighting of
@@ -487,15 +354,10 @@ function getOriginalIndex(diffs, pos, len) {
     return [pos, len];
   }
 
-<<<<<<< HEAD
-=======
-  const [starts, shifts] = diffs;
->>>>>>> upstream/master
   // First char in the new string.
   const start = pos;
   // Last char in the new string.
   const end = pos + len - 1;
-<<<<<<< HEAD
   let i = binarySearchFirstItem(diffs, x => x[0] >= start);
   if (diffs[i][0] > start) {
     --i;
@@ -503,30 +365,14 @@ function getOriginalIndex(diffs, pos, len) {
 
   let j = binarySearchFirstItem(diffs, x => x[0] >= end, i);
   if (diffs[j][0] > end) {
-=======
-  let i = binarySearchFirstItem(starts, x => x >= start);
-  if (starts[i] > start) {
-    --i;
-  }
-
-  let j = binarySearchFirstItem(starts, x => x >= end, i);
-  if (starts[j] > end) {
->>>>>>> upstream/master
     --j;
   }
 
   // First char in the old string.
-<<<<<<< HEAD
   const oldStart = start + diffs[i][1];
 
   // Last char in the old string.
   const oldEnd = end + diffs[j][1];
-=======
-  const oldStart = start + shifts[i];
-
-  // Last char in the old string.
-  const oldEnd = end + shifts[j];
->>>>>>> upstream/master
   const oldLen = oldEnd + 1 - oldStart;
 
   return [oldStart, oldLen];
@@ -568,10 +414,6 @@ class PDFFindController {
     this.#reset();
     eventBus._on("find", this.#onFind.bind(this));
     eventBus._on("findbarclose", this.#onFindBarClose.bind(this));
-<<<<<<< HEAD
-=======
-    eventBus._on("pagesedited", this.#onPagesEdited.bind(this));
->>>>>>> upstream/master
   }
 
   get highlightMatches() {
@@ -704,9 +546,10 @@ class PDFFindController {
       return;
     }
     this._scrollMatches = false; // Ensure that scrolling only happens once.
+
     const spot = {
       top: MATCH_SCROLL_OFFSET_TOP,
-      left: selectedLeft,
+      left: selectedLeft + MATCH_SCROLL_OFFSET_LEFT,
     };
     scrollIntoView(element, spot, /* scrollMatches = */ true);
   }
@@ -840,21 +683,6 @@ class PDFFindController {
   #convertToRegExpString(query, hasDiacritics) {
     const { matchDiacritics } = this.#state;
     let isUnicode = false;
-<<<<<<< HEAD
-=======
-    const addExtraWhitespaces = (original, fixed) => {
-      if (original === query) {
-        return fixed;
-      }
-      if (query.startsWith(original)) {
-        return `${fixed}[ ]*`;
-      }
-      if (query.endsWith(original)) {
-        return `[ ]*${fixed}`;
-      }
-      return `[ ]*${fixed}[ ]*`;
-    };
->>>>>>> upstream/master
     query = query.replaceAll(
       SPECIAL_CHARS_REG_EXP,
       (
@@ -869,21 +697,12 @@ class PDFFindController {
         // kind of whitespaces are replaced by a single " ".
 
         if (p1) {
-<<<<<<< HEAD
           // Escape characters like *+?... to not interfer with regexp syntax.
           return `[ ]*\\${p1}[ ]*`;
         }
         if (p2) {
           // Allow whitespaces around punctuation signs.
           return `[ ]*${p2}[ ]*`;
-=======
-          // Escape characters like *+?... to not interfere with regexp syntax.
-          return addExtraWhitespaces(p1, RegExp.escape(p1));
-        }
-        if (p2) {
-          // Allow whitespaces around group of punctuation signs.
-          return addExtraWhitespaces(p2, RegExp.escape(p2));
->>>>>>> upstream/master
         }
         if (p3) {
           // Replace spaces by \s+ to be sure to match any spaces.
@@ -932,7 +751,6 @@ class PDFFindController {
   }
 
   #calculateMatch(pageIndex) {
-<<<<<<< HEAD
     const query = this.#query;
     if (query.length === 0) {
       return; // Do nothing: the matches should be wiped out already.
@@ -944,22 +762,6 @@ class PDFFindController {
     const matchesLength = (this._pageMatchesLength[pageIndex] = []);
     const diffs = this._pageDiffs[pageIndex];
 
-=======
-    if (!this.#state) {
-      return;
-    }
-    const query = this.#query;
-    if (query.length === 0) {
-      return; // Do nothing: the matches should be wiped out already.
-    }
-    const pageContent = this._pageContents[pageIndex];
-    const matcherResult = this.match(query, pageContent, pageIndex);
-
-    const matches = (this._pageMatches[pageIndex] = []);
-    const matchesLength = (this._pageMatchesLength[pageIndex] = []);
-    const diffs = this._pageDiffs[pageIndex];
-
->>>>>>> upstream/master
     matcherResult?.forEach(({ index, length }) => {
       const [matchPos, matchLen] = getOriginalIndex(diffs, index, length);
       if (matchLen) {
@@ -1060,26 +862,13 @@ class PDFFindController {
 
     let deferred = Promise.resolve();
     const textOptions = { disableNormalization: true };
-<<<<<<< HEAD
-=======
-    const pdfDoc = this._pdfDocument;
->>>>>>> upstream/master
     for (let i = 0, ii = this._linkService.pagesCount; i < ii; i++) {
       const { promise, resolve } = Promise.withResolvers();
       this._extractTextPromises[i] = promise;
 
-<<<<<<< HEAD
       // eslint-disable-next-line arrow-body-style
       deferred = deferred.then(() => {
         return this._pdfDocument
-=======
-      deferred = deferred.then(async () => {
-        if (pdfDoc !== this._pdfDocument) {
-          resolve();
-          return;
-        }
-        await pdfDoc
->>>>>>> upstream/master
           .getPage(i + 1)
           .then(pdfPage => pdfPage.getTextContent(textOptions))
           .then(
@@ -1294,28 +1083,6 @@ class PDFFindController {
     }
   }
 
-<<<<<<< HEAD
-=======
-  #onPagesEdited({ pagesMapper }) {
-    if (this._extractTextPromises.length === 0) {
-      return;
-    }
-    this.#onFindBarClose();
-    this._dirtyMatch = true;
-    const prevTextPromises = this._extractTextPromises;
-    const extractTextPromises = (this._extractTextPromises.length = []);
-    for (let i = 0, ii = pagesMapper.length; i < ii; i++) {
-      const prevPageIndex = pagesMapper.getPrevPageNumber(i + 1) - 1;
-      if (prevPageIndex === -1) {
-        continue;
-      }
-      extractTextPromises.push(
-        prevTextPromises[prevPageIndex] || Promise.resolve()
-      );
-    }
-  }
-
->>>>>>> upstream/master
   #onFindBarClose(evt) {
     const pdfDocument = this._pdfDocument;
     // Since searching is asynchronous, ensure that the removal of highlighted
@@ -1398,4 +1165,4 @@ class PDFFindController {
   }
 }
 
-export { FindState, getOriginalIndex, normalize, PDFFindController };
+export { FindState, PDFFindController };

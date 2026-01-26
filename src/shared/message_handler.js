@@ -16,23 +16,21 @@
 import {
   AbortException,
   assert,
-<<<<<<< HEAD
   MissingPDFException,
-=======
-  InvalidPDFException,
->>>>>>> upstream/master
   PasswordException,
-  ResponseException,
+  UnexpectedResponseException,
   UnknownErrorException,
   unreachable,
 } from "./util.js";
 
 const CallbackKind = {
+  UNKNOWN: 0,
   DATA: 1,
   ERROR: 2,
 };
 
 const StreamKind = {
+  UNKNOWN: 0,
   CANCEL: 1,
   CANCEL_COMPLETE: 2,
   CLOSE: 3,
@@ -43,44 +41,31 @@ const StreamKind = {
   START_COMPLETE: 8,
 };
 
-function onFn() {}
-
-function wrapReason(ex) {
+function wrapReason(reason) {
   if (
-    ex instanceof AbortException ||
-    ex instanceof InvalidPDFException ||
-    ex instanceof PasswordException ||
-    ex instanceof ResponseException ||
-    ex instanceof UnknownErrorException
+    !(
+      reason instanceof Error ||
+      (typeof reason === "object" && reason !== null)
+    )
   ) {
-<<<<<<< HEAD
-    unreachable(
-      'wrapReason: Expected "reason" to be a (possibly cloned) Error.'
-    );
-=======
-    // Avoid re-creating the exception when its type is already correct.
-    return ex;
->>>>>>> upstream/master
-  }
-
-  if (!(ex instanceof Error || (typeof ex === "object" && ex !== null))) {
     unreachable(
       'wrapReason: Expected "reason" to be a (possibly cloned) Error.'
     );
   }
-  switch (ex.name) {
+  switch (reason.name) {
     case "AbortException":
-      return new AbortException(ex.message);
-    case "InvalidPDFException":
-      return new InvalidPDFException(ex.message);
+      return new AbortException(reason.message);
+    case "MissingPDFException":
+      return new MissingPDFException(reason.message);
     case "PasswordException":
-      return new PasswordException(ex.message, ex.code);
-    case "ResponseException":
-      return new ResponseException(ex.message, ex.status, ex.missing);
+      return new PasswordException(reason.message, reason.code);
+    case "UnexpectedResponseException":
+      return new UnexpectedResponseException(reason.message, reason.status);
     case "UnknownErrorException":
-      return new UnknownErrorException(ex.message, ex.details);
+      return new UnknownErrorException(reason.message, reason.details);
+    default:
+      return new UnknownErrorException(reason.message, reason.toString());
   }
-  return new UnknownErrorException(ex.message, ex.toString());
 }
 
 class MessageHandler {
@@ -136,13 +121,9 @@ class MessageHandler {
         targetName = data.sourceName,
         comObj = this.comObj;
 
-<<<<<<< HEAD
       new Promise(function (resolve) {
         resolve(action(data.data));
       }).then(
-=======
-      Promise.try(action, data.data).then(
->>>>>>> upstream/master
         function (result) {
           comObj.postMessage({
             sourceName,
@@ -384,7 +365,9 @@ class MessageHandler {
     streamSink.ready = streamSink.sinkCapability.promise;
     this.streamSinks[streamId] = streamSink;
 
-    Promise.try(action, data.data, streamSink).then(
+    new Promise(function (resolve) {
+      resolve(action(data.data, streamSink));
+    }).then(
       function () {
         comObj.postMessage({
           sourceName,
@@ -449,13 +432,9 @@ class MessageHandler {
         // Reset desiredSize property of sink on every pull.
         streamSink.desiredSize = data.desiredSize;
 
-<<<<<<< HEAD
         new Promise(function (resolve) {
           resolve(streamSink.onPull?.());
         }).then(
-=======
-        Promise.try(streamSink.onPull || onFn).then(
->>>>>>> upstream/master
           function () {
             comObj.postMessage({
               sourceName,
@@ -509,15 +488,10 @@ class MessageHandler {
         if (!streamSink) {
           break;
         }
-        const dataReason = wrapReason(data.reason);
 
-<<<<<<< HEAD
         new Promise(function (resolve) {
           resolve(streamSink.onCancel?.(wrapReason(data.reason)));
         }).then(
-=======
-        Promise.try(streamSink.onCancel || onFn, dataReason).then(
->>>>>>> upstream/master
           function () {
             comObj.postMessage({
               sourceName,
@@ -537,7 +511,7 @@ class MessageHandler {
             });
           }
         );
-        streamSink.sinkCapability.reject(dataReason);
+        streamSink.sinkCapability.reject(wrapReason(data.reason));
         streamSink.isCancelled = true;
         delete this.streamSinks[streamId];
         break;
@@ -563,4 +537,4 @@ class MessageHandler {
   }
 }
 
-export { MessageHandler, wrapReason };
+export { MessageHandler };

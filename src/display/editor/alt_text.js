@@ -330,11 +330,7 @@ class AltText {
       button.append(tooltip);
     }
 
-<<<<<<< HEAD
     const element = this.#editor.getImageForAltText();
-=======
-    const element = this.#editor.getElementForAltText();
->>>>>>> upstream/master
     element?.setAttribute("aria-describedby", tooltip.id);
   }
 }

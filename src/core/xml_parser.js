@@ -321,11 +321,11 @@ class SimpleDOMNode {
     if (!this.childNodes) {
       return this.nodeValue || "";
     }
-    return this.childNodes.map(child => child.textContent).join("");
-  }
-
-  get children() {
-    return this.childNodes || [];
+    return this.childNodes
+      .map(function (child) {
+        return child.textContent;
+      })
+      .join("");
   }
 
   get children() {

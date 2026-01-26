@@ -85,11 +85,7 @@ class L10n {
     try {
       await this.#l10n.translateElements([element]);
     } catch (ex) {
-<<<<<<< HEAD
       console.error(`translateOnce: "${ex}".`);
-=======
-      console.error("translateOnce:", ex);
->>>>>>> upstream/master
     }
   }
 

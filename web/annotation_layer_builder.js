@@ -21,27 +21,11 @@
 /** @typedef {import("./interfaces").IDownloadManager} IDownloadManager */
 /** @typedef {import("./interfaces").IPDFLinkService} IPDFLinkService */
 // eslint-disable-next-line max-len
-<<<<<<< HEAD
 /** @typedef {import("./text_accessibility.js").TextAccessibilityManager} TextAccessibilityManager */
 // eslint-disable-next-line max-len
 /** @typedef {import("../src/display/editor/tools.js").AnnotationEditorUIManager} AnnotationEditorUIManager */
 
 import { AnnotationLayer } from "pdfjs-lib";
-=======
-/** @typedef {import("./struct_tree_layer_builder.js").StructTreeLayerBuilder} StructTreeLayerBuilder */
-// eslint-disable-next-line max-len
-/** @typedef {import("./text_accessibility.js").TextAccessibilityManager} TextAccessibilityManager */
-// eslint-disable-next-line max-len
-/** @typedef {import("../src/display/editor/tools.js").AnnotationEditorUIManager} AnnotationEditorUIManager */
-/** @typedef {import("./comment_manager.js").CommentManager} CommentManager */
-
-import {
-  AnnotationLayer,
-  AnnotationType,
-  setLayerDimensions,
-  Util,
-} from "pdfjs-lib";
->>>>>>> upstream/master
 import { PresentationModeState } from "./ui_utils.js";
 
 /**
@@ -53,10 +37,6 @@ import { PresentationModeState } from "./ui_utils.js";
  * @property {boolean} renderForms
  * @property {IPDFLinkService} linkService
  * @property {IDownloadManager} [downloadManager]
-<<<<<<< HEAD
-=======
- * @property {boolean} [enableComment]
->>>>>>> upstream/master
  * @property {boolean} [enableScripting]
  * @property {Promise<boolean>} [hasJSActionsPromise]
  * @property {Promise<Object<string, Array<Object>> | null>}
@@ -65,38 +45,13 @@ import { PresentationModeState } from "./ui_utils.js";
  * @property {TextAccessibilityManager} [accessibilityManager]
  * @property {AnnotationEditorUIManager} [annotationEditorUIManager]
  * @property {function} [onAppend]
-<<<<<<< HEAD
  */
 
 class AnnotationLayerBuilder {
-=======
- * @property {CommentManager} [commentManager]
- */
-
-/**
- * @typedef {Object} AnnotationLayerBuilderRenderOptions
- * @property {PageViewport} viewport
- * @property {string} [intent] - The default value is "display".
- * @property {StructTreeLayerBuilder} [structTreeLayer]
- */
-
-class AnnotationLayerBuilder {
-  #annotations = null;
-
-  #commentManager = null;
-
-  #externalHide = false;
-
->>>>>>> upstream/master
   #onAppend = null;
 
   #eventAbortController = null;
 
-<<<<<<< HEAD
-=======
-  #linksInjected = false;
-
->>>>>>> upstream/master
   /**
    * @param {AnnotationLayerBuilderOptions} options
    */
@@ -107,11 +62,6 @@ class AnnotationLayerBuilder {
     annotationStorage = null,
     imageResourcesPath = "",
     renderForms = true,
-<<<<<<< HEAD
-=======
-    enableComment = false,
-    commentManager = null,
->>>>>>> upstream/master
     enableScripting = false,
     hasJSActionsPromise = null,
     fieldObjectsPromise = null,
@@ -126,8 +76,6 @@ class AnnotationLayerBuilder {
     this.imageResourcesPath = imageResourcesPath;
     this.renderForms = renderForms;
     this.annotationStorage = annotationStorage;
-    this.enableComment = enableComment;
-    this.#commentManager = commentManager;
     this.enableScripting = enableScripting;
     this._hasJSActionsPromise = hasJSActionsPromise || Promise.resolve(false);
     this._fieldObjectsPromise = fieldObjectsPromise || Promise.resolve(null);
@@ -143,7 +91,6 @@ class AnnotationLayerBuilder {
   }
 
   /**
-<<<<<<< HEAD
    * @param {PageViewport} viewport
    * @param {Object} options
    * @param {string} intent (default value is 'display')
@@ -151,13 +98,6 @@ class AnnotationLayerBuilder {
    *   annotations is complete.
    */
   async render(viewport, options, intent = "display") {
-=======
-   * @param {AnnotationLayerBuilderRenderOptions} options
-   * @returns {Promise<void>} A promise that is resolved when rendering of the
-   *   annotations is complete.
-   */
-  async render({ viewport, intent = "display", structTreeLayer = null }) {
->>>>>>> upstream/master
     if (this.div) {
       if (this._cancelled || !this.annotationLayer) {
         return;
@@ -184,7 +124,6 @@ class AnnotationLayerBuilder {
     const div = (this.div = document.createElement("div"));
     div.className = "annotationLayer";
     this.#onAppend?.(div);
-<<<<<<< HEAD
 
     if (annotations.length === 0) {
       this.hide();
@@ -201,28 +140,18 @@ class AnnotationLayerBuilder {
       structTreeLayer: options?.structTreeLayer || null,
     });
 
-=======
-    this.#initAnnotationLayer(viewport, structTreeLayer);
-
-    if (annotations.length === 0) {
-      this.#annotations = annotations;
-      setLayerDimensions(this.div, viewport);
-      return;
-    }
-
->>>>>>> upstream/master
     await this.annotationLayer.render({
       annotations,
       imageResourcesPath: this.imageResourcesPath,
       renderForms: this.renderForms,
+      linkService: this.linkService,
       downloadManager: this.downloadManager,
-      enableComment: this.enableComment,
+      annotationStorage: this.annotationStorage,
       enableScripting: this.enableScripting,
       hasJSActions,
       fieldObjects,
     });
 
-<<<<<<< HEAD
     // Ensure that interactive form elements in the annotationLayer are
     // disabled while PresentationMode is active (see issue 12232).
     if (this.linkService.isInPresentationMode) {
@@ -238,41 +167,7 @@ class AnnotationLayerBuilder {
         },
         { signal: this.#eventAbortController.signal }
       );
-=======
-    this.#annotations = annotations;
-
-    // Ensure that interactive form elements in the annotationLayer are
-    // disabled while PresentationMode is active (see issue 12232).
-    if (this.linkService.isInPresentationMode) {
-      this.#updatePresentationModeState(PresentationModeState.FULLSCREEN);
->>>>>>> upstream/master
     }
-    if (!this.#eventAbortController) {
-      this.#eventAbortController = new AbortController();
-
-      this._eventBus?._on(
-        "presentationmodechanged",
-        evt => {
-          this.#updatePresentationModeState(evt.state);
-        },
-        { signal: this.#eventAbortController.signal }
-      );
-    }
-  }
-
-  #initAnnotationLayer(viewport, structTreeLayer) {
-    this.annotationLayer = new AnnotationLayer({
-      div: this.div,
-      accessibilityManager: this._accessibilityManager,
-      annotationCanvasMap: this._annotationCanvasMap,
-      annotationEditorUIManager: this._annotationEditorUIManager,
-      annotationStorage: this.annotationStorage,
-      page: this.pdfPage,
-      viewport: viewport.clone({ dontFlip: true }),
-      structTreeLayer,
-      commentManager: this.#commentManager,
-      linkService: this.linkService,
-    });
   }
 
   cancel() {
@@ -282,8 +177,7 @@ class AnnotationLayerBuilder {
     this.#eventAbortController = null;
   }
 
-  hide(internal = false) {
-    this.#externalHide = !internal;
+  hide() {
     if (!this.div) {
       return;
     }
@@ -294,40 +188,6 @@ class AnnotationLayerBuilder {
     return !!this.annotationLayer?.hasEditableAnnotations();
   }
 
-<<<<<<< HEAD
-=======
-  /**
-   * @param {Array<Object>} inferredLinks
-   * @returns {Promise<void>} A promise that is resolved when the inferred links
-   *   are added to the annotation layer.
-   */
-  async injectLinkAnnotations(inferredLinks) {
-    if (this.#annotations === null) {
-      throw new Error(
-        "`render` method must be called before `injectLinkAnnotations`."
-      );
-    }
-    if (this._cancelled || this.#linksInjected) {
-      return;
-    }
-    this.#linksInjected = true;
-
-    const newLinks = this.#annotations.length
-      ? this.#checkInferredLinks(inferredLinks)
-      : inferredLinks;
-
-    if (!newLinks.length) {
-      return;
-    }
-
-    await this.annotationLayer.addLinkAnnotations(newLinks);
-    // Don't show the annotation layer if it was explicitly hidden previously.
-    if (!this.#externalHide) {
-      this.div.hidden = false;
-    }
-  }
-
->>>>>>> upstream/master
   #updatePresentationModeState(state) {
     if (!this.div) {
       return;
@@ -350,78 +210,6 @@ class AnnotationLayerBuilder {
       section.inert = disableFormElements;
     }
   }
-<<<<<<< HEAD
-=======
-
-  #checkInferredLinks(inferredLinks) {
-    function annotationRects(annot) {
-      if (!annot.quadPoints) {
-        return [annot.rect];
-      }
-      const rects = [];
-      for (let i = 2, ii = annot.quadPoints.length; i < ii; i += 8) {
-        const trX = annot.quadPoints[i];
-        const trY = annot.quadPoints[i + 1];
-        const blX = annot.quadPoints[i + 2];
-        const blY = annot.quadPoints[i + 3];
-        rects.push([blX, blY, trX, trY]);
-      }
-      return rects;
-    }
-
-    function intersectAnnotations(annot1, annot2) {
-      const intersections = [];
-      const annot1Rects = annotationRects(annot1);
-      const annot2Rects = annotationRects(annot2);
-      for (const rect1 of annot1Rects) {
-        for (const rect2 of annot2Rects) {
-          const intersection = Util.intersect(rect1, rect2);
-          if (intersection) {
-            intersections.push(intersection);
-          }
-        }
-      }
-      return intersections;
-    }
-
-    function areaRects(rects) {
-      let totalArea = 0;
-      for (const rect of rects) {
-        totalArea += Math.abs((rect[2] - rect[0]) * (rect[3] - rect[1]));
-      }
-      return totalArea;
-    }
-
-    return inferredLinks.filter(link => {
-      let linkAreaRects;
-
-      for (const annotation of this.#annotations) {
-        if (
-          annotation.annotationType !== AnnotationType.LINK ||
-          !annotation.url
-        ) {
-          continue;
-        }
-        // TODO: Add a test case to verify that we can find the intersection
-        //       between two annotations with quadPoints properly.
-        const intersections = intersectAnnotations(annotation, link);
-
-        if (intersections.length === 0) {
-          continue;
-        }
-        linkAreaRects ??= areaRects(annotationRects(link));
-
-        if (
-          areaRects(intersections) / linkAreaRects >
-          0.5 /* If the overlap is more than 50%. */
-        ) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
->>>>>>> upstream/master
 }
 
 export { AnnotationLayerBuilder };

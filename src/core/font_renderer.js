@@ -14,24 +14,13 @@
  */
 
 import {
-  assert,
   bytesToString,
-  DrawOPS,
-  FeatureTest,
   FONT_IDENTITY_MATRIX,
   FontRenderOps,
   FormatError,
   unreachable,
-  Util,
   warn,
 } from "../shared/util.js";
-import {
-  isNumberArray,
-  readInt16,
-  readInt8,
-  readUint16,
-  readUint32,
-} from "./core_utils.js";
 import { CFFParser } from "./cff_parser.js";
 import { getGlyphsUnicode } from "./glyphlist.js";
 import { isNumberArray } from "./core_utils.js";
@@ -39,7 +28,6 @@ import { StandardEncoding } from "./encodings.js";
 import { Stream } from "./stream.js";
 
 // TODO: use DataView and its methods.
-<<<<<<< HEAD
 
 function getUint32(data, offset) {
   return (
@@ -53,11 +41,6 @@ function getUint32(data, offset) {
 
 function getUint16(data, offset) {
   return (data[offset] << 8) | data[offset + 1];
-=======
-
-function getFloat214(data, offset) {
-  return readInt16(data, offset) / 16384;
->>>>>>> upstream/master
 }
 
 function getInt16(data, offset) {
@@ -85,7 +68,6 @@ function getSubroutineBias(subrs) {
 
 function parseCmap(data, start, end) {
   const offset =
-<<<<<<< HEAD
     getUint16(data, start + 2) === 1
       ? getUint32(data, start + 8)
       : getUint32(data, start + 16);
@@ -108,46 +90,17 @@ function parseCmap(data, start, end) {
     }
     for (i = 0; i < segCount; i++, p += 2) {
       let idOffset = getUint16(data, p);
-=======
-    readUint16(data, start + 2) === 1
-      ? readUint32(data, start + 8)
-      : readUint32(data, start + 16);
-  const format = readUint16(data, start + offset);
-  let ranges, p, i;
-  if (format === 4) {
-    readUint16(data, start + offset + 2); // length
-    const segCount = readUint16(data, start + offset + 6) >> 1;
-    p = start + offset + 14;
-    ranges = [];
-    for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i] = { end: readUint16(data, p) };
-    }
-    p += 2;
-    for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i].start = readUint16(data, p);
-    }
-    for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i].idDelta = readUint16(data, p);
-    }
-    for (i = 0; i < segCount; i++, p += 2) {
-      let idOffset = readUint16(data, p);
->>>>>>> upstream/master
       if (idOffset === 0) {
         continue;
       }
       ranges[i].ids = [];
       for (let j = 0, jj = ranges[i].end - ranges[i].start + 1; j < jj; j++) {
-<<<<<<< HEAD
         ranges[i].ids[j] = getUint16(data, p + idOffset);
-=======
-        ranges[i].ids[j] = readUint16(data, p + idOffset);
->>>>>>> upstream/master
         idOffset += 2;
       }
     }
     return ranges;
   } else if (format === 12) {
-<<<<<<< HEAD
     const groups = getUint32(data, start + offset + 12);
     p = start + offset + 16;
     ranges = [];
@@ -157,17 +110,6 @@ function parseCmap(data, start, end) {
         start,
         end: getUint32(data, p + 4),
         idDelta: getUint32(data, p + 8) - start,
-=======
-    const groups = readUint32(data, start + offset + 12);
-    p = start + offset + 16;
-    ranges = [];
-    for (i = 0; i < groups; i++) {
-      start = readUint32(data, p);
-      ranges.push({
-        start,
-        end: readUint32(data, p + 4),
-        idDelta: readUint32(data, p + 8) - start,
->>>>>>> upstream/master
       });
       p += 12;
     }
@@ -198,17 +140,10 @@ function parseGlyfTable(glyf, loca, isGlyphLocationsLong) {
   let itemSize, itemDecode;
   if (isGlyphLocationsLong) {
     itemSize = 4;
-<<<<<<< HEAD
     itemDecode = getUint32;
   } else {
     itemSize = 2;
     itemDecode = (data, offset) => 2 * getUint16(data, offset);
-=======
-    itemDecode = readUint32;
-  } else {
-    itemSize = 2;
-    itemDecode = (data, offset) => 2 * readUint16(data, offset);
->>>>>>> upstream/master
   }
   const glyphs = [];
   let startOffset = itemDecode(loca, 0);
@@ -247,7 +182,6 @@ function lookupCmap(ranges, unicode) {
 
 function compileGlyf(code, cmds, font) {
   function moveTo(x, y) {
-<<<<<<< HEAD
     cmds.add(FontRenderOps.MOVE_TO, [x, y]);
   }
   function lineTo(x, y) {
@@ -259,44 +193,19 @@ function compileGlyf(code, cmds, font) {
 
   let i = 0;
   const numberOfContours = getInt16(code, i);
-=======
-    if (firstPoint) {
-      // Close the current subpath in adding a straight line to the first point.
-      cmds.add(DrawOPS.lineTo, firstPoint);
-    }
-    firstPoint = [x, y];
-    cmds.add(DrawOPS.moveTo, [x, y]);
-  }
-  function lineTo(x, y) {
-    cmds.add(DrawOPS.lineTo, [x, y]);
-  }
-  function quadraticCurveTo(xa, ya, x, y) {
-    cmds.add(DrawOPS.quadraticCurveTo, [xa, ya, x, y]);
-  }
-
-  let i = 0;
-  const numberOfContours = readInt16(code, i);
->>>>>>> upstream/master
   let flags;
-  let firstPoint = null;
   let x = 0,
     y = 0;
   i += 10;
   if (numberOfContours < 0) {
     // composite glyph
     do {
-<<<<<<< HEAD
       flags = getUint16(code, i);
       const glyphIndex = getUint16(code, i + 2);
-=======
-      flags = readUint16(code, i);
-      const glyphIndex = readUint16(code, i + 2);
->>>>>>> upstream/master
       i += 4;
       let arg1, arg2;
       if (flags & 0x01) {
         if (flags & 0x02) {
-<<<<<<< HEAD
           arg1 = getInt16(code, i);
           arg2 = getInt16(code, i + 2);
         } else {
@@ -307,18 +216,6 @@ function compileGlyf(code, cmds, font) {
       } else if (flags & 0x02) {
         arg1 = getInt8(code, i++);
         arg2 = getInt8(code, i++);
-=======
-          arg1 = readInt16(code, i);
-          arg2 = readInt16(code, i + 2);
-        } else {
-          arg1 = readUint16(code, i);
-          arg2 = readUint16(code, i + 2);
-        }
-        i += 4;
-      } else if (flags & 0x02) {
-        arg1 = readInt8(code, i++);
-        arg2 = readInt8(code, i++);
->>>>>>> upstream/master
       } else {
         arg1 = code[i++];
         arg2 = code[i++];
@@ -352,7 +249,6 @@ function compileGlyf(code, cmds, font) {
       if (subglyph) {
         // TODO: the transform should be applied only if there is a scale:
         // https://github.com/freetype/freetype/blob/edd4fedc5427cf1cf1f4b045e53ff91eb282e9d4/src/truetype/ttgload.c#L1205
-<<<<<<< HEAD
         cmds.add(FontRenderOps.SAVE);
         cmds.add(FontRenderOps.TRANSFORM, [
           scaleX,
@@ -362,21 +258,13 @@ function compileGlyf(code, cmds, font) {
           x,
           y,
         ]);
-=======
-        cmds.save();
-        cmds.transform([scaleX, scale01, scale10, scaleY, x, y]);
->>>>>>> upstream/master
 
         if (!(flags & 0x02)) {
           // TODO: we must use arg1 and arg2 to make something similar to:
           // https://github.com/freetype/freetype/blob/edd4fedc5427cf1cf1f4b045e53ff91eb282e9d4/src/truetype/ttgload.c#L1209
         }
         compileGlyf(subglyph, cmds, font);
-<<<<<<< HEAD
         cmds.add(FontRenderOps.RESTORE);
-=======
-        cmds.restore();
->>>>>>> upstream/master
       }
     } while (flags & 0x20);
   } else {
@@ -384,17 +272,10 @@ function compileGlyf(code, cmds, font) {
     const endPtsOfContours = [];
     let j, jj;
     for (j = 0; j < numberOfContours; j++) {
-<<<<<<< HEAD
       endPtsOfContours.push(getUint16(code, i));
       i += 2;
     }
     const instructionLength = getUint16(code, i);
-=======
-      endPtsOfContours.push(readUint16(code, i));
-      i += 2;
-    }
-    const instructionLength = readUint16(code, i);
->>>>>>> upstream/master
     i += 2 + instructionLength; // skipping the instructions
     const numberOfPoints = endPtsOfContours.at(-1) + 1;
     const points = [];
@@ -411,11 +292,7 @@ function compileGlyf(code, cmds, font) {
     for (j = 0; j < numberOfPoints; j++) {
       switch (points[j].flags & 0x12) {
         case 0x00:
-<<<<<<< HEAD
           x += getInt16(code, i);
-=======
-          x += readInt16(code, i);
->>>>>>> upstream/master
           i += 2;
           break;
         case 0x02:
@@ -430,11 +307,7 @@ function compileGlyf(code, cmds, font) {
     for (j = 0; j < numberOfPoints; j++) {
       switch (points[j].flags & 0x24) {
         case 0x00:
-<<<<<<< HEAD
           y += getInt16(code, i);
-=======
-          y += readInt16(code, i);
->>>>>>> upstream/master
           i += 2;
           break;
         case 0x04:
@@ -496,7 +369,6 @@ function compileGlyf(code, cmds, font) {
 
 function compileCharString(charStringCode, cmds, font, glyphId) {
   function moveTo(x, y) {
-<<<<<<< HEAD
     cmds.add(FontRenderOps.MOVE_TO, [x, y]);
   }
   function lineTo(x, y) {
@@ -504,27 +376,12 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
   }
   function bezierCurveTo(x1, y1, x2, y2, x, y) {
     cmds.add(FontRenderOps.BEZIER_CURVE_TO, [x1, y1, x2, y2, x, y]);
-=======
-    if (firstPoint) {
-      // Close the current subpath in adding a straight line to the first point.
-      cmds.add(DrawOPS.lineTo, firstPoint);
-    }
-    firstPoint = [x, y];
-    cmds.add(DrawOPS.moveTo, [x, y]);
-  }
-  function lineTo(x, y) {
-    cmds.add(DrawOPS.lineTo, [x, y]);
-  }
-  function bezierCurveTo(x1, y1, x2, y2, x, y) {
-    cmds.add(DrawOPS.curveTo, [x1, y1, x2, y2, x, y]);
->>>>>>> upstream/master
   }
 
   const stack = [];
   let x = 0,
     y = 0;
   let stems = 0;
-  let firstPoint = null;
 
   function parse(code) {
     let i = 0;
@@ -691,13 +548,8 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
             const bchar = stack.pop();
             y = stack.pop();
             x = stack.pop();
-<<<<<<< HEAD
             cmds.add(FontRenderOps.SAVE);
             cmds.add(FontRenderOps.TRANSLATE, [x, y]);
-=======
-            cmds.save();
-            cmds.translate(x, y);
->>>>>>> upstream/master
             let cmap = lookupCmap(
               font.cmap,
               String.fromCharCode(font.glyphNameMap[StandardEncoding[achar]])
@@ -708,11 +560,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
               font,
               cmap.glyphId
             );
-<<<<<<< HEAD
             cmds.add(FontRenderOps.RESTORE);
-=======
-            cmds.restore();
->>>>>>> upstream/master
 
             cmap = lookupCmap(
               font.cmap,
@@ -812,7 +660,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
           }
           break;
         case 28:
-          stack.push(readInt16(code, i));
+          stack.push(((code[i] << 24) | (code[i + 1] << 16)) >> 16);
           i += 2;
           break;
         case 29: // callgsubr
@@ -896,52 +744,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
   parse(charStringCode);
 }
 
-const NOOP = "";
-
-class Commands {
-  cmds = [];
-
-  transformStack = [];
-
-  currentTransform = [1, 0, 0, 1, 0, 0];
-
-  add(cmd, args) {
-    if (args) {
-      const { currentTransform } = this;
-      for (let i = 0, ii = args.length; i < ii; i += 2) {
-        Util.applyTransform(args, currentTransform, i);
-      }
-      this.cmds.push(cmd, ...args);
-    } else {
-      this.cmds.push(cmd);
-    }
-  }
-
-  transform(transf) {
-    this.currentTransform = Util.transform(this.currentTransform, transf);
-  }
-
-  translate(x, y) {
-    this.transform([1, 0, 0, 1, x, y]);
-  }
-
-  save() {
-    this.transformStack.push(this.currentTransform.slice());
-  }
-
-  restore() {
-    this.currentTransform = this.transformStack.pop() || [1, 0, 0, 1, 0, 0];
-  }
-
-  getPath() {
-    if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
-      return new Float16Array(this.cmds);
-    }
-    return new (
-      FeatureTest.isFloat16ArraySupported ? Float16Array : Float32Array
-    )(this.cmds);
-  }
-}
+const NOOP = [];
 
 class Commands {
   cmds = [];
@@ -982,11 +785,7 @@ class CompiledFont {
     const { charCode, glyphId } = lookupCmap(this.cmap, unicode);
     let fn = this.compiledGlyphs[glyphId],
       compileEx;
-<<<<<<< HEAD
     if (!fn) {
-=======
-    if (fn === undefined) {
->>>>>>> upstream/master
       try {
         fn = this.compileGlyph(this.glyphs[glyphId], glyphId);
       } catch (ex) {
@@ -1005,7 +804,7 @@ class CompiledFont {
   }
 
   compileGlyph(code, glyphId) {
-    if (!code?.length || code[0] === 14) {
+    if (!code || code.length === 0 || code[0] === 14) {
       return NOOP;
     }
 
@@ -1021,10 +820,8 @@ class CompiledFont {
         warn("Invalid fd index for glyph index.");
       }
     }
-    assert(isNumberArray(fontMatrix, 6), "Expected a valid fontMatrix.");
 
     const cmds = new Commands();
-<<<<<<< HEAD
     cmds.add(FontRenderOps.SAVE);
     cmds.add(FontRenderOps.TRANSFORM, fontMatrix.slice());
     cmds.add(FontRenderOps.SCALE);
@@ -1032,13 +829,6 @@ class CompiledFont {
     cmds.add(FontRenderOps.RESTORE);
 
     return cmds.cmds;
-=======
-    cmds.transform(fontMatrix.slice());
-    this.compileGlyphImpl(code, cmds, glyphId);
-    cmds.add(DrawOPS.closePath);
-
-    return cmds.getPath();
->>>>>>> upstream/master
   }
 
   compileGlyphImpl() {
@@ -1068,14 +858,14 @@ class TrueTypeCompiled extends CompiledFont {
 }
 
 class Type2Compiled extends CompiledFont {
-  constructor(cffInfo, cmap, fontMatrix) {
+  constructor(cffInfo, cmap, fontMatrix, glyphNameMap) {
     super(fontMatrix || [0.001, 0, 0, 0.001, 0, 0]);
 
     this.glyphs = cffInfo.glyphs;
     this.gsubrs = cffInfo.gsubrs || [];
     this.subrs = cffInfo.subrs || [];
     this.cmap = cmap;
-    this.glyphNameMap = getGlyphsUnicode();
+    this.glyphNameMap = glyphNameMap || getGlyphsUnicode();
 
     this.gsubrsBias = getSubroutineBias(this.gsubrs);
     this.subrsBias = getSubroutineBias(this.subrs);
@@ -1094,19 +884,11 @@ class FontRendererFactory {
   static create(font, seacAnalysisEnabled) {
     const data = new Uint8Array(font.data);
     let cmap, glyf, loca, cff, indexToLocFormat, unitsPerEm;
-<<<<<<< HEAD
     const numTables = getUint16(data, 4);
     for (let i = 0, p = 12; i < numTables; i++, p += 16) {
       const tag = bytesToString(data.subarray(p, p + 4));
       const offset = getUint32(data, p + 8);
       const length = getUint32(data, p + 12);
-=======
-    const numTables = readUint16(data, 4);
-    for (let i = 0, p = 12; i < numTables; i++, p += 16) {
-      const tag = bytesToString(data.subarray(p, p + 4));
-      const offset = readUint32(data, p + 8);
-      const length = readUint32(data, p + 12);
->>>>>>> upstream/master
       switch (tag) {
         case "cmap":
           cmap = parseCmap(data, offset, offset + length);
@@ -1118,13 +900,8 @@ class FontRendererFactory {
           loca = data.subarray(offset, offset + length);
           break;
         case "head":
-<<<<<<< HEAD
           unitsPerEm = getUint16(data, offset + 18);
           indexToLocFormat = getUint16(data, offset + 50);
-=======
-          unitsPerEm = readUint16(data, offset + 18);
-          indexToLocFormat = readUint16(data, offset + 50);
->>>>>>> upstream/master
           break;
         case "CFF ":
           cff = parseCff(data, offset, offset + length, seacAnalysisEnabled);
@@ -1142,7 +919,7 @@ class FontRendererFactory {
         fontMatrix
       );
     }
-    return new Type2Compiled(cff, cmap, font.fontMatrix);
+    return new Type2Compiled(cff, cmap, font.fontMatrix, font.glyphNameMap);
   }
 }
 

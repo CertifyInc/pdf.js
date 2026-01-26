@@ -1321,7 +1321,7 @@ class CheckButton extends XFAObject {
   [$toHTML](availableSpace) {
     // TODO: border, shape and mark.
 
-    const style = toStyle(this, "margin");
+    const style = toStyle("margin");
     const size = measureToString(this.size);
 
     style.width = style.height = size;
@@ -1421,11 +1421,7 @@ class ChoiceList extends XFAObject {
     const field = ui[$getParent]();
     const fontSize = field.font?.size || 10;
     const optionStyle = {
-<<<<<<< HEAD
       fontSize: `calc(${fontSize}px * var(--scale-factor))`,
-=======
-      fontSize: `calc(${fontSize}px * var(--total-scale-factor))`,
->>>>>>> upstream/master
     };
     const children = [];
 
@@ -2466,7 +2462,9 @@ class ExclGroup extends XFAObject {
 
     setAccess(this, attributes.class);
 
-    this[$extra] ||= Object.create(null);
+    if (!this[$extra]) {
+      this[$extra] = Object.create(null);
+    }
 
     Object.assign(this[$extra], {
       children,
@@ -2955,7 +2953,9 @@ class Field extends XFAObject {
       }
     }
 
-    ui.attributes.style ||= Object.create(null);
+    if (!ui.attributes.style) {
+      ui.attributes.style = Object.create(null);
+    }
 
     let aElement = null;
 
@@ -3048,7 +3048,9 @@ class Field extends XFAObject {
       caption.attributes.class[0] = "xfaCaptionForCheckButton";
     }
 
-    ui.attributes.class ||= [];
+    if (!ui.attributes.class) {
+      ui.attributes.class = [];
+    }
 
     ui.children.splice(0, 0, caption);
 
@@ -3416,7 +3418,8 @@ class Image extends StringObject {
       return HTMLResult.EMPTY;
     }
 
-    let buffer = this[$globalData].images?.get(this.href);
+    let buffer =
+      this[$globalData].images && this[$globalData].images.get(this.href);
     if (!buffer && (this.href || !this[$content])) {
       // In general, we don't get remote data and use what we have
       // in the pdf itself, so no picture for non null href.
@@ -3903,7 +3906,7 @@ class Occur extends XFAObject {
       attributes.max !== ""
         ? getInteger({
             data: attributes.max,
-            defaultValue: -1,
+            defaultValue: 1,
             validate: x => true,
           })
         : "";
@@ -4064,9 +4067,11 @@ class PageArea extends XFAObject {
   }
 
   [$getNextPage]() {
-    this[$extra] ||= {
-      numberOfUse: 0,
-    };
+    if (!this[$extra]) {
+      this[$extra] = {
+        numberOfUse: 0,
+      };
+    }
 
     const parent = this[$getParent]();
     if (parent.relation === "orderedOccurrence") {
@@ -4085,9 +4090,11 @@ class PageArea extends XFAObject {
 
   [$toHTML]() {
     // TODO: incomplete.
-    this[$extra] ||= {
-      numberOfUse: 1,
-    };
+    if (!this[$extra]) {
+      this[$extra] = {
+        numberOfUse: 1,
+      };
+    }
 
     const children = [];
     this[$extra].children = children;
@@ -4179,11 +4186,13 @@ class PageSet extends XFAObject {
   }
 
   [$getNextPage]() {
-    this[$extra] ||= {
-      numberOfUse: 1,
-      pageIndex: -1,
-      pageSetIndex: -1,
-    };
+    if (!this[$extra]) {
+      this[$extra] = {
+        numberOfUse: 1,
+        pageIndex: -1,
+        pageSetIndex: -1,
+      };
+    }
 
     if (this.relation === "orderedOccurrence") {
       if (this[$extra].pageIndex + 1 < this.pageArea.children.length) {
@@ -5058,7 +5067,9 @@ class Subform extends XFAObject {
 
     setAccess(this, attributes.class);
 
-    this[$extra] ||= Object.create(null);
+    if (!this[$extra]) {
+      this[$extra] = Object.create(null);
+    }
 
     Object.assign(this[$extra], {
       children,
@@ -5484,7 +5495,9 @@ class Template extends XFAObject {
       }
     }
 
-    pageArea ||= pageAreas[0];
+    if (!pageArea) {
+      pageArea = pageAreas[0];
+    }
 
     pageArea[$extra] = {
       numberOfUse: 1,
@@ -5708,7 +5721,12 @@ class Text extends ContentObject {
     if (typeof this[$content] === "string") {
       return this[$content]
         .split(/[\u2029\u2028\n]/)
-        .filter(line => !!line)
+        .reduce((acc, line) => {
+          if (line) {
+            acc.push(line);
+          }
+          return acc;
+        }, [])
         .join("\n");
     }
     return this[$content][$text]();
@@ -5730,15 +5748,18 @@ class Text extends ContentObject {
           .map(para =>
             // Convert a paragraph into a set of <span> (for lines)
             // separated by <br>.
-            para.split(/[\u2028\n]/).flatMap(line => [
-              {
-                name: "span",
-                value: line,
-              },
-              {
-                name: "br",
-              },
-            ])
+            para.split(/[\u2028\n]/).reduce((acc, line) => {
+              acc.push(
+                {
+                  name: "span",
+                  value: line,
+                },
+                {
+                  name: "br",
+                }
+              );
+              return acc;
+            }, [])
           )
           .forEach(lines => {
             html.children.push({

@@ -23,11 +23,7 @@ import {
   Util,
   warn,
 } from "../shared/util.js";
-<<<<<<< HEAD
 import { setLayerDimensions } from "./display_utils.js";
-=======
-import { OutputScale, setLayerDimensions } from "./display_utils.js";
->>>>>>> upstream/master
 
 /**
  * @typedef {Object} TextLayerParameters
@@ -50,10 +46,7 @@ import { OutputScale, setLayerDimensions } from "./display_utils.js";
 
 const MAX_TEXT_DIVS_TO_RENDER = 100000;
 const DEFAULT_FONT_SIZE = 30;
-<<<<<<< HEAD
 const DEFAULT_FONT_ASCENT = 0.8;
-=======
->>>>>>> upstream/master
 
 class TextLayer {
   #capability = Promise.withResolvers();
@@ -123,11 +116,7 @@ class TextLayer {
     }
     this.#container = this.#rootContainer = container;
 
-<<<<<<< HEAD
     this.#scale = viewport.scale * (globalThis.devicePixelRatio || 1);
-=======
-    this.#scale = viewport.scale * OutputScale.pixelRatio;
->>>>>>> upstream/master
     this.#rotation = viewport.rotation;
     this.#layoutTextParams = {
       div: null,
@@ -140,10 +129,6 @@ class TextLayer {
     this.#pageHeight = pageHeight;
 
     TextLayer.#ensureMinFontSizeComputed();
-<<<<<<< HEAD
-=======
-    container.style.setProperty("--min-font-size", TextLayer.#minFontSize);
->>>>>>> upstream/master
 
     setLayerDimensions(container, viewport);
 
@@ -221,11 +206,7 @@ class TextLayer {
    * @returns {undefined}
    */
   update({ viewport, onBefore = null }) {
-<<<<<<< HEAD
     const scale = viewport.scale * (globalThis.devicePixelRatio || 1);
-=======
-    const scale = viewport.scale * OutputScale.pixelRatio;
->>>>>>> upstream/master
     const rotation = viewport.rotation;
 
     if (rotation !== this.#rotation) {
@@ -310,18 +291,9 @@ class TextLayer {
           const parent = this.#container;
           this.#container = document.createElement("span");
           this.#container.classList.add("markedContent");
-<<<<<<< HEAD
           if (item.id !== null) {
             this.#container.setAttribute("id", `${item.id}`);
           }
-=======
-          if (item.id) {
-            this.#container.setAttribute("id", `${item.id}`);
-          }
-          if (item.tag === "Artifact") {
-            this.#container.ariaHidden = true;
-          }
->>>>>>> upstream/master
           parent.append(this.#container);
         } else if (item.type === "endMarkedContent") {
           this.#container = this.#container.parentNode;
@@ -360,11 +332,7 @@ class TextLayer {
     fontFamily = TextLayer.fontFamilyMap.get(fontFamily) || fontFamily;
     const fontHeight = Math.hypot(tx[2], tx[3]);
     const fontAscent =
-<<<<<<< HEAD
       fontHeight * TextLayer.#getAscent(fontFamily, this.#lang);
-=======
-      fontHeight * TextLayer.#getAscent(fontFamily, style, this.#lang);
->>>>>>> upstream/master
 
     let left, top;
     if (angle === 0) {
@@ -375,7 +343,6 @@ class TextLayer {
       top = tx[5] - fontAscent * Math.cos(angle);
     }
 
-<<<<<<< HEAD
     const scaleFactorStr = "calc(var(--scale-factor)*";
     const divStyle = textDiv.style;
     // Setting the style properties individually, rather than all at once,
@@ -393,14 +360,6 @@ class TextLayer {
     // ignore the minimum font size enforced by the browser, so that the text
     // layer <span>s can always match the size of the text in the canvas.
     divStyle.fontSize = `${scaleFactorStr}${(TextLayer.#minFontSize * fontHeight).toFixed(2)}px)`;
-=======
-    const divStyle = textDiv.style;
-    // Setting the style properties individually, rather than all at once,
-    // should be OK since the `textDiv` isn't appended to the document yet.
-    divStyle.left = `${((100 * left) / this.#pageWidth).toFixed(2)}%`;
-    divStyle.top = `${((100 * top) / this.#pageHeight).toFixed(2)}%`;
-    divStyle.setProperty("--font-height", `${fontHeight.toFixed(2)}px`);
->>>>>>> upstream/master
     divStyle.fontFamily = fontFamily;
 
     textDivProperties.fontSize = fontHeight;
@@ -463,14 +422,11 @@ class TextLayer {
     const { div, properties, ctx } = params;
     const { style } = div;
 
-<<<<<<< HEAD
     let transform = "";
     if (TextLayer.#minFontSize > 1) {
       transform = `scale(${1 / TextLayer.#minFontSize})`;
     }
 
-=======
->>>>>>> upstream/master
     if (properties.canvasWidth !== 0 && properties.hasText) {
       const { fontFamily } = style;
       const { canvasWidth, fontSize } = properties;
@@ -480,7 +436,6 @@ class TextLayer {
       const { width } = ctx.measureText(div.textContent);
 
       if (width > 0) {
-<<<<<<< HEAD
         transform = `scaleX(${(canvasWidth * this.#scale) / width}) ${transform}`;
       }
     }
@@ -489,13 +444,6 @@ class TextLayer {
     }
     if (transform.length > 0) {
       style.transform = transform;
-=======
-        style.setProperty("--scale-x", (canvasWidth * this.#scale) / width);
-      }
-    }
-    if (properties.angle !== 0) {
-      style.setProperty("--rotate", `${properties.angle}deg`);
->>>>>>> upstream/master
     }
   }
 
@@ -575,11 +523,7 @@ class TextLayer {
     div.remove();
   }
 
-<<<<<<< HEAD
   static #getAscent(fontFamily, lang) {
-=======
-  static #getAscent(fontFamily, style, lang) {
->>>>>>> upstream/master
     const cachedAscent = this.#ascentCache.get(fontFamily);
     if (cachedAscent) {
       return cachedAscent;
@@ -590,7 +534,6 @@ class TextLayer {
     this.#ensureCtxFont(ctx, DEFAULT_FONT_SIZE, fontFamily);
     const metrics = ctx.measureText("");
 
-<<<<<<< HEAD
     // Both properties aren't available by default in Firefox.
     let ascent = metrics.fontBoundingBoxAscent;
     let descent = Math.abs(metrics.fontBoundingBoxDescent);
@@ -640,33 +583,6 @@ class TextLayer {
     ctx.canvas.width = ctx.canvas.height = 0;
 
     const ratio = ascent ? ascent / (ascent + descent) : DEFAULT_FONT_ASCENT;
-=======
-    const ascent = metrics.fontBoundingBoxAscent;
-    const descent = Math.abs(metrics.fontBoundingBoxDescent);
-
-    ctx.canvas.width = ctx.canvas.height = 0;
-    let ratio = 0.8; // DEFAULT_FONT_ASCENT
-
-    if (ascent) {
-      ratio = ascent / (ascent + descent);
-    } else {
-      if (
-        (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
-        FeatureTest.platform.isFirefox
-      ) {
-        warn(
-          "Enable the `dom.textMetrics.fontBoundingBox.enabled` preference " +
-            "in `about:config` to improve TextLayer rendering."
-        );
-      }
-      if (style.ascent) {
-        ratio = style.ascent;
-      } else if (style.descent) {
-        ratio = 1 + style.descent;
-      }
-    }
-
->>>>>>> upstream/master
     this.#ascentCache.set(fontFamily, ratio);
     return ratio;
   }

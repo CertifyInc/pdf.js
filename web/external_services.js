@@ -33,11 +33,6 @@ class BaseExternalServices {
 
   reportTelemetry(data) {}
 
-<<<<<<< HEAD
-=======
-  reportText(data) {}
-
->>>>>>> upstream/master
   /**
    * @returns {Promise<IL10n>}
    */
@@ -49,13 +44,6 @@ class BaseExternalServices {
     throw new Error("Not implemented: createScripting");
   }
 
-<<<<<<< HEAD
-=======
-  createSignatureStorage() {
-    throw new Error("Not implemented: createSignatureStorage");
-  }
-
->>>>>>> upstream/master
   updateEditorStates(data) {
     throw new Error("Not implemented: updateEditorStates");
   }

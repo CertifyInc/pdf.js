@@ -16,10 +16,6 @@
 // In mozilla-central, this file is loaded as non-module script,
 // so it mustn't have any dependencies.
 
-<<<<<<< HEAD
-=======
-// eslint-disable-next-line no-restricted-syntax
->>>>>>> upstream/master
 export class SandboxSupportBase {
   /**
    * @param {DOMWindow} - win

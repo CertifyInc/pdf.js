@@ -77,11 +77,7 @@ class FileSpec {
 
     const item = pickPlatformItem(this.root);
     if (item && typeof item === "string") {
-<<<<<<< HEAD
       filename = stringToPDFString(item)
-=======
-      filename = stringToPDFString(item, /* keepEscapeSequence = */ true)
->>>>>>> upstream/master
         .replaceAll("\\\\", "\\")
         .replaceAll("\\/", "/")
         .replaceAll("\\", "/");

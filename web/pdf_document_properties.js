@@ -67,22 +67,13 @@ class PDFDocumentProperties {
     overlayManager,
     eventBus,
     l10n,
-<<<<<<< HEAD
     fileNameLookup
-=======
-    fileNameLookup,
-    titleLookup
->>>>>>> upstream/master
   ) {
     this.dialog = dialog;
     this.fields = fields;
     this.overlayManager = overlayManager;
     this.l10n = l10n;
     this._fileNameLookup = fileNameLookup;
-<<<<<<< HEAD
-=======
-    this._titleLookup = titleLookup;
->>>>>>> upstream/master
 
     this.#reset();
     // Bind the event listener for the Close button.
@@ -121,27 +112,16 @@ class PDFDocumentProperties {
     }
 
     // Get the document properties.
-<<<<<<< HEAD
     const {
       info,
       /* metadata, */
       /* contentDispositionFilename, */
       contentLength,
     } = await this.pdfDocument.getMetadata();
-=======
-    const [
-      { info, metadata, /* contentDispositionFilename, */ contentLength },
-      pdfPage,
-    ] = await Promise.all([
-      this.pdfDocument.getMetadata(),
-      this.pdfDocument.getPage(currentPageNumber),
-    ]);
->>>>>>> upstream/master
 
     const [
       fileName,
       fileSize,
-      title,
       creationDate,
       modificationDate,
       pageSize,
@@ -149,33 +129,26 @@ class PDFDocumentProperties {
     ] = await Promise.all([
       this._fileNameLookup(),
       this.#parseFileSize(contentLength),
-<<<<<<< HEAD
       this.#parseDate(info.CreationDate),
       this.#parseDate(info.ModDate),
       // eslint-disable-next-line arrow-body-style
       this.pdfDocument.getPage(currentPageNumber).then(pdfPage => {
         return this.#parsePageSize(getPageSizeInches(pdfPage), pagesRotation);
       }),
-=======
-      this._titleLookup(),
-      this.#parseDate(metadata?.get("xmp:createdate"), info.CreationDate),
-      this.#parseDate(metadata?.get("xmp:modifydate"), info.ModDate),
-      this.#parsePageSize(getPageSizeInches(pdfPage), pagesRotation),
->>>>>>> upstream/master
       this.#parseLinearization(info.IsLinearized),
     ]);
 
     this.#fieldData = Object.freeze({
       fileName,
       fileSize,
-      title,
-      author: metadata?.get("dc:creator")?.join("\n") || info.Author,
-      subject: metadata?.get("dc:subject")?.join("\n") || info.Subject,
-      keywords: metadata?.get("pdf:keywords") || info.Keywords,
+      title: info.Title,
+      author: info.Author,
+      subject: info.Subject,
+      keywords: info.Keywords,
       creationDate,
       modificationDate,
-      creator: metadata?.get("xmp:creatortool") || info.Creator,
-      producer: metadata?.get("pdf:producer") || info.Producer,
+      creator: info.Creator,
+      producer: info.Producer,
       version: info.PDFFormatVersion,
       pageCount: this.pdfDocument.numPages,
       pageSize,
@@ -353,14 +326,8 @@ class PDFDocumentProperties {
     );
   }
 
-<<<<<<< HEAD
   async #parseDate(inputDate) {
     const dateObj = PDFDateString.toDateObject(inputDate);
-=======
-  async #parseDate(metadataDate, infoDate) {
-    const dateObj =
-      Date.parse(metadataDate) || PDFDateString.toDateObject(infoDate);
->>>>>>> upstream/master
     return dateObj
       ? this.l10n.get("pdfjs-document-properties-date-time-string", {
           dateObj: dateObj.valueOf(),

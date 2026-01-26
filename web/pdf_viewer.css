@@ -12,54 +12,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
-=======
-@import url(message_bar.css);
->>>>>>> upstream/master
 @import url(dialog.css);
 @import url(text_layer_builder.css);
 @import url(annotation_layer_builder.css);
 @import url(xfa_layer_builder.css);
-<<<<<<< HEAD
 /* Ignored in GECKOVIEW builds: */
 @import url(annotation_editor_layer_builder.css);
 
 :root {
-=======
-/* Ignored in GECKOVIEW: begin */
-@import url(annotation_editor_layer_builder.css);
-@import url(menu.css);
-@import url(tree.css);
-@import url(views_manager.css);
-@import url(sidebar.css);
-/* Ignored in GECKOVIEW: end */
-
-:root {
-  color-scheme: light dark;
-
->>>>>>> upstream/master
   --viewer-container-height: 0;
   --pdfViewer-padding-bottom: 0;
   --page-margin: 1px auto -8px;
   --page-border: 9px solid transparent;
   --spreadHorizontalWrapped-margin-LR: -3.5px;
   --loading-icon-delay: 400ms;
-<<<<<<< HEAD
 }
-=======
-  --focus-ring-color: light-dark(#0060df, #0df);
-  --focus-ring-outline: 2px solid var(--focus-ring-color);
->>>>>>> upstream/master
 
-  @media screen and (forced-colors: active) {
+@media screen and (forced-colors: active) {
+  :root {
     --pdfViewer-padding-bottom: 9px;
     --page-margin: 8px auto -1px;
     --page-border: 1px solid CanvasText;
     --spreadHorizontalWrapped-margin-LR: 3.5px;
-<<<<<<< HEAD
-=======
-    --focus-ring-color: CanvasText;
->>>>>>> upstream/master
   }
 }
 
@@ -108,17 +82,10 @@
     height: 100%;
 
     canvas {
-<<<<<<< HEAD
-=======
-      position: absolute;
-      top: 0;
-      left: 0;
->>>>>>> upstream/master
       margin: 0;
       display: block;
       width: 100%;
       height: 100%;
-<<<<<<< HEAD
 
       &[hidden] {
         display: none;
@@ -128,30 +95,15 @@
         width: 100%;
         height: 100%;
       }
-=======
-      contain: content;
->>>>>>> upstream/master
 
       .structTree {
         contain: strict;
       }
-<<<<<<< HEAD
-=======
-
-      &.detailView {
-        image-rendering: pixelated;
-      }
->>>>>>> upstream/master
     }
   }
 }
 
 .pdfViewer .page {
-<<<<<<< HEAD
-=======
-  --user-unit: 1;
-  --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
->>>>>>> upstream/master
   --scale-round-x: 1px;
   --scale-round-y: 1px;
 

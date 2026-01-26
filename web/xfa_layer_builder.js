@@ -30,12 +30,6 @@ import { XfaLayer } from "pdfjs-lib";
  * @property {Object} [xfaHtml]
  */
 
-/**
- * @typedef {Object} XfaLayerBuilderRenderOptions
- * @property {PageViewport} viewport
- * @property {string} [intent] - The default value is "display".
- */
-
 class XfaLayerBuilder {
   /**
    * @param {XfaLayerBuilderOptions} options
@@ -56,16 +50,13 @@ class XfaLayerBuilder {
   }
 
   /**
-   * @param {XfaLayerBuilderRenderOptions} viewport
+   * @param {PageViewport} viewport
+   * @param {string} intent (default value is 'display')
    * @returns {Promise<Object | void>} A promise that is resolved when rendering
    *   of the XFA layer is complete. The first rendering will return an object
    *   with a `textDivs` property that can be used with the TextHighlighter.
    */
-<<<<<<< HEAD
   async render(viewport, intent = "display") {
-=======
-  async render({ viewport, intent = "display" }) {
->>>>>>> upstream/master
     if (intent === "print") {
       const parameters = {
         viewport: viewport.clone({ dontFlip: true }),

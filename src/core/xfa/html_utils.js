@@ -86,15 +86,14 @@ const converters = {
       const colSpan = node.colSpan;
       let w;
       if (colSpan === -1) {
-        w = Math.sumPrecise(extra.columnWidths.slice(extra.currentColumn));
+        w = extra.columnWidths
+          .slice(extra.currentColumn)
+          .reduce((a, x) => a + x, 0);
         extra.currentColumn = 0;
       } else {
-        w = Math.sumPrecise(
-          extra.columnWidths.slice(
-            extra.currentColumn,
-            extra.currentColumn + colSpan
-          )
-        );
+        w = extra.columnWidths
+          .slice(extra.currentColumn, extra.currentColumn + colSpan)
+          .reduce((a, x) => a + x, 0);
         extra.currentColumn =
           (extra.currentColumn + node.colSpan) % extra.columnWidths.length;
       }
@@ -329,14 +328,13 @@ function fixDimensions(node) {
     const colSpan = node.colSpan;
     let width;
     if (colSpan === -1) {
-      width = Math.sumPrecise(extra.columnWidths.slice(extra.currentColumn));
+      width = extra.columnWidths
+        .slice(extra.currentColumn)
+        .reduce((a, w) => a + w, 0);
     } else {
-      width = Math.sumPrecise(
-        extra.columnWidths.slice(
-          extra.currentColumn,
-          extra.currentColumn + colSpan
-        )
-      );
+      width = extra.columnWidths
+        .slice(extra.currentColumn, extra.currentColumn + colSpan)
+        .reduce((a, w) => a + w, 0);
     }
     if (!isNaN(width)) {
       node.w = width;
@@ -350,7 +348,7 @@ function fixDimensions(node) {
 
   if (node.layout === "table") {
     if (node.w === "" && Array.isArray(node.columnWidths)) {
-      node.w = Math.sumPrecise(node.columnWidths);
+      node.w = node.columnWidths.reduce((a, x) => a + x, 0);
     }
   }
 }

@@ -64,17 +64,6 @@ class BaseStream {
     return false;
   }
 
-<<<<<<< HEAD
-=======
-  get isAsyncDecoder() {
-    return false;
-  }
-
-  get isImageStream() {
-    return false;
-  }
-
->>>>>>> upstream/master
   get canAsyncDecodeImageFromBuffer() {
     return false;
   }
@@ -143,10 +132,6 @@ class BaseStream {
    */
   getBaseStreams() {
     return null;
-  }
-
-  getOriginalStream() {
-    return this.stream?.getOriginalStream() || this;
   }
 }
 

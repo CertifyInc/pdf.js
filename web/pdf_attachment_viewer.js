@@ -118,12 +118,9 @@ class PDFAttachmentViewer extends BaseTreeViewer {
     }
 
     const fragment = document.createDocumentFragment();
-    const ul = document.createElement("ul");
-    fragment.append(ul);
     let attachmentsCount = 0;
     for (const name in attachments) {
       const item = attachments[name];
-<<<<<<< HEAD
 
       const div = document.createElement("div");
       div.className = "treeItem";
@@ -135,15 +132,6 @@ class PDFAttachmentViewer extends BaseTreeViewer {
       div.append(element);
 
       fragment.append(div);
-=======
-      const li = document.createElement("li");
-      ul.append(li);
-      const element = document.createElement("a");
-      li.append(element);
-      this._bindLink(element, item);
-      element.textContent = this._normalizeTextContent(item.filename);
-
->>>>>>> upstream/master
       attachmentsCount++;
     }
 
