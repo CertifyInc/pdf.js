@@ -12,6 +12,7 @@ pdfjs-zoom-in-button =
     .title = Cchiù granni
 pdfjs-zoom-in-button-label = Cchiù granni
 
+<<<<<<< HEAD
 ##  Secondary toolbar and context menu
 
 
@@ -26,6 +27,8 @@ pdfjs-zoom-in-button-label = Cchiù granni
 ##   $orientation (String) - the orientation of the (current) page
 
 
+=======
+>>>>>>> upstream/master
 ##
 
 # The linearization status of the document; usually called "Fast Web View" in
@@ -37,6 +40,7 @@ pdfjs-document-properties-linearized-yes = Se
 
 pdfjs-print-progress-close-button = Sfai
 
+<<<<<<< HEAD
 ## Tooltips and alt text for side panel toolbar buttons
 
 
@@ -46,10 +50,13 @@ pdfjs-print-progress-close-button = Sfai
 ## Find panel button title and messages
 
 
+=======
+>>>>>>> upstream/master
 ## Predefined zoom values
 
 pdfjs-page-scale-width = Larghizza dâ pàggina
 
+<<<<<<< HEAD
 ## PDF page
 
 
@@ -72,3 +79,8 @@ pdfjs-password-cancel-button = Sfai
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+## Password
+
+pdfjs-password-cancel-button = Sfai
+>>>>>>> upstream/master

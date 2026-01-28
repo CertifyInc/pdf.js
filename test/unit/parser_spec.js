@@ -152,7 +152,21 @@ describe("parser", function () {
       });
 
       it("should treat a single decimal point, or minus/plus sign, as zero", function () {
+<<<<<<< HEAD
         const validNums = [".", "-", "+", "-.", "+.", "-\r\n.", "+\r\n."];
+=======
+        const validNums = [
+          ".",
+          "-",
+          "+",
+          "-.",
+          "+.",
+          "-\r\n.",
+          "+\r\n.",
+          "-(",
+          "-<",
+        ];
+>>>>>>> upstream/master
         for (const number of validNums) {
           const validInput = new StringStream(number);
           const validLexer = new Lexer(validInput);

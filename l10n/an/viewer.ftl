@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Propiedatz d'o documento...
 pdfjs-document-properties-file-name = Nombre de fichero:
 pdfjs-document-properties-file-size = Grandaria d'o fichero:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Titol:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Afer:
 pdfjs-document-properties-keywords = Parolas clau:
 pdfjs-document-properties-creation-date = Calendata de creyación:
 pdfjs-document-properties-modification-date = Calendata de modificación:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Creyador:
 pdfjs-document-properties-producer = Creyador de PDF:
 pdfjs-document-properties-version = Versión de PDF:
@@ -213,9 +219,12 @@ pdfjs-page-scale-actual = Grandaria actual
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = S'ha produciu una error en cargar o PDF.
@@ -226,10 +235,13 @@ pdfjs-rendering-error = Ha ocurriu una error en renderizar a pachina.
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -245,6 +257,7 @@ pdfjs-password-invalid = Clau invalida. Torna a intentar-lo.
 pdfjs-password-ok-button = Acceptar
 pdfjs-password-cancel-button = Cancelar
 pdfjs-web-fonts-disabled = As fuents web son desactivadas: no se puet incrustar fichers PDF.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -255,3 +268,5 @@ pdfjs-web-fonts-disabled = As fuents web son desactivadas: no se puet incrustar 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

@@ -71,6 +71,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = ஆவண பண்புகள்...
 pdfjs-document-properties-file-name = கோப்பு பெயர்:
 pdfjs-document-properties-file-size = கோப்பின் அளவு:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -79,16 +80,21 @@ pdfjs-document-properties-kb = { $size_kb } கிபை ({ $size_b } பைட�
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } மெபை ({ $size_b } பைட்டுகள்)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = தலைப்பு:
 pdfjs-document-properties-author = எழுதியவர்
 pdfjs-document-properties-subject = பொருள்:
 pdfjs-document-properties-keywords = முக்கிய வார்த்தைகள்:
 pdfjs-document-properties-creation-date = படைத்த தேதி :
 pdfjs-document-properties-modification-date = திருத்திய தேதி:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = உருவாக்குபவர்:
 pdfjs-document-properties-producer = பிடிஎஃப் தயாரிப்பாளர்:
 pdfjs-document-properties-version = PDF பதிப்பு:
@@ -183,9 +189,12 @@ pdfjs-page-scale-actual = உண்மையான அளவு
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ஐ ஏற்றும் போது ஒரு பிழை ஏற்பட்டது.
@@ -211,6 +220,7 @@ pdfjs-password-invalid = செல்லுபடியாகாத கடவு
 pdfjs-password-ok-button = சரி
 pdfjs-password-cancel-button = ரத்து
 pdfjs-web-fonts-disabled = வலை எழுத்துருக்கள் முடக்கப்பட்டுள்ளன: உட்பொதிக்கப்பட்ட PDF எழுத்துருக்களைப் பயன்படுத்த முடியவில்லை.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -221,3 +231,5 @@ pdfjs-web-fonts-disabled = வலை எழுத்துருக்கள் 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

@@ -92,6 +92,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Dokumento savybės…
 pdfjs-document-properties-file-name = Failo vardas:
 pdfjs-document-properties-file-size = Failo dydis:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -100,16 +101,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } B)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } B)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Antraštė:
 pdfjs-document-properties-author = Autorius:
 pdfjs-document-properties-subject = Tema:
 pdfjs-document-properties-keywords = Reikšminiai žodžiai:
 pdfjs-document-properties-creation-date = Sukūrimo data:
 pdfjs-document-properties-modification-date = Modifikavimo data:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Kūrėjas:
 pdfjs-document-properties-producer = PDF generatorius:
 pdfjs-document-properties-version = PDF versija:
@@ -237,10 +243,13 @@ pdfjs-rendering-error = Atvaizduojant puslapį įvyko klaida.
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -256,6 +265,7 @@ pdfjs-password-invalid = Slaptažodis neteisingas. Bandykite dar kartą.
 pdfjs-password-ok-button = Gerai
 pdfjs-password-cancel-button = Atsisakyti
 pdfjs-web-fonts-disabled = Saityno šriftai išjungti – PDF faile esančių šriftų naudoti negalima.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -266,3 +276,5 @@ pdfjs-web-fonts-disabled = Saityno šriftai išjungti – PDF faile esančių š
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

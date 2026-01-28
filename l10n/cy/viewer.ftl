@@ -112,6 +112,7 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } beit)
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -120,6 +121,8 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } beit)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } beit)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Teitl:
 pdfjs-document-properties-author = Awdur:
 pdfjs-document-properties-subject = Pwnc:
@@ -129,10 +132,13 @@ pdfjs-document-properties-modification-date = Dyddiad Addasu:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Crewr:
 pdfjs-document-properties-producer = Cynhyrchydd PDF:
 pdfjs-document-properties-version = Fersiwn PDF:
@@ -283,10 +289,13 @@ pdfjs-rendering-error = Digwyddodd gwall wrth adeiladu'r dudalen.
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -310,9 +319,19 @@ pdfjs-web-fonts-disabled = Ffontiau gwe wedi eu hanalluogi: methu defnyddio ffon
 
 pdfjs-editor-free-text-button =
     .title = Testun
+<<<<<<< HEAD
 pdfjs-editor-free-text-button-label = Testun
 pdfjs-editor-ink-button =
     .title = Lluniadu
+=======
+pdfjs-editor-color-picker-free-text-input =
+    .title = Newid lliw testun
+pdfjs-editor-free-text-button-label = Testun
+pdfjs-editor-ink-button =
+    .title = Lluniadu
+pdfjs-editor-color-picker-ink-input =
+    .title = Newid lliw lluniadu
+>>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Lluniadu
 pdfjs-editor-stamp-button =
     .title = Ychwanegu neu olygu delweddau
@@ -324,6 +343,36 @@ pdfjs-highlight-floating-button1 =
     .title = Amlygu
     .aria-label = Amlygu
 pdfjs-highlight-floating-button-label = Amlygu
+<<<<<<< HEAD
+=======
+pdfjs-comment-floating-button =
+    .title = Sylw
+    .aria-label = Sylw
+pdfjs-comment-floating-button-label = Sylw
+pdfjs-editor-comment-button =
+    .title = Sylw
+    .aria-label = Sylw
+pdfjs-editor-comment-button-label = Sylw
+pdfjs-editor-signature-button =
+    .title = Ychwanegu llofnod
+pdfjs-editor-signature-button-label = Ychwanegu llofnod
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = Golygydd amlygu
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = Golygydd lluniadu
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = Golygydd llofnod: { $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = Golygydd delweddau
+>>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -335,6 +384,11 @@ pdfjs-editor-remove-stamp-button =
     .title = Dileu delwedd
 pdfjs-editor-remove-highlight-button =
     .title = Tynnu amlygiad
+<<<<<<< HEAD
+=======
+pdfjs-editor-remove-signature-button =
+    .title = Dileu llofnod
+>>>>>>> upstream/master
 
 ##
 
@@ -351,10 +405,24 @@ pdfjs-editor-stamp-add-image-button-label = Ychwanegu delwedd
 pdfjs-editor-free-highlight-thickness-input = Trwch
 pdfjs-editor-free-highlight-thickness-title =
     .title = Newid trwch wrth amlygu eitemau heblaw testun
+<<<<<<< HEAD
+=======
+pdfjs-editor-add-signature-container =
+    .aria-label = Rheolyddion llofnodion a llofnodion wedi'u cadw
+pdfjs-editor-signature-add-signature-button =
+    .title = Ychwanegu llofnod newydd
+pdfjs-editor-signature-add-signature-button-label = Ychwanegu llofnod newydd
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = Llofnod wedi'i gadw: { $description }
+>>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Golygydd Testun
     .default-content = Cychwyn teipio…
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = Golygydd Testun
 pdfjs-free-text-default-content = Cychwyn teipio…
@@ -362,13 +430,37 @@ pdfjs-ink =
     .aria-label = Golygydd Lluniadu
 pdfjs-ink-canvas =
     .aria-label = Delwedd wedi'i chreu gan ddefnyddwyr
+=======
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [zero] Sylwadau
+        [one] Sylw
+        [two] Sylw
+        [few] Sylw
+        [many] Sylw
+       *[other] Sylw
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .title = Cau'r bar ochr
+    .aria-label = Cau'r bar ochr
+pdfjs-editor-comments-sidebar-close-button-label = Cau'r bar ochr
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = Gweld rhywbeth nodedig? Amlygwch ef a gadael sylw.
+pdfjs-editor-comments-sidebar-no-comments-link = Dysgu rhagor
+>>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Testun amgen (alt)
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Golygu testun amgen
+<<<<<<< HEAD
 pdfjs-editor-alt-text-edit-button-label = Golygu testun amgen
+=======
+>>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Dewisiadau
 pdfjs-editor-alt-text-dialog-description = Mae testun amgen (testun alt) yn helpu pan na all pobl weld y ddelwedd neu pan nad yw'n llwytho.
 pdfjs-editor-alt-text-add-description-label = Ychwanegu disgrifiad
@@ -388,6 +480,7 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+<<<<<<< HEAD
 pdfjs-editor-resizer-label-top-left = Y gornel chwith uchaf — newid maint
 pdfjs-editor-resizer-label-top-middle = Canol uchaf - newid maint
 pdfjs-editor-resizer-label-top-right = Y gornel dde uchaf - newid maint
@@ -396,6 +489,8 @@ pdfjs-editor-resizer-label-bottom-right = Y gornel dde isaf — newid maint
 pdfjs-editor-resizer-label-bottom-middle = Canol gwaelod — newid maint
 pdfjs-editor-resizer-label-bottom-left = Y gornel chwith isaf — newid maint
 pdfjs-editor-resizer-label-middle-left = Chwith canol — newid maint
+=======
+>>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Y gornel chwith uchaf — newid maint
 pdfjs-editor-resizer-top-middle =
@@ -452,7 +547,11 @@ pdfjs-editor-new-alt-text-textarea =
 pdfjs-editor-new-alt-text-description = Disgrifiad byr ar gyfer pobl sydd ddim yn gallu gweld y ddelwedd neu pan nad yw'r ddelwedd yn llwytho.
 # This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
 pdfjs-editor-new-alt-text-disclaimer1 = Cafodd y testun amgen hwn ei greu'n awtomatig a gall fod yn anghywir.
+<<<<<<< HEAD
 pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Dysgu rhagor
+=======
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Rhagor
+>>>>>>> upstream/master
 pdfjs-editor-new-alt-text-create-automatically-button-label = Creu testun amgen yn awtomatig
 pdfjs-editor-new-alt-text-not-now-button = Nid nawr
 pdfjs-editor-new-alt-text-error-title = Methu â chreu testun amgen yn awtomatig
@@ -461,7 +560,10 @@ pdfjs-editor-new-alt-text-error-close-button = Cau
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+<<<<<<< HEAD
 #   $percent (Number) - the percentage of the downloaded size.
+=======
+>>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Wrthi'n llwytho i lawr model AI testun amgen ( { $downloadedSize } o { $totalSize } MB)
     .aria-valuetext = Wrthi'n llwytho i lawr model AI testun amgen ( { $downloadedSize } o { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -501,3 +603,138 @@ pdfjs-editor-alt-text-settings-editor-title = Golygydd testun amgen
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Dangoswch y golygydd testun amgen yn syth wrth ychwanegu delwedd
 pdfjs-editor-alt-text-settings-show-dialog-description = Yn eich helpu i wneud yn siŵr bod gan eich holl ddelweddau destun amgen.
 pdfjs-editor-alt-text-settings-close-button = Cau
+<<<<<<< HEAD
+=======
+
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = Amlygu wedi'i ychwanegu
+pdfjs-editor-freetext-added-alert = Testun wedi'i ychwanegu
+pdfjs-editor-ink-added-alert = Lluniadu wedi'i ychwanegu
+pdfjs-editor-stamp-added-alert = Delwedd wedi'i hychwanegu
+pdfjs-editor-signature-added-alert = Llofnod wedi'i ychwanegu
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-highlight = Tynnwyd yr amlygu
+pdfjs-editor-undo-bar-message-freetext = Tynnwyd y testun
+pdfjs-editor-undo-bar-message-ink = Tynnwyd y lluniad
+pdfjs-editor-undo-bar-message-stamp = Tynnwyd y ddelwedd
+pdfjs-editor-undo-bar-message-signature = Llofnod wedi'i dynnu
+# Variables:
+#   $count (Number) - the number of removed annotations.
+pdfjs-editor-undo-bar-message-multiple =
+    { $count ->
+        [zero] { $count } anodiad wedi'u tynnu
+        [one] { $count } anodiad wedi'i dynnu
+        [two] { $count } anodiad wedi'u tynnu
+        [few] { $count } anodiad wedi'u tynnu
+        [many] { $count } anodiad wedi'u tynnu
+       *[other] { $count } anodiad wedi'u tynnu
+    }
+pdfjs-editor-undo-bar-undo-button =
+    .title = Dadwneud
+pdfjs-editor-undo-bar-undo-button-label = Dadwneud
+pdfjs-editor-undo-bar-close-button =
+    .title = Cau
+pdfjs-editor-undo-bar-close-button-label = Cau
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-label = Mae'r modd hwn yn caniatáu i'r defnyddiwr greu llofnod i'w ychwanegu at ddogfen PDF. Gall y defnyddiwr olygu'r enw (sydd hefyd yn gweithredu fel y testun amgen), ac yn ddewisol cadw'r llofnod i'w ddefnyddio dro ar ôl tro.
+pdfjs-editor-add-signature-dialog-title = Ychwanegu llofnod
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = Math
+    .title = Math
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = Lluniadu
+    .title = Lluniadu
+pdfjs-editor-add-signature-image-button = Delwedd
+    .title = Delwedd
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = Teipiwch eich llofnod
+    .placeholder = Teipiwch eich llofnod
+pdfjs-editor-add-signature-draw-placeholder = Lluniwch eich llofnod
+pdfjs-editor-add-signature-draw-thickness-range-label = Trwch
+# Variables:
+#   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
+pdfjs-editor-add-signature-draw-thickness-range =
+    .title = Trwch y llinell: { $thickness }
+pdfjs-editor-add-signature-image-placeholder = Llusgwch ffeil yma i'w llwytho
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] Neu ddewis ffeiliau delwedd
+       *[other] Neu bori ffeiliau delwedd
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = Disgrifiad (testun amgen)
+pdfjs-editor-add-signature-description-input =
+    .title = Disgrifiad (testun amgen)
+pdfjs-editor-add-signature-description-default-when-drawing = Llofnod
+pdfjs-editor-add-signature-clear-button-label = Diddymu llofnod
+pdfjs-editor-add-signature-clear-button =
+    .title = Diddymu llofnod
+pdfjs-editor-add-signature-save-checkbox = Cadw llofnod
+pdfjs-editor-add-signature-save-warning-message = Rydych chi wedi cyrraedd y terfyn o 5 llofnod sydd wedi'u cadw. Tynnwch un i gadw rhagor
+pdfjs-editor-add-signature-image-upload-error-title = Methu llwytho'r ddelwedd.
+pdfjs-editor-add-signature-image-upload-error-description = Gwiriwch eich cysylltiad rhwydwaith neu rhowch gynnig ar ddelwedd arall.
+pdfjs-editor-add-signature-image-no-data-error-title = Methu trosi'r ddelwedd hon yn llofnod
+pdfjs-editor-add-signature-image-no-data-error-description = Ceisiwch lwytho delwedd wahanol.
+pdfjs-editor-add-signature-error-close-button = Cau
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Diddymu
+pdfjs-editor-add-signature-add-button = Ychwanegu
+pdfjs-editor-edit-signature-update-button = Diweddaru
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = Golygu sylw
+pdfjs-editor-edit-comment-popup-button =
+    .title = Golygu sylw
+pdfjs-editor-delete-comment-popup-button-label = Tynnu sylw
+pdfjs-editor-delete-comment-popup-button =
+    .title = Tynnu sylw
+pdfjs-show-comment-button =
+    .title = Dangos sylw
+
+##  Edit a comment dialog
+
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = Golygu sylw
+pdfjs-editor-edit-comment-dialog-save-button-when-editing = Diweddaru
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Ychwanegu sylw
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = Ychwanegu
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Cychwyn teipio…
+pdfjs-editor-edit-comment-dialog-cancel-button = Diddymu
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = Ychwanegu sylw
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = Tynnu llofnod sydd wedi'i gadw
+pdfjs-editor-delete-signature-button-label1 = Tynnwch y llofnod sydd wedi'i gadw
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = Golygu disgrifiad
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = Golygu disgrifiad
+>>>>>>> upstream/master

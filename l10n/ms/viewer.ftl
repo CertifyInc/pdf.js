@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Sifat Dokumen…
 pdfjs-document-properties-file-name = Nama fail:
 pdfjs-document-properties-file-size = Saiz fail:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bait)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bait)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Tajuk:
 pdfjs-document-properties-author = Pengarang:
 pdfjs-document-properties-subject = Subjek:
 pdfjs-document-properties-keywords = Kata kunci:
 pdfjs-document-properties-creation-date = Masa Dicipta:
 pdfjs-document-properties-modification-date = Tarikh Ubahsuai:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Pencipta:
 pdfjs-document-properties-producer = Pengeluar PDF:
 pdfjs-document-properties-version = Versi PDF:
@@ -207,9 +213,12 @@ pdfjs-page-scale-actual = Saiz Sebenar
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = Masalah berlaku semasa menuatkan sebuah PDF.
@@ -235,6 +244,7 @@ pdfjs-password-invalid = Kata laluan salah. Cuba lagi.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Batal
 pdfjs-web-fonts-disabled = Fon web dinyahdayakan: tidak dapat menggunakan fon terbenam PDF.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -245,3 +255,5 @@ pdfjs-web-fonts-disabled = Fon web dinyahdayakan: tidak dapat menggunakan fon te
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

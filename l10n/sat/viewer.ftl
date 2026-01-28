@@ -104,6 +104,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = ᱫᱚᱞᱤᱞ ᱜᱩᱱᱠᱚ …
 pdfjs-document-properties-file-name = ᱨᱮᱫᱽ ᱧᱩᱛᱩᱢ :
 pdfjs-document-properties-file-size = ᱨᱮᱫᱽ ᱢᱟᱯ :
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -112,16 +113,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } ᱵᱟᱭᱤᱴ ᱠ�
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } ᱵᱟᱭᱤᱴ ᱠᱚ)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = ᱧᱩᱛᱩᱢ :
 pdfjs-document-properties-author = ᱚᱱᱚᱞᱤᱭᱟᱹ :
 pdfjs-document-properties-subject = ᱵᱤᱥᱚᱭ :
 pdfjs-document-properties-keywords = ᱠᱟᱹᱴᱷᱤ ᱥᱟᱵᱟᱫᱽ :
 pdfjs-document-properties-creation-date = ᱛᱮᱭᱟᱨ ᱢᱟᱸᱦᱤᱛ :
 pdfjs-document-properties-modification-date = ᱵᱚᱫᱚᱞ ᱦᱚᱪᱚ ᱢᱟᱹᱦᱤᱛ :
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = ᱵᱮᱱᱟᱣᱤᱡ :
 pdfjs-document-properties-producer = PDF ᱛᱮᱭᱟᱨ ᱚᱰᱚᱠᱤᱡ :
 pdfjs-document-properties-version = PDF ᱵᱷᱟᱹᱨᱥᱚᱱ :
@@ -249,10 +255,13 @@ pdfjs-rendering-error = ᱥᱟᱦᱴᱟ ᱮᱢ ᱡᱚᱦᱚᱠ ᱢᱤᱫ ᱵᱷ�
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -281,9 +290,12 @@ pdfjs-editor-stamp-button =
     .title = ᱪᱤᱛᱟᱹᱨᱠᱚ ᱥᱮᱞᱮᱫ ᱥᱮ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
 pdfjs-editor-stamp-button-label = ᱪᱤᱛᱟᱹᱨᱠᱚ ᱥᱮᱞᱮᱫ ᱥᱮ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
 
+<<<<<<< HEAD
 ## Remove button for the various kind of editor.
 
 
+=======
+>>>>>>> upstream/master
 ##
 
 # Editor Parameters
@@ -295,6 +307,7 @@ pdfjs-editor-ink-opacity-input = ᱟᱨᱯᱟᱨ
 pdfjs-editor-stamp-add-image-button =
     .title = ᱪᱤᱛᱟᱹᱨ ᱥᱮᱞᱮᱫ ᱢᱮ
 pdfjs-editor-stamp-add-image-button-label = ᱪᱤᱛᱟᱹᱨ ᱥᱮᱞᱮᱫ ᱢᱮ
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = ᱚᱞ ᱥᱟᱯᱲᱟᱣᱤᱭᱟᱹ
 pdfjs-free-text-default-content = ᱚᱞ ᱮᱛᱦᱚᱵ ᱢᱮ …
@@ -323,3 +336,5 @@ pdfjs-ink-canvas =
 
 ## Image alt-text settings
 
+=======
+>>>>>>> upstream/master

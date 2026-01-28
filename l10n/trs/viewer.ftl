@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Nej sa nikāj ñanj…
 pdfjs-document-properties-file-name = Si yugui archîbo:
 pdfjs-document-properties-file-size = Dàj yachìj archîbo:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Si yugui:
 pdfjs-document-properties-author = Sí girirà:
 pdfjs-document-properties-subject = Dugui':
 pdfjs-document-properties-keywords = Nej nuguan' huìi:
 pdfjs-document-properties-creation-date = Gui gurugui' man:
 pdfjs-document-properties-modification-date = Nuguan' nahuin nakà:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Guiri ro'
 pdfjs-document-properties-producer = Sa ri PDF:
 pdfjs-document-properties-version = PDF Version:
@@ -154,9 +160,12 @@ pdfjs-toggle-sidebar-button =
 pdfjs-toggle-sidebar-button-label = Nadunā barrâ nù yi'nïn
 pdfjs-findbar-button-label = Narì'
 
+<<<<<<< HEAD
 ## Thumbnails panel item (tooltip and alt text for images)
 
 
+=======
+>>>>>>> upstream/master
 ## Find panel button title and messages
 
 pdfjs-find-previous-button-label = Sa gachîn
@@ -172,6 +181,7 @@ pdfjs-page-scale-actual = Dàj yàchi akuan' nín
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
@@ -181,10 +191,13 @@ pdfjs-page-scale-percent = { $scale }%
 ## Annotations
 
 
+=======
+>>>>>>> upstream/master
 ## Password
 
 pdfjs-password-ok-button = Ga'ue
 pdfjs-password-cancel-button = Duyichin'
+<<<<<<< HEAD
 
 ## Editing
 
@@ -195,3 +208,5 @@ pdfjs-password-cancel-button = Duyichin'
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

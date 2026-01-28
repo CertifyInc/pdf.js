@@ -42,7 +42,11 @@
 
 import { GlobalWorkerOptions } from "pdfjs/display/worker_options.js";
 import { isNodeJS } from "../../src/shared/util.js";
+<<<<<<< HEAD
 import { TestReporter } from "./testreporter.js";
+=======
+import { TestReporter } from "../reporter.js";
+>>>>>>> upstream/master
 
 async function initializePDFJS(callback) {
   await Promise.all(
@@ -51,6 +55,10 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/annotation_storage_spec.js",
       "pdfjs-test/unit/api_spec.js",
       "pdfjs-test/unit/app_options_spec.js",
+<<<<<<< HEAD
+=======
+      "pdfjs-test/unit/autolinker_spec.js",
+>>>>>>> upstream/master
       "pdfjs-test/unit/bidi_spec.js",
       "pdfjs-test/unit/canvas_factory_spec.js",
       "pdfjs-test/unit/cff_parser_spec.js",
@@ -74,6 +82,7 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/murmurhash3_spec.js",
       "pdfjs-test/unit/network_spec.js",
       "pdfjs-test/unit/network_utils_spec.js",
+      "pdfjs-test/unit/obj_bin_transform_spec.js",
       "pdfjs-test/unit/parser_spec.js",
       "pdfjs-test/unit/pdf.image_decoders_spec.js",
       "pdfjs-test/unit/pdf.worker_spec.js",
@@ -99,10 +108,7 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/xfa_serialize_data_spec.js",
       "pdfjs-test/unit/xfa_tohtml_spec.js",
       "pdfjs-test/unit/xml_spec.js",
-    ].map(function (moduleName) {
-      // eslint-disable-next-line no-unsanitized/method
-      return import(moduleName);
-    })
+    ].map(moduleName => import(moduleName)) // eslint-disable-line no-unsanitized/method
   );
 
   if (isNodeJS) {

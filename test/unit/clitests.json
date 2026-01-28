@@ -8,6 +8,10 @@
     "annotation_storage_spec.js",
     "api_spec.js",
     "app_options_spec.js",
+<<<<<<< HEAD
+=======
+    "autolinker_spec.js",
+>>>>>>> upstream/master
     "bidi_spec.js",
     "canvas_factory_spec.js",
     "cff_parser_spec.js",
@@ -31,6 +35,7 @@
     "murmurhash3_spec.js",
     "network_utils_spec.js",
     "node_stream_spec.js",
+    "obj_bin_transform_spec.js",
     "parser_spec.js",
     "pdf.image_decoders_spec.js",
     "pdf.worker_spec.js",
@@ -45,6 +50,10 @@
     "struct_tree_spec.js",
     "svg_factory_spec.js",
     "text_layer_spec.js",
+<<<<<<< HEAD
+=======
+    "to_unicode_map_spec.js",
+>>>>>>> upstream/master
     "type1_parser_spec.js",
     "ui_utils_spec.js",
     "unicode_spec.js",

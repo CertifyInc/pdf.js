@@ -89,6 +89,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Keeroraaɗi Winndannde…
 pdfjs-document-properties-file-name = Innde fiilde:
 pdfjs-document-properties-file-size = Ɓetol fiilde:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -97,16 +98,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bite)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bite)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Tiitoonde:
 pdfjs-document-properties-author = Binnduɗo:
 pdfjs-document-properties-subject = Toɓɓere:
 pdfjs-document-properties-keywords = Kelmekele jiytirɗe:
 pdfjs-document-properties-creation-date = Ñalnde Sosaa:
 pdfjs-document-properties-modification-date = Ñalnde Waylaa:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Cosɗo:
 pdfjs-document-properties-producer = Paggiiɗo PDF:
 pdfjs-document-properties-version = Yamre PDF:
@@ -207,9 +213,12 @@ pdfjs-page-scale-actual = Ɓetol Jaati
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
+<<<<<<< HEAD
 ## PDF page
 
 
+=======
+>>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = Juumre waɗii tuma nde loowata PDF oo.
@@ -235,6 +244,7 @@ pdfjs-password-invalid = Finnde moƴƴaani. Tiiɗno eto kadi.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Haaytu
 pdfjs-web-fonts-disabled = Ponte geese ko daaƴaaɗe: horiima huutoraade ponte PDF coomtoraaɗe.
+<<<<<<< HEAD
 
 ## Editing
 
@@ -245,3 +255,5 @@ pdfjs-web-fonts-disabled = Ponte geese ko daaƴaaɗe: horiima huutoraade ponte P
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+=======
+>>>>>>> upstream/master

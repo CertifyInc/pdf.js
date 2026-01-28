@@ -95,6 +95,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Propiedades de su documentu…
 pdfjs-document-properties-file-name = Nòmine de s'archìviu:
 pdfjs-document-properties-file-size = Mannària de s'archìviu:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -103,16 +104,21 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Tìtulu:
 pdfjs-document-properties-author = Autoria:
 pdfjs-document-properties-subject = Ogetu:
 pdfjs-document-properties-keywords = Faeddos crae:
 pdfjs-document-properties-creation-date = Data de creatzione:
 pdfjs-document-properties-modification-date = Data de modìfica:
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Creatzione:
 pdfjs-document-properties-producer = Produtore de PDF:
 pdfjs-document-properties-version = Versione de PDF:
@@ -152,7 +158,11 @@ pdfjs-print-progress-message = Aparitzende s'imprenta de su documentu…
 # Variables:
 #   $progress (Number) - percent value
 pdfjs-print-progress-percent = { $progress }%
+<<<<<<< HEAD
 pdfjs-print-progress-close-button = Cantzella
+=======
+pdfjs-print-progress-close-button = Annulla
+>>>>>>> upstream/master
 pdfjs-printing-not-supported = Atentzione: s'imprenta no est funtzionende de su totu in custu navigadore.
 pdfjs-printing-not-ready = Atentzione: su PDF no est istadu carrigadu de su totu pro s'imprenta.
 
@@ -234,6 +244,7 @@ pdfjs-missing-file-error = Ammancat s'archìviu PDF.
 pdfjs-unexpected-response-error = Risposta imprevista de su serbidore.
 pdfjs-rendering-error = Faddina in sa visualizatzione de sa pàgina.
 
+<<<<<<< HEAD
 ## Annotations
 
 # Variables:
@@ -241,12 +252,18 @@ pdfjs-rendering-error = Faddina in sa visualizatzione de sa pàgina.
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
 
+=======
+>>>>>>> upstream/master
 ## Password
 
 pdfjs-password-label = Inserta sa crae pro abèrrere custu archìviu PDF.
 pdfjs-password-invalid = Sa crae no est curreta. Torra a nche proare.
 pdfjs-password-ok-button = Andat bene
+<<<<<<< HEAD
 pdfjs-password-cancel-button = Cantzella
+=======
+pdfjs-password-cancel-button = Annulla
+>>>>>>> upstream/master
 pdfjs-web-fonts-disabled = Is tipografias web sunt disativadas: is tipografias incrustadas a su PDF non podent èssere impreadas.
 
 ## Editing
@@ -291,6 +308,7 @@ pdfjs-editor-stamp-add-image-button =
 pdfjs-editor-stamp-add-image-button-label = Agiunghe un’immàgine
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Grussària
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = Editore de testu
 pdfjs-free-text-default-content = Cumintza a iscrìere…
@@ -304,16 +322,29 @@ pdfjs-ink-canvas =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Testu alternativu
 pdfjs-editor-alt-text-edit-button-label = Modifica su testu alternativu
+=======
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = Editore de testu
+    .default-content = Cumintza a iscrìere…
+
+## Alt-text dialog
+
+pdfjs-editor-alt-text-button-label = Testu alternativu
+>>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Sèbera un’optzione
 pdfjs-editor-alt-text-dialog-description = Su testu alternativu (“alt text”) est ùtile pro persones chi non podent bìdere s’immàgine o cando non benit carrigada.
 pdfjs-editor-alt-text-add-description-label = Agiunghe una descritzione
 pdfjs-editor-alt-text-cancel-button = Annulla
 pdfjs-editor-alt-text-save-button = Sarva
 
+<<<<<<< HEAD
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
 
+=======
+>>>>>>> upstream/master
 ## Color picker
 
 pdfjs-editor-colorpicker-button =
@@ -329,6 +360,7 @@ pdfjs-editor-colorpicker-blue =
 pdfjs-editor-colorpicker-pink =
     .title = Rosa
 
+<<<<<<< HEAD
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
@@ -339,6 +371,12 @@ pdfjs-editor-colorpicker-pink =
 # This is a button that users can click to open the alt text editor and add alt text when it is not present.
 pdfjs-editor-new-alt-text-missing-button-label = Mancat su testu alternativu
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+=======
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+pdfjs-editor-new-alt-text-missing-button-label = Mancat su testu alternativu
+>>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Revisiona su testu alternativu
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -365,3 +403,15 @@ pdfjs-editor-alt-text-settings-editor-title = Editore de testu alternativu
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mustra deretu s’editore de testu alternativu cando siat agiunta un’immàgine
 pdfjs-editor-alt-text-settings-show-dialog-description = T’agiudat a assegurare chi totu is immàgines tuas tèngiant unu testu alternativu.
 pdfjs-editor-alt-text-settings-close-button = Serra
+<<<<<<< HEAD
+=======
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Annulla
+
+##  Edit a comment dialog
+
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Cumintza a iscrìere…
+>>>>>>> upstream/master

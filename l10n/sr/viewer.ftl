@@ -98,6 +98,7 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Параметри документа…
 pdfjs-document-properties-file-name = Име датотеке:
 pdfjs-document-properties-file-size = Величина датотеке:
+<<<<<<< HEAD
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -106,6 +107,8 @@ pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } B)
 #   $size_mb (Number) - the PDF file size in megabytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } B)
+=======
+>>>>>>> upstream/master
 pdfjs-document-properties-title = Наслов:
 pdfjs-document-properties-author = Аутор:
 pdfjs-document-properties-subject = Тема:
@@ -113,9 +116,14 @@ pdfjs-document-properties-keywords = Кључне речи:
 pdfjs-document-properties-creation-date = Датум креирања:
 pdfjs-document-properties-modification-date = Датум модификације:
 # Variables:
+<<<<<<< HEAD
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
 pdfjs-document-properties-date-string = { $date }, { $time }
+=======
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+>>>>>>> upstream/master
 pdfjs-document-properties-creator = Стваралац:
 pdfjs-document-properties-producer = PDF произвођач:
 pdfjs-document-properties-version = PDF верзија:
@@ -162,10 +170,17 @@ pdfjs-printing-not-ready = Упозорење: PDF није у потпунос�
 ## Tooltips and alt text for side panel toolbar buttons
 
 pdfjs-toggle-sidebar-button =
+<<<<<<< HEAD
     .title = Прикажи додатну палету
 pdfjs-toggle-sidebar-notification-button =
     .title = Прикажи/сакриј бочну траку (документ садржи контуру/прилоге/слојеве)
 pdfjs-toggle-sidebar-button-label = Прикажи додатну палету
+=======
+    .title = Прикажи/сакриј бочни панел
+pdfjs-toggle-sidebar-notification-button =
+    .title = Прикажи/сакриј бочни панел (документ садржи контуру/прилоге/слојеве)
+pdfjs-toggle-sidebar-button-label = Прикажи/сакриј бочни панел
+>>>>>>> upstream/master
 pdfjs-document-outline-button =
     .title = Прикажи структуру документа (двоструким кликом проширујете/скупљате све ставке)
 pdfjs-document-outline-button-label = Контура документа
@@ -243,10 +258,13 @@ pdfjs-rendering-error = Дошло је до грешке приликом ре�
 
 ## Annotations
 
+<<<<<<< HEAD
 # Variables:
 #   $date (Date) - the modification date of the annotation
 #   $time (Time) - the modification time of the annotation
 pdfjs-annotation-date-string = { $date }, { $time }
+=======
+>>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -254,6 +272,12 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } коментар]
+<<<<<<< HEAD
+=======
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+>>>>>>> upstream/master
 
 ## Password
 
@@ -271,9 +295,33 @@ pdfjs-editor-free-text-button-label = Текст
 pdfjs-editor-ink-button =
     .title = Цртај
 pdfjs-editor-ink-button-label = Цртај
+<<<<<<< HEAD
 
 ## Remove button for the various kind of editor.
 
+=======
+pdfjs-editor-stamp-button =
+    .title = Додај или уреди слике
+pdfjs-editor-stamp-button-label = Додај или уреди слике
+pdfjs-editor-highlight-button =
+    .title = Означи
+pdfjs-editor-highlight-button-label = Означи
+pdfjs-highlight-floating-button1 =
+    .title = Означи
+    .aria-label = Означи
+pdfjs-highlight-floating-button-label = Означи
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Уклони цртеж
+pdfjs-editor-remove-freetext-button =
+    .title = Уклони текст
+pdfjs-editor-remove-stamp-button =
+    .title = Уклони слику
+pdfjs-editor-remove-highlight-button =
+    .title = Уклони ознаку
+>>>>>>> upstream/master
 
 ##
 
@@ -283,6 +331,7 @@ pdfjs-editor-free-text-size-input = Величина
 pdfjs-editor-ink-color-input = Боја
 pdfjs-editor-ink-thickness-input = Дебљина
 pdfjs-editor-ink-opacity-input = Опацитет
+<<<<<<< HEAD
 pdfjs-free-text =
     .aria-label = Уређивач текста
 pdfjs-free-text-default-content = Почни куцање…
@@ -293,21 +342,113 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
+=======
+pdfjs-editor-stamp-add-image-button =
+    .title = Додај слику
+pdfjs-editor-stamp-add-image-button-label = Додај слику
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Промени дебљину при означавању других ставки сем текста
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = Уређивач текста
+    .default-content = Почни куцати…
+
+## Alt-text dialog
+
+pdfjs-editor-alt-text-button-label = Алтернативни текст
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = Уреди алтернативни текст
+pdfjs-editor-alt-text-dialog-label = Одабери опцију
+pdfjs-editor-alt-text-dialog-description = Алтернативни текст помаже слепим и слабовидим особама или када се слика не учита.
+pdfjs-editor-alt-text-add-description-label = Додај опис
+pdfjs-editor-alt-text-add-description-description = Сажмите у 1-2 реченице које описују предмет, окружење или радње.
+pdfjs-editor-alt-text-mark-decorative-label = Означи као украсно
+pdfjs-editor-alt-text-mark-decorative-description = Ово је за украсне слике, као што су ивице или водени печати.
+pdfjs-editor-alt-text-cancel-button = Откажи
+pdfjs-editor-alt-text-save-button = Сачувај
+pdfjs-editor-alt-text-decorative-tooltip = Означено као украсно
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = На пример: „Младић седа за сто да једе“
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button =
+    .aria-label = Алтернативни текст
+>>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+<<<<<<< HEAD
 
 ## Color picker
 
+=======
+pdfjs-editor-resizer-top-left =
+    .aria-label = Горњи леви угао — промени величину
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Средина горе — промени величину
+pdfjs-editor-resizer-top-right =
+    .aria-label = Горњи десни угао — промени величину
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Средина десно — промени величину
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Доњи десни угао — промени величину
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Средина доле — промени величину
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Доњи леви угао — промени величину
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Средина лево — промени величину
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Боја означавања
+pdfjs-editor-colorpicker-button =
+    .title = Промени боју
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Избор боја
+pdfjs-editor-colorpicker-yellow =
+    .title = Жута
+pdfjs-editor-colorpicker-green =
+    .title = Зелена
+pdfjs-editor-colorpicker-blue =
+    .title = Плава
+pdfjs-editor-colorpicker-pink =
+    .title = Розе
+pdfjs-editor-colorpicker-red =
+    .title = Црвена
+>>>>>>> upstream/master
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
+<<<<<<< HEAD
+=======
+pdfjs-editor-highlight-show-all-button-label = Прикажи све
+pdfjs-editor-highlight-show-all-button =
+    .title = Прикажи све
+>>>>>>> upstream/master
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
+<<<<<<< HEAD
 
 ## Image alt-text settings
 
+=======
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Уреди алтернативни текст (опис слике)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Додај алтернативни текст (опис слике)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Напиши опис овде…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Кратак опис за слепе и слабовиде људе или када се слика не успе учитати.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Овај алтернативни текст је направљен аутоматски и може бити нетачан.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Сазнајте више
+pdfjs-editor-new-alt-text-create-automatically-button-label = Прави алтернативни текст аутоматски
+pdfjs-editor-new-alt-text-not-now-button = Не сада
+>>>>>>> upstream/master
