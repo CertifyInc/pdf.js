@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } מ״ב ({ $b } בתים)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } ק״ב ({ $size_b } בתים)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } מ״ב ({ $size_b } בתים)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = כותרת:
 pdfjs-document-properties-author = מחבר:
 pdfjs-document-properties-subject = נושא:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = תאריך שינוי:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = יוצר:
 pdfjs-document-properties-producer = יצרן PDF:
 pdfjs-document-properties-version = גרסת PDF:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = אירעה שגיאה בעת עיבוד הדף.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -302,11 +277,7 @@ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", tim
 ## Password
 
 pdfjs-password-label = נא להכניס את הססמה לפתיחת קובץ PDF זה.
-<<<<<<< HEAD
-pdfjs-password-invalid = ססמה שגויה. נא לנסות שנית.
-=======
 pdfjs-password-invalid = ססמה שגויה. נא לנסות שוב.
->>>>>>> upstream/master
 pdfjs-password-ok-button = אישור
 pdfjs-password-cancel-button = ביטול
 pdfjs-web-fonts-disabled = גופני רשת מנוטרלים: לא ניתן להשתמש בגופני PDF מוטבעים.
@@ -315,11 +286,6 @@ pdfjs-web-fonts-disabled = גופני רשת מנוטרלים: לא ניתן ל�
 
 pdfjs-editor-free-text-button =
     .title = טקסט
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = טקסט
-pdfjs-editor-ink-button =
-    .title = ציור
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = שינוי צבע הטקסט
 pdfjs-editor-free-text-button-label = טקסט
@@ -327,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = ציור
 pdfjs-editor-color-picker-ink-input =
     .title = שינוי צבע הציור
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = ציור
 pdfjs-editor-stamp-button =
     .title = הוספה או עריכת תמונות
@@ -339,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = סימון
     .aria-label = סימון
 pdfjs-highlight-floating-button-label = סימון
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = הערה
     .aria-label = הערה
@@ -368,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = עורך החתימות: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = עורך תמונות
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -379,13 +341,9 @@ pdfjs-editor-remove-freetext-button =
 pdfjs-editor-remove-stamp-button =
     .title = הסרת תמונה
 pdfjs-editor-remove-highlight-button =
-<<<<<<< HEAD
-    .title = הסרת הדגשה
-=======
     .title = הסרת סימון
 pdfjs-editor-remove-signature-button =
     .title = הסרת חתימה
->>>>>>> upstream/master
 
 ##
 
@@ -401,9 +359,6 @@ pdfjs-editor-stamp-add-image-button-label = הוספת תמונה
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = עובי
 pdfjs-editor-free-highlight-thickness-title =
-<<<<<<< HEAD
-    .title = שינוי עובי בעת הדגשת פריטים שאינם טקסט
-=======
     .title = שינוי עובי בעת סימון פריטים שאינם טקסט
 pdfjs-editor-add-signature-container =
     .aria-label = פקדי חתימה וחתימות שמורות
@@ -415,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = הוספת חתימה חדש
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = חתימה שמורה: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = עורך טקסט
     .default-content = נא להתחיל להקליד…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = עורך טקסט
-pdfjs-free-text-default-content = להתחיל להקליד…
-pdfjs-ink =
-    .aria-label = עורך ציור
-pdfjs-ink-canvas =
-    .aria-label = תמונה שנוצרה על־ידי משתמש
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -444,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = סגירת סרגל הצד
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = ראית משהו ראוי לציון? ניתן לסמן אותו ולהשאיר הערה.
 pdfjs-editor-comments-sidebar-no-comments-link = מידע נוסף
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = טקסט חלופי
 pdfjs-editor-alt-text-edit-button =
     .aria-label = עריכת טקסט חלופי
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = עריכת טקסט חלופי
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = בחירת אפשרות
 pdfjs-editor-alt-text-dialog-description = טקסט חלופי עוזר כשאנשים לא יכולים לראות את התמונה או כשהיא לא נטענת.
 pdfjs-editor-alt-text-add-description-label = הוספת תיאור
@@ -474,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = פינה שמאלית עליונה - שינוי גודל
-pdfjs-editor-resizer-label-top-middle = למעלה באמצע - שינוי גודל
-pdfjs-editor-resizer-label-top-right = פינה ימנית עליונה - שינוי גודל
-pdfjs-editor-resizer-label-middle-right = ימינה באמצע - שינוי גודל
-pdfjs-editor-resizer-label-bottom-right = פינה ימנית תחתונה - שינוי גודל
-pdfjs-editor-resizer-label-bottom-middle = למטה באמצע - שינוי גודל
-pdfjs-editor-resizer-label-bottom-left = פינה שמאלית תחתונה - שינוי גודל
-pdfjs-editor-resizer-label-middle-left = שמאלה באמצע - שינוי גודל
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = פינה שמאלית עליונה - שינוי גודל
 pdfjs-editor-resizer-top-middle =
@@ -505,11 +434,7 @@ pdfjs-editor-resizer-middle-left =
 ## Color picker
 
 # This means "Color used to highlight text"
-<<<<<<< HEAD
-pdfjs-editor-highlight-colorpicker-label = צבע הדגשה
-=======
 pdfjs-editor-highlight-colorpicker-label = צבע סימון
->>>>>>> upstream/master
 pdfjs-editor-colorpicker-button =
     .title = שינוי צבע
 pdfjs-editor-colorpicker-dropdown =
@@ -554,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = סגירה
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = בתהליך הורדת מודל AI של טקסט חלופי ({ $downloadedSize } מתוך { $totalSize } מ״ב)
     .aria-valuetext = בתהליך הורדת מודל AI של טקסט חלופי ({ $downloadedSize } מתוך { $totalSize } מ״ב)
 # This is a button that users can click to edit the alt text they have already added.
@@ -597,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = עורך טקסט חלופי
 pdfjs-editor-alt-text-settings-show-dialog-button-label = הצגת עורך טקסט חלופי מיד בעת הוספת תמונה
 pdfjs-editor-alt-text-settings-show-dialog-description = מסייע לך לוודא שלכל התמונות שלך יש טקסט חלופי.
 pdfjs-editor-alt-text-settings-close-button = סגירה
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -727,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = עריכת תיאור
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = עריכת תיאור
->>>>>>> upstream/master

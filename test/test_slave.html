@@ -17,19 +17,11 @@ limitations under the License.
 <html>
   <head>
     <title>PDF.js test slave</title>
-<<<<<<< HEAD
-    <meta charset="utf-8">
-    <script src="../build/generic/build/pdf.mjs" type="module"></script>
-    <script src="../build/components/pdf_viewer.mjs" type="module"></script>
-
-    <link rel="resource" type="application/l10n" href="../build/generic/web/locale/locale.json">
-=======
     <meta charset="utf-8" />
     <script src="../build/generic/build/pdf.mjs" type="module"></script>
     <script src="../build/components/pdf_viewer.mjs" type="module"></script>
 
     <link rel="resource" type="application/l10n" href="../build/generic/web/locale/locale.json" />
->>>>>>> upstream/master
   </head>
   <body>
     <p>Inflight requests: <span id="inflight"></span></p>
@@ -44,17 +36,10 @@ limitations under the License.
     import { Driver } from "./driver.js";
 
     const driver = new Driver({
-<<<<<<< HEAD
-      disableScrolling: document.getElementById('disableScrolling'),
-      inflight: document.getElementById('inflight'),
-      output: document.getElementById('output'),
-      end: document.getElementById('end')
-=======
       disableScrolling: document.getElementById("disableScrolling"),
       inflight: document.getElementById("inflight"),
       output: document.getElementById("output"),
       end: document.getElementById("end"),
->>>>>>> upstream/master
     });
     driver.run();
   </script>

@@ -245,17 +245,10 @@ describe("Scripting", function () {
         expect(new Date(value)).toEqual(date);
 
         value = await myeval(`util.scand("mmddyyyy", "07/15/2007").toString()`);
-<<<<<<< HEAD
-        expect(new Date(value)).toEqual(new Date("07/15/2007"));
-
-        value = await myeval(`util.scand("mmddyyyy", "07a15b2007").toString()`);
-        expect(new Date(value)).toEqual(new Date("07/15/2007"));
-=======
         expect(new Date(value)).toEqual(new Date("07/15/2007 12:00:00"));
 
         value = await myeval(`util.scand("mmddyyyy", "07a15b2007").toString()`);
         expect(new Date(value)).toEqual(new Date("07/15/2007 12:00:00"));
->>>>>>> upstream/master
       });
     });
 
@@ -1071,13 +1064,8 @@ describe("Scripting", function () {
                 id: refId,
                 value: "",
                 actions: {
-<<<<<<< HEAD
-                  Format: [`AFDate_FormatEx("mmddyyyy");`],
-                  Keystroke: [`AFDate_KeystrokeEx("mmddyyyy");`],
-=======
                   Format: [`AFDate_FormatEx("mm.dd.yyyy");`],
                   Keystroke: [`AFDate_KeystrokeEx("mm.dd.yyyy");`],
->>>>>>> upstream/master
                 },
                 type: "text",
               },
@@ -1091,11 +1079,7 @@ describe("Scripting", function () {
         sandbox.createSandbox(data);
         await sandbox.dispatchEventInSandbox({
           id: refId,
-<<<<<<< HEAD
-          value: "12062023",
-=======
           value: "12.06.2023",
->>>>>>> upstream/master
           name: "Keystroke",
           willCommit: true,
         });
@@ -1103,23 +1087,14 @@ describe("Scripting", function () {
         expect(send_queue.get(refId)).toEqual({
           id: refId,
           siblings: null,
-<<<<<<< HEAD
-          value: "12062023",
-          formattedValue: "12062023",
-=======
           value: "12.06.2023",
           formattedValue: "12.06.2023",
->>>>>>> upstream/master
         });
         send_queue.delete(refId);
 
         await sandbox.dispatchEventInSandbox({
           id: refId,
-<<<<<<< HEAD
-          value: "1206202",
-=======
           value: "12.06.202",
->>>>>>> upstream/master
           name: "Keystroke",
           willCommit: true,
         });
@@ -1127,25 +1102,15 @@ describe("Scripting", function () {
         expect(send_queue.get(refId)).toEqual({
           id: refId,
           siblings: null,
-<<<<<<< HEAD
-          value: "",
-          formattedValue: null,
-          selRange: [0, 0],
-=======
           value: "12.06.202",
           formattedValue: "12.06.0202",
->>>>>>> upstream/master
         });
         send_queue.delete(refId);
 
         sandbox.createSandbox(data);
         await sandbox.dispatchEventInSandbox({
           id: refId,
-<<<<<<< HEAD
-          value: "02062023",
-=======
           value: "02.06.2023",
->>>>>>> upstream/master
           name: "Keystroke",
           willCommit: true,
         });
@@ -1153,10 +1118,6 @@ describe("Scripting", function () {
         expect(send_queue.get(refId)).toEqual({
           id: refId,
           siblings: null,
-<<<<<<< HEAD
-          value: "02062023",
-          formattedValue: "02062023",
-=======
           value: "02.06.2023",
           formattedValue: "02.06.2023",
         });
@@ -1175,7 +1136,6 @@ describe("Scripting", function () {
           siblings: null,
           value: "2.6.2023",
           formattedValue: "02.06.2023",
->>>>>>> upstream/master
         });
         send_queue.delete(refId);
       });
@@ -1446,8 +1406,6 @@ describe("Scripting", function () {
           siblings: null,
           value: 579,
           formattedValue: null,
-<<<<<<< HEAD
-=======
         });
       });
 
@@ -1558,7 +1516,6 @@ describe("Scripting", function () {
           siblings: null,
           value: 3,
           formattedValue: null,
->>>>>>> upstream/master
         });
       });
     });
@@ -1852,8 +1809,6 @@ describe("Scripting", function () {
         send_queue.delete(refId);
       });
 
-<<<<<<< HEAD
-=======
       it("should validate a US phone number with digits and dashes (long) on a keystroke event", async () => {
         const refId = getId();
         const data = {
@@ -1915,7 +1870,6 @@ describe("Scripting", function () {
         send_queue.delete(refId);
       });
 
->>>>>>> upstream/master
       it("should validate a US phone number (short) on a keystroke event", async () => {
         const refId = getId();
         const data = {

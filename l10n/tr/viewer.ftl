@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bayt)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bayt)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bayt)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Başlık:
 pdfjs-document-properties-author = Yazar:
 pdfjs-document-properties-subject = Konu:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Değiştirme tarihi:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Oluşturan:
 pdfjs-document-properties-producer = PDF üreticisi:
 pdfjs-document-properties-version = PDF sürümü:
@@ -178,11 +160,7 @@ pdfjs-print-progress-message = Belge yazdırılmaya hazırlanıyor…
 # Variables:
 #   $progress (Number) - percent value
 pdfjs-print-progress-percent = %{ $progress }
-<<<<<<< HEAD
-pdfjs-print-progress-close-button = İptal
-=======
 pdfjs-print-progress-close-button = Vazgeç
->>>>>>> upstream/master
 pdfjs-printing-not-supported = Uyarı: Yazdırma bu tarayıcı tarafından tam olarak desteklenmemektedir.
 pdfjs-printing-not-ready = Uyarı: PDF tamamen yüklenmedi ve yazdırmaya hazır değil.
 
@@ -285,13 +263,6 @@ pdfjs-rendering-error = Sayfa yorumlanırken bir hata oluştu.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -308,22 +279,13 @@ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", tim
 pdfjs-password-label = Bu PDF dosyasını açmak için parolasını yazın.
 pdfjs-password-invalid = Geçersiz parola. Lütfen yeniden deneyin.
 pdfjs-password-ok-button = Tamam
-<<<<<<< HEAD
-pdfjs-password-cancel-button = İptal
-=======
 pdfjs-password-cancel-button = Vazgeç
->>>>>>> upstream/master
 pdfjs-web-fonts-disabled = Web fontları devre dışı: Gömülü PDF fontları kullanılamıyor.
 
 ## Editing
 
 pdfjs-editor-free-text-button =
     .title = Metin
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Metin
-pdfjs-editor-ink-button =
-    .title = Çiz
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Metin rengini değiştir
 pdfjs-editor-free-text-button-label = Metin
@@ -331,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Çiz
 pdfjs-editor-color-picker-ink-input =
     .title = Çizim rengini değiştir
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Çiz
 pdfjs-editor-stamp-button =
     .title = Resim ekle veya düzenle
@@ -343,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Vurgula
     .aria-label = Vurgula
 pdfjs-highlight-floating-button-label = Vurgula
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Yorum ekle
     .aria-label = Yorum ekle
@@ -372,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = İmza düzenleyici: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Resim düzenleyici
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -384,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Resmi kaldır
 pdfjs-editor-remove-highlight-button =
     .title = Vurgulamayı kaldır
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = İmzayı kaldır
->>>>>>> upstream/master
 
 ##
 
@@ -405,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Resim ekle
 pdfjs-editor-free-highlight-thickness-input = Kalınlık
 pdfjs-editor-free-highlight-thickness-title =
     .title = Metin dışındaki öğeleri vurgularken kalınlığı değiştir
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = İmza yönetimi ve kayıtlı imzalar
 pdfjs-editor-signature-add-signature-button =
@@ -417,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Yeni imza ekle
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Kayıtlı imza: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Metin düzenleyicisi
     .default-content = Yazmaya başlayın…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Metin düzenleyicisi
-pdfjs-free-text-default-content = Yazmaya başlayın…
-pdfjs-ink =
-    .aria-label = Çizim düzenleyicisi
-pdfjs-ink-canvas =
-    .aria-label = Kullanıcı tarafından oluşturulan resim
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -446,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Kenar çubuğunu kapat
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Not almaya değer bir şey mi gördünüz? Onu işaretleyip yorum yazabilirsiniz.
 pdfjs-editor-comments-sidebar-no-comments-link = Daha fazla bilgi alın
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternatif metin
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Alternatif metni düzenle
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Alternatif metni düzenle
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Bir seçenek seçin
 pdfjs-editor-alt-text-dialog-description = Alternatif metin, insanlar resmi göremediğinde veya resim yüklenmediğinde işe yarar.
 pdfjs-editor-alt-text-add-description-label = Açıklama ekle
@@ -476,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Sol üst köşe — yeniden boyutlandır
-pdfjs-editor-resizer-label-top-middle = Üst orta — yeniden boyutlandır
-pdfjs-editor-resizer-label-top-right = Sağ üst köşe — yeniden boyutlandır
-pdfjs-editor-resizer-label-middle-right = Orta sağ — yeniden boyutlandır
-pdfjs-editor-resizer-label-bottom-right = Sağ alt köşe — yeniden boyutlandır
-pdfjs-editor-resizer-label-bottom-middle = Alt orta — yeniden boyutlandır
-pdfjs-editor-resizer-label-bottom-left = Sol alt köşe — yeniden boyutlandır
-pdfjs-editor-resizer-label-middle-left = Orta sol — yeniden boyutlandır
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Sol üst köşe — yeniden boyutlandır
 pdfjs-editor-resizer-top-middle =
@@ -552,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Kapat
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Alt metin yapay zekâ modeli indiriliyor ({ $downloadedSize } / { $totalSize } MB)
     .aria-valuetext = Alt metin yapay zekâ modeli indiriliyor ({ $downloadedSize } / { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -595,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Alt metin düzenleyicisi
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Resim eklerken alt metin düzenleyicisini hemen göster
 pdfjs-editor-alt-text-settings-show-dialog-description = Tüm resimlerinizin alt metne sahip olduğundan emin olmanızı sağlar.
 pdfjs-editor-alt-text-settings-close-button = Kapat
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -725,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Açıklamayı düzenle
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Açıklamayı düzenle
->>>>>>> upstream/master

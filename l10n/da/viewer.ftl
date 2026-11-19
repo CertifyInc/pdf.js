@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titel:
 pdfjs-document-properties-author = Forfatter:
 pdfjs-document-properties-subject = Emne:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Redigeret:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Program:
 pdfjs-document-properties-producer = PDF-producent:
 pdfjs-document-properties-version = PDF-version:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Der opstod en fejl ved generering af siden.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Webskrifttyper er deaktiverede. De indlejrede skriftt
 
 pdfjs-editor-free-text-button =
     .title = Tekst
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Tekst
-pdfjs-editor-ink-button =
-    .title = Tegn
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Skift tekstfarve
 pdfjs-editor-free-text-button-label = Tekst
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Tegn
 pdfjs-editor-color-picker-ink-input =
     .title = Skift tegne-farve
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Tegn
 pdfjs-editor-stamp-button =
     .title = Tilføj eller rediger billeder
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Fremhæv
     .aria-label = Fremhæv
 pdfjs-highlight-floating-button-label = Fremhæv
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Kommenter
     .aria-label = Kommenter
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Redigering af signatur: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Redigering af billeder
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Fjern billede
 pdfjs-editor-remove-highlight-button =
     .title = Fjern fremhævning
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Fjern signatur
->>>>>>> upstream/master
 
 ##
 
@@ -397,15 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Tilføj billede
 pdfjs-editor-free-highlight-thickness-input = Tykkelse
 pdfjs-editor-free-highlight-thickness-title =
     .title = Ændr tykkelse, når andre elementer end tekst fremhæves
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Teksteditor
-pdfjs-free-text-default-content = Begynd at skrive…
-pdfjs-ink =
-    .aria-label = Tegnings-editor
-pdfjs-ink-canvas =
-    .aria-label = Brugeroprettet billede
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Indstillinger for signaturer og gemte signaturer
 pdfjs-editor-signature-add-signature-button =
@@ -435,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Luk sidepanelet
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Har du fundet noget interessant? Fremhæv det og gem en kommentar.
 pdfjs-editor-comments-sidebar-no-comments-link = Læs mere
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternativ tekst
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Rediger alternativ tekst
-=======
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Rediger alternativ tekst
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Vælg en indstilling
 pdfjs-editor-alt-text-dialog-description = Alternativ tekst hjælper folk, som ikke kan se billedet eller når det ikke indlæses.
 pdfjs-editor-alt-text-add-description-label = Tilføj en beskrivelse
@@ -458,27 +407,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Markeret som dekorativ
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = For eksempel: "En ung mand sætter sig ved et bord for at spise et måltid mad"
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Alternativ tekst
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Øverste venstre hjørne — tilpas størrelse
-pdfjs-editor-resizer-label-top-middle = Øverste i midten — tilpas størrelse
-pdfjs-editor-resizer-label-top-right = Øverste højre hjørne — tilpas størrelse
-pdfjs-editor-resizer-label-middle-right = Midten til højre — tilpas størrelse
-pdfjs-editor-resizer-label-bottom-right = Nederste højre hjørne - tilpas størrelse
-pdfjs-editor-resizer-label-bottom-middle = Nederst i midten - tilpas størrelse
-pdfjs-editor-resizer-label-bottom-left = Nederste venstre hjørne - tilpas størrelse
-pdfjs-editor-resizer-label-middle-left = Midten til venstre — tilpas størrelse
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Øverste venstre hjørne — tilpas størrelse
 pdfjs-editor-resizer-top-middle =
@@ -544,17 +479,11 @@ pdfjs-editor-new-alt-text-error-close-button = Luk
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Henter alternativ tekst AI-model ({ $downloadedSize } af { $totalSize } MB)
-    .aria-valuetext = Henter alternativ tekst AI-model ({ $downloadedSize } af { $totalSize } MB)
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Henter alternativ tekst AI-model ({ $downloadedSize } af { $totalSize } MB)
     .aria-valuetext = Henter alternativ tekst AI-model ({ $downloadedSize } af { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
 pdfjs-editor-new-alt-text-added-button =
     .aria-label = Alternativ tekst tilføjet
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-added-button-label = Alternativ tekst tilføjet
 # This is a button that users can click to open the alt text editor and add alt text when it is not present.
 pdfjs-editor-new-alt-text-missing-button =
@@ -589,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Redigering af alternativ tekst
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Vis redigering af alternativ tekst med det samme, når et billede tilføjes
 pdfjs-editor-alt-text-settings-show-dialog-description = Hjælper dig med at sikre, at alle dine billeder har alternativ tekst.
 pdfjs-editor-alt-text-settings-close-button = Luk
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -719,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Rediger beskrivelse
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Rediger beskrivelse
->>>>>>> upstream/master

@@ -15,11 +15,7 @@
 
 import {
   createHeaders,
-<<<<<<< HEAD
-  createResponseStatusError,
-=======
   createResponseError,
->>>>>>> upstream/master
   extractFilenameFromHeader,
   validateRangeRequestCapabilities,
   validateResponseStatus,

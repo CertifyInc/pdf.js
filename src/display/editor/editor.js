@@ -22,10 +22,17 @@ import {
   ColorManager,
   KeyboardManager,
 } from "./tools.js";
-import { FeatureTest, shadow, unreachable } from "../../shared/util.js";
+import {
+  FeatureTest,
+  MathClamp,
+  shadow,
+  unreachable,
+} from "../../shared/util.js";
+import { noContextMenu, stopEvent } from "../display_utils.js";
 import { AltText } from "./alt_text.js";
+import { Comment } from "./comment.js";
 import { EditorToolbar } from "./toolbar.js";
-import { noContextMenu } from "../display_utils.js";
+import { TouchManager } from "../touch_manager.js";
 
 /**
  * @typedef {Object} AnnotationEditorParameters
@@ -46,13 +53,23 @@ class AnnotationEditor {
 
   #altText = null;
 
+  #comment = null;
+
+  #commentStandaloneButton = null;
+
   #disabled = false;
 
-  #keepAspectRatio = false;
+  #dragPointerId = null;
+
+  #dragPointerType = "";
 
   #resizersDiv = null;
 
+  #lastPointerCoords = null;
+
   #savedDimensions = null;
+
+  #fakeAnnotation = null;
 
   #focusAC = null;
 
@@ -60,7 +77,7 @@ class AnnotationEditor {
 
   #hasBeenClicked = false;
 
-  #initialPosition = null;
+  #initialRect = null;
 
   #isEditing = false;
 
@@ -75,6 +92,12 @@ class AnnotationEditor {
   #prevDragY = 0;
 
   #telemetryTimeouts = null;
+
+  #touchManager = null;
+
+  isSelected = false;
+
+  _isCopy = false;
 
   _editToolbar = null;
 
@@ -162,6 +185,10 @@ class AnnotationEditor {
     this._willKeepAspectRatio = false;
     this._initialOptions.isCentered = parameters.isCentered;
     this._structTreeParentId = null;
+    this.annotationElementId = parameters.annotationElementId || null;
+    this.creationDate = parameters.creationDate || new Date();
+    this.modificationDate = parameters.modificationDate || null;
+    this.canAddComment = true;
 
     const {
       rotation,
@@ -184,6 +211,14 @@ class AnnotationEditor {
 
   get editorType() {
     return Object.getPrototypeOf(this).constructor._type;
+  }
+
+  get mode() {
+    return Object.getPrototypeOf(this).constructor._editorType;
+  }
+
+  static get isDrawer() {
+    return false;
   }
 
   static get _defaultLineColor() {
@@ -283,6 +318,10 @@ class AnnotationEditor {
     this.div?.classList.toggle("draggable", value);
   }
 
+  get uid() {
+    return this.annotationElementId || this.id;
+  }
+
   /**
    * @returns {boolean} true if the editor handles the Enter key itself.
    */
@@ -346,6 +385,10 @@ class AnnotationEditor {
     } else {
       // The editor is being removed from the DOM, so we need to stop resizing.
       this.#stopResizing();
+
+      // Remove the fake annotation in the annotation layer.
+      this.#fakeAnnotation?.remove();
+      this.#fakeAnnotation = null;
     }
     this.parent = parent;
   }
@@ -405,6 +448,9 @@ class AnnotationEditor {
    * Commit the data contained in this editor.
    */
   commit() {
+    if (!this.isInEditMode()) {
+      return;
+    }
     this.addToAnnotationStorage();
   }
 
@@ -429,11 +475,24 @@ class AnnotationEditor {
     this.fixAndSetPosition();
   }
 
+  _moveAfterPaste(baseX, baseY) {
+    const [parentWidth, parentHeight] = this.parentDimensions;
+    this.setAt(
+      baseX * parentWidth,
+      baseY * parentHeight,
+      this.width * parentWidth,
+      this.height * parentHeight
+    );
+    this._onTranslated();
+  }
+
   #translate([width, height], x, y) {
     [x, y] = this.screenToPageTranslation(x, y);
 
     this.x += x / width;
     this.y += y / height;
+
+    this._onTranslating(this.x, this.y);
 
     this.fixAndSetPosition();
   }
@@ -456,14 +515,21 @@ class AnnotationEditor {
    * @param {number} y - y-translation in page coordinates.
    */
   translateInPage(x, y) {
-    this.#initialPosition ||= [this.x, this.y];
+    this.#initialRect ||= [this.x, this.y, this.width, this.height];
     this.#translate(this.pageDimensions, x, y);
     this.div.scrollIntoView({ block: "nearest" });
   }
 
+  translationDone() {
+    this._onTranslated(this.x, this.y);
+  }
+
   drag(tx, ty) {
-    this.#initialPosition ||= [this.x, this.y];
-    const [parentWidth, parentHeight] = this.parentDimensions;
+    this.#initialRect ||= [this.x, this.y, this.width, this.height];
+    const {
+      div,
+      parentDimensions: [parentWidth, parentHeight],
+    } = this;
     this.x += tx / parentWidth;
     this.y += ty / parentHeight;
     if (this.parent && (this.x < 0 || this.x > 1 || this.y < 0 || this.y > 1)) {
@@ -490,16 +556,41 @@ class AnnotationEditor {
     x += bx;
     y += by;
 
-    this.div.style.left = `${(100 * x).toFixed(2)}%`;
-    this.div.style.top = `${(100 * y).toFixed(2)}%`;
-    this.div.scrollIntoView({ block: "nearest" });
+    const { style } = div;
+    style.left = `${(100 * x).toFixed(2)}%`;
+    style.top = `${(100 * y).toFixed(2)}%`;
+
+    this._onTranslating(x, y);
+
+    div.scrollIntoView({ block: "nearest" });
   }
+
+  /**
+   * Called when the editor is being translated.
+   * @param {number} x - in page coordinates.
+   * @param {number} y - in page coordinates.
+   */
+  _onTranslating(x, y) {}
+
+  /**
+   * Called when the editor has been translated.
+   * @param {number} x - in page coordinates.
+   * @param {number} y - in page coordinates.
+   */
+  _onTranslated(x, y) {}
 
   get _hasBeenMoved() {
     return (
-      !!this.#initialPosition &&
-      (this.#initialPosition[0] !== this.x ||
-        this.#initialPosition[1] !== this.y)
+      !!this.#initialRect &&
+      (this.#initialRect[0] !== this.x || this.#initialRect[1] !== this.y)
+    );
+  }
+
+  get _hasBeenResized() {
+    return (
+      !!this.#initialRect &&
+      (this.#initialRect[2] !== this.width ||
+        this.#initialRect[3] !== this.height)
     );
   }
 
@@ -540,7 +631,10 @@ class AnnotationEditor {
    * @param {number} [rotation] - the rotation of the page.
    */
   fixAndSetPosition(rotation = this.rotation) {
-    const [pageWidth, pageHeight] = this.pageDimensions;
+    const {
+      div: { style },
+      pageDimensions: [pageWidth, pageHeight],
+    } = this;
     let { x, y, width, height } = this;
     width *= pageWidth;
     height *= pageHeight;
@@ -550,20 +644,20 @@ class AnnotationEditor {
     if (this._mustFixPosition) {
       switch (rotation) {
         case 0:
-          x = Math.max(0, Math.min(pageWidth - width, x));
-          y = Math.max(0, Math.min(pageHeight - height, y));
+          x = MathClamp(x, 0, pageWidth - width);
+          y = MathClamp(y, 0, pageHeight - height);
           break;
         case 90:
-          x = Math.max(0, Math.min(pageWidth - height, x));
-          y = Math.min(pageHeight, Math.max(width, y));
+          x = MathClamp(x, 0, pageWidth - height);
+          y = MathClamp(y, width, pageHeight);
           break;
         case 180:
-          x = Math.min(pageWidth, Math.max(width, x));
-          y = Math.min(pageHeight, Math.max(height, y));
+          x = MathClamp(x, width, pageWidth);
+          y = MathClamp(y, height, pageHeight);
           break;
         case 270:
-          x = Math.min(pageWidth, Math.max(height, x));
-          y = Math.max(0, Math.min(pageHeight - width, y));
+          x = MathClamp(x, height, pageWidth);
+          y = MathClamp(y, 0, pageHeight - width);
           break;
       }
     }
@@ -575,7 +669,6 @@ class AnnotationEditor {
     x += bx;
     y += by;
 
-    const { style } = this.div;
     style.left = `${(100 * x).toFixed(2)}%`;
     style.top = `${(100 * y).toFixed(2)}%`;
 
@@ -648,35 +741,15 @@ class AnnotationEditor {
 
   /**
    * Set the dimensions of this editor.
-   * @param {number} width
-   * @param {number} height
    */
-  setDims(width, height) {
-    const [parentWidth, parentHeight] = this.parentDimensions;
-    this.div.style.width = `${((100 * width) / parentWidth).toFixed(2)}%`;
-    if (!this.#keepAspectRatio) {
-      this.div.style.height = `${((100 * height) / parentHeight).toFixed(2)}%`;
-    }
-  }
-
-  fixDims() {
-    const { style } = this.div;
-    const { height, width } = style;
-    const widthPercent = width.endsWith("%");
-    const heightPercent = !this.#keepAspectRatio && height.endsWith("%");
-    if (widthPercent && heightPercent) {
-      return;
-    }
-
-    const [parentWidth, parentHeight] = this.parentDimensions;
-    if (!widthPercent) {
-      style.width = `${((100 * parseFloat(width)) / parentWidth).toFixed(2)}%`;
-    }
-    if (!this.#keepAspectRatio && !heightPercent) {
-      style.height = `${((100 * parseFloat(height)) / parentHeight).toFixed(
-        2
-      )}%`;
-    }
+  setDims() {
+    const {
+      div: { style },
+      width,
+      height,
+    } = this;
+    style.width = `${(100 * width).toFixed(2)}%`;
+    style.height = `${(100 * height).toFixed(2)}%`;
   }
 
   /**
@@ -736,6 +809,7 @@ class AnnotationEditor {
 
     const savedDraggable = this._isDraggable;
     this._isDraggable = false;
+    this.#lastPointerCoords = [event.screenX, event.screenY];
 
     const ac = new AbortController();
     const signal = this._uiManager.combinedSignal(ac);
@@ -746,11 +820,18 @@ class AnnotationEditor {
       this.#resizerPointermove.bind(this, name),
       { passive: true, capture: true, signal }
     );
+    window.addEventListener(
+      "touchmove",
+      stopEvent /* Prevent the page from scrolling */,
+      { passive: false, signal }
+    );
     window.addEventListener("contextmenu", noContextMenu, { signal });
-    const savedX = this.x;
-    const savedY = this.y;
-    const savedWidth = this.width;
-    const savedHeight = this.height;
+    this.#savedDimensions = {
+      savedX: this.x,
+      savedY: this.y,
+      savedWidth: this.width,
+      savedHeight: this.height,
+    };
     const savedParentCursor = this.parent.div.style.cursor;
     const savedCursor = this.div.style.cursor;
     this.div.style.cursor = this.parent.div.style.cursor =
@@ -764,7 +845,7 @@ class AnnotationEditor {
       this.parent.div.style.cursor = savedParentCursor;
       this.div.style.cursor = savedCursor;
 
-      this.#addResizeToUndoStack(savedX, savedY, savedWidth, savedHeight);
+      this.#addResizeToUndoStack();
     };
     window.addEventListener("pointerup", pointerUpCallback, { signal });
     // If the user switches to another window (with alt+tab), then we end the
@@ -772,7 +853,28 @@ class AnnotationEditor {
     window.addEventListener("blur", pointerUpCallback, { signal });
   }
 
-  #addResizeToUndoStack(savedX, savedY, savedWidth, savedHeight) {
+  #resize(x, y, width, height) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.setDims();
+    this.fixAndSetPosition();
+    this._onResized();
+  }
+
+  /**
+   * Called when the editor has been resized.
+   */
+  _onResized() {}
+
+  #addResizeToUndoStack() {
+    if (!this.#savedDimensions) {
+      return;
+    }
+    const { savedX, savedY, savedWidth, savedHeight } = this.#savedDimensions;
+    this.#savedDimensions = null;
+
     const newX = this.x;
     const newY = this.y;
     const newWidth = this.width;
@@ -787,26 +889,17 @@ class AnnotationEditor {
     }
 
     this.addCommands({
-      cmd: () => {
-        this.width = newWidth;
-        this.height = newHeight;
-        this.x = newX;
-        this.y = newY;
-        const [parentWidth, parentHeight] = this.parentDimensions;
-        this.setDims(parentWidth * newWidth, parentHeight * newHeight);
-        this.fixAndSetPosition();
-      },
-      undo: () => {
-        this.width = savedWidth;
-        this.height = savedHeight;
-        this.x = savedX;
-        this.y = savedY;
-        const [parentWidth, parentHeight] = this.parentDimensions;
-        this.setDims(parentWidth * savedWidth, parentHeight * savedHeight);
-        this.fixAndSetPosition();
-      },
+      cmd: this.#resize.bind(this, newX, newY, newWidth, newHeight),
+      undo: this.#resize.bind(this, savedX, savedY, savedWidth, savedHeight),
       mustExec: true,
     });
+  }
+
+  static _round(x) {
+    // 10000 because we multiply by 100 and use toFixed(2) in fixAndSetPosition.
+    // Without rounding, the positions of the corners other than the top left
+    // one can be slightly wrong.
+    return Math.round(x * 10000) / 10000;
   }
 
   #resizerPointermove(name, event) {
@@ -818,10 +911,6 @@ class AnnotationEditor {
     const minWidth = AnnotationEditor.MIN_SIZE / parentWidth;
     const minHeight = AnnotationEditor.MIN_SIZE / parentHeight;
 
-    // 10000 because we multiply by 100 and use toFixed(2) in fixAndSetPosition.
-    // Without rounding, the positions of the corners other than the top left
-    // one can be slightly wrong.
-    const round = x => Math.round(x * 10000) / 10000;
     const rotationMatrix = this.#getRotationMatrix(this.rotation);
     const transf = (x, y) => [
       rotationMatrix[0] * x + rotationMatrix[2] * y,
@@ -881,15 +970,28 @@ class AnnotationEditor {
     const point = getPoint(savedWidth, savedHeight);
     const oppositePoint = getOpposite(savedWidth, savedHeight);
     let transfOppositePoint = transf(...oppositePoint);
-    const oppositeX = round(savedX + transfOppositePoint[0]);
-    const oppositeY = round(savedY + transfOppositePoint[1]);
+    const oppositeX = AnnotationEditor._round(savedX + transfOppositePoint[0]);
+    const oppositeY = AnnotationEditor._round(savedY + transfOppositePoint[1]);
     let ratioX = 1;
     let ratioY = 1;
 
-    let [deltaX, deltaY] = this.screenToPageTranslation(
-      event.movementX,
-      event.movementY
-    );
+    let deltaX, deltaY;
+
+    if (!event.fromKeyboard) {
+      // We can't use event.movementX/Y because they're not reliable:
+      //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/movementX
+      // (it was buggy on a laptop with a touch screen).
+      const { screenX, screenY } = event;
+      const [lastScreenX, lastScreenY] = this.#lastPointerCoords;
+      [deltaX, deltaY] = this.screenToPageTranslation(
+        screenX - lastScreenX,
+        screenY - lastScreenY
+      );
+      this.#lastPointerCoords[0] = screenX;
+      this.#lastPointerCoords[1] = screenY;
+    } else {
+      ({ deltaX, deltaY } = event);
+    }
     [deltaX, deltaY] = invTransf(deltaX / parentWidth, deltaY / parentHeight);
 
     if (isDiagonal) {
@@ -910,38 +1012,53 @@ class AnnotationEditor {
       );
     } else if (isHorizontal) {
       ratioX =
-        Math.max(
-          minWidth,
-          Math.min(1, Math.abs(oppositePoint[0] - point[0] - deltaX))
-        ) / savedWidth;
+        MathClamp(Math.abs(oppositePoint[0] - point[0] - deltaX), minWidth, 1) /
+        savedWidth;
     } else {
       ratioY =
-        Math.max(
+        MathClamp(
+          Math.abs(oppositePoint[1] - point[1] - deltaY),
           minHeight,
-          Math.min(1, Math.abs(oppositePoint[1] - point[1] - deltaY))
+          1
         ) / savedHeight;
     }
 
-    const newWidth = round(savedWidth * ratioX);
-    const newHeight = round(savedHeight * ratioY);
+    const newWidth = AnnotationEditor._round(savedWidth * ratioX);
+    const newHeight = AnnotationEditor._round(savedHeight * ratioY);
     transfOppositePoint = transf(...getOpposite(newWidth, newHeight));
     const newX = oppositeX - transfOppositePoint[0];
     const newY = oppositeY - transfOppositePoint[1];
 
+    this.#initialRect ||= [this.x, this.y, this.width, this.height];
     this.width = newWidth;
     this.height = newHeight;
     this.x = newX;
     this.y = newY;
 
-    this.setDims(parentWidth * newWidth, parentHeight * newHeight);
+    this.setDims();
     this.fixAndSetPosition();
+
+    this._onResizing();
   }
+
+  /**
+   * Called when the editor is being resized.
+   */
+  _onResizing() {}
 
   /**
    * Called when the alt text dialog is closed.
    */
   altTextFinish() {
     this.#altText?.finish();
+  }
+
+  /**
+   * Get the toolbar buttons for this editor.
+   * @returns {Array<Array<string|object|null>>|null}
+   */
+  get toolbarButtons() {
+    return null;
   }
 
   /**
@@ -954,18 +1071,34 @@ class AnnotationEditor {
     }
     this._editToolbar = new EditorToolbar(this);
     this.div.append(this._editToolbar.render());
-    if (this.#altText) {
-      await this._editToolbar.addAltText(this.#altText);
+    const { toolbarButtons } = this;
+    if (toolbarButtons) {
+      for (const [name, tool] of toolbarButtons) {
+        await this._editToolbar.addButton(name, tool);
+      }
     }
+    if (!this.hasComment) {
+      this._editToolbar.addButton("comment", this.addCommentButton());
+    }
+    this._editToolbar.addButton("delete");
 
     return this._editToolbar;
   }
 
+  addCommentButtonInToolbar() {
+    this._editToolbar?.addButtonBefore(
+      "comment",
+      this.addCommentButton(),
+      ".deleteButton"
+    );
+  }
+
+  removeCommentButtonFromToolbar() {
+    this._editToolbar?.removeButton("comment");
+  }
+
   removeEditToolbar() {
-    if (!this._editToolbar) {
-      return;
-    }
-    this._editToolbar.remove();
+    this._editToolbar?.remove();
     this._editToolbar = null;
 
     // We destroy the alt text but we don't null it because we want to be able
@@ -986,17 +1119,20 @@ class AnnotationEditor {
     return this.div.getBoundingClientRect();
   }
 
-  async addAltTextButton() {
-    if (this.#altText) {
-      return;
+  /**
+   * Create the alt text for this editor.
+   * @returns {object}
+   */
+  createAltText() {
+    if (!this.#altText) {
+      AltText.initialize(AnnotationEditor._l10n);
+      this.#altText = new AltText(this);
+      if (this.#accessibilityData) {
+        this.#altText.data = this.#accessibilityData;
+        this.#accessibilityData = null;
+      }
     }
-    AltText.initialize(AnnotationEditor._l10n);
-    this.#altText = new AltText(this);
-    if (this.#accessibilityData) {
-      this.#altText.data = this.#accessibilityData;
-      this.#accessibilityData = null;
-    }
-    await this.addEditToolbar();
+    return this.#altText;
   }
 
   get altTextData() {
@@ -1033,18 +1169,157 @@ class AnnotationEditor {
     return this.#altText?.hasData() ?? false;
   }
 
+  focusCommentButton() {
+    this.#comment?.focusButton();
+  }
+
+  addCommentButton() {
+    return this.canAddComment ? (this.#comment ||= new Comment(this)) : null;
+  }
+
+  addStandaloneCommentButton() {
+    if (!this._uiManager.hasCommentManager()) {
+      return;
+    }
+    if (this.#commentStandaloneButton) {
+      if (this._uiManager.isEditingMode()) {
+        this.#commentStandaloneButton.classList.remove("hidden");
+      }
+      return;
+    }
+    if (!this.hasComment) {
+      return;
+    }
+    this.#commentStandaloneButton = this.#comment.renderForStandalone();
+    this.div.append(this.#commentStandaloneButton);
+  }
+
+  removeStandaloneCommentButton() {
+    this.#comment.removeStandaloneCommentButton();
+    this.#commentStandaloneButton = null;
+  }
+
+  hideStandaloneCommentButton() {
+    this.#commentStandaloneButton?.classList.add("hidden");
+  }
+
+  get comment() {
+    const {
+      data: { richText, text, date, deleted },
+    } = this.#comment;
+    return {
+      text,
+      richText,
+      date,
+      deleted,
+      color: this.getNonHCMColor(),
+      opacity: this.opacity ?? 1,
+    };
+  }
+
+  set comment(text) {
+    this.#comment ||= new Comment(this);
+    this.#comment.data = text;
+    if (this.hasComment) {
+      this.removeCommentButtonFromToolbar();
+      this.addStandaloneCommentButton();
+      this._uiManager.updateComment(this);
+    } else {
+      this.addCommentButtonInToolbar();
+      this.removeStandaloneCommentButton();
+      this._uiManager.removeComment(this);
+    }
+  }
+
+  setCommentData({ comment, popupRef, richText }) {
+    if (!popupRef) {
+      return;
+    }
+    this.#comment ||= new Comment(this);
+    this.#comment.setInitialText(comment, richText);
+
+    if (!this.annotationElementId) {
+      return;
+    }
+    const storedData = this._uiManager.getAndRemoveDataFromAnnotationStorage(
+      this.annotationElementId
+    );
+    if (storedData) {
+      this.updateFromAnnotationLayer(storedData);
+    }
+  }
+
+  get hasEditedComment() {
+    return this.#comment?.hasBeenEdited();
+  }
+
+  get hasDeletedComment() {
+    return this.#comment?.isDeleted();
+  }
+
+  get hasComment() {
+    return (
+      !!this.#comment && !this.#comment.isEmpty() && !this.#comment.isDeleted()
+    );
+  }
+
+  async editComment(options) {
+    this.#comment ||= new Comment(this);
+    this.#comment.edit(options);
+  }
+
+  toggleComment(isSelected, visibility = undefined) {
+    if (this.hasComment) {
+      this._uiManager.toggleComment(this, isSelected, visibility);
+    }
+  }
+
+  setSelectedCommentButton(selected) {
+    this.#comment.setSelectedButton(selected);
+  }
+
+  addComment(serialized) {
+    if (this.hasEditedComment) {
+      const DEFAULT_POPUP_WIDTH = 180;
+      const DEFAULT_POPUP_HEIGHT = 100;
+      const [, , , trY] = serialized.rect;
+      const [pageWidth] = this.pageDimensions;
+      const [pageX] = this.pageTranslation;
+      const blX = pageX + pageWidth + 1;
+      const blY = trY - DEFAULT_POPUP_HEIGHT;
+      const trX = blX + DEFAULT_POPUP_WIDTH;
+      serialized.popup = {
+        contents: this.comment.text,
+        deleted: this.comment.deleted,
+        rect: [blX, blY, trX, trY],
+      };
+    }
+  }
+
+  updateFromAnnotationLayer({ popup: { contents, deleted } }) {
+    this.#comment.data = deleted ? null : contents;
+  }
+
+  get parentBoundingClientRect() {
+    return this.parent.boundingClientRect;
+  }
+
   /**
    * Render this editor in a div.
    * @returns {HTMLDivElement | null}
    */
   render() {
-    this.div = document.createElement("div");
-    this.div.setAttribute("data-editor-rotation", (360 - this.rotation) % 360);
-    this.div.className = this.name;
-    this.div.setAttribute("id", this.id);
-    this.div.tabIndex = this.#disabled ? -1 : 0;
+    const div = (this.div = document.createElement("div"));
+    div.setAttribute("data-editor-rotation", (360 - this.rotation) % 360);
+    div.className = this.name;
+    div.setAttribute("id", this.id);
+    div.tabIndex = this.#disabled ? -1 : 0;
+    div.setAttribute("role", "application");
+    if (this.defaultL10nId) {
+      div.setAttribute("data-l10n-id", this.defaultL10nId);
+    }
     if (!this._isVisible) {
-      this.div.classList.add("hidden");
+      div.classList.add("hidden");
     }
 
     this.setInForeground();
@@ -1052,21 +1327,104 @@ class AnnotationEditor {
 
     const [parentWidth, parentHeight] = this.parentDimensions;
     if (this.parentRotation % 180 !== 0) {
-      this.div.style.maxWidth = `${((100 * parentHeight) / parentWidth).toFixed(
+      div.style.maxWidth = `${((100 * parentHeight) / parentWidth).toFixed(
         2
       )}%`;
-      this.div.style.maxHeight = `${(
-        (100 * parentWidth) /
-        parentHeight
-      ).toFixed(2)}%`;
+      div.style.maxHeight = `${((100 * parentWidth) / parentHeight).toFixed(
+        2
+      )}%`;
     }
 
     const [tx, ty] = this.getInitialTranslation();
     this.translate(tx, ty);
 
-    bindEvents(this, this.div, ["pointerdown"]);
+    bindEvents(this, div, ["keydown", "pointerdown", "dblclick"]);
 
-    return this.div;
+    if (this.isResizable && this._uiManager._supportsPinchToZoom) {
+      this.#touchManager ||= new TouchManager({
+        container: div,
+        isPinchingDisabled: () => !this.isSelected,
+        onPinchStart: this.#touchPinchStartCallback.bind(this),
+        onPinching: this.#touchPinchCallback.bind(this),
+        onPinchEnd: this.#touchPinchEndCallback.bind(this),
+        signal: this._uiManager._signal,
+      });
+    }
+
+    this.addStandaloneCommentButton();
+    this._uiManager._editorUndoBar?.hide();
+
+    return div;
+  }
+
+  #touchPinchStartCallback() {
+    this.#savedDimensions = {
+      savedX: this.x,
+      savedY: this.y,
+      savedWidth: this.width,
+      savedHeight: this.height,
+    };
+    this.#altText?.toggle(false);
+    this.parent.togglePointerEvents(false);
+  }
+
+  #touchPinchCallback(_origin, prevDistance, distance) {
+    // Slightly slow down the zooming because the editor could be small and the
+    // user could have difficulties to rescale it as they want.
+    const slowDownFactor = 0.7;
+    let factor =
+      slowDownFactor * (distance / prevDistance) + 1 - slowDownFactor;
+    if (factor === 1) {
+      return;
+    }
+
+    const rotationMatrix = this.#getRotationMatrix(this.rotation);
+    const transf = (x, y) => [
+      rotationMatrix[0] * x + rotationMatrix[2] * y,
+      rotationMatrix[1] * x + rotationMatrix[3] * y,
+    ];
+
+    // The center of the editor is the fixed point.
+    const [parentWidth, parentHeight] = this.parentDimensions;
+    const savedX = this.x;
+    const savedY = this.y;
+    const savedWidth = this.width;
+    const savedHeight = this.height;
+
+    const minWidth = AnnotationEditor.MIN_SIZE / parentWidth;
+    const minHeight = AnnotationEditor.MIN_SIZE / parentHeight;
+    factor = Math.max(
+      Math.min(factor, 1 / savedWidth, 1 / savedHeight),
+      minWidth / savedWidth,
+      minHeight / savedHeight
+    );
+    const newWidth = AnnotationEditor._round(savedWidth * factor);
+    const newHeight = AnnotationEditor._round(savedHeight * factor);
+    if (newWidth === savedWidth && newHeight === savedHeight) {
+      return;
+    }
+
+    this.#initialRect ||= [savedX, savedY, savedWidth, savedHeight];
+    const transfCenterPoint = transf(savedWidth / 2, savedHeight / 2);
+    const centerX = AnnotationEditor._round(savedX + transfCenterPoint[0]);
+    const centerY = AnnotationEditor._round(savedY + transfCenterPoint[1]);
+    const newTransfCenterPoint = transf(newWidth / 2, newHeight / 2);
+
+    this.x = centerX - newTransfCenterPoint[0];
+    this.y = centerY - newTransfCenterPoint[1];
+    this.width = newWidth;
+    this.height = newHeight;
+
+    this.setDims();
+    this.fixAndSetPosition();
+
+    this._onResizing();
+  }
+
+  #touchPinchEndCallback() {
+    this.#altText?.toggle(true);
+    this.parent.togglePointerEvents(true);
+    this.#addResizeToUndoStack();
   }
 
   /**
@@ -1080,7 +1438,6 @@ class AnnotationEditor {
       event.preventDefault();
       return;
     }
-
     this.#hasBeenClicked = true;
 
     if (this._isDraggable) {
@@ -1089,10 +1446,6 @@ class AnnotationEditor {
     }
 
     this.#selectOnPointerEvent(event);
-  }
-
-  get isSelected() {
-    return this._uiManager.isSelected(this);
   }
 
   #selectOnPointerEvent(event) {
@@ -1111,41 +1464,86 @@ class AnnotationEditor {
   #setUpDragSession(event) {
     const { isSelected } = this;
     this._uiManager.setUpDragSession();
+    let hasDraggingStarted = false;
 
     const ac = new AbortController();
     const signal = this._uiManager.combinedSignal(ac);
-
-    if (isSelected) {
-      this.div.classList.add("moving");
-      this.#prevDragX = event.clientX;
-      this.#prevDragY = event.clientY;
-      const pointerMoveCallback = e => {
-        const { clientX: x, clientY: y } = e;
-        const [tx, ty] = this.screenToPageTranslation(
-          x - this.#prevDragX,
-          y - this.#prevDragY
-        );
-        this.#prevDragX = x;
-        this.#prevDragY = y;
-        this._uiManager.dragSelectedEditors(tx, ty);
-      };
-      window.addEventListener("pointermove", pointerMoveCallback, {
-        passive: true,
-        capture: true,
-        signal,
-      });
-    }
-
-    const pointerUpCallback = () => {
+    const opts = { capture: true, passive: false, signal };
+    const cancelDrag = e => {
       ac.abort();
-      if (isSelected) {
-        this.div.classList.remove("moving");
-      }
 
+      this.#dragPointerId = null;
       this.#hasBeenClicked = false;
       if (!this._uiManager.endDragSession()) {
-        this.#selectOnPointerEvent(event);
+        this.#selectOnPointerEvent(e);
       }
+      if (hasDraggingStarted) {
+        this._onStopDragging();
+      }
+    };
+
+    if (isSelected) {
+      this.#prevDragX = event.clientX;
+      this.#prevDragY = event.clientY;
+      this.#dragPointerId = event.pointerId;
+      this.#dragPointerType = event.pointerType;
+      window.addEventListener(
+        "pointermove",
+        e => {
+          if (!hasDraggingStarted) {
+            hasDraggingStarted = true;
+            this._uiManager.toggleComment(
+              this,
+              /* isSelected = */ true,
+              /* visibility = */ false
+            );
+            this._onStartDragging();
+          }
+          const { clientX: x, clientY: y, pointerId } = e;
+          if (pointerId !== this.#dragPointerId) {
+            stopEvent(e);
+            return;
+          }
+          const [tx, ty] = this.screenToPageTranslation(
+            x - this.#prevDragX,
+            y - this.#prevDragY
+          );
+          this.#prevDragX = x;
+          this.#prevDragY = y;
+          this._uiManager.dragSelectedEditors(tx, ty);
+        },
+        opts
+      );
+      window.addEventListener(
+        "touchmove",
+        stopEvent /* Prevent the page from scrolling */,
+        opts
+      );
+      window.addEventListener(
+        "pointerdown",
+        // If the user drags with one finger and then clicks with another.
+        e => {
+          if (e.pointerType === this.#dragPointerType) {
+            // We've a pinch to zoom session.
+            // We cannot have two primaries at the same time.
+            // It's possible to be in this state with Firefox and Gnome when
+            // trying to drag with three fingers (see bug 1933716).
+            if (this.#touchManager || e.isPrimary) {
+              cancelDrag(e);
+            }
+          }
+          stopEvent(e);
+        },
+        opts
+      );
+    }
+
+    const pointerUpCallback = e => {
+      if (!this.#dragPointerId || this.#dragPointerId === e.pointerId) {
+        cancelDrag(e);
+        return;
+      }
+      stopEvent(e);
     };
     window.addEventListener("pointerup", pointerUpCallback, { signal });
     // If the user is using alt+tab during the dragging session, the pointerup
@@ -1153,6 +1551,10 @@ class AnnotationEditor {
     // order to interrupt the dragging session.
     window.addEventListener("blur", pointerUpCallback, { signal });
   }
+
+  _onStartDragging() {}
+
+  _onStopDragging() {}
 
   moveInDOM() {
     // Moving the editor in the DOM can be expensive, so we wait a bit before.
@@ -1164,6 +1566,11 @@ class AnnotationEditor {
     this.#moveInDOMTimeout = setTimeout(() => {
       this.#moveInDOMTimeout = null;
       this.parent?.moveEditorInDOM(this);
+      if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING")) {
+        this._uiManager._eventBus.dispatch("editormovedindom", {
+          source: this,
+        });
+      }
     }, 0);
   }
 
@@ -1172,6 +1579,7 @@ class AnnotationEditor {
     this.x = x;
     this.y = y;
     this.fixAndSetPosition();
+    this._onTranslated();
   }
 
   /**
@@ -1246,9 +1654,57 @@ class AnnotationEditor {
   }
 
   /**
-   * Executed once this editor has been rendered.
+   * Get the rect in page coordinates without any translation.
+   * It's used when serializing the editor.
+   * @returns {Array<number>}
    */
-  onceAdded() {}
+  getPDFRect() {
+    return this.getRect(0, 0);
+  }
+
+  getNonHCMColor() {
+    return (
+      this.color &&
+      AnnotationEditor._colorManager.convert(
+        this._uiManager.getNonHCMColor(this.color)
+      )
+    );
+  }
+
+  /**
+   * The color has been changed.
+   */
+  onUpdatedColor() {
+    this.#comment?.onUpdatedColor();
+  }
+
+  getData() {
+    const {
+      comment: { text: str, color, date, opacity, deleted, richText },
+      uid: id,
+      pageIndex,
+      creationDate,
+      modificationDate,
+    } = this;
+    return {
+      id,
+      pageIndex,
+      rect: this.getPDFRect(),
+      richText,
+      contentsObj: { str },
+      creationDate,
+      modificationDate: date || modificationDate,
+      popupRef: !deleted,
+      color,
+      opacity,
+    };
+  }
+
+  /**
+   * Executed once this editor has been rendered.
+   * @param {boolean} focus - true if the editor should be focused.
+   */
+  onceAdded(focus) {}
 
   /**
    * Check if the editor contains something.
@@ -1260,16 +1716,30 @@ class AnnotationEditor {
 
   /**
    * Enable edit mode.
+   * @returns {boolean} - true if the edit mode has been enabled.
    */
   enableEditMode() {
+    if (this.isInEditMode()) {
+      return false;
+    }
+    this.parent.setEditingState(false);
     this.#isInEditMode = true;
+
+    return true;
   }
 
   /**
    * Disable edit mode.
+   * @returns {boolean} - true if the edit mode has been disabled.
    */
   disableEditMode() {
+    if (!this.isInEditMode()) {
+      return false;
+    }
+    this.parent.setEditingState(true);
     this.#isInEditMode = false;
+
+    return true;
   }
 
   /**
@@ -1297,6 +1767,12 @@ class AnnotationEditor {
     return this.div && !this.isAttachedToDOM;
   }
 
+  get isOnScreen() {
+    const { top, left, bottom, right } = this.getClientDimensions();
+    const { innerHeight, innerWidth } = window;
+    return left < innerWidth && right > 0 && top < innerHeight && bottom > 0;
+  }
+
   #addFocusListeners() {
     if (this.#focusAC || !this.div) {
       return;
@@ -1318,10 +1794,15 @@ class AnnotationEditor {
   }
 
   /**
-   * Rotate the editor.
+   * Rotate the editor when the page is rotated.
    * @param {number} angle
    */
   rotate(_angle) {}
+
+  /**
+   * Resize the editor when the page is resized.
+   */
+  resize() {}
 
   /**
    * Serialize the editor when it has been deleted.
@@ -1347,7 +1828,14 @@ class AnnotationEditor {
    * @returns {Object | null}
    */
   serialize(isForCopying = false, context = null) {
-    unreachable("An editor must be serializable");
+    return {
+      annotationType: this.mode,
+      pageIndex: this.pageIndex,
+      rect: this.getPDFRect(),
+      rotation: this.rotation,
+      structTreeParentId: this._structTreeParentId,
+      popupRef: this._initialData?.popupRef || "",
+    };
   }
 
   /**
@@ -1364,9 +1852,13 @@ class AnnotationEditor {
       parent,
       id: parent.getNextId(),
       uiManager,
+      annotationElementId: data.annotationElementId,
+      creationDate: data.creationDate,
+      modificationDate: data.modificationDate,
     });
     editor.rotation = data.rotation;
     editor.#accessibilityData = data.accessibilityData;
+    editor._isCopy = data.isCopy || false;
 
     const [pageWidth, pageHeight] = editor.pageDimensions;
     const [x, y, width, height] = editor.getRectInCurrentCoords(
@@ -1411,6 +1903,7 @@ class AnnotationEditor {
     } else {
       this._uiManager.removeEditor(this);
     }
+    this.hideCommentPopup();
 
     if (this.#moveInDOMTimeout) {
       clearTimeout(this.#moveInDOMTimeout);
@@ -1425,6 +1918,10 @@ class AnnotationEditor {
       this.#telemetryTimeouts = null;
     }
     this.parent = null;
+    this.#touchManager?.destroy();
+    this.#touchManager = null;
+    this.#fakeAnnotation?.remove();
+    this.#fakeAnnotation = null;
   }
 
   /**
@@ -1441,12 +1938,61 @@ class AnnotationEditor {
     if (this.isResizable) {
       this.#createResizers();
       this.#resizersDiv.classList.remove("hidden");
-      bindEvents(this, this.div, ["keydown"]);
     }
   }
 
   get toolbarPosition() {
     return null;
+  }
+
+  /**
+   * Get the position of the comment button.
+   * @returns {Array<number>|null}
+   */
+  get commentButtonPosition() {
+    return this._uiManager.direction === "ltr" ? [1, 0] : [0, 0];
+  }
+
+  get commentButtonPositionInPage() {
+    const {
+      commentButtonPosition: [posX, posY],
+    } = this;
+    const [blX, blY, trX, trY] = this.getPDFRect();
+    return [
+      AnnotationEditor._round(blX + (trX - blX) * posX),
+      AnnotationEditor._round(blY + (trY - blY) * (1 - posY)),
+    ];
+  }
+
+  get commentButtonColor() {
+    return this._uiManager.makeCommentColor(
+      this.getNonHCMColor(),
+      this.opacity
+    );
+  }
+
+  get commentPopupPosition() {
+    return this.#comment.commentPopupPositionInLayer;
+  }
+
+  set commentPopupPosition(pos) {
+    this.#comment.commentPopupPositionInLayer = pos;
+  }
+
+  hasDefaultPopupPosition() {
+    return this.#comment.hasDefaultPopupPosition();
+  }
+
+  get commentButtonWidth() {
+    return this.#comment.commentButtonWidth;
+  }
+
+  get elementBeforePopup() {
+    return this.div;
+  }
+
+  setCommentButtonStates(options) {
+    this.#comment?.setCommentButtonStates(options);
   }
 
   /**
@@ -1505,11 +2051,13 @@ class AnnotationEditor {
       // on the top-left one.
       if (nextFirstPosition < firstPosition) {
         for (let i = 0; i < firstPosition - nextFirstPosition; i++) {
-          this.#resizersDiv.append(this.#resizersDiv.firstChild);
+          this.#resizersDiv.append(this.#resizersDiv.firstElementChild);
         }
       } else if (nextFirstPosition > firstPosition) {
         for (let i = 0; i < nextFirstPosition - firstPosition; i++) {
-          this.#resizersDiv.firstChild.before(this.#resizersDiv.lastChild);
+          this.#resizersDiv.firstElementChild.before(
+            this.#resizersDiv.lastElementChild
+          );
         }
       }
 
@@ -1523,7 +2071,7 @@ class AnnotationEditor {
 
     this.#setResizerTabIndex(0);
     this.#isResizerEnabledForKeyboard = true;
-    this.#resizersDiv.firstChild.focus({ focusVisible: true });
+    this.#resizersDiv.firstElementChild.focus({ focusVisible: true });
     event.preventDefault();
     event.stopImmediatePropagation();
   }
@@ -1559,19 +2107,16 @@ class AnnotationEditor {
       return;
     }
     this.#resizerPointermove(this.#focusedResizerName, {
-      movementX: x,
-      movementY: y,
+      deltaX: x,
+      deltaY: y,
+      fromKeyboard: true,
     });
   }
 
   #stopResizing() {
     this.#isResizerEnabledForKeyboard = false;
     this.#setResizerTabIndex(-1);
-    if (this.#savedDimensions) {
-      const { savedX, savedY, savedWidth, savedHeight } = this.#savedDimensions;
-      this.#addResizeToUndoStack(savedX, savedY, savedWidth, savedHeight);
-      this.#savedDimensions = null;
-    }
+    this.#addResizeToUndoStack();
   }
 
   _stopResizingWithKeyboard() {
@@ -1583,6 +2128,11 @@ class AnnotationEditor {
    * Select this editor.
    */
   select() {
+    if (this.isSelected && this._editToolbar) {
+      this._editToolbar.show();
+      return;
+    }
+    this.isSelected = true;
     this.makeResizable();
     this.div?.classList.add("selectedEditor");
     if (!this._editToolbar) {
@@ -1600,10 +2150,20 @@ class AnnotationEditor {
     this.#altText?.toggleAltTextBadge(false);
   }
 
+  focus() {
+    if (this.div && !this.div.contains(document.activeElement)) {
+      setTimeout(() => this.div?.focus({ preventScroll: true }), 0);
+    }
+  }
+
   /**
    * Unselect this editor.
    */
   unselect() {
+    if (!this.isSelected) {
+      return;
+    }
+    this.isSelected = false;
     this.#resizersDiv?.classList.add("hidden");
     this.div?.classList.remove("selectedEditor");
     if (this.div?.contains(document.activeElement)) {
@@ -1615,6 +2175,13 @@ class AnnotationEditor {
     }
     this._editToolbar?.hide();
     this.#altText?.toggleAltTextBadge(true);
+    this.hideCommentPopup();
+  }
+
+  hideCommentPopup() {
+    if (this.hasComment) {
+      this._uiManager.toggleComment(null);
+    }
   }
 
   /**
@@ -1637,15 +2204,47 @@ class AnnotationEditor {
   enableEditing() {}
 
   /**
+   * Check if the content of this editor can be changed.
+   * For example, a FreeText editor can be changed (the user can change the
+   * text), but a Stamp editor cannot.
+   * @returns {boolean}
+   */
+  get canChangeContent() {
+    return false;
+  }
+
+  /**
    * The editor is about to be edited.
    */
-  enterInEditMode() {}
+  enterInEditMode() {
+    if (!this.canChangeContent) {
+      return;
+    }
+    this.enableEditMode();
+    this.div.focus();
+  }
+
+  /**
+   * ondblclick callback.
+   * @param {MouseEvent} event
+   */
+  dblclick(event) {
+    if (event.target.nodeName === "BUTTON") {
+      // Avoid entering in edit mode when clicking on the comment button.
+      return;
+    }
+    this.enterInEditMode();
+    this.parent.updateToolbar({
+      mode: this.constructor._editorType,
+      editId: this.uid,
+    });
+  }
 
   /**
    * @returns {HTMLElement | null} the element requiring an alt text.
    */
-  getImageForAltText() {
-    return null;
+  getElementForAltText() {
+    return this.div;
   }
 
   /**
@@ -1679,19 +2278,6 @@ class AnnotationEditor {
     } else {
       this.parent.setActiveEditor(null);
     }
-  }
-
-  /**
-   * Set the aspect ratio to use when resizing.
-   * @param {number} width
-   * @param {number} height
-   */
-  setAspectRatio(width, height) {
-    this.#keepAspectRatio = true;
-    const aspectRatio = width / height;
-    const { style } = this.div;
-    style.aspectRatio = aspectRatio;
-    style.height = "auto";
   }
 
   static get MIN_SIZE() {
@@ -1769,12 +2355,34 @@ class AnnotationEditor {
     this.#disabled = true;
   }
 
+  updateFakeAnnotationElement(annotationLayer) {
+    if (!this.#fakeAnnotation && !this.deleted) {
+      this.#fakeAnnotation = annotationLayer.addFakeAnnotation(this);
+      return;
+    }
+    if (this.deleted) {
+      this.#fakeAnnotation.remove();
+      this.#fakeAnnotation = null;
+      return;
+    }
+    if (this.hasEditedComment || this._hasBeenMoved || this._hasBeenResized) {
+      this.#fakeAnnotation.updateEdited({
+        rect: this.getPDFRect(),
+        popup: this.comment,
+      });
+    }
+  }
+
   /**
    * Render an annotation in the annotation layer.
    * @param {Object} annotation
    * @returns {HTMLElement|null}
    */
   renderAnnotationElement(annotation) {
+    if (this.deleted) {
+      annotation.hide();
+      return null;
+    }
     let content = annotation.container.querySelector(".annotationContent");
     if (!content) {
       content = document.createElement("div");
@@ -1791,12 +2399,12 @@ class AnnotationEditor {
   }
 
   resetAnnotationElement(annotation) {
-    const { firstChild } = annotation.container;
+    const { firstElementChild } = annotation.container;
     if (
-      firstChild?.nodeName === "DIV" &&
-      firstChild.classList.contains("annotationContent")
+      firstElementChild?.nodeName === "DIV" &&
+      firstElementChild.classList.contains("annotationContent")
     ) {
-      firstChild.remove();
+      firstElementChild.remove();
     }
   }
 }

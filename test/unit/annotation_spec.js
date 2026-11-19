@@ -1783,11 +1783,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList.argsArray[1]).toEqual(new Uint8ClampedArray([26, 51, 76]));
-=======
       expect(opList.argsArray[1]).toEqual(["#1a334c"]);
->>>>>>> upstream/master
     });
 
     it("should render auto-sized text for printing", async function () {
@@ -2261,11 +2257,7 @@ describe("annotation", function () {
       );
       expect(newData.data).toEqual(
         "2 0 obj\n<< /Subtype /Form /Resources " +
-<<<<<<< HEAD
-          "<< /Font << /Helv 314 0 R>>>> /BBox [0 0 32 10] /Matrix [0 1 -1 0 32 0] /Length 74>> stream\n" +
-=======
           "<< /Font << /Helv 314 0 R>>>> /BBox [0 0 10 32] /Matrix [0 1 -1 0 32 0] /Length 74>> stream\n" +
->>>>>>> upstream/master
           "/Tx BMC q BT /Helv 5 Tf 1 0 0 1 0 0 Tm 2 2.94 Td (hello world) Tj " +
           "ET Q EMC\nendstream\nendobj\n"
       );
@@ -2672,11 +2664,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList1.argsArray[1]).toEqual(new Uint8ClampedArray([26, 51, 76]));
-=======
       expect(opList1.argsArray[1]).toEqual(["#1a334c"]);
->>>>>>> upstream/master
 
       annotationStorage.set(annotation.data.id, { value: false });
 
@@ -2699,11 +2687,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList2.argsArray[1]).toEqual(new Uint8ClampedArray([76, 51, 26]));
-=======
       expect(opList2.argsArray[1]).toEqual(["#4c331a"]);
->>>>>>> upstream/master
     });
 
     it("should render checkboxes for printing twice", async function () {
@@ -2764,13 +2748,7 @@ describe("annotation", function () {
           [1, 0, 0, 1, 0, 0],
           false,
         ]);
-<<<<<<< HEAD
-        expect(opList.argsArray[1]).toEqual(
-          new Uint8ClampedArray([26, 51, 76])
-        );
-=======
         expect(opList.argsArray[1]).toEqual(["#1a334c"]);
->>>>>>> upstream/master
       }
     });
 
@@ -2829,11 +2807,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList.argsArray[1]).toEqual(new Uint8ClampedArray([26, 51, 76]));
-=======
       expect(opList.argsArray[1]).toEqual(["#1a334c"]);
->>>>>>> upstream/master
     });
 
     it("should save checkboxes", async function () {
@@ -3076,11 +3050,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList1.argsArray[1]).toEqual(new Uint8ClampedArray([26, 51, 76]));
-=======
       expect(opList1.argsArray[1]).toEqual(["#1a334c"]);
->>>>>>> upstream/master
 
       annotationStorage.set(annotation.data.id, { value: false });
 
@@ -3103,11 +3073,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList2.argsArray[1]).toEqual(new Uint8ClampedArray([76, 51, 26]));
-=======
       expect(opList2.argsArray[1]).toEqual(["#4c331a"]);
->>>>>>> upstream/master
     });
 
     it("should render radio buttons for printing using normal appearance", async function () {
@@ -3166,11 +3132,7 @@ describe("annotation", function () {
         [1, 0, 0, 1, 0, 0],
         false,
       ]);
-<<<<<<< HEAD
-      expect(opList.argsArray[1]).toEqual(new Uint8ClampedArray([76, 51, 26]));
-=======
       expect(opList.argsArray[1]).toEqual(["#4c331a"]);
->>>>>>> upstream/master
     });
 
     it("should save radio buttons", async function () {
@@ -3844,11 +3806,7 @@ describe("annotation", function () {
         [
           "2 0 obj",
           "<< /Subtype /Form /Resources << /Font << /Helv 314 0 R>>>> " +
-<<<<<<< HEAD
-            "/BBox [0 0 32 10] /Matrix [0 -1 1 0 0 10] /Length 170>> stream",
-=======
             "/BBox [0 0 10 32] /Matrix [0 -1 1 0 0 10] /Length 170>> stream",
->>>>>>> upstream/master
           "/Tx BMC q",
           "1 1 10 32 re W n",
           "0.600006 0.756866 0.854904 rg",
@@ -4326,23 +4284,13 @@ describe("annotation", function () {
         null
       );
 
-<<<<<<< HEAD
-      expect(opList.fnArray.length).toEqual(16);
-=======
       expect(opList.fnArray.length).toEqual(15);
->>>>>>> upstream/master
       expect(opList.fnArray).toEqual([
         OPS.beginAnnotation,
         OPS.save,
         OPS.transform,
-<<<<<<< HEAD
-        OPS.constructPath,
-        OPS.clip,
-        OPS.endPath,
-=======
         OPS.clip,
         OPS.constructPath,
->>>>>>> upstream/master
         OPS.beginText,
         OPS.setFillRGBColor,
         OPS.setCharSpacing,
@@ -4496,23 +4444,6 @@ describe("annotation", function () {
             thickness: 1,
             opacity: 1,
             color: [0, 0, 0],
-<<<<<<< HEAD
-            paths: [
-              {
-                bezier: [
-                  10, 11, 12, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26, 27,
-                ],
-                points: [1, 2, 3, 4, 5, 6, 7, 8],
-              },
-              {
-                bezier: [
-                  910, 911, 912, 913, 914, 915, 916, 917, 922, 923, 924, 925,
-                  926, 927,
-                ],
-                points: [91, 92, 93, 94, 95, 96, 97, 98],
-              },
-            ],
-=======
             paths: {
               lines: [
                 [
@@ -4561,7 +4492,6 @@ describe("annotation", function () {
                 [91, 92, 93, 94, 95, 96, 97, 98],
               ],
             },
->>>>>>> upstream/master
           },
         ],
         null,
@@ -4581,20 +4511,12 @@ describe("annotation", function () {
       const appearance = data[1].data;
       expect(appearance).toEqual(
         "2 0 obj\n" +
-<<<<<<< HEAD
-          "<< /FormType 1 /Subtype /Form /Type /XObject /BBox [12 34 56 78] /Length 129>> stream\n" +
-=======
           "<< /FormType 1 /Subtype /Form /Type /XObject /BBox [12 34 56 78] /Length 127>> stream\n" +
->>>>>>> upstream/master
           "1 w 1 J 1 j\n" +
           "0 G\n" +
           "10 11 m\n" +
           "12 13 14 15 16 17 c\n" +
           "22 23 24 25 26 27 c\n" +
-<<<<<<< HEAD
-          "S\n" +
-=======
->>>>>>> upstream/master
           "910 911 m\n" +
           "912 913 914 915 916 917 c\n" +
           "922 923 924 925 926 927 c\n" +
@@ -4619,23 +4541,6 @@ describe("annotation", function () {
             thickness: 1,
             opacity: 0.12,
             color: [0, 0, 0],
-<<<<<<< HEAD
-            paths: [
-              {
-                bezier: [
-                  10, 11, 12, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26, 27,
-                ],
-                points: [1, 2, 3, 4, 5, 6, 7, 8],
-              },
-              {
-                bezier: [
-                  910, 911, 912, 913, 914, 915, 916, 917, 922, 923, 924, 925,
-                  926, 927,
-                ],
-                points: [91, 92, 93, 94, 95, 96, 97, 98],
-              },
-            ],
-=======
             paths: {
               lines: [
                 [
@@ -4684,7 +4589,6 @@ describe("annotation", function () {
                 [91, 92, 93, 94, 95, 96, 97, 98],
               ],
             },
->>>>>>> upstream/master
           },
         ],
         null,
@@ -4704,11 +4608,7 @@ describe("annotation", function () {
       const appearance = data[1].data;
       expect(appearance).toEqual(
         "2 0 obj\n" +
-<<<<<<< HEAD
-          "<< /FormType 1 /Subtype /Form /Type /XObject /BBox [12 34 56 78] /Length 136 /Resources " +
-=======
           "<< /FormType 1 /Subtype /Form /Type /XObject /BBox [12 34 56 78] /Length 134 /Resources " +
->>>>>>> upstream/master
           "<< /ExtGState << /R0 << /CA 0.12 /Type /ExtGState>>>>>>>> stream\n" +
           "1 w 1 J 1 j\n" +
           "0 G\n" +
@@ -4716,10 +4616,6 @@ describe("annotation", function () {
           "10 11 m\n" +
           "12 13 14 15 16 17 c\n" +
           "22 23 24 25 26 27 c\n" +
-<<<<<<< HEAD
-          "S\n" +
-=======
->>>>>>> upstream/master
           "910 911 m\n" +
           "912 913 914 915 916 917 c\n" +
           "922 923 924 925 926 927 c\n" +
@@ -4745,20 +4641,10 @@ describe("annotation", function () {
               thickness: 3,
               opacity: 1,
               color: [0, 255, 0],
-<<<<<<< HEAD
-              paths: [
-                {
-                  bezier: [1, 2, 3, 4, 5, 6, 7, 8],
-                  // Useless in the printing case.
-                  points: [1, 2, 3, 4, 5, 6, 7, 8],
-                },
-              ],
-=======
               paths: {
                 lines: [[NaN, NaN, NaN, NaN, 1, 2, 3, 4, 5, 6, 7, 8]],
                 points: [[1, 2, 3, 4, 5, 6, 7, 8]],
               },
->>>>>>> upstream/master
             },
           ]
         )
@@ -4771,11 +4657,7 @@ describe("annotation", function () {
         null
       );
 
-<<<<<<< HEAD
-      expect(opList.argsArray.length).toEqual(8);
-=======
       expect(opList.argsArray.length).toEqual(7);
->>>>>>> upstream/master
       expect(opList.fnArray).toEqual([
         OPS.beginAnnotation,
         OPS.setLineWidth,
@@ -4783,25 +4665,6 @@ describe("annotation", function () {
         OPS.setLineJoin,
         OPS.setStrokeRGBColor,
         OPS.constructPath,
-<<<<<<< HEAD
-        OPS.stroke,
-        OPS.endAnnotation,
-      ]);
-
-      // Linewidth.
-      expect(opList.argsArray[1]).toEqual([3]);
-      // LineCap.
-      expect(opList.argsArray[2]).toEqual([1]);
-      // LineJoin.
-      expect(opList.argsArray[3]).toEqual([1]);
-      // Color.
-      expect(opList.argsArray[4]).toEqual(new Uint8ClampedArray([0, 255, 0]));
-      // Path.
-      expect(opList.argsArray[5][0]).toEqual([OPS.moveTo, OPS.curveTo]);
-      expect(opList.argsArray[5][1]).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
-      // Min-max.
-      expect(opList.argsArray[5][2]).toEqual([1, 2, 1, 2]);
-=======
         OPS.endAnnotation,
       ]);
 
@@ -4831,7 +4694,6 @@ describe("annotation", function () {
       ]);
       // Min-max.
       expect(opList.argsArray[5][2]).toEqual(new Float32Array([1, 2, 7, 8]));
->>>>>>> upstream/master
     });
   });
 
@@ -4979,20 +4841,12 @@ describe("annotation", function () {
         null
       );
 
-<<<<<<< HEAD
-      expect(opList.argsArray.length).toEqual(6);
-=======
       expect(opList.argsArray.length).toEqual(5);
->>>>>>> upstream/master
       expect(opList.fnArray).toEqual([
         OPS.beginAnnotation,
         OPS.setFillRGBColor,
         OPS.setGState,
         OPS.constructPath,
-<<<<<<< HEAD
-        OPS.eoFill,
-=======
->>>>>>> upstream/master
         OPS.endAnnotation,
       ]);
     });
@@ -5108,22 +4962,12 @@ describe("annotation", function () {
         null
       );
 
-<<<<<<< HEAD
-      expect(opList.argsArray.length).toEqual(6);
-=======
       expect(opList.argsArray.length).toEqual(5);
->>>>>>> upstream/master
       expect(opList.fnArray).toEqual([
         OPS.beginAnnotation,
         OPS.setFillRGBColor,
         OPS.setGState,
         OPS.constructPath,
-<<<<<<< HEAD
-        OPS.fill,
-        OPS.endAnnotation,
-      ]);
-    });
-=======
         OPS.endAnnotation,
       ]);
     });
@@ -5236,7 +5080,6 @@ describe("annotation", function () {
           "endobj\n"
       );
     });
->>>>>>> upstream/master
   });
 
   describe("UnderlineAnnotation", function () {
@@ -5362,8 +5205,6 @@ describe("annotation", function () {
       expect(data.quadPoints).toEqual(
         Float32Array.from([10, 20, 20, 20, 10, 10, 20, 10])
       );
-<<<<<<< HEAD
-=======
     });
   });
 
@@ -5415,7 +5256,6 @@ describe("annotation", function () {
           "endstream\n" +
           "endobj\n"
       );
->>>>>>> upstream/master
     });
   });
 });

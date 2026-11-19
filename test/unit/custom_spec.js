@@ -33,11 +33,6 @@ describe("custom canvas rendering", function () {
   let loadingTask, doc, page;
 
   beforeAll(async function () {
-<<<<<<< HEAD
-    CanvasFactory = new DefaultCanvasFactory({});
-
-=======
->>>>>>> upstream/master
     loadingTask = getDocument(transparentGetDocumentParams);
     doc = await loadingTask.promise;
     page = await doc.getPage(1);

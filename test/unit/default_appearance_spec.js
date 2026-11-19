@@ -20,10 +20,7 @@ import {
 } from "../../src/core/default_appearance.js";
 import { Dict, Name } from "../../src/core/primitives.js";
 import { NullStream, StringStream } from "../../src/core/stream.js";
-<<<<<<< HEAD
-=======
 import { GlobalColorSpaceCache } from "../../src/core/image_utils.js";
->>>>>>> upstream/master
 import { XRefMock } from "./test_utils.js";
 
 describe("Default appearance", function () {
@@ -60,11 +57,7 @@ describe("Default appearance", function () {
   });
 
   describe("parseAppearanceStream", () => {
-<<<<<<< HEAD
-    let evaluatorOptions, xref;
-=======
     let evaluatorOptions, xref, globalColorSpaceCache;
->>>>>>> upstream/master
 
     beforeAll(function () {
       evaluatorOptions = {
@@ -72,19 +65,13 @@ describe("Default appearance", function () {
         isOffscreenCanvasSupported: false,
       };
       xref = new XRefMock();
-<<<<<<< HEAD
-=======
       globalColorSpaceCache = new GlobalColorSpaceCache();
->>>>>>> upstream/master
     });
 
     afterAll(function () {
       evaluatorOptions = null;
       xref = null;
-<<<<<<< HEAD
-=======
       globalColorSpaceCache = null;
->>>>>>> upstream/master
     });
 
     it("should parse a FreeText (from Acrobat) appearance", () => {
@@ -117,11 +104,6 @@ describe("Default appearance", function () {
         fontName: "Helv",
         fontColor: new Uint8ClampedArray([107, 217, 41]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -130,7 +112,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
 
@@ -149,11 +130,6 @@ describe("Default appearance", function () {
         fontName: "Helv",
         fontColor: new Uint8ClampedArray([237, 43, 112]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -162,7 +138,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
 
@@ -197,11 +172,6 @@ describe("Default appearance", function () {
         fontName: "TT1",
         fontColor: new Uint8ClampedArray([135, 78, 254]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -210,7 +180,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
 
@@ -231,11 +200,6 @@ describe("Default appearance", function () {
         fontName: "Helv",
         fontColor: new Uint8ClampedArray([16, 124, 16]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -244,7 +208,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
 
@@ -268,11 +231,6 @@ describe("Default appearance", function () {
         fontName: "FXF0",
         fontColor: new Uint8ClampedArray([149, 63, 60]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -281,7 +239,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
 
@@ -303,11 +260,6 @@ describe("Default appearance", function () {
         fontName: "Invalid_font",
         fontColor: new Uint8ClampedArray([0, 85, 127]),
       };
-<<<<<<< HEAD
-      expect(parseAppearanceStream(appearance, evaluatorOptions, xref)).toEqual(
-        result
-      );
-=======
       expect(
         parseAppearanceStream(
           appearance,
@@ -316,7 +268,6 @@ describe("Default appearance", function () {
           globalColorSpaceCache
         )
       ).toEqual(result);
->>>>>>> upstream/master
       expect(appearance.pos).toEqual(0);
     });
   });

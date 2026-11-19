@@ -18,10 +18,7 @@ import {
   bytesToString,
   createValidAbsoluteUrl,
   getModificationDate,
-<<<<<<< HEAD
-=======
   getUuid,
->>>>>>> upstream/master
   string32,
   stringToBytes,
   stringToPDFString,
@@ -253,8 +250,6 @@ describe("util", function () {
       expect(getModificationDate(date.toString())).toEqual("31410609020653");
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("getUuid", function () {
     it("should get uuid string", function () {
@@ -263,5 +258,4 @@ describe("util", function () {
       expect(uuid.length).toBeGreaterThanOrEqual(32);
     });
   });
->>>>>>> upstream/master
 });

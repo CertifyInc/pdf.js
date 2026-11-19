@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } B)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } B)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } B)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Tytuł:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Temat:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Data modyfikacji:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Utworzony przez:
 pdfjs-document-properties-producer = PDF wyprodukowany przez:
 pdfjs-document-properties-version = Wersja PDF:
@@ -283,13 +265,6 @@ pdfjs-rendering-error = Podczas renderowania strony wystąpił błąd.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -303,11 +278,7 @@ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", tim
 
 ## Password
 
-<<<<<<< HEAD
-pdfjs-password-label = Wprowadź hasło, aby otworzyć ten dokument PDF.
-=======
 pdfjs-password-label = Wpisz hasło, aby otworzyć ten dokument PDF.
->>>>>>> upstream/master
 pdfjs-password-invalid = Nieprawidłowe hasło. Proszę spróbować ponownie.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Anuluj
@@ -317,11 +288,6 @@ pdfjs-web-fonts-disabled = Czcionki sieciowe są wyłączone: nie można użyć 
 
 pdfjs-editor-free-text-button =
     .title = Tekst
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Tekst
-pdfjs-editor-ink-button =
-    .title = Rysunek
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Zmień kolor tekstu
 pdfjs-editor-free-text-button-label = Tekst
@@ -329,7 +295,6 @@ pdfjs-editor-ink-button =
     .title = Rysunek
 pdfjs-editor-color-picker-ink-input =
     .title = Zmień kolor rysunku
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Rysunek
 pdfjs-editor-stamp-button =
     .title = Dodaj lub edytuj obrazy
@@ -341,8 +306,6 @@ pdfjs-highlight-floating-button1 =
     .title = Wyróżnij
     .aria-label = Wyróżnij
 pdfjs-highlight-floating-button-label = Wyróżnij
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Dodaj komentarz
     .aria-label = Dodaj komentarz
@@ -370,7 +333,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Edytor podpisu: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Edytor obrazu
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -382,11 +344,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Usuń obraz
 pdfjs-editor-remove-highlight-button =
     .title = Usuń wyróżnienie
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Usuń podpis
->>>>>>> upstream/master
 
 ##
 
@@ -403,21 +362,6 @@ pdfjs-editor-stamp-add-image-button-label = Dodaj obraz
 pdfjs-editor-free-highlight-thickness-input = Grubość
 pdfjs-editor-free-highlight-thickness-title =
     .title = Zmień grubość podczas wyróżniania elementów innych niż tekst
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Edytor tekstu
-pdfjs-free-text-default-content = Zacznij pisać…
-pdfjs-ink =
-    .aria-label = Edytor rysunku
-pdfjs-ink-canvas =
-    .aria-label = Obraz utworzony przez użytkownika
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Tekst alternatywny
-pdfjs-editor-alt-text-edit-button-label = Edytuj tekst alternatywny
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Sterowanie podpisami i zachowane podpisy
 pdfjs-editor-signature-add-signature-button =
@@ -453,7 +397,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = Więcej informacji
 pdfjs-editor-alt-text-button-label = Tekst alternatywny
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Edytuj tekst alternatywny
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Wybierz opcję
 pdfjs-editor-alt-text-dialog-description = Tekst alternatywny pomaga, kiedy ktoś nie może zobaczyć obrazu lub gdy się nie wczytuje.
 pdfjs-editor-alt-text-add-description-label = Dodaj opis
@@ -466,27 +409,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Oznaczone jako dekoracyjne
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Na przykład: „Młody człowiek siada przy stole, aby zjeść posiłek”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Tekst alternatywny
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Lewy górny róg — zmień rozmiar
-pdfjs-editor-resizer-label-top-middle = Górny środkowy — zmień rozmiar
-pdfjs-editor-resizer-label-top-right = Prawy górny róg — zmień rozmiar
-pdfjs-editor-resizer-label-middle-right = Prawy środkowy — zmień rozmiar
-pdfjs-editor-resizer-label-bottom-right = Prawy dolny róg — zmień rozmiar
-pdfjs-editor-resizer-label-bottom-middle = Dolny środkowy — zmień rozmiar
-pdfjs-editor-resizer-label-bottom-left = Lewy dolny róg — zmień rozmiar
-pdfjs-editor-resizer-label-middle-left = Lewy środkowy — zmień rozmiar
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Lewy górny róg — zmień rozmiar
 pdfjs-editor-resizer-top-middle =
@@ -552,16 +481,6 @@ pdfjs-editor-new-alt-text-error-close-button = Zamknij
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Pobieranie modelu SI tekstu alternatywnego ({ $downloadedSize } z { $totalSize } MB)
-    .aria-valuetext = Pobieranie modelu SI tekstu alternatywnego ({ $downloadedSize } z { $totalSize } MB)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = Dodano tekst alternatywny
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = Brak tekstu alternatywnego
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Pobieranie modelu SI tekstu alternatywnego ({ $downloadedSize } z { $totalSize } MB)
     .aria-valuetext = Pobieranie modelu SI tekstu alternatywnego ({ $downloadedSize } z { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -575,7 +494,6 @@ pdfjs-editor-new-alt-text-missing-button-label = Brak tekstu alternatywnego
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = Przejrzyj tekst alternatywny
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Przejrzyj tekst alternatywny
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -602,8 +520,6 @@ pdfjs-editor-alt-text-settings-editor-title = Edytor tekstu alternatywnego
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Wyświetlanie edytora tekstu alternatywnego od razu po dodaniu obrazu
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomaga upewnić się, że wszystkie obrazy mają tekst alternatywny.
 pdfjs-editor-alt-text-settings-close-button = Zamknij
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -733,4 +649,3 @@ pdfjs-editor-add-signature-edit-button-label = Edytuj opis
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Edycja opisu
->>>>>>> upstream/master

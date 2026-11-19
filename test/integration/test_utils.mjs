@@ -17,22 +17,15 @@ import os from "os";
 
 const isMac = os.platform() === "darwin";
 
-<<<<<<< HEAD
-function loadAndWait(filename, selector, zoom, setups, options) {
-=======
 function loadAndWait(filename, selector, zoom, setups, options, viewport) {
->>>>>>> upstream/master
   return Promise.all(
     global.integrationSessions.map(async session => {
       const page = await session.browser.newPage();
 
-<<<<<<< HEAD
-=======
       if (viewport) {
         await page.setViewport(viewport);
       }
 
->>>>>>> upstream/master
       // In order to avoid errors because of checks which depend on
       // a locale.
       await page.evaluateOnNewDocument(() => {
@@ -56,15 +49,6 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
             : options;
 
         // Options must be handled in app.js::_parseHashParams.
-<<<<<<< HEAD
-        for (const [key, value] of Object.entries(optionsObject)) {
-          app_options += `&${key}=${encodeURIComponent(value)}`;
-        }
-      }
-      const url = `${
-        global.integrationBaseUrl
-      }?file=/test/pdfs/${filename}#zoom=${zoom ?? "page-fit"}${app_options}`;
-=======
         for (const [key, value] of Object.entries(optionsObject || {})) {
           app_options += `&${key}=${encodeURIComponent(value)}`;
         }
@@ -74,7 +58,6 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
         ? filename
         : `/test/pdfs/${filename}`;
       const url = `${global.integrationBaseUrl}?file=${fileParam}#zoom=${zoom ?? "page-fit"}${app_options}`;
->>>>>>> upstream/master
 
       if (setups) {
         // page.evaluateOnNewDocument allows us to run code before the
@@ -156,16 +139,6 @@ function closePages(pages) {
   return Promise.all(pages.map(([_, page]) => closeSinglePage(page)));
 }
 
-<<<<<<< HEAD
-function isVisible(page, selector) {
-  return page.evaluate(
-    sel => document.querySelector(sel)?.checkVisibility(),
-    selector
-  );
-}
-
-=======
->>>>>>> upstream/master
 async function closeSinglePage(page) {
   // Avoid to keep something from a previous test.
   await page.evaluate(async () => {
@@ -185,27 +158,6 @@ async function waitForSandboxTrip(page) {
   await awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-=======
-async function waitForDOMMutation(page, callback) {
-  return page.evaluateHandle(
-    cb => [
-      new Promise(resolve => {
-        const mutationObserver = new MutationObserver(mutationList => {
-          // eslint-disable-next-line no-eval
-          if (eval(`(${cb})`)(mutationList)) {
-            mutationObserver.disconnect();
-            resolve();
-          }
-        });
-        mutationObserver.observe(document, { childList: true, subtree: true });
-      }),
-    ],
-    callback.toString()
-  );
-}
-
->>>>>>> upstream/master
 function waitForTimeout(milliseconds) {
   /**
    * Wait for the given number of milliseconds.
@@ -246,15 +198,12 @@ async function waitAndClick(page, selector, clickOptions = {}) {
   await page.click(selector, clickOptions);
 }
 
-<<<<<<< HEAD
-=======
 function waitForPointerUp(page) {
   return createPromise(page, resolve => {
     window.addEventListener("pointerup", resolve, { once: true });
   });
 }
 
->>>>>>> upstream/master
 function getSelector(id) {
   return `[data-element-id="${id}"]`;
 }
@@ -283,23 +232,6 @@ function getEditorSelector(n) {
 
 function getAnnotationSelector(id) {
   return `[data-annotation-id="${id}"]`;
-}
-
-<<<<<<< HEAD
-function getSelectedEditors(page) {
-  return page.evaluate(() => {
-    const elements = document.querySelectorAll(".selectedEditor");
-    const results = [];
-    for (const { id } of elements) {
-      results.push(parseInt(id.split("_").at(-1)));
-    }
-    results.sort();
-    return results;
-  });
-=======
-function getThumbnailSelector(pageNumber) {
-  return `.thumbnailImage[data-l10n-args='{"page":${pageNumber}}']`;
->>>>>>> upstream/master
 }
 
 async function getSpanRectFromText(page, pageNumber, text) {
@@ -378,15 +310,12 @@ async function waitForEvent({
   }
 }
 
-<<<<<<< HEAD
-=======
 async function countStorageEntries(page) {
   return page.evaluate(
     () => window.PDFViewerApplication.pdfDocument.annotationStorage.size
   );
 }
 
->>>>>>> upstream/master
 async function waitForStorageEntries(page, nEntries) {
   return page.waitForFunction(
     n => window.PDFViewerApplication.pdfDocument.annotationStorage.size === n,
@@ -395,8 +324,6 @@ async function waitForStorageEntries(page, nEntries) {
   );
 }
 
-<<<<<<< HEAD
-=======
 async function countSerialized(page) {
   return page.evaluate(
     () =>
@@ -405,7 +332,6 @@ async function countSerialized(page) {
   );
 }
 
->>>>>>> upstream/master
 async function waitForSerialized(page, nEntries) {
   return page.waitForFunction(
     n => {
@@ -440,8 +366,6 @@ async function applyFunctionToEditor(page, editorId, func) {
   );
 }
 
-<<<<<<< HEAD
-=======
 async function selectEditor(page, selector, count = 1) {
   const editorRect = await getRect(page, selector);
   await page.mouse.click(
@@ -452,19 +376,15 @@ async function selectEditor(page, selector, count = 1) {
   await waitForSelectedEditor(page, selector);
 }
 
->>>>>>> upstream/master
 async function waitForSelectedEditor(page, selector) {
   return page.waitForSelector(`${selector}.selectedEditor`);
 }
 
-<<<<<<< HEAD
-=======
 async function unselectEditor(page, selector) {
   await page.keyboard.press("Escape");
   await waitForUnselectedEditor(page, selector);
 }
 
->>>>>>> upstream/master
 async function waitForUnselectedEditor(page, selector) {
   return page.waitForSelector(`${selector}:not(.selectedEditor)`);
 }
@@ -555,13 +475,8 @@ async function getFirstSerialized(page, filter = undefined) {
 function getAnnotationStorage(page) {
   return page.evaluate(() =>
     Object.fromEntries(
-<<<<<<< HEAD
-      window.PDFViewerApplication.pdfDocument.annotationStorage.serializable.map?.entries() ||
-        []
-=======
       window.PDFViewerApplication.pdfDocument.annotationStorage.serializable
         .map || []
->>>>>>> upstream/master
     )
   );
 }
@@ -586,39 +501,23 @@ function getEditors(page, kind) {
     const elements = document.querySelectorAll(`.${aKind}Editor`);
     const results = [];
     for (const { id } of elements) {
-<<<<<<< HEAD
-      results.push(id);
-    }
-=======
       results.push(parseInt(id.split("_").at(-1)));
     }
     results.sort();
->>>>>>> upstream/master
     return results;
   }, kind);
 }
 
-<<<<<<< HEAD
-function getEditorDimensions(page, id) {
-  return page.evaluate(n => {
-    const element = document.getElementById(`pdfjs_internal_editor_${n}`);
-    const { style } = element;
-=======
 function getEditorDimensions(page, selector) {
   return page.evaluate(sel => {
     const { style } = document.querySelector(sel);
->>>>>>> upstream/master
     return {
       left: style.left,
       top: style.top,
       width: style.width,
       height: style.height,
     };
-<<<<<<< HEAD
-  }, id);
-=======
   }, selector);
->>>>>>> upstream/master
 }
 
 async function serializeBitmapDimensions(page) {
@@ -645,12 +544,6 @@ async function serializeBitmapDimensions(page) {
   });
 }
 
-<<<<<<< HEAD
-async function dragAndDropAnnotation(page, startX, startY, tX, tY) {
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-  await page.mouse.move(startX + tX, startY + tY);
-=======
 async function dragAndDrop(page, selector, translations, steps = 1) {
   const rect = await getRect(page, selector);
   const startX = rect.x + rect.width / 2;
@@ -660,13 +553,10 @@ async function dragAndDrop(page, selector, translations, steps = 1) {
   for (const [tX, tY] of translations) {
     await page.mouse.move(startX + tX, startY + tY, { steps });
   }
->>>>>>> upstream/master
   await page.mouse.up();
   await page.waitForSelector("#viewer:not(.noUserSelect)");
 }
 
-<<<<<<< HEAD
-=======
 function waitForPageChanging(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on("pagechanging", resolve, {
@@ -675,7 +565,6 @@ function waitForPageChanging(page) {
   });
 }
 
->>>>>>> upstream/master
 function waitForAnnotationEditorLayer(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on(
@@ -696,11 +585,6 @@ function waitForAnnotationModeChanged(page) {
   });
 }
 
-<<<<<<< HEAD
-function waitForPageRendered(page) {
-  return createPromise(page, resolve => {
-    window.PDFViewerApplication.eventBus.on("pagerendered", resolve, {
-=======
 function waitForPageRendered(page, pageNumber) {
   return page.evaluateHandle(
     number => [
@@ -724,7 +608,6 @@ function waitForPageRendered(page, pageNumber) {
 function waitForEditorMovedInDOM(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on("editormovedindom", resolve, {
->>>>>>> upstream/master
       once: true,
     });
   });
@@ -764,14 +647,6 @@ async function firstPageOnTop(page) {
   return awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-async function hover(page, selector) {
-  const rect = await getRect(page, selector);
-  await page.mouse.move(rect.x + rect.width / 2, rect.y + rect.height / 2);
-}
-
-=======
->>>>>>> upstream/master
 async function setCaretAt(page, pageNumber, text, position) {
   await page.evaluate(
     (pageN, string, pos) => {
@@ -931,15 +806,12 @@ async function kbFocusPrevious(page) {
   await awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-=======
 async function kbSave(page) {
   await page.keyboard.down(modifier);
   await page.keyboard.press("s");
   await page.keyboard.up(modifier);
 }
 
->>>>>>> upstream/master
 async function switchToEditor(name, page, disable = false) {
   const modeChangedHandle = await createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on(
@@ -957,11 +829,6 @@ async function switchToEditor(name, page, disable = false) {
   await awaitPromise(modeChangedHandle);
 }
 
-<<<<<<< HEAD
-export {
-  applyFunctionToEditor,
-  awaitPromise,
-=======
 async function selectEditors(name, page) {
   await kbSelectAll(page);
   await page.waitForFunction(
@@ -1066,24 +933,17 @@ export {
   applyFunctionToEditor,
   awaitPromise,
   clearEditors,
->>>>>>> upstream/master
   clearInput,
   closePages,
   closeSinglePage,
   copy,
   copyToClipboard,
-<<<<<<< HEAD
-  createPromise,
-  dragAndDropAnnotation,
-  firstPageOnTop,
-=======
   countSerialized,
   countStorageEntries,
   createPromise,
   dragAndDrop,
   firstPageOnTop,
   FSI,
->>>>>>> upstream/master
   getAnnotationSelector,
   getAnnotationStorage,
   getComputedStyleSelector,
@@ -1091,27 +951,15 @@ export {
   getEditors,
   getEditorSelector,
   getFirstSerialized,
-<<<<<<< HEAD
-  getQuerySelector,
-  getRect,
-  getSelectedEditors,
-  getSelector,
-  getSerialized,
-  getSpanRectFromText,
-  hover,
-  isVisible,
-=======
   getNextEditorId,
   getQuerySelector,
   getRect,
   getSelector,
   getSerialized,
   getSpanRectFromText,
-  getThumbnailSelector,
   getXY,
   highlightSpan,
   isCanvasMonochrome,
->>>>>>> upstream/master
   kbBigMoveDown,
   kbBigMoveLeft,
   kbBigMoveRight,
@@ -1124,28 +972,11 @@ export {
   kbModifierDown,
   kbModifierUp,
   kbRedo,
-<<<<<<< HEAD
-=======
   kbSave,
->>>>>>> upstream/master
   kbSelectAll,
   kbUndo,
   loadAndWait,
   mockClipboard,
-<<<<<<< HEAD
-  paste,
-  pasteFromClipboard,
-  scrollIntoView,
-  serializeBitmapDimensions,
-  setCaretAt,
-  switchToEditor,
-  waitAndClick,
-  waitForAnnotationEditorLayer,
-  waitForAnnotationModeChanged,
-  waitForEntryInStorage,
-  waitForEvent,
-  waitForPageRendered,
-=======
   moveEditor,
   paste,
   pasteFromClipboard,
@@ -1160,14 +991,12 @@ export {
   waitAndClick,
   waitForAnnotationEditorLayer,
   waitForAnnotationModeChanged,
-  waitForDOMMutation,
   waitForEntryInStorage,
   waitForEvent,
   waitForNoElement,
   waitForPageChanging,
   waitForPageRendered,
   waitForPointerUp,
->>>>>>> upstream/master
   waitForSandboxTrip,
   waitForSelectedEditor,
   waitForSerialized,

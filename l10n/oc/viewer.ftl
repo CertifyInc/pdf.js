@@ -104,30 +104,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Proprietats del document…
 pdfjs-document-properties-file-name = Nom del fichièr :
 pdfjs-document-properties-file-size = Talha del fichièr :
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } Ko ({ $size_b } octets)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } Mo ({ $size_b } octets)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Títol :
 pdfjs-document-properties-author = Autor :
 pdfjs-document-properties-subject = Subjècte :
 pdfjs-document-properties-keywords = Mots claus :
 pdfjs-document-properties-creation-date = Data de creacion :
 pdfjs-document-properties-modification-date = Data de modificacion :
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, a { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creator :
 pdfjs-document-properties-producer = Aisina de conversion PDF :
 pdfjs-document-properties-version = Version PDF :
@@ -226,8 +208,6 @@ pdfjs-find-match-diacritics-checkbox-label = Respectar los diacritics
 pdfjs-find-entire-word-checkbox-label = Mots entièrs
 pdfjs-find-reached-top = Naut de la pagina atenh, perseguida del bas
 pdfjs-find-reached-bottom = Bas de la pagina atench, perseguida al començament
-<<<<<<< HEAD
-=======
 # Variables:
 #   $current (Number) - the index of the currently active find result
 #   $total (Number) - the total number of matches in the document
@@ -243,7 +223,6 @@ pdfjs-find-match-count-limit =
         [one] Mai de { $limit } ocurréncia
        *[other] Mai de { $limit } ocurréncias
     }
->>>>>>> upstream/master
 pdfjs-find-not-found = Frasa pas trobada
 
 ## Predefined zoom values
@@ -273,13 +252,6 @@ pdfjs-rendering-error = Una error s'es producha pendent l'afichatge de la pagina
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } a { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -287,12 +259,9 @@ pdfjs-annotation-date-string = { $date } a { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Anotacion { $type }]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -345,21 +314,6 @@ pdfjs-editor-stamp-add-image-button =
 pdfjs-editor-stamp-add-image-button-label = Apondre imatge
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Espessor
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor de tèxte
-pdfjs-free-text-default-content = Començatz d’escriure…
-pdfjs-ink =
-    .aria-label = Editor de dessenh
-pdfjs-ink-canvas =
-    .aria-label = Imatge creat per l’utilizaire
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Tèxt alternatiu
-pdfjs-editor-alt-text-edit-button-label = Modificar lo tèxt alternatiu
-=======
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Editor de tèxte
@@ -368,19 +322,11 @@ pdfjs-free-text2 =
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Tèxt alternatiu
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Causir una opcion
 pdfjs-editor-alt-text-add-description-label = Apondre una descripcion
 pdfjs-editor-alt-text-cancel-button = Anullar
 pdfjs-editor-alt-text-save-button = Enregistrar
 
-<<<<<<< HEAD
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-
-=======
->>>>>>> upstream/master
 ## Color picker
 
 # This means "Color used to highlight text"
@@ -406,8 +352,6 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = O afichar tot
 pdfjs-editor-highlight-show-all-button =
     .title = O afichar tot
-<<<<<<< HEAD
-=======
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
@@ -435,4 +379,3 @@ pdfjs-editor-undo-bar-undo-button-label = Anullar
 pdfjs-editor-undo-bar-close-button =
     .title = Tampar
 pdfjs-editor-undo-bar-close-button-label = Tampar
->>>>>>> upstream/master

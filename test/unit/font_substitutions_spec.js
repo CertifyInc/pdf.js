@@ -140,11 +140,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+)$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard font", () => {
->>>>>>> upstream/master
     const fontName = "Foo";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -176,11 +172,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard italic font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard italic font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-Italic";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -214,11 +206,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard bold font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard bold font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-Bold";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -251,11 +239,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard bold italic font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard bold italic font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-BoldItalic";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -291,8 +275,6 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-=======
   it("should substitute an unknown serif font but with a standard font", () => {
     const fontName = "Foo";
     const fontSubstitution = getFontSubstitution(
@@ -423,7 +405,6 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),serif$/);
   });
 
->>>>>>> upstream/master
   it("should substitute Calibri", () => {
     const fontName = "Calibri";
     const fontSubstitution = getFontSubstitution(

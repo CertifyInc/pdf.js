@@ -24,13 +24,17 @@ import {
   getVisibleElements,
   isValidRotation,
   RenderingStates,
-  scrollIntoView,
   watchScroll,
 } from "./ui_utils.js";
-import { PDFThumbnailView, TempImageFactory } from "./pdf_thumbnail_view.js";
+import { MathClamp, stopEvent } from "pdfjs-lib";
+import { PDFThumbnailView } from "./pdf_thumbnail_view.js";
 
-const THUMBNAIL_SCROLL_MARGIN = -19;
-const THUMBNAIL_SELECTED_CLASS = "selected";
+const SCROLL_OPTIONS = {
+  behavior: "instant",
+  block: "nearest",
+  inline: "nearest",
+  container: "nearest",
+};
 
 /**
  * @typedef {Object} PDFThumbnailViewerOptions
@@ -39,6 +43,12 @@ const THUMBNAIL_SELECTED_CLASS = "selected";
  * @property {EventBus} eventBus - The application event bus.
  * @property {IPDFLinkService} linkService - The navigation/linking service.
  * @property {PDFRenderingQueue} renderingQueue - The rendering queue object.
+ * @property {number} [maxCanvasPixels] - The maximum supported canvas size in
+ *   total pixels, i.e. width * height. Use `-1` for no limit, or `0` for
+ *   CSS-only zooming. The default value is 4096 * 8192 (32 mega-pixels).
+ * @property {number} [maxCanvasDim] - The maximum supported canvas dimension,
+ *   in either width or height. Use `-1` for no limit.
+ *   The default value is 32767.
  * @property {Object} [pageColors] - Overwrites background and foreground colors
  *   with user defined ones in order to improve readability in high contrast
  *   mode.
@@ -60,23 +70,29 @@ class PDFThumbnailViewer {
     eventBus,
     linkService,
     renderingQueue,
+    maxCanvasPixels,
+    maxCanvasDim,
     pageColors,
     abortSignal,
     enableHWA,
   }) {
+    this.scrollableContainer = container.parentElement;
     this.container = container;
     this.eventBus = eventBus;
     this.linkService = linkService;
     this.renderingQueue = renderingQueue;
+    this.maxCanvasPixels = maxCanvasPixels;
+    this.maxCanvasDim = maxCanvasDim;
     this.pageColors = pageColors || null;
     this.enableHWA = enableHWA || false;
 
     this.scroll = watchScroll(
-      this.container,
+      this.scrollableContainer,
       this.#scrollUpdated.bind(this),
       abortSignal
     );
     this.#resetView();
+    this.#addEventListeners();
   }
 
   #scrollUpdated() {
@@ -89,7 +105,7 @@ class PDFThumbnailViewer {
 
   #getVisibleThumbs() {
     return getVisibleElements({
-      scrollEl: this.container,
+      scrollEl: this.scrollableContainer,
       views: this._thumbnails,
     });
   }
@@ -107,10 +123,9 @@ class PDFThumbnailViewer {
 
     if (pageNumber !== this._currentPageNumber) {
       const prevThumbnailView = this._thumbnails[this._currentPageNumber - 1];
-      // Remove the highlight from the previous thumbnail...
-      prevThumbnailView.div.classList.remove(THUMBNAIL_SELECTED_CLASS);
-      // ... and add the highlight to the new thumbnail.
-      thumbnailView.div.classList.add(THUMBNAIL_SELECTED_CLASS);
+      prevThumbnailView.toggleCurrent(/* isCurrent = */ false);
+      thumbnailView.toggleCurrent(/* isCurrent = */ true);
+      this._currentPageNumber = pageNumber;
     }
     const { first, last, views } = this.#getVisibleThumbs();
 
@@ -129,7 +144,7 @@ class PDFThumbnailViewer {
         }
       }
       if (shouldScroll) {
-        scrollIntoView(thumbnailView.div, { top: THUMBNAIL_SCROLL_MARGIN });
+        thumbnailView.div.scrollIntoView(SCROLL_OPTIONS);
       }
     }
 
@@ -164,7 +179,6 @@ class PDFThumbnailViewer {
         thumbnail.reset();
       }
     }
-    TempImageFactory.destroyCanvas();
   }
 
   #resetView() {
@@ -199,16 +213,19 @@ class PDFThumbnailViewer {
       .then(firstPdfPage => {
         const pagesCount = pdfDocument.numPages;
         const viewport = firstPdfPage.getViewport({ scale: 1 });
+        const fragment = document.createDocumentFragment();
 
         for (let pageNum = 1; pageNum <= pagesCount; ++pageNum) {
           const thumbnail = new PDFThumbnailView({
-            container: this.container,
+            container: fragment,
             eventBus: this.eventBus,
             id: pageNum,
             defaultViewport: viewport.clone(),
             optionalContentConfigPromise,
             linkService: this.linkService,
             renderingQueue: this.renderingQueue,
+            maxCanvasPixels: this.maxCanvasPixels,
+            maxCanvasDim: this.maxCanvasDim,
             pageColors: this.pageColors,
             enableHWA: this.enableHWA,
           });
@@ -221,7 +238,8 @@ class PDFThumbnailViewer {
 
         // Ensure that the current thumbnail is always highlighted on load.
         const thumbnailView = this._thumbnails[this._currentPageNumber - 1];
-        thumbnailView.div.classList.add(THUMBNAIL_SELECTED_CLASS);
+        thumbnailView.toggleCurrent(/* isCurrent = */ true);
+        this.container.append(fragment);
       })
       .catch(reason => {
         console.error("Unable to initialize thumbnail viewer", reason);
@@ -292,7 +310,9 @@ class PDFThumbnailViewer {
     const thumbView = this.renderingQueue.getHighestPriority(
       visibleThumbs,
       this._thumbnails,
-      scrollAhead
+      scrollAhead,
+      /* preRenderExtra */ false,
+      /* ignoreDetailViews */ true
     );
     if (thumbView) {
       this.#ensurePdfPageLoaded(thumbView).then(() => {
@@ -301,6 +321,107 @@ class PDFThumbnailViewer {
       return true;
     }
     return false;
+  }
+
+  #addEventListeners() {
+    this.container.addEventListener("keydown", e => {
+      switch (e.key) {
+        case "ArrowLeft":
+          this.#goToNextItem(e.target, false, true);
+          stopEvent(e);
+          break;
+        case "ArrowRight":
+          this.#goToNextItem(e.target, true, true);
+          stopEvent(e);
+          break;
+        case "ArrowDown":
+          this.#goToNextItem(e.target, true, false);
+          stopEvent(e);
+          break;
+        case "ArrowUp":
+          this.#goToNextItem(e.target, false, false);
+          stopEvent(e);
+          break;
+        case "Home":
+          this._thumbnails[0].image.focus();
+          stopEvent(e);
+          break;
+        case "End":
+          this._thumbnails.at(-1).image.focus();
+          stopEvent(e);
+          break;
+        case "Enter":
+        case " ":
+          this.#goToPage(e);
+          break;
+      }
+    });
+    this.container.addEventListener("click", this.#goToPage.bind(this));
+  }
+
+  #goToPage(e) {
+    const { target } = e;
+    if (target.classList.contains("thumbnailImage")) {
+      const pageNumber = parseInt(
+        target.parentElement.getAttribute("page-number"),
+        10
+      );
+      this.linkService.goToPage(pageNumber);
+      stopEvent(e);
+    }
+  }
+
+  /**
+   * Go to the next/previous menu item.
+   * @param {HTMLElement} element
+   * @param {boolean} forward
+   * @param {boolean} horizontal
+   */
+  #goToNextItem(element, forward, horizontal) {
+    let currentPageNumber = parseInt(
+      element.parentElement.getAttribute("page-number"),
+      10
+    );
+    if (isNaN(currentPageNumber)) {
+      currentPageNumber = this._currentPageNumber;
+    }
+
+    const increment = forward ? 1 : -1;
+    let nextThumbnail;
+    if (horizontal) {
+      const nextPageNumber = MathClamp(
+        currentPageNumber + increment,
+        1,
+        this._thumbnails.length + 1
+      );
+      nextThumbnail = this._thumbnails[nextPageNumber - 1];
+    } else {
+      const currentThumbnail = this._thumbnails[currentPageNumber - 1];
+      const { x: currentX, y: currentY } =
+        currentThumbnail.div.getBoundingClientRect();
+      let firstWithDifferentY;
+      for (
+        let i = currentPageNumber - 1 + increment;
+        i >= 0 && i < this._thumbnails.length;
+        i += increment
+      ) {
+        const thumbnail = this._thumbnails[i];
+        const { x, y } = thumbnail.div.getBoundingClientRect();
+        if (!firstWithDifferentY && y !== currentY) {
+          firstWithDifferentY = thumbnail;
+        }
+        if (x === currentX) {
+          nextThumbnail = thumbnail;
+          break;
+        }
+      }
+      if (!nextThumbnail) {
+        nextThumbnail = firstWithDifferentY;
+      }
+    }
+    if (nextThumbnail) {
+      nextThumbnail.image.focus();
+    }
   }
 }
 

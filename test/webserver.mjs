@@ -38,10 +38,7 @@ const MIME_TYPES = {
   ".log": "text/plain",
   ".bcmap": "application/octet-stream",
   ".ftl": "text/plain",
-<<<<<<< HEAD
-=======
   ".wasm": "application/wasm",
->>>>>>> upstream/master
 };
 const DEFAULT_MIME_TYPE = "application/octet-stream";
 
@@ -56,11 +53,7 @@ class WebServer {
     this.cacheExpirationTime = cacheExpirationTime || 0;
     this.disableRangeRequests = false;
     this.hooks = {
-<<<<<<< HEAD
-      GET: [crossOriginHandler],
-=======
       GET: [crossOriginHandler, redirectHandler],
->>>>>>> upstream/master
       POST: [],
     };
   }
@@ -185,10 +178,7 @@ class WebServer {
       this.#serveFileRange(
         response,
         localURL,
-<<<<<<< HEAD
-=======
         url.searchParams,
->>>>>>> upstream/master
         fileSize,
         start,
         isNaN(end) ? fileSize : end + 1
@@ -319,16 +309,12 @@ class WebServer {
     stream.pipe(response);
   }
 
-<<<<<<< HEAD
-  #serveFileRange(response, fileURL, fileSize, start, end) {
-=======
   #serveFileRange(response, fileURL, searchParams, fileSize, start, end) {
     if (end > fileSize || start > end) {
       response.writeHead(416);
       response.end();
       return;
     }
->>>>>>> upstream/master
     const stream = fs.createReadStream(fileURL, {
       flags: "rs",
       start,
@@ -346,8 +332,6 @@ class WebServer {
       "Content-Range",
       `bytes ${start}-${end - 1}/${fileSize}`
     );
-<<<<<<< HEAD
-=======
 
     // Support test in `test/unit/network_spec.js`.
     switch (searchParams.get("test-network-break-ranges")) {
@@ -358,7 +342,6 @@ class WebServer {
         response.setHeader("Content-Range", "bytes abc-def/qwerty");
         break;
     }
->>>>>>> upstream/master
     response.writeHead(206);
     stream.pipe(response);
   }
@@ -370,28 +353,13 @@ class WebServer {
 }
 
 // This supports the "Cross-origin" test in test/unit/api_spec.js
-<<<<<<< HEAD
-// It is here instead of test.js so that when the test will still complete as
-=======
 // and "Redirects" in test/unit/network_spec.js and
 // test/unit/fetch_stream_spec.js via test/unit/common_pdfstream_tests.js.
 // It is here instead of test.mjs so that when the test will still complete as
->>>>>>> upstream/master
 // expected if the user does "gulp server" and then visits
 // http://localhost:8888/test/unit/unit_test.html?spec=Cross-origin
 function crossOriginHandler(url, request, response) {
   if (url.pathname === "/test/pdfs/basicapi.pdf") {
-<<<<<<< HEAD
-    if (url.searchParams.get("cors") === "withCredentials") {
-      response.setHeader("Access-Control-Allow-Origin", request.headers.origin);
-      response.setHeader("Access-Control-Allow-Credentials", "true");
-    } else if (url.searchParams.get("cors") === "withoutCredentials") {
-      response.setHeader("Access-Control-Allow-Origin", request.headers.origin);
-    }
-  }
-}
-
-=======
     if (!url.searchParams.has("cors") || !request.headers.origin) {
       return;
     }
@@ -446,5 +414,4 @@ function redirectHandler(url, request, response) {
   return false;
 }
 
->>>>>>> upstream/master
 export { WebServer };

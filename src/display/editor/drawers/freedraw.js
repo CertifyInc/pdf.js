@@ -34,7 +34,7 @@ class FreeDrawOutliner {
   // We track the last 3 points in order to be able to:
   //  - compute the normal of the line,
   //  - compute the control points of the quadratic Bézier curve.
-  #last = new Float64Array(18);
+  #last = new Float32Array(18);
 
   #lastX;
 
@@ -302,7 +302,7 @@ class FreeDrawOutliner {
     const last = this.#last;
     const [layerX, layerY, layerWidth, layerHeight] = this.#box;
 
-    const points = new Float64Array((this.#points?.length ?? 0) + 2);
+    const points = new Float32Array((this.#points?.length ?? 0) + 2);
     for (let i = 0, ii = points.length - 2; i < ii; i += 2) {
       points[i] = (this.#points[i] - layerX) / layerWidth;
       points[i + 1] = (this.#points[i + 1] - layerY) / layerHeight;
@@ -315,7 +315,7 @@ class FreeDrawOutliner {
       return this.#getOutlineTwoPoints(points);
     }
 
-    const outline = new Float64Array(
+    const outline = new Float32Array(
       this.#top.length + 24 + this.#bottom.length
     );
     let N = top.length;
@@ -360,7 +360,7 @@ class FreeDrawOutliner {
     const [layerX, layerY, layerWidth, layerHeight] = this.#box;
     const [lastTopX, lastTopY, lastBottomX, lastBottomY] =
       this.#getLastCoords();
-    const outline = new Float64Array(36);
+    const outline = new Float32Array(36);
     outline.set(
       [
         NaN,
@@ -460,7 +460,7 @@ class FreeDrawOutliner {
 class FreeDrawOutline extends Outline {
   #box;
 
-  #bbox = null;
+  #bbox = new Float32Array(4);
 
   #innerMargin;
 
@@ -480,9 +480,11 @@ class FreeDrawOutline extends Outline {
     this.#scaleFactor = scaleFactor;
     this.#innerMargin = innerMargin;
     this.#isLTR = isLTR;
+    this.firstPoint = [NaN, NaN];
+    this.lastPoint = [NaN, NaN];
     this.#computeMinMax(isLTR);
 
-    const { x, y, width, height } = this.#bbox;
+    const [x, y, width, height] = this.#bbox;
     for (let i = 0, ii = outline.length; i < ii; i += 2) {
       outline[i] = (outline[i] - x) / width;
       outline[i + 1] = (outline[i + 1] - y) / height;
@@ -517,99 +519,116 @@ class FreeDrawOutline extends Outline {
     let points;
     switch (rotation) {
       case 0:
-        outline = this.#rescale(this.#outline, blX, trY, width, -height);
-        points = this.#rescale(this.#points, blX, trY, width, -height);
+        outline = Outline._rescale(this.#outline, blX, trY, width, -height);
+        points = Outline._rescale(this.#points, blX, trY, width, -height);
         break;
       case 90:
-        outline = this.#rescaleAndSwap(this.#outline, blX, blY, width, height);
-        points = this.#rescaleAndSwap(this.#points, blX, blY, width, height);
+        outline = Outline._rescaleAndSwap(
+          this.#outline,
+          blX,
+          blY,
+          width,
+          height
+        );
+        points = Outline._rescaleAndSwap(this.#points, blX, blY, width, height);
         break;
       case 180:
-        outline = this.#rescale(this.#outline, trX, blY, -width, height);
-        points = this.#rescale(this.#points, trX, blY, -width, height);
+        outline = Outline._rescale(this.#outline, trX, blY, -width, height);
+        points = Outline._rescale(this.#points, trX, blY, -width, height);
         break;
       case 270:
-        outline = this.#rescaleAndSwap(
+        outline = Outline._rescaleAndSwap(
           this.#outline,
           trX,
           trY,
           -width,
           -height
         );
-        points = this.#rescaleAndSwap(this.#points, trX, trY, -width, -height);
+        points = Outline._rescaleAndSwap(
+          this.#points,
+          trX,
+          trY,
+          -width,
+          -height
+        );
         break;
     }
     return { outline: Array.from(outline), points: [Array.from(points)] };
-  }
-
-  #rescale(src, tx, ty, sx, sy) {
-    const dest = new Float64Array(src.length);
-    for (let i = 0, ii = src.length; i < ii; i += 2) {
-      dest[i] = tx + src[i] * sx;
-      dest[i + 1] = ty + src[i + 1] * sy;
-    }
-    return dest;
-  }
-
-  #rescaleAndSwap(src, tx, ty, sx, sy) {
-    const dest = new Float64Array(src.length);
-    for (let i = 0, ii = src.length; i < ii; i += 2) {
-      dest[i] = tx + src[i + 1] * sx;
-      dest[i + 1] = ty + src[i] * sy;
-    }
-    return dest;
   }
 
   #computeMinMax(isLTR) {
     const outline = this.#outline;
     let lastX = outline[4];
     let lastY = outline[5];
-    let minX = lastX;
-    let minY = lastY;
-    let maxX = lastX;
-    let maxY = lastY;
+    const minMax = [lastX, lastY, lastX, lastY];
+    let firstPointX = lastX;
+    let firstPointY = lastY;
     let lastPointX = lastX;
     let lastPointY = lastY;
     const ltrCallback = isLTR ? Math.max : Math.min;
+    const bezierBbox = new Float32Array(4);
 
     for (let i = 6, ii = outline.length; i < ii; i += 6) {
+      const x = outline[i + 4],
+        y = outline[i + 5];
+
       if (isNaN(outline[i])) {
-        minX = Math.min(minX, outline[i + 4]);
-        minY = Math.min(minY, outline[i + 5]);
-        maxX = Math.max(maxX, outline[i + 4]);
-        maxY = Math.max(maxY, outline[i + 5]);
-        if (lastPointY < outline[i + 5]) {
-          lastPointX = outline[i + 4];
-          lastPointY = outline[i + 5];
-        } else if (lastPointY === outline[i + 5]) {
-          lastPointX = ltrCallback(lastPointX, outline[i + 4]);
+        Util.pointBoundingBox(x, y, minMax);
+
+        if (firstPointY > y) {
+          firstPointX = x;
+          firstPointY = y;
+        } else if (firstPointY === y) {
+          firstPointX = ltrCallback(firstPointX, x);
+        }
+        if (lastPointY < y) {
+          lastPointX = x;
+          lastPointY = y;
+        } else if (lastPointY === y) {
+          lastPointX = ltrCallback(lastPointX, x);
         }
       } else {
-        const bbox = Util.bezierBoundingBox(
+        bezierBbox[0] = bezierBbox[1] = Infinity;
+        bezierBbox[2] = bezierBbox[3] = -Infinity;
+        Util.bezierBoundingBox(
           lastX,
           lastY,
-          ...outline.slice(i, i + 6)
+          ...outline.slice(i, i + 6),
+          bezierBbox
         );
-        minX = Math.min(minX, bbox[0]);
-        minY = Math.min(minY, bbox[1]);
-        maxX = Math.max(maxX, bbox[2]);
-        maxY = Math.max(maxY, bbox[3]);
-        if (lastPointY < bbox[3]) {
-          lastPointX = bbox[2];
-          lastPointY = bbox[3];
-        } else if (lastPointY === bbox[3]) {
-          lastPointX = ltrCallback(lastPointX, bbox[2]);
+
+        Util.rectBoundingBox(
+          bezierBbox[0],
+          bezierBbox[1],
+          bezierBbox[2],
+          bezierBbox[3],
+          minMax
+        );
+
+        if (firstPointY > bezierBbox[1]) {
+          firstPointX = bezierBbox[0];
+          firstPointY = bezierBbox[1];
+        } else if (firstPointY === bezierBbox[1]) {
+          firstPointX = ltrCallback(firstPointX, bezierBbox[0]);
+        }
+        if (lastPointY < bezierBbox[3]) {
+          lastPointX = bezierBbox[2];
+          lastPointY = bezierBbox[3];
+        } else if (lastPointY === bezierBbox[3]) {
+          lastPointX = ltrCallback(lastPointX, bezierBbox[2]);
         }
       }
-      lastX = outline[i + 4];
-      lastY = outline[i + 5];
+      lastX = x;
+      lastY = y;
     }
 
-    const x = minX - this.#innerMargin,
-      y = minY - this.#innerMargin,
-      width = maxX - minX + 2 * this.#innerMargin,
-      height = maxY - minY + 2 * this.#innerMargin;
-    this.#bbox = { x, y, width, height, lastPoint: [lastPointX, lastPointY] };
+    const bbox = this.#bbox;
+    bbox[0] = minMax[0] - this.#innerMargin;
+    bbox[1] = minMax[1] - this.#innerMargin;
+    bbox[2] = minMax[2] - minMax[0] + 2 * this.#innerMargin;
+    bbox[3] = minMax[3] - minMax[1] + 2 * this.#innerMargin;
+    this.firstPoint = [firstPointX, firstPointY];
+    this.lastPoint = [lastPointX, lastPointY];
   }
 
   get box() {
@@ -629,7 +648,7 @@ class FreeDrawOutline extends Outline {
 
   getNewOutline(thickness, innerMargin) {
     // Build the outline of the highlight to use as the focus outline.
-    const { x, y, width, height } = this.#bbox;
+    const [x, y, width, height] = this.#bbox;
     const [layerX, layerY, layerWidth, layerHeight] = this.#box;
     const sx = width * layerWidth;
     const sy = height * layerHeight;
@@ -653,10 +672,6 @@ class FreeDrawOutline extends Outline {
       });
     }
     return outliner.getOutlines();
-  }
-
-  get mustRemoveSelfIntersections() {
-    return true;
   }
 }
 

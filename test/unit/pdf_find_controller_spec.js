@@ -128,11 +128,7 @@ function testSearch({
       }
     }
 
-<<<<<<< HEAD
-    const totalMatches = matchesPerPage.reduce((a, b) => a + b);
-=======
     const totalMatches = Math.sumPrecise(matchesPerPage);
->>>>>>> upstream/master
 
     if (updateFindControlState) {
       eventBus.on(
@@ -638,13 +634,8 @@ describe("pdf_find_controller", function () {
         pageIndex: 0,
         matchIndex: 0,
       },
-<<<<<<< HEAD
-      pageMatches: [[1497]],
-      pageMatchesLength: [[25]],
-=======
       pageMatches: [[1498]],
       pageMatchesLength: [[24]],
->>>>>>> upstream/master
     });
   });
 
@@ -1071,27 +1062,16 @@ describe("pdf_find_controller", function () {
     await testOnFind({ eventBus });
   });
 
-<<<<<<< HEAD
-  it("performs a search in a text with compound word on two lines", async function () {
-    const { eventBus, pdfFindController } =
-      await initPdfFindController("issue18693.pdf");
-
-=======
   it("performs a search in a text with a compound word on two lines", async function () {
     const { eventBus, pdfFindController } =
       await initPdfFindController("issue18693.pdf");
 
     const query = "hel-Lo";
->>>>>>> upstream/master
     await testSearch({
       eventBus,
       pdfFindController,
       state: {
-<<<<<<< HEAD
-        query: "hel-Lo",
-=======
         query,
->>>>>>> upstream/master
       },
       matchesPerPage: [1],
       selectedMatch: {
@@ -1099,9 +1079,6 @@ describe("pdf_find_controller", function () {
         matchIndex: 0,
       },
       pageMatches: [[6]],
-<<<<<<< HEAD
-      pageMatchesLength: [[7]],
-=======
       pageMatchesLength: [[query.length]],
     });
   });
@@ -1198,7 +1175,6 @@ describe("pdf_find_controller", function () {
       },
       pageMatches: [[6]],
       pageMatchesLength: [[10]],
->>>>>>> upstream/master
     });
   });
 

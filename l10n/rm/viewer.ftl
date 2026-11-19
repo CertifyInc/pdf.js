@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titel:
 pdfjs-document-properties-author = Autur:
 pdfjs-document-properties-subject = Tema:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Data da modificaziun:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creà da:
 pdfjs-document-properties-producer = Creà il PDF cun:
 pdfjs-document-properties-version = Versiun da PDF:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Ina errur è cumparida cun visualisar questa pagina.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Scrittiras dal web èn deactivadas: impussibel dad ut
 
 pdfjs-editor-free-text-button =
     .title = Text
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Text
-pdfjs-editor-ink-button =
-    .title = Dissegnar
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Midar la colur dal text
 pdfjs-editor-free-text-button-label = Text
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Dissegnar
 pdfjs-editor-color-picker-ink-input =
     .title = Midar la colur per dissegnar
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Dissegnar
 pdfjs-editor-stamp-button =
     .title = Agiuntar u modifitgar maletgs
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Marcar
     .aria-label = Marcar
 pdfjs-highlight-floating-button-label = Marcar
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Commentar
     .aria-label = Commentar
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Editur da signatura: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Editur per maletgs
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Allontanar la grafica
 pdfjs-editor-remove-highlight-button =
     .title = Allontanar l'emfasa
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Allontanar la signatura
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Agiuntar in maletg
 pdfjs-editor-free-highlight-thickness-input = Grossezza
 pdfjs-editor-free-highlight-thickness-title =
     .title = Midar la grossezza cun relevar elements betg textuals
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Controllas da signatura e signaturas memorisadas
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Agiuntar ina nova signatura
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Signatura memorisada: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Editur da text
     .default-content = Cumenza a tippar…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editur da text
-pdfjs-free-text-default-content = Cumenzar a tippar…
-pdfjs-ink =
-    .aria-label = Editur dissegn
-pdfjs-ink-canvas =
-    .aria-label = Maletg creà da l'utilisader
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Serrar la trav laterala
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Vesas insatge interessant? Marchescha la passascha ed agiuntescha in commentari.
 pdfjs-editor-comments-sidebar-no-comments-link = Ulteriuras infurmaziuns
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Text alternativ
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Modifitgar il text alternativ
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Modifitgar il text alternativ
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Tscherner ina opziun
 pdfjs-editor-alt-text-dialog-description = Il text alternativ (alt text) gida en cas che persunas na vesan betg il maletg u sch'i na reussescha betg d'al chargiar.
 pdfjs-editor-alt-text-add-description-label = Agiuntar ina descripziun
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Chantun sura a sanestra — redimensiunar
-pdfjs-editor-resizer-label-top-middle = Sura amez — redimensiunar
-pdfjs-editor-resizer-label-top-right = Chantun sura a dretga — redimensiunar
-pdfjs-editor-resizer-label-middle-right = Da vart dretga amez — redimensiunar
-pdfjs-editor-resizer-label-bottom-right = Chantun sut a dretga — redimensiunar
-pdfjs-editor-resizer-label-bottom-middle = Sutvart amez — redimensiunar
-pdfjs-editor-resizer-label-bottom-left = Chantun sut a sanestra — redimensiunar
-pdfjs-editor-resizer-label-middle-left = Vart sanestra amez — redimensiunar
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Chantun sura a sanestra — redimensiunar
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Serrar
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Telechargiar il model IA da text alternativ ({ $downloadedSize } da { $totalSize } MB)
     .aria-valuetext = Telechargiar il model IA da text alternativ ({ $downloadedSize } da { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -587,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Editur per text alternativ
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mussar l’editur per text alternativ directamain cun agiuntar in maletg
 pdfjs-editor-alt-text-settings-show-dialog-description = Ta gida a garantir che tut tes maletgs hajan in text alternativ.
 pdfjs-editor-alt-text-settings-close-button = Serrar
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -708,4 +637,3 @@ pdfjs-editor-add-signature-edit-button-label = Modifitgar la descripziun
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Modifitgar la descripziun
->>>>>>> upstream/master

@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB（{ $b } 位元組）
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB（{ $size_b } 位元組）
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB（{ $size_b } 位元組）
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = 標題：
 pdfjs-document-properties-author = 作者：
 pdfjs-document-properties-subject = 主旨：
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = 修改日期：
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = 建立者：
 pdfjs-document-properties-producer = PDF 產生器：
 pdfjs-document-properties-version = PDF 版本：
@@ -179,13 +161,8 @@ pdfjs-print-progress-message = 正在準備列印文件…
 #   $progress (Number) - percent value
 pdfjs-print-progress-percent = { $progress }%
 pdfjs-print-progress-close-button = 取消
-<<<<<<< HEAD
-pdfjs-printing-not-supported = 警告: 此瀏覽器未完整支援列印功能。
-pdfjs-printing-not-ready = 警告: 此 PDF 未完成下載以供列印。
-=======
 pdfjs-printing-not-supported = 警告：此瀏覽器未完整支援列印功能。
 pdfjs-printing-not-ready = 警告：此 PDF 未完成下載以供列印。
->>>>>>> upstream/master
 
 ## Tooltips and alt text for side panel toolbar buttons
 
@@ -278,13 +255,6 @@ pdfjs-rendering-error = 描繪頁面時發生錯誤。
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -308,11 +278,6 @@ pdfjs-web-fonts-disabled = 已停用網路字型 (Web fonts): 無法使用 PDF �
 
 pdfjs-editor-free-text-button =
     .title = 文字
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = 文字
-pdfjs-editor-ink-button =
-    .title = 繪圖
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = 更改文字色彩
 pdfjs-editor-free-text-button-label = 文字
@@ -320,7 +285,6 @@ pdfjs-editor-ink-button =
     .title = 繪圖
 pdfjs-editor-color-picker-ink-input =
     .title = 更改繪圖色彩
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = 繪圖
 pdfjs-editor-stamp-button =
     .title = 新增或編輯圖片
@@ -332,8 +296,6 @@ pdfjs-highlight-floating-button1 =
     .title = 強調
     .aria-label = 強調
 pdfjs-highlight-floating-button-label = 強調
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = 註解
     .aria-label = 註解
@@ -361,7 +323,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = 簽章編輯器：{ $description }
 pdfjs-editor-stamp-editor =
     .aria-label = 圖片編輯器
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -372,13 +333,9 @@ pdfjs-editor-remove-freetext-button =
 pdfjs-editor-remove-stamp-button =
     .title = 移除圖片
 pdfjs-editor-remove-highlight-button =
-<<<<<<< HEAD
-    .title = 移除強調範圍
-=======
     .title = 移除選擇範圍的強調效果
 pdfjs-editor-remove-signature-button =
     .title = 移除簽章
->>>>>>> upstream/master
 
 ##
 
@@ -395,8 +352,6 @@ pdfjs-editor-stamp-add-image-button-label = 新增圖片
 pdfjs-editor-free-highlight-thickness-input = 線條粗細
 pdfjs-editor-free-highlight-thickness-title =
     .title = 更改強調文字以外的項目時的線條粗細
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = 簽章控制元件與儲存的簽章
 pdfjs-editor-signature-add-signature-button =
@@ -407,20 +362,10 @@ pdfjs-editor-signature-add-signature-button-label = 新增簽章
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = 已儲存簽章：{ $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = 文字編輯器
     .default-content = 請打字…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = 文本編輯器
-pdfjs-free-text-default-content = 在此打字…
-pdfjs-ink =
-    .aria-label = 圖形編輯器
-pdfjs-ink-canvas =
-    .aria-label = 使用者建立的圖片
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -432,17 +377,12 @@ pdfjs-editor-comments-sidebar-close-button-label = 關閉側邊欄
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = 想把哪個部分記下來？可以畫螢光強調，並且留下註解。
 pdfjs-editor-comments-sidebar-no-comments-link = 更多資訊
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = 替代文字
 pdfjs-editor-alt-text-edit-button =
     .aria-label = 編輯替代文字
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = 編輯替代文字
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = 挑選一種
 pdfjs-editor-alt-text-dialog-description = 替代文字可協助盲人，或於圖片無法載入時提供說明。
 pdfjs-editor-alt-text-add-description-label = 新增描述
@@ -462,17 +402,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = 左上角 — 調整大小
-pdfjs-editor-resizer-label-top-middle = 頂部中間 — 調整大小
-pdfjs-editor-resizer-label-top-right = 右上角 — 調整大小
-pdfjs-editor-resizer-label-middle-right = 中間右方 — 調整大小
-pdfjs-editor-resizer-label-bottom-right = 右下角 — 調整大小
-pdfjs-editor-resizer-label-bottom-middle = 底部中間 — 調整大小
-pdfjs-editor-resizer-label-bottom-left = 左下角 — 調整大小
-pdfjs-editor-resizer-label-middle-left = 中間左方 — 調整大小
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = 左上角 — 調整大小
 pdfjs-editor-resizer-top-middle =
@@ -538,10 +467,6 @@ pdfjs-editor-new-alt-text-error-close-button = 關閉
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = 正在下載替代文字 AI 模型（{ $downloadedSize } / { $totalSize } MB）
     .aria-valuetext = 正在下載替代文字 AI 模型（{ $downloadedSize } / { $totalSize } MB）
 # This is a button that users can click to edit the alt text they have already added.
@@ -581,8 +506,6 @@ pdfjs-editor-alt-text-settings-editor-title = 替代文字編輯器
 pdfjs-editor-alt-text-settings-show-dialog-button-label = 新增圖片後立即顯示替代文字編輯器
 pdfjs-editor-alt-text-settings-show-dialog-description = 幫助您確保所有圖片都有替代文字。
 pdfjs-editor-alt-text-settings-close-button = 關閉
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -707,4 +630,3 @@ pdfjs-editor-add-signature-edit-button-label = 編輯描述
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = 編輯描述
->>>>>>> upstream/master

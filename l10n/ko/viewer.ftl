@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } 바이트)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b }바이트)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b }바이트)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = 제목:
 pdfjs-document-properties-author = 작성자:
 pdfjs-document-properties-subject = 주제:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = 수정 날짜:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = 작성 프로그램:
 pdfjs-document-properties-producer = PDF 변환 소프트웨어:
 pdfjs-document-properties-version = PDF 버전:
@@ -273,13 +255,6 @@ pdfjs-rendering-error = 페이지를 렌더링하는 동안 오류가 발생했�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -303,11 +278,6 @@ pdfjs-web-fonts-disabled = 웹 폰트가 비활성화됨: 내장된 PDF 글꼴�
 
 pdfjs-editor-free-text-button =
     .title = 텍스트
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = 텍스트
-pdfjs-editor-ink-button =
-    .title = 그리기
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = 텍스트 색상 변경
 pdfjs-editor-free-text-button-label = 텍스트
@@ -315,7 +285,6 @@ pdfjs-editor-ink-button =
     .title = 그리기
 pdfjs-editor-color-picker-ink-input =
     .title = 그리기 색상 변경
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = 그리기
 pdfjs-editor-stamp-button =
     .title = 이미지 추가 또는 편집
@@ -327,8 +296,6 @@ pdfjs-highlight-floating-button1 =
     .title = 강조 표시
     .aria-label = 강조 표시
 pdfjs-highlight-floating-button-label = 강조 표시
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = 주석
     .aria-label = 주석
@@ -356,7 +323,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = 서명 편집기: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = 이미지 편집기
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -368,11 +334,8 @@ pdfjs-editor-remove-stamp-button =
     .title = 이미지 제거
 pdfjs-editor-remove-highlight-button =
     .title = 강조 표시 제거
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = 서명 제거
->>>>>>> upstream/master
 
 ##
 
@@ -389,19 +352,6 @@ pdfjs-editor-stamp-add-image-button-label = 이미지 추가
 pdfjs-editor-free-highlight-thickness-input = 두께
 pdfjs-editor-free-highlight-thickness-title =
     .title = 텍스트 이외의 항목을 강조 표시할 때 두께 변경
-<<<<<<< HEAD
-# .default-content is used as a placeholder in an empty text editor.
-pdfjs-free-text2 =
-    .aria-label = 텍스트 편집기
-    .default-content = 입력을 시작하세요…
-pdfjs-free-text =
-    .aria-label = 텍스트 편집기
-pdfjs-free-text-default-content = 입력하세요…
-pdfjs-ink =
-    .aria-label = 그리기 편집기
-pdfjs-ink-canvas =
-    .aria-label = 사용자 생성 이미지
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = 서명 제어 및 저장된 서명
 pdfjs-editor-signature-add-signature-button =
@@ -427,17 +377,12 @@ pdfjs-editor-comments-sidebar-close-button-label = 사이드바 닫기
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = 눈에 띄는 내용이 있나요? 해당 부분을 강조 표시하고 주석을 남겨주세요.
 pdfjs-editor-comments-sidebar-no-comments-link = 더 알아보기
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = 대체 텍스트
 pdfjs-editor-alt-text-edit-button =
     .aria-label = 대체 텍스트 편집
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = 대체 텍스트 편집
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = 옵션을 선택하세요
 pdfjs-editor-alt-text-dialog-description = 대체 텍스트는 사람들이 이미지를 볼 수 없거나 이미지가 로드되지 않을 때 도움이 됩니다.
 pdfjs-editor-alt-text-add-description-label = 설명 추가
@@ -457,17 +402,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = 왼쪽 위 — 크기 조정
-pdfjs-editor-resizer-label-top-middle = 가운데 위 - 크기 조정
-pdfjs-editor-resizer-label-top-right = 오른쪽 위 — 크기 조정
-pdfjs-editor-resizer-label-middle-right = 오른쪽 가운데 — 크기 조정
-pdfjs-editor-resizer-label-bottom-right = 오른쪽 아래 - 크기 조정
-pdfjs-editor-resizer-label-bottom-middle = 가운데 아래 — 크기 조정
-pdfjs-editor-resizer-label-bottom-left = 왼쪽 아래 - 크기 조정
-pdfjs-editor-resizer-label-middle-left = 왼쪽 가운데 — 크기 조정
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = 왼쪽 위 — 크기 조정
 pdfjs-editor-resizer-top-middle =
@@ -533,10 +467,6 @@ pdfjs-editor-new-alt-text-error-close-button = 닫기
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = 대체 텍스트 AI 모델 다운로드 중 ({ $downloadedSize } / { $totalSize } MB)
     .aria-valuetext = 대체 텍스트 AI 모델 다운로드 중 ({ $downloadedSize } / { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -576,8 +506,6 @@ pdfjs-editor-alt-text-settings-editor-title = 대체 텍스트 편집기
 pdfjs-editor-alt-text-settings-show-dialog-button-label = 이미지 추가 시 바로 대체 텍스트 편집기 표시
 pdfjs-editor-alt-text-settings-show-dialog-description = 모든 이미지에 대체 텍스트가 있는지 확인하는 데 도움이 됩니다.
 pdfjs-editor-alt-text-settings-close-button = 닫기
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -702,4 +630,3 @@ pdfjs-editor-add-signature-edit-button-label = 설명 편집
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = 설명 편집
->>>>>>> upstream/master

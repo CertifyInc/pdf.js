@@ -31,13 +31,8 @@ pdfjs-zoom-in-button-label = მოახლოება
 pdfjs-zoom-select =
     .title = ზომა
 pdfjs-presentation-mode-button =
-<<<<<<< HEAD
-    .title = ჩვენების რეჟიმზე გადართვა
-pdfjs-presentation-mode-button-label = ჩვენების რეჟიმი
-=======
     .title = წარდგენის რეჟიმზე გადართვა
 pdfjs-presentation-mode-button-label = წარდგენის რეჟიმი
->>>>>>> upstream/master
 pdfjs-open-file-button =
     .title = ფაილის გახსნა
 pdfjs-open-file-button-label = გახსნა
@@ -110,15 +105,6 @@ pdfjs-document-properties-button-label = დოკუმენტის შე�
 pdfjs-document-properties-file-name = ფაილის სახელი:
 pdfjs-document-properties-file-size = ფაილის მოცულობა:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } კბ ({ $size_b } ბაიტი)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } მბ ({ $size_b } ბაიტი)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } კბაიტი ({ $b } ბაიტი)
@@ -126,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } მბაიტი ({ $b } ბაიტი)
->>>>>>> upstream/master
 pdfjs-document-properties-title = სათაური:
 pdfjs-document-properties-author = შემქმნელი:
 pdfjs-document-properties-subject = თემა:
@@ -134,14 +119,8 @@ pdfjs-document-properties-keywords = საკვანძო სიტყვე
 pdfjs-document-properties-creation-date = შექმნის დრო:
 pdfjs-document-properties-modification-date = ჩასწორების დრო:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = შემდგენელი:
 pdfjs-document-properties-producer = PDF-შემდგენელი:
 pdfjs-document-properties-version = PDF-ვერსია:
@@ -190,11 +169,7 @@ pdfjs-printing-not-ready = გაფრთხილება: PDF სრულ�
 pdfjs-toggle-sidebar-button =
     .title = გვერდითა ზოლის გამოჩენა/დამალვა
 pdfjs-toggle-sidebar-notification-button =
-<<<<<<< HEAD
-    .title = გვერდითი ზოლის გამოჩენა (შეიცავს სარჩევს/დანართს/ფენებს)
-=======
     .title = გვერდითი ზოლის გამოჩენა (შეიცავს სარჩევს/დანართს/შრეებს)
->>>>>>> upstream/master
 pdfjs-toggle-sidebar-button-label = გვერდითა ზოლის გამოჩენა/დამალვა
 pdfjs-document-outline-button =
     .title = დოკუმენტის სარჩევის ჩვენება (ორმაგი წკაპით თითოეულის ჩამოშლა/აკეცვა)
@@ -203,13 +178,8 @@ pdfjs-attachments-button =
     .title = დანართების ჩვენება
 pdfjs-attachments-button-label = დანართები
 pdfjs-layers-button =
-<<<<<<< HEAD
-    .title = ფენების გამოჩენა (ორმაგი წკაპით ყველა ფენის ნაგულისხმევზე დაბრუნება)
-pdfjs-layers-button-label = ფენები
-=======
     .title = შრეების გამოჩენა (ორმაგი წკაპით ყველა შრის ნაგულისხმევზე დაბრუნება)
 pdfjs-layers-button-label = შრეები
->>>>>>> upstream/master
 pdfjs-thumbs-button =
     .title = შეთვალიერება
 pdfjs-thumbs-button-label = ესკიზები
@@ -219,11 +189,7 @@ pdfjs-current-outline-item-button-label = მიმდინარე გვე�
 pdfjs-findbar-button =
     .title = პოვნა დოკუმენტში
 pdfjs-findbar-button-label = ძიება
-<<<<<<< HEAD
-pdfjs-additional-layers = დამატებითი ფენები
-=======
 pdfjs-additional-layers = დამატებითი შრეები
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
@@ -242,17 +208,10 @@ pdfjs-find-input =
     .title = ძიება
     .placeholder = პოვნა დოკუმენტში…
 pdfjs-find-previous-button =
-<<<<<<< HEAD
-    .title = ფრაზის წინა კონტექსტის პოვნა
-pdfjs-find-previous-button-label = წინა
-pdfjs-find-next-button =
-    .title = ფრაზის შემდეგი კონტექსტის პოვნა
-=======
     .title = წინა დამთხვევის პოვნა
 pdfjs-find-previous-button-label = წინა
 pdfjs-find-next-button =
     .title = მომდევნო დამთხვევის პოვნა
->>>>>>> upstream/master
 pdfjs-find-next-button-label = შემდეგი
 pdfjs-find-highlight-checkbox = ყველაფრის მონიშვნა
 pdfjs-find-match-case-checkbox-label = მთავრულით
@@ -304,13 +263,6 @@ pdfjs-rendering-error = შეცდომა, გვერდის ჩვე�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -318,12 +270,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } შენიშვნა]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -337,12 +286,6 @@ pdfjs-web-fonts-disabled = ვებშრიფტები გამორთ�
 
 pdfjs-editor-free-text-button =
     .title = წარწერა
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = ტექსტი
-pdfjs-editor-ink-button =
-    .title = ხაზვა
-pdfjs-editor-ink-button-label = ხაზვა
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = წარწერის ფერის შეცვლა
 pdfjs-editor-free-text-button-label = წარწერა
@@ -351,15 +294,12 @@ pdfjs-editor-ink-button =
 pdfjs-editor-color-picker-ink-input =
     .title = მოხაზულის ფერის შეცვლა
 pdfjs-editor-ink-button-label = მოხაზვა
->>>>>>> upstream/master
 pdfjs-editor-stamp-button =
     .title = სურათების დართვა ან ჩასწორება
 pdfjs-editor-stamp-button-label = სურათების დართვა ან ჩასწორება
 pdfjs-editor-highlight-button =
     .title = მონიშვნა
 pdfjs-editor-highlight-button-label = მონიშვნა
-<<<<<<< HEAD
-=======
 pdfjs-highlight-floating-button1 =
     .title = მონიშვნა
     .aria-label = მონიშვნა
@@ -391,27 +331,19 @@ pdfjs-editor-signature-editor1 =
     .aria-description = ხელმოწერის ჩასწორება: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = სურათის ჩასწორება
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
 pdfjs-editor-remove-ink-button =
-<<<<<<< HEAD
-    .title = დახაზულის მოცილება
-=======
     .title = მოხაზულის მოცილება
->>>>>>> upstream/master
 pdfjs-editor-remove-freetext-button =
     .title = წარწერის მოცილება
 pdfjs-editor-remove-stamp-button =
     .title = სურათის მოცილება
 pdfjs-editor-remove-highlight-button =
     .title = მონიშვნის მოცილება
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = ხელმოწერის მოცილება
->>>>>>> upstream/master
 
 ##
 
@@ -424,21 +356,6 @@ pdfjs-editor-ink-opacity-input = გაუმჭვირვალობა
 pdfjs-editor-stamp-add-image-button =
     .title = სურათის დამატება
 pdfjs-editor-stamp-add-image-button-label = სურათის დამატება
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = ნაწერის ჩასწორება
-pdfjs-free-text-default-content = აკრიფეთ…
-pdfjs-ink =
-    .aria-label = დახაზულის შესწორება
-pdfjs-ink-canvas =
-    .aria-label = მომხმარებლის შექმნილი სურათი
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = თანდართული წარწერა
-pdfjs-editor-alt-text-edit-button-label = თანდართული წარწერის ჩასწორება
-=======
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = სისქე
 pdfjs-editor-free-highlight-thickness-title =
@@ -478,7 +395,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = ვრცლად
 pdfjs-editor-alt-text-button-label = თანდართული წარწერა
 pdfjs-editor-alt-text-edit-button =
     .aria-label = დართული წარწერის ჩასწორება
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = არჩევა
 pdfjs-editor-alt-text-dialog-description = თანდართული (შემნაცვლებელი) წარწერა გამოსადეგია მათთვის, ვინც ვერ ხედავს სურათებს ან გამოისახება მაშინ, როცა სურათი ვერ ჩაიტვირთება.
 pdfjs-editor-alt-text-add-description-label = აღწერილობის მითითება
@@ -491,27 +407,13 @@ pdfjs-editor-alt-text-decorative-tooltip = მოინიშნოს მორ
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = მაგალითად, „ახალგაზრდა მამაკაცი მაგიდასთან ზის და სადილობს“
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = დართული წარწერა
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = ზევით მარცხნივ — ზომაცვლა
-pdfjs-editor-resizer-label-top-middle = ზევით შუაში — ზომაცვლა
-pdfjs-editor-resizer-label-top-right = ზევით მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-middle-right = შუაში მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-right = ქვევით მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-middle = ქვევით შუაში — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-left = ზვევით მარცხნივ — ზომაცვლა
-pdfjs-editor-resizer-label-middle-left = შუაში მარცხნივ — ზომაცვლა
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = ზევით მარცხნივ — ზომაცვლა
 pdfjs-editor-resizer-top-middle =
@@ -551,21 +453,13 @@ pdfjs-editor-colorpicker-red =
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-highlight-show-all-button-label = ყველას ჩვენება
 pdfjs-editor-highlight-show-all-button =
     .title = ყველას ჩვენება
->>>>>>> upstream/master
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-
-## Image alt-text settings
-
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = დართული წარწერის ჩასწორება (სურათის აღწერის)
 # Modal header positioned above a text box where users can add the alt text.
@@ -752,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = აღწერილობის
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = აღწერილობის ჩასწორება
->>>>>>> upstream/master

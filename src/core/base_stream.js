@@ -64,6 +64,10 @@ class BaseStream {
     return false;
   }
 
+  get isAsyncDecoder() {
+    return false;
+  }
+
   get canAsyncDecodeImageFromBuffer() {
     return false;
   }
@@ -132,6 +136,10 @@ class BaseStream {
    */
   getBaseStreams() {
     return null;
+  }
+
+  getOriginalStream() {
+    return this.stream?.getOriginalStream() || this;
   }
 }
 

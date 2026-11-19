@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } Mt ({ $b } tavua)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } kt ({ $size_b } tavua)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } Mt ({ $size_b } tavua)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Otsikko:
 pdfjs-document-properties-author = Tekijä:
 pdfjs-document-properties-subject = Aihe:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Muokkauspäivämäärä:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Luoja:
 pdfjs-document-properties-producer = PDF-tuottaja:
 pdfjs-document-properties-version = PDF-versio:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Tapahtui virhe piirrettäessä sivua.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Verkkosivujen omat kirjasinlajit on estetty: ei voida
 
 pdfjs-editor-free-text-button =
     .title = Teksti
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Teksti
-pdfjs-editor-ink-button =
-    .title = Piirros
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Muuta tekstin väriä
 pdfjs-editor-free-text-button-label = Teksti
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Piirros
 pdfjs-editor-color-picker-ink-input =
     .title = Vaihda piirustuksen väriä
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Piirros
 pdfjs-editor-stamp-button =
     .title = Lisää tai muokkaa kuvia
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Korostus
     .aria-label = Korostus
 pdfjs-highlight-floating-button-label = Korostus
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Kommentti
     .aria-label = Kommentti
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Allekirjoituksen muokkain: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Kuvamuokkain
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Poista kuva
 pdfjs-editor-remove-highlight-button =
     .title = Poista korostus
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Poista allekirjoitus
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Lisää kuva
 pdfjs-editor-free-highlight-thickness-input = Paksuus
 pdfjs-editor-free-highlight-thickness-title =
     .title = Muuta paksuutta korostaessasi muita kohteita kuin tekstiä
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Allekirjoitussäätimet ja tallennetut allekirjoitukset
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Lisää uusi allekirjoitus
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Tallennettu allekirjoitus: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Tekstimuokkain
     .default-content = Aloita kirjoittaminen…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Tekstimuokkain
-pdfjs-free-text-default-content = Aloita kirjoittaminen…
-pdfjs-ink =
-    .aria-label = Piirrustusmuokkain
-pdfjs-ink-canvas =
-    .aria-label = Käyttäjän luoma kuva
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Sulje sivupaneeli
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Näetkö jotain huomionarvoista? Korosta se ja jätä kommentti.
 pdfjs-editor-comments-sidebar-no-comments-link = Lue lisää
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Vaihtoehtoinen teksti
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Muokkaa vaihtoehtoista tekstiä
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Muokkaa vaihtoehtoista tekstiä
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Valitse vaihtoehto
 pdfjs-editor-alt-text-dialog-description = Vaihtoehtoinen teksti ("alt-teksti") auttaa ihmisiä, jotka eivät näe kuvaa tai kun kuva ei lataudu.
 pdfjs-editor-alt-text-add-description-label = Lisää kuvaus
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Vasen yläkulma - muuta kokoa
-pdfjs-editor-resizer-label-top-middle = Ylhäällä keskellä - muuta kokoa
-pdfjs-editor-resizer-label-top-right = Oikea yläkulma - muuta kokoa
-pdfjs-editor-resizer-label-middle-right = Keskellä oikealla - muuta kokoa
-pdfjs-editor-resizer-label-bottom-right = Oikea alakulma - muuta kokoa
-pdfjs-editor-resizer-label-bottom-middle = Alhaalla keskellä - muuta kokoa
-pdfjs-editor-resizer-label-bottom-left = Vasen alakulma - muuta kokoa
-pdfjs-editor-resizer-label-middle-left = Keskellä vasemmalla - muuta kokoa
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Vasen yläkulma - muuta kokoa
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Sulje
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Ladataan vaihtoehtoisen tekstin tekoälymallia ({ $downloadedSize } / { $totalSize } Mt)
     .aria-valuetext = Ladataan vaihtoehtoisen tekstin tekoälymallia ({ $downloadedSize } / { $totalSize } Mt)
 # This is a button that users can click to edit the alt text they have already added.
@@ -587,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Vaihtoehtoisen tekstin muokkain
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Näytä vaihtoehtoisen tekstin muokkain heti, kun lisäät kuvan
 pdfjs-editor-alt-text-settings-show-dialog-description = Auttaa varmistamaan, että kaikissa kuvissasi on vaihtoehtoinen teksti.
 pdfjs-editor-alt-text-settings-close-button = Sulje
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -717,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Muokkaa kuvausta
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Muokkaa kuvausta
->>>>>>> upstream/master

@@ -105,15 +105,6 @@ pdfjs-document-properties-button-label = Propiedades del documento…
 pdfjs-document-properties-file-name = Nombre del archivo:
 pdfjs-document-properties-file-size = Tamaño del archivo:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
@@ -121,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Título:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Asunto:
@@ -129,14 +119,8 @@ pdfjs-document-properties-keywords = Palabras claves:
 pdfjs-document-properties-creation-date = Fecha de creación:
 pdfjs-document-properties-modification-date = Fecha de modificación:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creador:
 pdfjs-document-properties-producer = Productor PDF:
 pdfjs-document-properties-version = Versión PDF:
@@ -279,13 +263,6 @@ pdfjs-rendering-error = Un error ocurrió al renderizar la página.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -293,12 +270,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } anotación]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -312,11 +286,6 @@ pdfjs-web-fonts-disabled = Las fuentes web están desactivadas: es imposible usa
 
 pdfjs-editor-free-text-button =
     .title = Texto
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Texto
-pdfjs-editor-ink-button =
-    .title = Dibujar
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Cambiar el color del texto
 pdfjs-editor-free-text-button-label = Texto
@@ -324,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Dibujar
 pdfjs-editor-color-picker-ink-input =
     .title = Cambiar el color del dibujo
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Dibujar
 pdfjs-editor-stamp-button =
     .title = Agregar o editar imágenes
@@ -336,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Destacados
     .aria-label = Destacados
 pdfjs-highlight-floating-button-label = Destacados
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Comentario
     .aria-label = Comentario
@@ -365,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Editor de firmas: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Editor de imágenes
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -377,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Eliminar imagen
 pdfjs-editor-remove-highlight-button =
     .title = Eliminar destacado
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Eliminar firma
->>>>>>> upstream/master
 
 ##
 
@@ -398,21 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Agregar imagen
 pdfjs-editor-free-highlight-thickness-input = Espesor
 pdfjs-editor-free-highlight-thickness-title =
     .title = Cambiar el grosor al resaltar elementos que no sean texto
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor de texto
-pdfjs-free-text-default-content = Empieza a escribir…
-pdfjs-ink =
-    .aria-label = Editor de dibujo
-pdfjs-ink-canvas =
-    .aria-label = Imagen creada por el usuario
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Texto alternativo
-pdfjs-editor-alt-text-edit-button-label = Editar texto alternativo
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Controles de firma y firmas guardadas
 pdfjs-editor-signature-add-signature-button =
@@ -448,7 +395,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = Saber más
 pdfjs-editor-alt-text-button-label = Texto alternativo
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Editar texto alternativo
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Elige una opción
 pdfjs-editor-alt-text-dialog-description = El texto alternativo (texto alternativo) ayuda cuando las personas no pueden ver la imagen o cuando no se carga.
 pdfjs-editor-alt-text-add-description-label = Añadir una descripción
@@ -461,26 +407,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Marcado como decorativo
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Por ejemplo: “Un joven se sienta a la mesa a comer”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Texto alternativo
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Esquina superior izquierda: cambiar el tamaño
-pdfjs-editor-resizer-label-top-middle = Arriba en el medio: cambiar el tamaño
-pdfjs-editor-resizer-label-top-right = Esquina superior derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-middle-right = Centro derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-right = Esquina inferior derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-middle = Abajo en el medio: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-left = Esquina inferior izquierda: cambiar el tamaño
-pdfjs-editor-resizer-label-middle-left = Centro izquierda: cambiar el tamaño
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Esquina superior izquierda — redimensionar
 pdfjs-editor-resizer-top-middle =
@@ -497,7 +430,6 @@ pdfjs-editor-resizer-bottom-left =
     .aria-label = Esquina inferior izquierda — redimensionar
 pdfjs-editor-resizer-middle-left =
     .aria-label = Borde izquierdo en el medio — redimensionar
->>>>>>> upstream/master
 
 ## Color picker
 
@@ -528,11 +460,6 @@ pdfjs-editor-highlight-show-all-button =
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-
-## Image alt-text settings
-
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = Editar texto alternativo (descripción de la imagen)
 # Modal header positioned above a text box where users can add the alt text.
@@ -719,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Editar descripción
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Editar descripción
->>>>>>> upstream/master

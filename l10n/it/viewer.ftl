@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } kB ({ $size_b } byte)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byte)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titolo:
 pdfjs-document-properties-author = Autore:
 pdfjs-document-properties-subject = Oggetto:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Data modifica:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Autore originale:
 pdfjs-document-properties-producer = Produttore PDF:
 pdfjs-document-properties-version = Versione PDF:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Si è verificato un errore durante il rendering della pa
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -302,11 +277,7 @@ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", tim
 ## Password
 
 pdfjs-password-label = Inserire la password per aprire questo file PDF.
-<<<<<<< HEAD
-pdfjs-password-invalid = Password non corretta. Riprovare.
-=======
 pdfjs-password-invalid = Password non corretta. Riprova.
->>>>>>> upstream/master
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Annulla
 pdfjs-web-fonts-disabled = I web font risultano disattivati: impossibile utilizzare i caratteri incorporati nel PDF.
@@ -315,12 +286,6 @@ pdfjs-web-fonts-disabled = I web font risultano disattivati: impossibile utilizz
 
 pdfjs-editor-free-text-button =
     .title = Testo
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Testo
-pdfjs-editor-ink-button =
-    .title = Disegno
-pdfjs-editor-ink-button-label = Disegno
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Cambia colore del testo
 pdfjs-editor-free-text-button-label = Testo
@@ -329,7 +294,6 @@ pdfjs-editor-ink-button =
 pdfjs-editor-color-picker-ink-input =
     .title = Cambia colore del disegno
 pdfjs-editor-ink-button-label = Disegna
->>>>>>> upstream/master
 pdfjs-editor-stamp-button =
     .title = Aggiungi o rimuovi immagine
 pdfjs-editor-stamp-button-label = Aggiungi o rimuovi immagine
@@ -340,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Evidenzia
     .aria-label = Evidenzia
 pdfjs-highlight-floating-button-label = Evidenzia
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Commenta
     .aria-label = Commenta
@@ -369,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Editor firme: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Modifica immagini
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -381,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Rimuovi immagine
 pdfjs-editor-remove-highlight-button =
     .title = Rimuovi evidenziazione
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Rimuovi firma
->>>>>>> upstream/master
 
 ##
 
@@ -402,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Aggiungi immagine
 pdfjs-editor-free-highlight-thickness-input = Spessore
 pdfjs-editor-free-highlight-thickness-title =
     .title = Modifica lo spessore della selezione per elementi non testuali
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Controlli firma e firme salvate
 pdfjs-editor-signature-add-signature-button =
@@ -414,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Aggiungi nuova firma
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Firma salvata: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Editor di testo
     .default-content = Inizia a digitare…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor di testo
-pdfjs-free-text-default-content = Inizia a digitare…
-pdfjs-ink =
-    .aria-label = Editor disegni
-pdfjs-ink-canvas =
-    .aria-label = Immagine creata dall’utente
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -443,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Chiudi la barra laterale
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Hai notato qualcosa di interessante? Evidenzialo e aggiungi un commento.
 pdfjs-editor-comments-sidebar-no-comments-link = Ulteriori informazioni
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Testo alternativo
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Modifica testo alternativo
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Modifica testo alternativo
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Scegli un’opzione
 pdfjs-editor-alt-text-dialog-description = Il testo alternativo (“alt text”) aiuta quando le persone non possono vedere l’immagine o quando l’immagine non viene caricata.
 pdfjs-editor-alt-text-add-description-label = Aggiungi una descrizione
@@ -473,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Angolo in alto a sinistra — ridimensiona
-pdfjs-editor-resizer-label-top-middle = Lato superiore nel mezzo — ridimensiona
-pdfjs-editor-resizer-label-top-right = Angolo in alto a destra — ridimensiona
-pdfjs-editor-resizer-label-middle-right = Lato destro nel mezzo — ridimensiona
-pdfjs-editor-resizer-label-bottom-right = Angolo in basso a destra — ridimensiona
-pdfjs-editor-resizer-label-bottom-middle = Lato inferiore nel mezzo — ridimensiona
-pdfjs-editor-resizer-label-bottom-left = Angolo in basso a sinistra — ridimensiona
-pdfjs-editor-resizer-label-middle-left = Lato sinistro nel mezzo — ridimensiona
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Angolo in alto a sinistra — ridimensiona
 pdfjs-editor-resizer-top-middle =
@@ -549,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Chiudi
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Download in corso del modello IA per il testo alternativo ({ $downloadedSize } di { $totalSize } MB)
     .aria-valuetext = Download in corso del modello IA per il testo alternativo ({ $downloadedSize } di { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -592,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Modifica testo alternativo
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostra l’editor del testo alternativo non appena si aggiunge un’immagine
 pdfjs-editor-alt-text-settings-show-dialog-description = Ti aiuta ad assicurarti che tutte le tue immagini abbiano il testo alternativo.
 pdfjs-editor-alt-text-settings-close-button = Chiudi
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -722,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Modifica descrizione
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Modifica descrizione
->>>>>>> upstream/master

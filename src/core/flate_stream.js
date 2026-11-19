@@ -125,7 +125,7 @@ class FlateStream extends DecodeStream {
   constructor(str, maybeLength) {
     super(maybeLength);
 
-    this.str = str;
+    this.stream = str;
     this.dict = str.dict;
 
     const cmf = str.getByte();
@@ -151,12 +151,18 @@ class FlateStream extends DecodeStream {
 
   async getImageData(length, _decoderOptions) {
     const data = await this.asyncGetBytes();
-    return data?.subarray(0, length) || this.getBytes(length);
+    if (!data) {
+      return this.getBytes(length);
+    }
+    if (data.length <= length) {
+      return data;
+    }
+    return data.subarray(0, length);
   }
 
   async asyncGetBytes() {
-    this.str.reset();
-    const bytes = this.str.getBytes();
+    this.stream.reset();
+    const bytes = this.stream.getBytes();
 
     try {
       const { readable, writable } = new DecompressionStream("deflate");
@@ -194,11 +200,11 @@ class FlateStream extends DecodeStream {
       // decoder.
       // We already get the bytes from the underlying stream, so we just reuse
       // them to avoid get them again.
-      this.str = new Stream(
+      this.stream = new Stream(
         bytes,
         2 /* = header size (see ctor) */,
         bytes.length,
-        this.str.dict
+        this.stream.dict
       );
       this.reset();
       return null;
@@ -210,7 +216,7 @@ class FlateStream extends DecodeStream {
   }
 
   getBits(bits) {
-    const str = this.str;
+    const str = this.stream;
     let codeSize = this.codeSize;
     let codeBuf = this.codeBuf;
 
@@ -230,7 +236,7 @@ class FlateStream extends DecodeStream {
   }
 
   getCode(table) {
-    const str = this.str;
+    const str = this.stream;
     const codes = table[0];
     const maxLen = table[1];
     let codeSize = this.codeSize;
@@ -306,7 +312,7 @@ class FlateStream extends DecodeStream {
 
   readBlock() {
     let buffer, hdr, len;
-    const str = this.str;
+    const str = this.stream;
     // read block header
     try {
       hdr = this.getBits(3);

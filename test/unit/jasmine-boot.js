@@ -42,11 +42,7 @@
 
 import { GlobalWorkerOptions } from "pdfjs/display/worker_options.js";
 import { isNodeJS } from "../../src/shared/util.js";
-<<<<<<< HEAD
-import { TestReporter } from "./testreporter.js";
-=======
 import { TestReporter } from "../reporter.js";
->>>>>>> upstream/master
 
 async function initializePDFJS(callback) {
   await Promise.all(
@@ -55,10 +51,7 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/annotation_storage_spec.js",
       "pdfjs-test/unit/api_spec.js",
       "pdfjs-test/unit/app_options_spec.js",
-<<<<<<< HEAD
-=======
       "pdfjs-test/unit/autolinker_spec.js",
->>>>>>> upstream/master
       "pdfjs-test/unit/bidi_spec.js",
       "pdfjs-test/unit/canvas_factory_spec.js",
       "pdfjs-test/unit/cff_parser_spec.js",

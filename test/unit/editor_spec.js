@@ -14,10 +14,7 @@
  */
 
 import { CommandManager } from "../../src/display/editor/tools.js";
-<<<<<<< HEAD
-=======
 import { SignatureExtractor } from "../../src/display/editor/drawers/signaturedraw.js";
->>>>>>> upstream/master
 
 describe("editor", function () {
   describe("Command Manager", function () {
@@ -94,8 +91,6 @@ describe("editor", function () {
     manager.add({ ...makeDoUndo(5), mustExec: true });
     expect(x).toEqual(11);
   });
-<<<<<<< HEAD
-=======
 
   it("should check signature compression/decompression", async () => {
     let gen = n => new Float32Array(crypto.getRandomValues(new Uint16Array(n)));
@@ -143,5 +138,4 @@ describe("editor", function () {
     decompressed = await SignatureExtractor.decompressSignature(compressed);
     expect(decompressed).toEqual(signature);
   });
->>>>>>> upstream/master
 });

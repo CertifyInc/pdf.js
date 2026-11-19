@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bájt)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bájt)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bájt)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Cím:
 pdfjs-document-properties-author = Szerző:
 pdfjs-document-properties-subject = Tárgy:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Módosítás dátuma:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Létrehozta:
 pdfjs-document-properties-producer = PDF előállító:
 pdfjs-document-properties-version = PDF verzió:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Hiba történt az oldal feldolgozása közben.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Webes betűkészletek letiltva: nem használhatók a 
 
 pdfjs-editor-free-text-button =
     .title = Szöveg
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Szöveg
-pdfjs-editor-ink-button =
-    .title = Rajzolás
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Szövegszín módosítása
 pdfjs-editor-free-text-button-label = Szöveg
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Rajzolás
 pdfjs-editor-color-picker-ink-input =
     .title = Rajzolási szín módosítása
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Rajzolás
 pdfjs-editor-stamp-button =
     .title = Képek hozzáadása vagy szerkesztése
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Kiemelés
     .aria-label = Kiemelés
 pdfjs-highlight-floating-button-label = Kiemelés
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Megjegyzés
     .aria-label = Megjegyzés
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Aláírás-szerkesztő: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Képszerkesztő
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Kép eltávolítása
 pdfjs-editor-remove-highlight-button =
     .title = Kiemelés eltávolítása
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Aláírás eltávolítása
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Kép hozzáadása
 pdfjs-editor-free-highlight-thickness-input = Vastagság
 pdfjs-editor-free-highlight-thickness-title =
     .title = Vastagság módosítása, ha nem szöveges elemeket emel ki
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Aláírás-vezérlők és mentett aláírások
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Új aláírás hozzáadása
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Mentett aláírás: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Szövegszerkesztő
     .default-content = Kezdjen gépelni…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Szövegszerkesztő
-pdfjs-free-text-default-content = Kezdjen el gépelni…
-pdfjs-ink =
-    .aria-label = Rajzszerkesztő
-pdfjs-ink-canvas =
-    .aria-label = Felhasználó által készített kép
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Oldalsáv bezárása
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Lát valami figyelemre méltót? Jelölje ki és írjon megjegyzést.
 pdfjs-editor-comments-sidebar-no-comments-link = További tudnivalók
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternatív szöveg
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Alternatív szöveg szerkesztése
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Alternatív szöveg szerkesztése
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Válasszon egy lehetőséget
 pdfjs-editor-alt-text-dialog-description = Az alternatív szöveg segít, ha az emberek nem látják a képet, vagy ha az nem töltődik be.
 pdfjs-editor-alt-text-add-description-label = Leírás hozzáadása
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Bal felső sarok – átméretezés
-pdfjs-editor-resizer-label-top-middle = Felül középen – átméretezés
-pdfjs-editor-resizer-label-top-right = Jobb felső sarok – átméretezés
-pdfjs-editor-resizer-label-middle-right = Jobbra középen – átméretezés
-pdfjs-editor-resizer-label-bottom-right = Jobb alsó sarok – átméretezés
-pdfjs-editor-resizer-label-bottom-middle = Alul középen – átméretezés
-pdfjs-editor-resizer-label-bottom-left = Bal alsó sarok – átméretezés
-pdfjs-editor-resizer-label-middle-left = Balra középen – átméretezés
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Bal felső sarok – átméretezés
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Bezárás
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Alternatív szöveg MI modell letöltése ({ $downloadedSize } / { $totalSize } MB)
     .aria-valuetext = Alternatív szöveg MI modell letöltése ({ $downloadedSize } / { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -587,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Alternatív szöveg szerkesztője
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Az alternatív szöveg szerkesztőjének azonnali megjelenítése egy kép hozzáadásakor
 pdfjs-editor-alt-text-settings-show-dialog-description = Segít elérni, hogy az összes képén legyen alternatív szöveg.
 pdfjs-editor-alt-text-settings-close-button = Bezárás
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -717,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Leírás szerkesztése
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Leírás szerkesztése
->>>>>>> upstream/master

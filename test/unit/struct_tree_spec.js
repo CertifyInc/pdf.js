@@ -152,8 +152,6 @@ describe("struct tree", function () {
     );
     await loadingTask.destroy();
   });
-<<<<<<< HEAD
-=======
 
   it("parses structure with some MathML in AF dictionary", async function () {
     const filename = "bug1937438_af_from_latex.pdf";
@@ -332,5 +330,4 @@ describe("struct tree", function () {
 
     await loadingTask.destroy();
   });
->>>>>>> upstream/master
 });

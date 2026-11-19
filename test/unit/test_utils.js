@@ -14,12 +14,6 @@
  */
 
 import { assert, isNodeJS } from "../../src/shared/util.js";
-<<<<<<< HEAD
-import { NullStream, StringStream } from "../../src/core/stream.js";
-import { Page, PDFDocument } from "../../src/core/document.js";
-import { fetchData as fetchDataDOM } from "../../src/display/display_utils.js";
-import { fetchData as fetchDataNode } from "../../src/display/node_utils.js";
-=======
 import {
   fetchData as fetchDataNode,
   NodeCMapReaderFactory,
@@ -30,7 +24,6 @@ import { Page, PDFDocument } from "../../src/core/document.js";
 import { DOMCMapReaderFactory } from "../../src/display/cmap_reader_factory.js";
 import { DOMStandardFontDataFactory } from "../../src/display/standard_fontdata_factory.js";
 import { fetchData as fetchDataDOM } from "../../src/display/display_utils.js";
->>>>>>> upstream/master
 import { Ref } from "../../src/core/primitives.js";
 
 const TEST_PDFS_PATH = isNodeJS ? "./test/pdfs/" : "../pdfs/";
@@ -41,11 +34,8 @@ const STANDARD_FONT_DATA_URL = isNodeJS
   ? "./external/standard_fonts/"
   : "../../external/standard_fonts/";
 
-<<<<<<< HEAD
-=======
 const WASM_URL = isNodeJS ? "./external/openjpeg/" : "../../external/openjpeg/";
 
->>>>>>> upstream/master
 class DefaultFileReaderFactory {
   static async fetch(params) {
     if (isNodeJS) {
@@ -56,8 +46,6 @@ class DefaultFileReaderFactory {
   }
 }
 
-<<<<<<< HEAD
-=======
 const DefaultCMapReaderFactory =
   typeof PDFJSDev !== "undefined" && PDFJSDev.test("GENERIC") && isNodeJS
     ? NodeCMapReaderFactory
@@ -68,7 +56,6 @@ const DefaultStandardFontDataFactory =
     ? NodeStandardFontDataFactory
     : DOMStandardFontDataFactory;
 
->>>>>>> upstream/master
 function buildGetDocumentParams(filename, options) {
   const params = Object.create(null);
   params.url = isNodeJS
@@ -170,52 +157,6 @@ function createIdFactory(pageIndex) {
   return page._localIdFactory;
 }
 
-<<<<<<< HEAD
-function createTemporaryNodeServer() {
-  assert(isNodeJS, "Should only be used in Node.js environments.");
-
-  const fs = process.getBuiltinModule("fs"),
-    http = process.getBuiltinModule("http");
-  // Create http server to serve pdf data for tests.
-  const server = http
-    .createServer((request, response) => {
-      const filePath = process.cwd() + "/test/pdfs" + request.url;
-      fs.promises.lstat(filePath).then(
-        stat => {
-          if (!request.headers.range) {
-            const contentLength = stat.size;
-            const stream = fs.createReadStream(filePath);
-            response.writeHead(200, {
-              "Content-Type": "application/pdf",
-              "Content-Length": contentLength,
-              "Accept-Ranges": "bytes",
-            });
-            stream.pipe(response);
-          } else {
-            const [start, end] = request.headers.range
-              .split("=")[1]
-              .split("-")
-              .map(x => Number(x));
-            const stream = fs.createReadStream(filePath, { start, end });
-            response.writeHead(206, {
-              "Content-Type": "application/pdf",
-            });
-            stream.pipe(response);
-          }
-        },
-        error => {
-          response.writeHead(404);
-          response.end(`File ${request.url} not found!`);
-        }
-      );
-    })
-    .listen(0); /* Listen on a random free port */
-
-  return {
-    server,
-    port: server.address().port,
-  };
-=======
 // Some tests rely on special behavior from webserver.mjs. When loaded in the
 // browser, the page is already served from WebServer. When running from
 // Node.js, that is not the case. This helper starts the WebServer if needed,
@@ -303,22 +244,16 @@ class TestPdfsServer {
     // http://localhost:8888/test/pdfs/
     return new URL(TEST_PDFS_PATH + path, window.location);
   }
->>>>>>> upstream/master
 }
 
 export {
   buildGetDocumentParams,
   CMAP_URL,
   createIdFactory,
-<<<<<<< HEAD
-  createTemporaryNodeServer,
-  DefaultFileReaderFactory,
-=======
   DefaultCMapReaderFactory,
   DefaultFileReaderFactory,
   DefaultStandardFontDataFactory,
   getCrossOriginHostname,
->>>>>>> upstream/master
   STANDARD_FONT_DATA_URL,
   TEST_PDFS_PATH,
   TestPdfsServer,

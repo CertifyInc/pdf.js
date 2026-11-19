@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байтаў)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байт)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Загаловак:
 pdfjs-document-properties-author = Аўтар:
 pdfjs-document-properties-subject = Тэма:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Дата змянення:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Стваральнік:
 pdfjs-document-properties-producer = Вырабнік PDF:
 pdfjs-document-properties-version = Версія PDF:
@@ -283,13 +265,6 @@ pdfjs-rendering-error = Здарылася памылка падчас адлю�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -313,11 +288,6 @@ pdfjs-web-fonts-disabled = Шрыфты Сеціва забаронены: не�
 
 pdfjs-editor-free-text-button =
     .title = Тэкст
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Тэкст
-pdfjs-editor-ink-button =
-    .title = Маляваць
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Змяніць колер тэксту
 pdfjs-editor-free-text-button-label = Тэкст
@@ -325,7 +295,6 @@ pdfjs-editor-ink-button =
     .title = Маляваць
 pdfjs-editor-color-picker-ink-input =
     .title = Змяніць колер малюнка
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Маляваць
 pdfjs-editor-stamp-button =
     .title = Дадаць або змяніць выявы
@@ -337,8 +306,6 @@ pdfjs-highlight-floating-button1 =
     .title = Падфарбаваць
     .aria-label = Падфарбаваць
 pdfjs-highlight-floating-button-label = Падфарбаваць
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Каментаваць
     .aria-label = Каментаваць
@@ -366,7 +333,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Рэдактар подпісаў: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Рэдактар выяў
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -378,11 +344,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Выдаліць выяву
 pdfjs-editor-remove-highlight-button =
     .title = Выдаліць падфарбоўку
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Выдаліць подпіс
->>>>>>> upstream/master
 
 ##
 
@@ -399,21 +362,6 @@ pdfjs-editor-stamp-add-image-button-label = Дадаць выяву
 pdfjs-editor-free-highlight-thickness-input = Таўшчыня
 pdfjs-editor-free-highlight-thickness-title =
     .title = Змяняць таўшчыню пры вылучэнні іншых элементаў, акрамя тэксту
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Тэкставы рэдактар
-pdfjs-free-text-default-content = Пачніце набор тэксту…
-pdfjs-ink =
-    .aria-label = Графічны рэдактар
-pdfjs-ink-canvas =
-    .aria-label = Выява, створаная карыстальнікам
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Альтэрнатыўны тэкст
-pdfjs-editor-alt-text-edit-button-label = Змяніць альтэрнатыўны тэкст
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Элементы кіравання подпісамі і захаваныя подпісы
 pdfjs-editor-signature-add-signature-button =
@@ -450,7 +398,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = Падрабязней
 pdfjs-editor-alt-text-button-label = Альтэрнатыўны тэкст
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Змяніць альтэрнатыўны тэкст
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Выберыце варыянт
 pdfjs-editor-alt-text-dialog-description = Альтэрнатыўны тэкст дапамагае, калі людзі не бачаць выяву або калі яна не загружаецца.
 pdfjs-editor-alt-text-add-description-label = Дадаць апісанне
@@ -463,27 +410,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Пазначаны як дэкара�
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Напрыклад, «Малады чалавек садзіцца за стол есці»
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Альтэрнатыўны тэкст
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Верхні левы кут — змяніць памер
-pdfjs-editor-resizer-label-top-middle = Уверсе пасярэдзіне — змяніць памер
-pdfjs-editor-resizer-label-top-right = Верхні правы кут — змяніць памер
-pdfjs-editor-resizer-label-middle-right = Пасярэдзіне справа — змяніць памер
-pdfjs-editor-resizer-label-bottom-right = Правы ніжні кут — змяніць памер
-pdfjs-editor-resizer-label-bottom-middle = Пасярэдзіне ўнізе — змяніць памер
-pdfjs-editor-resizer-label-bottom-left = Левы ніжні кут — змяніць памер
-pdfjs-editor-resizer-label-middle-left = Пасярэдзіне злева — змяніць памер
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Верхні левы кут — змяніць памер
 pdfjs-editor-resizer-top-middle =
@@ -549,16 +482,6 @@ pdfjs-editor-new-alt-text-error-close-button = Закрыць
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Сцягванне мадэлі ШІ для тэксту для атрыбута alt ({ $downloadedSize } з { $totalSize } МБ)
-    .aria-valuetext = Сцягванне мадэлі ШІ для тэксту для атрыбута alt ({ $downloadedSize } з { $totalSize } МБ)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = Тэкст для атрыбута alt дададзены
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = Адсутнічае тэкст для атрыбута alt
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Сцягванне мадэлі ШІ для тэксту для атрыбута alt ({ $downloadedSize } з { $totalSize } МБ)
     .aria-valuetext = Сцягванне мадэлі ШІ для тэксту для атрыбута alt ({ $downloadedSize } з { $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -572,7 +495,6 @@ pdfjs-editor-new-alt-text-missing-button-label = Адсутнічае тэкст
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = Водгук на тэкст для атрыбута alt
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Водгук на тэкст для атрыбута alt
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -599,8 +521,6 @@ pdfjs-editor-alt-text-settings-editor-title = Рэдактар тэксту дл
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Адразу паказваць рэдактар тэксту для атрыбута alt пры даданні выявы
 pdfjs-editor-alt-text-settings-show-dialog-description = Дапамагае пераканацца, што ўсе вашы выявы маюць альтэрнатыўны тэкст.
 pdfjs-editor-alt-text-settings-close-button = Закрыць
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -730,4 +650,3 @@ pdfjs-editor-add-signature-edit-button-label = Рэдагаваць апісан
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Рэдагаваць апісанне
->>>>>>> upstream/master

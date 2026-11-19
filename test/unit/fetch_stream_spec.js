@@ -13,39 +13,12 @@
  * limitations under the License.
  */
 
-import { AbortException, isNodeJS } from "../../src/shared/util.js";
-import { createTemporaryNodeServer } from "./test_utils.js";
+import { AbortException } from "../../src/shared/util.js";
 import { PDFFetchStream } from "../../src/display/fetch_stream.js";
 import { testCrossOriginRedirects } from "./common_pdfstream_tests.js";
 import { TestPdfsServer } from "./test_utils.js";
 
 describe("fetch_stream", function () {
-<<<<<<< HEAD
-  let tempServer = null;
-
-  function getPdfUrl() {
-    return isNodeJS
-      ? `http://127.0.0.1:${tempServer.port}/tracemonkey.pdf`
-      : new URL("../pdfs/tracemonkey.pdf", window.location).href;
-  }
-  const pdfLength = 1016315;
-
-  beforeAll(function () {
-    if (isNodeJS) {
-      tempServer = createTemporaryNodeServer();
-    }
-  });
-
-  afterAll(function () {
-    if (isNodeJS) {
-      // Close the server from accepting new connections after all test
-      // finishes.
-      const { server } = tempServer;
-      server.close();
-
-      tempServer = null;
-    }
-=======
   function getPdfUrl() {
     return TestPdfsServer.resolveURL("tracemonkey.pdf").href;
   }
@@ -57,7 +30,6 @@ describe("fetch_stream", function () {
 
   afterAll(async function () {
     await TestPdfsServer.ensureStopped();
->>>>>>> upstream/master
   });
 
   it("read with streaming", async function () {

@@ -40,20 +40,12 @@ describe("Copy and paste", () => {
   describe("all text", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       pages = await loadAndWait("tracemonkey.pdf", "#hiddenCopyElement", 100);
       await mockClipboard(pages);
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-=======
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -145,11 +137,7 @@ describe("Copy and paste", () => {
   describe("Copy/paste and ligatures", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       pages = await loadAndWait(
         "copy_paste_ligatures.pdf",
         "#hiddenCopyElement",
@@ -158,11 +146,7 @@ describe("Copy and paste", () => {
       await mockClipboard(pages);
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-=======
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 

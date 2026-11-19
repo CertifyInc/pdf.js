@@ -59,11 +59,7 @@ describe("Text layer", () => {
       };
     }
 
-<<<<<<< HEAD
-    beforeAll(() => {
-=======
     beforeEach(() => {
->>>>>>> upstream/master
       jasmine.addAsyncMatchers({
         // Check that a page has a selection containing the given text, with
         // some tolerance for extra characters before/after.
@@ -115,22 +111,14 @@ describe("Text layer", () => {
       describe("doesn't jump when hovering on an empty area", () => {
         let pages;
 
-<<<<<<< HEAD
-        beforeAll(async () => {
-=======
         beforeEach(async () => {
->>>>>>> upstream/master
           pages = await loadAndWait(
             "tracemonkey.pdf",
             `.page[data-page-number = "1"] .endOfContent`
           );
         });
-<<<<<<< HEAD
-        afterAll(async () => {
-=======
 
         afterEach(async () => {
->>>>>>> upstream/master
           await closePages(pages);
         });
 
@@ -230,12 +218,6 @@ describe("Text layer", () => {
         });
       });
 
-<<<<<<< HEAD
-      describe("when selecting over a link", () => {
-        let pages;
-
-        beforeAll(async () => {
-=======
       describe("doesn't jump when hovering on an empty area, with .markedContent", () => {
         let pages;
 
@@ -330,29 +312,15 @@ describe("Text layer", () => {
         let pages;
 
         beforeEach(async () => {
->>>>>>> upstream/master
           pages = await loadAndWait(
             "annotation-link-text-popup.pdf",
             `.page[data-page-number = "1"] .endOfContent`
           );
         });
-<<<<<<< HEAD
-        afterAll(async () => {
-          await closePages(pages);
-        });
-        afterEach(() =>
-          Promise.all(
-            pages.map(([_, page]) =>
-              page.evaluate(() => window.getSelection().removeAllRanges())
-            )
-          )
-        );
-=======
 
         afterEach(async () => {
           await closePages(pages);
         });
->>>>>>> upstream/master
 
         it("allows selecting within the link", async () => {
           await Promise.all(
@@ -470,11 +438,7 @@ describe("Text layer", () => {
       let browser;
       let page;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-=======
       beforeEach(async () => {
->>>>>>> upstream/master
         // Chrome does not support simulating caret-based selection, so this
         // test only runs in Firefox.
         browser = await startBrowser({
@@ -495,12 +459,8 @@ describe("Text layer", () => {
           { timeout: 0 }
         );
       });
-<<<<<<< HEAD
-      afterAll(async () => {
-=======
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closeSinglePage(page);
         await browser.close();
       });
@@ -553,11 +513,7 @@ describe("Text layer", () => {
 
         await expectAsync(page)
           .withContext(`second selection`)
-<<<<<<< HEAD
-          .toHaveRoughlySelected(/frequently .* We call such a se/s);
-=======
           .toHaveRoughlySelected(/frequently .* We call such a s/s);
->>>>>>> upstream/master
 
         await page.mouse.down();
         await moveInSteps(page, intermediateCaretPos, finalCaretPos, 20);
@@ -565,11 +521,7 @@ describe("Text layer", () => {
 
         await expectAsync(page)
           .withContext(`third selection`)
-<<<<<<< HEAD
-          .toHaveRoughlySelected(/frequently .* We call such a se/s);
-=======
           .toHaveRoughlySelected(/frequently .* We call such a s/s);
->>>>>>> upstream/master
       });
     });
   });
@@ -578,11 +530,7 @@ describe("Text layer", () => {
     let browser;
     let page;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       // Only testing in Firefox because, while Chrome has a setting similar to
       // font.minimum-size.x-western, it is not exposed through its API.
       browser = await startBrowser({
@@ -601,11 +549,7 @@ describe("Text layer", () => {
       );
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-=======
     afterEach(async () => {
->>>>>>> upstream/master
       await closeSinglePage(page);
       await browser.close();
     });

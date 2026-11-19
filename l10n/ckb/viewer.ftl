@@ -80,30 +80,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = تایبەتمەندییەکانی بەڵگەنامە...
 pdfjs-document-properties-file-name = ناوی پەڕگە:
 pdfjs-document-properties-file-size = قەبارەی پەڕگە:
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } کب ({ $size_b } بایت)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } مب ({ $size_b } بایت)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = سەردێڕ:
 pdfjs-document-properties-author = نووسەر
 pdfjs-document-properties-subject = بابەت:
 pdfjs-document-properties-keywords = کلیلەوشە:
 pdfjs-document-properties-creation-date = بەرواری درووستکردن:
 pdfjs-document-properties-modification-date = بەرواری دەستکاریکردن:
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = درووستکەر:
 pdfjs-document-properties-producer = بەرهەمهێنەری PDF:
 pdfjs-document-properties-version = وەشانی PDF:
@@ -204,12 +186,6 @@ pdfjs-page-scale-actual = قەبارەی ڕاستی
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-<<<<<<< HEAD
-## PDF page
-
-
-=======
->>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = هەڵەیەک ڕوویدا لە کاتی بارکردنی  PDF.
@@ -220,13 +196,6 @@ pdfjs-rendering-error = هەڵەیەک ڕوویدا لە کاتی پوختەکر
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -242,16 +211,3 @@ pdfjs-password-invalid = وشەی تێپەڕ هەڵەیە. تکایە دووبا
 pdfjs-password-ok-button = باشە
 pdfjs-password-cancel-button = پاشگەزبوونەوە
 pdfjs-web-fonts-disabled = جۆرەپیتی وێب ناچالاکە: نەتوانی جۆرەپیتی تێخراوی ناو pdfـەکە بەکاربێت.
-<<<<<<< HEAD
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-=======
->>>>>>> upstream/master

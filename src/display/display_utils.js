@@ -15,11 +15,13 @@
 
 import {
   BaseException,
+  DrawOPS,
   FeatureTest,
   shadow,
   Util,
   warn,
 } from "../shared/util.js";
+import { XfaLayer } from "./xfa_layer.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -83,6 +85,7 @@ async function fetchData(url, type = "text") {
  * @typedef {Object} PageViewportParameters
  * @property {Array<number>} viewBox - The xMin, yMin, xMax and
  *   yMax coordinates.
+ * @property {number} userUnit - The size of units.
  * @property {number} scale - The scale of the viewport.
  * @property {number} rotation - The rotation, in degrees, of the viewport.
  * @property {number} [offsetX] - The horizontal, i.e. x-axis, offset. The
@@ -116,6 +119,7 @@ class PageViewport {
    */
   constructor({
     viewBox,
+    userUnit,
     scale,
     rotation,
     offsetX = 0,
@@ -123,10 +127,13 @@ class PageViewport {
     dontFlip = false,
   }) {
     this.viewBox = viewBox;
+    this.userUnit = userUnit;
     this.scale = scale;
     this.rotation = rotation;
     this.offsetX = offsetX;
     this.offsetY = offsetY;
+
+    scale *= userUnit; // Take the userUnit into account.
 
     // creating transform to convert pdf coordinate system to the normal
     // canvas like coordinates taking in account scale and rotation
@@ -208,12 +215,13 @@ class PageViewport {
    * @type {Object}
    */
   get rawDims() {
-    const { viewBox } = this;
+    const dims = this.viewBox;
+
     return shadow(this, "rawDims", {
-      pageWidth: viewBox[2] - viewBox[0],
-      pageHeight: viewBox[3] - viewBox[1],
-      pageX: viewBox[0],
-      pageY: viewBox[1],
+      pageWidth: dims[2] - dims[0],
+      pageHeight: dims[3] - dims[1],
+      pageX: dims[0],
+      pageY: dims[1],
     });
   }
 
@@ -231,6 +239,7 @@ class PageViewport {
   } = {}) {
     return new PageViewport({
       viewBox: this.viewBox.slice(),
+      userUnit: this.userUnit,
       scale,
       rotation,
       offsetX,
@@ -250,7 +259,9 @@ class PageViewport {
    * @see {@link convertToViewportRectangle}
    */
   convertToViewportPoint(x, y) {
-    return Util.applyTransform([x, y], this.transform);
+    const p = [x, y];
+    Util.applyTransform(p, this.transform);
+    return p;
   }
 
   /**
@@ -261,8 +272,10 @@ class PageViewport {
    * @see {@link convertToViewportPoint}
    */
   convertToViewportRectangle(rect) {
-    const topLeft = Util.applyTransform([rect[0], rect[1]], this.transform);
-    const bottomRight = Util.applyTransform([rect[2], rect[3]], this.transform);
+    const topLeft = [rect[0], rect[1]];
+    Util.applyTransform(topLeft, this.transform);
+    const bottomRight = [rect[2], rect[3]];
+    Util.applyTransform(bottomRight, this.transform);
     return [topLeft[0], topLeft[1], bottomRight[0], bottomRight[1]];
   }
 
@@ -276,7 +289,9 @@ class PageViewport {
    * @see {@link convertToViewportPoint}
    */
   convertToPdfPoint(x, y) {
-    return Util.applyInverseTransform([x, y], this.transform);
+    const p = [x, y];
+    Util.applyInverseTransform(p, this.transform);
+    return p;
   }
 }
 
@@ -325,31 +340,82 @@ function getPdfFilenameFromUrl(url, defaultFilename = "document.pdf") {
     warn('getPdfFilenameFromUrl: ignore "data:"-URL for performance reasons.');
     return defaultFilename;
   }
-  const reURI = /^(?:(?:[^:]+:)?\/\/[^/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/;
-  //              SCHEME        HOST        1.PATH  2.QUERY   3.REF
-  // Pattern to get last matching NAME.pdf
-  const reFilename = /[^/?#=]+\.pdf\b(?!.*\.pdf\b)/i;
-  const splitURI = reURI.exec(url);
-  let suggestedFilename =
-    reFilename.exec(splitURI[1]) ||
-    reFilename.exec(splitURI[2]) ||
-    reFilename.exec(splitURI[3]);
-  if (suggestedFilename) {
-    suggestedFilename = suggestedFilename[0];
-    if (suggestedFilename.includes("%")) {
-      // URL-encoded %2Fpath%2Fto%2Ffile.pdf should be file.pdf
+
+  const getURL = urlString => {
+    try {
+      return new URL(urlString);
+    } catch {
       try {
-        suggestedFilename = reFilename.exec(
-          decodeURIComponent(suggestedFilename)
-        )[0];
+        return new URL(decodeURIComponent(urlString));
       } catch {
-        // Possible (extremely rare) errors:
-        // URIError "Malformed URI", e.g. for "%AA.pdf"
-        // TypeError "null has no properties", e.g. for "%2F.pdf"
+        try {
+          // Attempt to parse the URL using the document's base URI.
+          return new URL(urlString, "https://foo.bar");
+        } catch {
+          try {
+            return new URL(decodeURIComponent(urlString), "https://foo.bar");
+          } catch {
+            return null;
+          }
+        }
+      }
+    }
+  };
+
+  const newURL = getURL(url);
+  if (!newURL) {
+    // If the URL is invalid, return the default filename.
+    return defaultFilename;
+  }
+
+  const decode = name => {
+    try {
+      let decoded = decodeURIComponent(name);
+      if (decoded.includes("/")) {
+        decoded = decoded.split("/").at(-1);
+        if (decoded.test(/^\.pdf$/i)) {
+          return decoded;
+        }
+        return name;
+      }
+      return decoded;
+    } catch {
+      return name;
+    }
+  };
+
+  const pdfRegex = /\.pdf$/i;
+  const filename = newURL.pathname.split("/").at(-1);
+  if (pdfRegex.test(filename)) {
+    return decode(filename);
+  }
+
+  if (newURL.searchParams.size > 0) {
+    const values = Array.from(newURL.searchParams.values()).reverse();
+    for (const value of values) {
+      if (pdfRegex.test(value)) {
+        // If any of the search parameters ends with ".pdf", return it.
+        return decode(value);
+      }
+    }
+    const keys = Array.from(newURL.searchParams.keys()).reverse();
+    for (const key of keys) {
+      if (pdfRegex.test(key)) {
+        // If any of the search parameter keys ends with ".pdf", return it.
+        return decode(key);
       }
     }
   }
-  return suggestedFilename || defaultFilename;
+
+  if (newURL.hash) {
+    const reFilename = /[^/?#=]+\.pdf\b(?!.*\.pdf\b)/i;
+    const hashFilename = reFilename.exec(newURL.hash);
+    if (hashFilename) {
+      return decode(hashFilename[0]);
+    }
+  }
+
+  return defaultFilename;
 }
 
 class StatTimer {
@@ -395,13 +461,9 @@ function isValidFetchUrl(url, baseUrl) {
   if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
     throw new Error("Not implemented: isValidFetchUrl");
   }
-  try {
-    const { protocol } = baseUrl ? new URL(url, baseUrl) : new URL(url);
-    // The Fetch API only supports the http/https protocols, and not file/ftp.
-    return protocol === "http:" || protocol === "https:";
-  } catch {
-    return false; // `new URL()` will throw on incorrect data.
-  }
+  const res = baseUrl ? URL.parse(url, baseUrl) : URL.parse(url);
+  // The Fetch API only supports the http/https protocols, and not file/ftp.
+  return res?.protocol === "http:" || res?.protocol === "https:";
 }
 
 /**
@@ -409,6 +471,11 @@ function isValidFetchUrl(url, baseUrl) {
  */
 function noContextMenu(e) {
   e.preventDefault();
+}
+
+function stopEvent(e) {
+  e.preventDefault();
+  e.stopPropagation();
 }
 
 // Deprecated API function -- display regardless of the `verbosity` setting.
@@ -437,6 +504,9 @@ class PDFDateString {
    * @returns {Date|null}
    */
   static toDateObject(input) {
+    if (input instanceof Date) {
+      return input;
+    }
     if (!input || typeof input !== "string") {
       return null;
     }
@@ -509,6 +579,7 @@ function getXfaPageViewport(xfaPage, { scale = 1, rotation = 0 }) {
 
   return new PageViewport({
     viewBox,
+    userUnit: 1,
     scale,
     rotation,
   });
@@ -547,6 +618,8 @@ function getRGB(color) {
 function getColorValues(colors) {
   const span = document.createElement("span");
   span.style.visibility = "hidden";
+  // NOTE: The following does *not* affect `forced-colors: active` mode.
+  span.style.colorScheme = "only light";
   document.body.append(span);
   for (const name of colors.keys()) {
     span.style.color = name;
@@ -583,13 +656,13 @@ function setLayerDimensions(
     const { style } = div;
     const useRound = FeatureTest.isCSSRoundSupported;
 
-    const w = `var(--scale-factor) * ${pageWidth}px`,
-      h = `var(--scale-factor) * ${pageHeight}px`;
+    const w = `var(--total-scale-factor) * ${pageWidth}px`,
+      h = `var(--total-scale-factor) * ${pageHeight}px`;
     const widthStr = useRound
-        ? `round(down, ${w}, var(--scale-round-x, 1px))`
+        ? `round(down, ${w}, var(--scale-round-x))`
         : `calc(${w})`,
       heightStr = useRound
-        ? `round(down, ${h}, var(--scale-round-y, 1px))`
+        ? `round(down, ${h}, var(--scale-round-y))`
         : `calc(${h})`;
 
     if (!mustFlip || viewport.rotation % 180 === 0) {
@@ -611,7 +684,7 @@ function setLayerDimensions(
  */
 class OutputScale {
   constructor() {
-    const pixelRatio = window.devicePixelRatio || 1;
+    const { pixelRatio } = OutputScale;
 
     /**
      * @type {number} Horizontal scale.
@@ -631,14 +704,343 @@ class OutputScale {
     return this.sx !== 1 || this.sy !== 1;
   }
 
+  /**
+   * @type {boolean} Returns `true` when scaling is symmetric,
+   *   `false` otherwise.
+   */
   get symmetric() {
     return this.sx === this.sy;
   }
+
+  /**
+   * @returns {boolean} Returns `true` if scaling was limited,
+   *   `false` otherwise.
+   */
+  limitCanvas(width, height, maxPixels, maxDim, capAreaFactor = -1) {
+    let maxAreaScale = Infinity,
+      maxWidthScale = Infinity,
+      maxHeightScale = Infinity;
+
+    maxPixels = OutputScale.capPixels(maxPixels, capAreaFactor);
+    if (maxPixels > 0) {
+      maxAreaScale = Math.sqrt(maxPixels / (width * height));
+    }
+    if (maxDim !== -1) {
+      maxWidthScale = maxDim / width;
+      maxHeightScale = maxDim / height;
+    }
+    const maxScale = Math.min(maxAreaScale, maxWidthScale, maxHeightScale);
+
+    if (this.sx > maxScale || this.sy > maxScale) {
+      this.sx = maxScale;
+      this.sy = maxScale;
+      return true;
+    }
+    return false;
+  }
+
+  static get pixelRatio() {
+    return globalThis.devicePixelRatio || 1;
+  }
+
+  static capPixels(maxPixels, capAreaFactor) {
+    if (capAreaFactor >= 0) {
+      const winPixels = Math.ceil(
+        (typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING")
+          ? window.innerWidth * window.innerHeight
+          : window.screen.availWidth * window.screen.availHeight) *
+          this.pixelRatio ** 2 *
+          (1 + capAreaFactor / 100)
+      );
+      return maxPixels > 0 ? Math.min(maxPixels, winPixels) : winPixels;
+    }
+    return maxPixels;
+  }
+}
+
+// See https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+// to know which types are supported by the browser.
+const SupportedImageMimeTypes = [
+  "image/apng",
+  "image/avif",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/webp",
+  "image/x-icon",
+];
+
+class ColorScheme {
+  static get isDarkMode() {
+    return shadow(
+      this,
+      "isDarkMode",
+      !!window?.matchMedia?.("(prefers-color-scheme: dark)").matches
+    );
+  }
+}
+
+class CSSConstants {
+  static get commentForegroundColor() {
+    const element = document.createElement("span");
+    element.classList.add("comment", "sidebar");
+    const { style } = element;
+    style.width = style.height = "0";
+    style.display = "none";
+    style.color = "var(--comment-fg-color)";
+    document.body.append(element);
+    const { color } = window.getComputedStyle(element);
+    element.remove();
+    return shadow(this, "commentForegroundColor", getRGB(color));
+  }
+}
+
+function applyOpacity(r, g, b, opacity) {
+  opacity = Math.min(Math.max(opacity ?? 1, 0), 1);
+  const white = 255 * (1 - opacity);
+  r = Math.round(r * opacity + white);
+  g = Math.round(g * opacity + white);
+  b = Math.round(b * opacity + white);
+  return [r, g, b];
+}
+
+function RGBToHSL(rgb, output) {
+  const r = rgb[0] / 255;
+  const g = rgb[1] / 255;
+  const b = rgb[2] / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+
+  if (max === min) {
+    // achromatic
+    output[0] = output[1] = 0; // hue and saturation are 0
+  } else {
+    const d = max - min;
+    output[1] = l < 0.5 ? d / (max + min) : d / (2 - max - min);
+    // hue
+    switch (max) {
+      case r:
+        output[0] = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+        break;
+      case g:
+        output[0] = ((b - r) / d + 2) * 60;
+        break;
+      case b:
+        output[0] = ((r - g) / d + 4) * 60;
+        break;
+    }
+  }
+  output[2] = l;
+}
+
+function HSLToRGB(hsl, output) {
+  const h = hsl[0];
+  const s = hsl[1];
+  const l = hsl[2];
+  const c = (1 - Math.abs(2 * l - 1)) * s; // chroma
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+
+  switch (Math.floor(h / 60)) {
+    case 0:
+      output[0] = c + m;
+      output[1] = x + m;
+      output[2] = m;
+      break;
+    case 1:
+      output[0] = x + m;
+      output[1] = c + m;
+      output[2] = m;
+      break;
+    case 2:
+      output[0] = m;
+      output[1] = c + m;
+      output[2] = x + m;
+      break;
+    case 3:
+      output[0] = m;
+      output[1] = x + m;
+      output[2] = c + m;
+      break;
+    case 4:
+      output[0] = x + m;
+      output[1] = m;
+      output[2] = c + m;
+      break;
+    case 5:
+    case 6:
+      output[0] = c + m;
+      output[1] = m;
+      output[2] = x + m;
+      break;
+  }
+}
+
+function computeLuminance(x) {
+  return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+}
+
+function contrastRatio(hsl1, hsl2, output) {
+  HSLToRGB(hsl1, output);
+  output.map(computeLuminance);
+  const lum1 = 0.2126 * output[0] + 0.7152 * output[1] + 0.0722 * output[2];
+  HSLToRGB(hsl2, output);
+  output.map(computeLuminance);
+  const lum2 = 0.2126 * output[0] + 0.7152 * output[1] + 0.0722 * output[2];
+  return lum1 > lum2
+    ? (lum1 + 0.05) / (lum2 + 0.05)
+    : (lum2 + 0.05) / (lum1 + 0.05);
+}
+
+// Cache for the findContrastColor function, to improve performance.
+const contrastCache = new Map();
+
+/**
+ * Find a color that has sufficient contrast against a fixed color.
+ * The luminance (in HSL color space) of the base color is adjusted
+ * until the contrast ratio between the base color and the fixed color
+ * is at least the minimum contrast ratio required by WCAG 2.1.
+ * @param {Array<number>} baseColor
+ * @param {Array<number>} fixedColor
+ * @returns {string}
+ */
+function findContrastColor(baseColor, fixedColor) {
+  const key =
+    baseColor[0] +
+    baseColor[1] * 0x100 +
+    baseColor[2] * 0x10000 +
+    fixedColor[0] * 0x1000000 +
+    fixedColor[1] * 0x100000000 +
+    fixedColor[2] * 0x10000000000;
+  let cachedValue = contrastCache.get(key);
+  if (cachedValue) {
+    return cachedValue;
+  }
+  const array = new Float32Array(9);
+  const output = array.subarray(0, 3);
+  const baseHSL = array.subarray(3, 6);
+  RGBToHSL(baseColor, baseHSL);
+  const fixedHSL = array.subarray(6, 9);
+  RGBToHSL(fixedColor, fixedHSL);
+  const isFixedColorDark = fixedHSL[2] < 0.5;
+
+  // Use the contrast ratio requirements from WCAG 2.1.
+  // https://www.w3.org/TR/WCAG21/#contrast-minimum
+  // https://www.w3.org/TR/WCAG21/#contrast-enhanced
+  const minContrast = isFixedColorDark ? 12 : 4.5;
+
+  baseHSL[2] = isFixedColorDark
+    ? Math.sqrt(baseHSL[2])
+    : 1 - Math.sqrt(1 - baseHSL[2]);
+
+  if (contrastRatio(baseHSL, fixedHSL, output) < minContrast) {
+    let start, end;
+    if (isFixedColorDark) {
+      start = baseHSL[2];
+      end = 1;
+    } else {
+      start = 0;
+      end = baseHSL[2];
+    }
+    const PRECISION = 0.005;
+    while (end - start > PRECISION) {
+      const mid = (baseHSL[2] = (start + end) / 2);
+      if (
+        isFixedColorDark ===
+        contrastRatio(baseHSL, fixedHSL, output) < minContrast
+      ) {
+        start = mid;
+      } else {
+        end = mid;
+      }
+    }
+    baseHSL[2] = isFixedColorDark ? end : start;
+  }
+
+  HSLToRGB(baseHSL, output);
+  cachedValue = Util.makeHexColor(
+    Math.round(output[0] * 255),
+    Math.round(output[1] * 255),
+    Math.round(output[2] * 255)
+  );
+  contrastCache.set(key, cachedValue);
+  return cachedValue;
+}
+
+function renderRichText({ html, dir, className }, container) {
+  const fragment = document.createDocumentFragment();
+  if (typeof html === "string") {
+    const p = document.createElement("p");
+    p.dir = dir || "auto";
+    const lines = html.split(/(?:\r\n?|\n)/);
+    for (let i = 0, ii = lines.length; i < ii; ++i) {
+      const line = lines[i];
+      p.append(document.createTextNode(line));
+      if (i < ii - 1) {
+        p.append(document.createElement("br"));
+      }
+    }
+    fragment.append(p);
+  } else {
+    XfaLayer.render({
+      xfaHtml: html,
+      div: fragment,
+      intent: "richText",
+    });
+  }
+  fragment.firstElementChild.classList.add("richText", className);
+  container.append(fragment);
+}
+
+function makePathFromDrawOPS(data) {
+  // Using a SVG string is slightly slower than using the following loop.
+  const path = new Path2D();
+  if (!data) {
+    return path;
+  }
+  for (let i = 0, ii = data.length; i < ii; ) {
+    switch (data[i++]) {
+      case DrawOPS.moveTo:
+        path.moveTo(data[i++], data[i++]);
+        break;
+      case DrawOPS.lineTo:
+        path.lineTo(data[i++], data[i++]);
+        break;
+      case DrawOPS.curveTo:
+        path.bezierCurveTo(
+          data[i++],
+          data[i++],
+          data[i++],
+          data[i++],
+          data[i++],
+          data[i++]
+        );
+        break;
+      case DrawOPS.quadraticCurveTo:
+        path.quadraticCurveTo(data[i++], data[i++], data[i++], data[i++]);
+        break;
+      case DrawOPS.closePath:
+        path.closePath();
+        break;
+      default:
+        warn(`Unrecognized drawing path operator: ${data[i - 1]}`);
+        break;
+    }
+  }
+  return path;
 }
 
 export {
+  applyOpacity,
+  ColorScheme,
+  CSSConstants,
   deprecated,
   fetchData,
+  findContrastColor,
   getColorValues,
   getCurrentTransform,
   getCurrentTransformInverse,
@@ -649,13 +1051,17 @@ export {
   isDataScheme,
   isPdfFile,
   isValidFetchUrl,
+  makePathFromDrawOPS,
   noContextMenu,
   OutputScale,
   PageViewport,
   PDFDateString,
   PixelsPerInch,
   RenderingCancelledException,
+  renderRichText,
   setLayerDimensions,
   StatTimer,
+  stopEvent,
+  SupportedImageMimeTypes,
   SVG_NS,
 };

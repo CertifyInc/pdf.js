@@ -15,13 +15,9 @@
 
 import {
   closePages,
-<<<<<<< HEAD
-  getQuerySelector,
-=======
   getAnnotationSelector,
   getQuerySelector,
   getRect,
->>>>>>> upstream/master
   getSelector,
   loadAndWait,
 } from "./test_utils.mjs";
@@ -30,19 +26,6 @@ describe("Annotation highlight", () => {
   describe("annotation-highlight.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait(
-        "annotation-highlight.pdf",
-        "[data-annotation-id='19R']"
-      );
-    });
-
-    afterAll(async () => {
-      await closePages(pages);
-    });
-
-=======
     beforeEach(async () => {
       pages = await loadAndWait(
         "annotation-highlight.pdf",
@@ -73,35 +56,21 @@ describe("Annotation highlight", () => {
       );
     });
 
->>>>>>> upstream/master
     it("must show a popup on mouseover", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           let hidden = await page.$eval(
-<<<<<<< HEAD
-            "[data-annotation-id='21R']",
-            el => el.hidden
-          );
-          expect(hidden).withContext(`In ${browserName}`).toEqual(true);
-          await page.hover("[data-annotation-id='19R']");
-          await page.waitForSelector("[data-annotation-id='21R']", {
-=======
             getAnnotationSelector("21R"),
             el => el.hidden
           );
           expect(hidden).withContext(`In ${browserName}`).toEqual(true);
           await page.hover(getAnnotationSelector("19R"));
           await page.waitForSelector(getAnnotationSelector("21R"), {
->>>>>>> upstream/master
             visible: true,
             timeout: 0,
           });
           hidden = await page.$eval(
-<<<<<<< HEAD
-            "[data-annotation-id='21R']",
-=======
             getAnnotationSelector("21R"),
->>>>>>> upstream/master
             el => el.hidden
           );
           expect(hidden).withContext(`In ${browserName}`).toEqual(false);
@@ -113,19 +82,11 @@ describe("Annotation highlight", () => {
   describe("Check that widget annotations are in front of highlight ones", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("bug1883609.pdf", "[data-annotation-id='23R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("bug1883609.pdf", getAnnotationSelector("23R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -133,13 +94,8 @@ describe("Annotation highlight", () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           for (const i of [23, 22, 14]) {
-<<<<<<< HEAD
-            await page.click(`[data-annotation-id='${i}R']`);
-            await page.waitForSelector(`#pdfjs_internal_id_${i}R:focus`);
-=======
             await page.click(getAnnotationSelector(`${i}R`));
             await page.waitForSelector(`#pdfjs_internal_id_${i}R:focus-within`);
->>>>>>> upstream/master
           }
         })
       );
@@ -151,38 +107,22 @@ describe("Checkbox annotation", () => {
   describe("issue12706.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue12706.pdf", "[data-annotation-id='63R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue12706.pdf", getAnnotationSelector("63R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must let checkboxes with the same name behave like radio buttons", async () => {
-<<<<<<< HEAD
-      const selectors = [63, 70, 79].map(n => `[data-annotation-id='${n}R']`);
-=======
       const selectors = [63, 70, 79].map(n => getAnnotationSelector(`${n}R`));
->>>>>>> upstream/master
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           for (const selector of selectors) {
             await page.click(selector);
             await page.waitForFunction(
-<<<<<<< HEAD
-              `document.querySelector("${selector} > :first-child").checked`
-=======
               `document.querySelector('${selector} > :first-child').checked`
->>>>>>> upstream/master
             );
 
             for (const otherSelector of selectors) {
@@ -203,36 +143,21 @@ describe("Checkbox annotation", () => {
   describe("issue15597.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue15597.pdf", "[data-annotation-id='7R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue15597.pdf", getAnnotationSelector("7R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check the checkbox", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-          const selector = "[data-annotation-id='7R']";
-          await page.click(selector);
-          await page.waitForFunction(
-            `document.querySelector("${selector} > :first-child").checked`
-=======
           const selector = getAnnotationSelector("7R");
           await page.click(selector);
           await page.waitForFunction(
             `document.querySelector('${selector} > :first-child').checked`
->>>>>>> upstream/master
           );
           expect(true).withContext(`In ${browserName}`).toEqual(true);
         })
@@ -243,41 +168,24 @@ describe("Checkbox annotation", () => {
   describe("bug1847733.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("bug1847733.pdf", "[data-annotation-id='18R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("bug1847733.pdf", getAnnotationSelector("18R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check the checkbox", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-          const selectors = [18, 30, 42, 54].map(
-            id => `[data-annotation-id='${id}R']`
-=======
           const selectors = [18, 30, 42, 54].map(id =>
             getAnnotationSelector(`${id}R`)
->>>>>>> upstream/master
           );
           for (const selector of selectors) {
             await page.click(selector);
             await page.waitForFunction(
-<<<<<<< HEAD
-              `document.querySelector("${selector} > :first-child").checked`
-=======
               `document.querySelector('${selector} > :first-child').checked`
->>>>>>> upstream/master
             );
           }
         })
@@ -290,19 +198,11 @@ describe("Text widget", () => {
   describe("issue13271.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue13271.pdf", "[data-annotation-id='24R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue13271.pdf", getAnnotationSelector("24R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -327,19 +227,11 @@ describe("Text widget", () => {
   describe("issue16473.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue16473.pdf", "[data-annotation-id='22R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue16473.pdf", getAnnotationSelector("22R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -360,8 +252,6 @@ describe("Text widget", () => {
   });
 });
 
-<<<<<<< HEAD
-=======
 describe("Link annotations with internal destinations", () => {
   describe("bug1708041.pdf", () => {
     let pages;
@@ -407,24 +297,15 @@ describe("Link annotations with internal destinations", () => {
   });
 });
 
->>>>>>> upstream/master
 describe("Annotation and storage", () => {
   describe("issue14023.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue14023.pdf", "[data-annotation-id='64R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue14023.pdf", getAnnotationSelector("64R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -436,15 +317,9 @@ describe("Annotation and storage", () => {
           // Text field.
           await page.type(getSelector("64R"), text1);
           // Checkbox.
-<<<<<<< HEAD
-          await page.click("[data-annotation-id='65R']");
-          // Radio.
-          await page.click("[data-annotation-id='67R']");
-=======
           await page.click(getAnnotationSelector("65R"));
           // Radio.
           await page.click(getAnnotationSelector("67R"));
->>>>>>> upstream/master
 
           for (const [pageNumber, textId, checkId, radio1Id, radio2Id] of [
             [2, "18R", "19R", "21R", "20R"],
@@ -481,15 +356,9 @@ describe("Annotation and storage", () => {
           // Text field.
           await page.type(getSelector("23R"), text2);
           // Checkbox.
-<<<<<<< HEAD
-          await page.click("[data-annotation-id='24R']");
-          // Radio.
-          await page.click("[data-annotation-id='25R']");
-=======
           await page.click(getAnnotationSelector("24R"));
           // Radio.
           await page.click(getAnnotationSelector("25R"));
->>>>>>> upstream/master
 
           for (const [pageNumber, textId, checkId, radio1Id, radio2Id] of [
             [1, "64R", "65R", "67R", "68R"],
@@ -533,19 +402,11 @@ describe("ResetForm action", () => {
   describe("resetform.pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("resetform.pdf", "[data-annotation-id='63R']");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("resetform.pdf", getAnnotationSelector("63R"));
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -557,13 +418,8 @@ describe("ResetForm action", () => {
             await page.type(getSelector(`${i}R`), base);
           }
 
-<<<<<<< HEAD
-          const selectors = [69, 71, 75].map(
-            n => `[data-annotation-id='${n}R']`
-=======
           const selectors = [69, 71, 75].map(n =>
             getAnnotationSelector(`${n}R`)
->>>>>>> upstream/master
           );
           for (const selector of selectors) {
             await page.click(selector);
@@ -572,11 +428,7 @@ describe("ResetForm action", () => {
           await page.select(getSelector("78R"), "b");
           await page.select(getSelector("81R"), "f");
 
-<<<<<<< HEAD
-          await page.click("[data-annotation-id='82R']");
-=======
           await page.click(getAnnotationSelector("82R"));
->>>>>>> upstream/master
           await page.waitForFunction(`${getQuerySelector("63R")}.value === ""`);
 
           for (let i = 63; i <= 68; i++) {
@@ -616,13 +468,8 @@ describe("ResetForm action", () => {
             await page.type(getSelector(`${i}R`), base);
           }
 
-<<<<<<< HEAD
-          const selectors = [69, 71, 72, 73, 75].map(
-            n => `[data-annotation-id='${n}R']`
-=======
           const selectors = [69, 71, 72, 73, 75].map(n =>
             getAnnotationSelector(`${n}R`)
->>>>>>> upstream/master
           );
           for (const selector of selectors) {
             await page.click(selector);
@@ -631,11 +478,7 @@ describe("ResetForm action", () => {
           await page.select(getSelector("78R"), "b");
           await page.select(getSelector("81R"), "f");
 
-<<<<<<< HEAD
-          await page.click("[data-annotation-id='84R']");
-=======
           await page.click(getAnnotationSelector("84R"));
->>>>>>> upstream/master
           await page.waitForFunction(`${getQuerySelector("63R")}.value === ""`);
 
           for (let i = 63; i <= 68; i++) {
@@ -684,16 +527,6 @@ describe("ResetForm action", () => {
     describe("issue14438.pdf", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-        pages = await loadAndWait(
-          "issue14438.pdf",
-          "[data-annotation-id='10R']"
-        );
-      });
-
-      afterAll(async () => {
-=======
       beforeEach(async () => {
         pages = await loadAndWait(
           "issue14438.pdf",
@@ -702,23 +535,16 @@ describe("ResetForm action", () => {
       });
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
       it("must check that the FreeText annotation has a popup", async () => {
         await Promise.all(
           pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-            await page.click("[data-annotation-id='10R']");
-            await page.waitForFunction(
-              `document.querySelector("[data-annotation-id='10R']").hidden === false`
-=======
             const selector = getAnnotationSelector("10R");
             await page.click(selector);
             await page.waitForFunction(
               `document.querySelector('${selector}').hidden === false`
->>>>>>> upstream/master
             );
           })
         );
@@ -730,16 +556,6 @@ describe("ResetForm action", () => {
     describe("annotation-caret-ink.pdf", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-        pages = await loadAndWait(
-          "annotation-caret-ink.pdf",
-          "[data-annotation-id='25R']"
-        );
-      });
-
-      afterAll(async () => {
-=======
       beforeEach(async () => {
         pages = await loadAndWait(
           "annotation-caret-ink.pdf",
@@ -748,33 +564,12 @@ describe("ResetForm action", () => {
       });
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
       it("must check that the Ink annotation has a popup", async () => {
         await Promise.all(
           pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-            if (browserName) {
-              // TODO
-              pending(
-                "Re-enable this test when the Ink annotation has been made editable."
-              );
-              return;
-            }
-
-            await page.waitForFunction(
-              `document.querySelector("[data-annotation-id='25R']").hidden === false`
-            );
-            await page.click("#editorFreeText");
-            await page.waitForFunction(
-              `document.querySelector("[data-annotation-id='25R']").hidden === true`
-            );
-            await page.click("#editorFreeText");
-            await page.waitForFunction(
-              `document.querySelector("[data-annotation-id='25R']").hidden === false`
-=======
             const selector = getAnnotationSelector("25R");
             await page.waitForFunction(
               `document.querySelector('${selector}').hidden === false`
@@ -786,7 +581,6 @@ describe("ResetForm action", () => {
             await page.click("#editorFreeText");
             await page.waitForFunction(
               `document.querySelector('${selector}').hidden === false`
->>>>>>> upstream/master
             );
           })
         );
@@ -798,16 +592,6 @@ describe("ResetForm action", () => {
     describe("bug1844583.pdf", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-        pages = await loadAndWait(
-          "bug1844583.pdf",
-          "[data-annotation-id='8R']"
-        );
-      });
-
-      afterAll(async () => {
-=======
       beforeEach(async () => {
         pages = await loadAndWait(
           "bug1844583.pdf",
@@ -816,7 +600,6 @@ describe("ResetForm action", () => {
       });
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
@@ -837,16 +620,6 @@ describe("ResetForm action", () => {
     describe("tagged_stamp.pdf", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-        pages = await loadAndWait(
-          "tagged_stamp.pdf",
-          "[data-annotation-id='20R']"
-        );
-      });
-
-      afterAll(async () => {
-=======
       beforeEach(async () => {
         pages = await loadAndWait(
           "tagged_stamp.pdf",
@@ -855,29 +628,12 @@ describe("ResetForm action", () => {
       });
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
       it("must check that the popup has the correct visibility", async () => {
         await Promise.all(
           pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-            let hidden = await page.$eval(
-              "[data-annotation-id='21R']",
-              el => el.hidden
-            );
-            expect(hidden).withContext(`In ${browserName}`).toEqual(true);
-            await page.focus("[data-annotation-id='20R']");
-            await page.keyboard.press("Enter");
-            await page.waitForFunction(
-              `document.querySelector("[data-annotation-id='21R']").hidden !== true`
-            );
-            hidden = await page.$eval(
-              "[data-annotation-id='21R']",
-              el => el.hidden
-            );
-=======
             const selector = getAnnotationSelector("21R");
             let hidden = await page.$eval(selector, el => el.hidden);
             expect(hidden).withContext(`In ${browserName}`).toEqual(true);
@@ -888,55 +644,27 @@ describe("ResetForm action", () => {
               `document.querySelector('${selector}').hidden !== true`
             );
             hidden = await page.$eval(selector, el => el.hidden);
->>>>>>> upstream/master
             expect(hidden).withContext(`In ${browserName}`).toEqual(false);
 
             await page.keyboard.press("Enter");
             await page.waitForFunction(
-<<<<<<< HEAD
-              `document.querySelector("[data-annotation-id='21R']").hidden !== false`
-            );
-            hidden = await page.$eval(
-              "[data-annotation-id='21R']",
-              el => el.hidden
-            );
-=======
               `document.querySelector('${selector}').hidden !== false`
             );
             hidden = await page.$eval(selector, el => el.hidden);
->>>>>>> upstream/master
             expect(hidden).withContext(`In ${browserName}`).toEqual(true);
 
             await page.keyboard.press("Enter");
             await page.waitForFunction(
-<<<<<<< HEAD
-              `document.querySelector("[data-annotation-id='21R']").hidden !== true`
-            );
-            hidden = await page.$eval(
-              "[data-annotation-id='21R']",
-              el => el.hidden
-            );
-=======
               `document.querySelector('${selector}').hidden !== true`
             );
             hidden = await page.$eval(selector, el => el.hidden);
->>>>>>> upstream/master
             expect(hidden).withContext(`In ${browserName}`).toEqual(false);
 
             await page.keyboard.press("Escape");
             await page.waitForFunction(
-<<<<<<< HEAD
-              `document.querySelector("[data-annotation-id='21R']").hidden !== false`
-            );
-            hidden = await page.$eval(
-              "[data-annotation-id='21R']",
-              el => el.hidden
-            );
-=======
               `document.querySelector('${selector}').hidden !== false`
             );
             hidden = await page.$eval(selector, el => el.hidden);
->>>>>>> upstream/master
             expect(hidden).withContext(`In ${browserName}`).toEqual(true);
           })
         );
@@ -948,16 +676,6 @@ describe("ResetForm action", () => {
     describe("issue14438.pdf", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-        pages = await loadAndWait(
-          "highlights.pdf",
-          "[data-annotation-id='693R']"
-        );
-      });
-
-      afterAll(async () => {
-=======
       beforeEach(async () => {
         pages = await loadAndWait(
           "highlights.pdf",
@@ -966,20 +684,12 @@ describe("ResetForm action", () => {
       });
 
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
       it("must check that the highlight annotation has no popup and no aria-haspopup attribute", async () => {
         await Promise.all(
           pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-            await page.waitForFunction(
-              // No aria-haspopup attribute,
-              `document.querySelector("[data-annotation-id='693R']").ariaHasPopup === null` +
-                // and no popup.
-                `&& document.querySelector("[data-annotation-id='694R']") === null`
-=======
             const highlightSelector = getAnnotationSelector("693R");
             const popupSelector = getAnnotationSelector("694R");
             await page.waitForFunction(
@@ -987,15 +697,12 @@ describe("ResetForm action", () => {
               `document.querySelector('${highlightSelector}').ariaHasPopup === null ` +
                 // and no popup.
                 `&& document.querySelector('${popupSelector}') === null`
->>>>>>> upstream/master
             );
           })
         );
       });
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("Rotated annotation and its clickable area", () => {
     describe("rotated_ink.pdf", () => {
@@ -1213,5 +920,4 @@ a dynamic compiler for JavaScript based on our`);
       );
     });
   });
->>>>>>> upstream/master
 });

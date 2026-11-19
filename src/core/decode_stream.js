@@ -99,8 +99,11 @@ class DecodeStream extends BaseStream {
     return this.buffer.subarray(pos, end);
   }
 
-  async getImageData(length, decoderOptions = null) {
+  async getImageData(length, decoderOptions) {
     if (!this.canAsyncDecodeImageFromBuffer) {
+      if (this.isAsyncDecoder) {
+        return this.decodeImage(null, decoderOptions);
+      }
       return this.getBytes(length, decoderOptions);
     }
     const data = await this.stream.asyncGetBytes();
@@ -126,7 +129,20 @@ class DecodeStream extends BaseStream {
   }
 
   getBaseStreams() {
-    return this.str ? this.str.getBaseStreams() : null;
+    return this.stream ? this.stream.getBaseStreams() : null;
+  }
+
+  clone() {
+    // Make sure it has been fully read.
+    while (!this.eof) {
+      this.readBlock();
+    }
+    return new Stream(
+      this.buffer,
+      this.start,
+      this.end - this.start,
+      this.dict.clone()
+    );
   }
 }
 

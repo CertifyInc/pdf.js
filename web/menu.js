@@ -56,6 +56,7 @@ class Menu {
       return;
     }
     const menu = this.#menu;
+    menu.classList.toggle("hidden", true);
     this.#triggeringButton.ariaExpanded = "false";
     this.#openMenuAC.abort();
     this.#openMenuAC = null;
@@ -81,6 +82,7 @@ class Menu {
       }
 
       const menu = this.#menu;
+      menu.classList.toggle("hidden", false);
       this.#triggeringButton.ariaExpanded = "true";
       this.#openMenuAC = new AbortController();
       const signal = AbortSignal.any([
@@ -135,13 +137,6 @@ class Menu {
               .focus();
             stopEvent(e);
             break;
-          default:
-            const char = e.key.toLocaleLowerCase();
-            this.#goToNextItem(e.target, true, item =>
-              item.textContent.trim().toLowerCase().startsWith(char)
-            );
-            stopEvent(e);
-            break;
         }
       },
       { signal, capture: true }
@@ -153,38 +148,32 @@ class Menu {
     });
     this.#triggeringButton.addEventListener(
       "keydown",
-      e => {
-        switch (e.key) {
-          case " ":
-          case "Enter":
+      ev => {
+        if (!this.#openMenuAC) {
+          return;
+        }
+        switch (ev.key) {
           case "ArrowDown":
           case "Home":
-            if (!this.#openMenuAC) {
-              this.#triggeringButton.click();
-            }
             this.#menuItems
               .find(
                 item => !item.disabled && !item.classList.contains("hidden")
               )
               .focus();
-            stopEvent(e);
+            stopEvent(ev);
             break;
           case "ArrowUp":
           case "End":
-            if (!this.#openMenuAC) {
-              this.#triggeringButton.click();
-            }
             this.#menuItems
               .findLast(
                 item => !item.disabled && !item.classList.contains("hidden")
               )
               .focus();
-            stopEvent(e);
+            stopEvent(ev);
             break;
           case "Escape":
             this.#closeMenu();
-            stopEvent(e);
-            break;
+            stopEvent(ev);
         }
       },
       { signal }
@@ -196,7 +185,7 @@ class Menu {
    * @param {HTMLElement} element
    * @param {boolean} forward
    */
-  #goToNextItem(element, forward, check = () => true) {
+  #goToNextItem(element, forward) {
     const index =
       this.#lastIndex === -1
         ? this.#menuItems.indexOf(element)
@@ -209,11 +198,7 @@ class Menu {
       i = (i + increment) % len
     ) {
       const menuItem = this.#menuItems[i];
-      if (
-        !menuItem.disabled &&
-        !menuItem.classList.contains("hidden") &&
-        check(menuItem)
-      ) {
+      if (!menuItem.disabled && !menuItem.classList.contains("hidden")) {
         menuItem.focus();
         this.#lastIndex = i;
         break;

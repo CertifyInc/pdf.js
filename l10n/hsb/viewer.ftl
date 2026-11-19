@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bajtow)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bajtow)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bajtow)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titul:
 pdfjs-document-properties-author = Awtor:
 pdfjs-document-properties-subject = Předmjet:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Datum změny:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Awtor:
 pdfjs-document-properties-producer = PDF-zhotowjer:
 pdfjs-document-properties-version = PDF-wersija:
@@ -285,13 +267,6 @@ pdfjs-rendering-error = Při zwobraznjenju strony je zmylk wustupił.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -315,11 +290,6 @@ pdfjs-web-fonts-disabled = Webpisma su znjemóžnjene: njeje móžno, zasadźene
 
 pdfjs-editor-free-text-button =
     .title = Tekst
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Tekst
-pdfjs-editor-ink-button =
-    .title = Rysować
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Tekstowu barbu změnić
 pdfjs-editor-free-text-button-label = Tekst
@@ -327,7 +297,6 @@ pdfjs-editor-ink-button =
     .title = Rysować
 pdfjs-editor-color-picker-ink-input =
     .title = Rysowansku barbu změnić
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Rysować
 pdfjs-editor-stamp-button =
     .title = Wobrazy přidać abo wobdźěłać
@@ -339,8 +308,6 @@ pdfjs-highlight-floating-button1 =
     .title = Wuzběhnjenje
     .aria-label = Wuzběhnjenje
 pdfjs-highlight-floating-button-label = Wuzběhnjenje
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Komentować
     .aria-label = Komentować
@@ -368,7 +335,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Signaturowy editor: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Wobrazowy editor
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -380,11 +346,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Wobraz wotstronić
 pdfjs-editor-remove-highlight-button =
     .title = Wuzběhnjenje wotstronić
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Signaturu wotstronić
->>>>>>> upstream/master
 
 ##
 
@@ -401,8 +364,6 @@ pdfjs-editor-stamp-add-image-button-label = Wobraz přidać
 pdfjs-editor-free-highlight-thickness-input = Tołstosć
 pdfjs-editor-free-highlight-thickness-title =
     .title = Tołstosć změnić, hdyž so zapiski wuzběhuja, kotrež tekst njejsu
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Wodźenske elementy signaturow a składowane signatury
 pdfjs-editor-signature-add-signature-button =
@@ -413,20 +374,10 @@ pdfjs-editor-signature-add-signature-button-label = Nowu signaturu přidać
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Składowana signatura: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Tekstowy editor
     .default-content = Započńće pisać …
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Tekstowy editor
-pdfjs-free-text-default-content = Započńće pisać…
-pdfjs-ink =
-    .aria-label = Rysowanski editor
-pdfjs-ink-canvas =
-    .aria-label = Wobraz wutworjeny wot wužiwarja
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -444,17 +395,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Bóčnicu začinić
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Widźiće něšto přispomnjenja hódneho? Wuzběhńće to a zawostajće komentar.
 pdfjs-editor-comments-sidebar-no-comments-link = Dalše informacije
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternatiwny tekst
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Alternatiwny tekst wobdźěłać
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Alternatiwny tekst wobdźěłać
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Nastajenje wubrać
 pdfjs-editor-alt-text-dialog-description = Alternatiwny tekst pomha, hdyž ludźo njemóža wobraz widźeć abo hdyž so wobraz njezačita.
 pdfjs-editor-alt-text-add-description-label = Wopisanje přidać
@@ -474,17 +420,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Horjeka nalěwo – wulkosć změnić
-pdfjs-editor-resizer-label-top-middle = Horjeka wosrjedź – wulkosć změnić
-pdfjs-editor-resizer-label-top-right = Horjeka naprawo – wulkosć změnić
-pdfjs-editor-resizer-label-middle-right = Wosrjedź naprawo – wulkosć změnić
-pdfjs-editor-resizer-label-bottom-right = Deleka naprawo – wulkosć změnić
-pdfjs-editor-resizer-label-bottom-middle = Deleka wosrjedź – wulkosć změnić
-pdfjs-editor-resizer-label-bottom-left = Deleka nalěwo – wulkosć změnić
-pdfjs-editor-resizer-label-middle-left = Wosrjedź nalěwo – wulkosć změnić
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Horjeka nalěwo – wulkosć změnić
 pdfjs-editor-resizer-top-middle =
@@ -550,10 +485,6 @@ pdfjs-editor-new-alt-text-error-close-button = Začinić
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Model KI za alternatiwny tekst so sćahuje ({ $downloadedSize } z { $totalSize } MB)
     .aria-valuetext = Model KI za alternatiwny tekst so sćahuje ({ $downloadedSize } z { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -593,8 +524,6 @@ pdfjs-editor-alt-text-settings-editor-title = Editor za alternatiwny tekst
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Editor alternatiwneho teksta hnydom pokazać, hdyž so wobraz přidawa
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomha, wam wšěm swojim wobrazam alternatiwny tekst přidać.
 pdfjs-editor-alt-text-settings-close-button = Začinić
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -725,4 +654,3 @@ pdfjs-editor-add-signature-edit-button-label = Wopisanje wobdźěłać
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Wopisanje wobdźěłać
->>>>>>> upstream/master

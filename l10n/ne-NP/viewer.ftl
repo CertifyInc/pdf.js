@@ -83,30 +83,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = कागजात विशेषताहरू...
 pdfjs-document-properties-file-name = फाइल नाम:
 pdfjs-document-properties-file-size = फाइल आकार:
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = शीर्षक:
 pdfjs-document-properties-author = लेखक:
 pdfjs-document-properties-subject = विषयः
 pdfjs-document-properties-keywords = शब्दकुञ्जीः
 pdfjs-document-properties-creation-date = सिर्जना गरिएको मिति:
 pdfjs-document-properties-modification-date = परिमार्जित मिति:
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = सर्जक:
 pdfjs-document-properties-producer = PDF निर्माता:
 pdfjs-document-properties-version = PDF संस्करण
@@ -119,17 +101,6 @@ pdfjs-document-properties-page-size-orientation-landscape = परिदृश�
 pdfjs-document-properties-page-size-name-letter = अक्षर
 pdfjs-document-properties-page-size-name-legal = कानूनी
 
-<<<<<<< HEAD
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
-=======
->>>>>>> upstream/master
 ##
 
 pdfjs-document-properties-linearized-yes = हो
@@ -203,12 +174,6 @@ pdfjs-page-scale-actual = वास्तविक आकार
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-<<<<<<< HEAD
-## PDF page
-
-
-=======
->>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = यो PDF लोड गर्दा एउटा त्रुटि देखापर्‍यो।
@@ -234,16 +199,3 @@ pdfjs-password-invalid = अवैध गोप्यशब्द। पुन�
 pdfjs-password-ok-button = ठिक छ
 pdfjs-password-cancel-button = रद्द गर्नुहोस्
 pdfjs-web-fonts-disabled = वेब फन्ट असक्षम छन्: एम्बेडेड PDF फन्ट प्रयोग गर्न असमर्थ।
-<<<<<<< HEAD
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-=======
->>>>>>> upstream/master

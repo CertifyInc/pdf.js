@@ -38,19 +38,11 @@ describe("accessibility", () => {
   describe("structure tree", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("structure_simple.pdf", ".structTree");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("structure_simple.pdf", ".structTree");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -115,22 +107,14 @@ describe("accessibility", () => {
   describe("Annotation", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       pages = await loadAndWait(
         "tracemonkey_a11y.pdf",
         ".textLayer .endOfContent"
       );
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-=======
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -163,19 +147,11 @@ describe("accessibility", () => {
   describe("Annotations order", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("fields_order.pdf", ".annotationLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("fields_order.pdf", ".annotationLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -204,13 +180,6 @@ describe("accessibility", () => {
   describe("Stamp annotation accessibility", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tagged_stamp.pdf", ".annotationLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait(
         "tagged_stamp.pdf",
@@ -219,7 +188,6 @@ describe("accessibility", () => {
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -280,19 +248,11 @@ describe("accessibility", () => {
   describe("Figure in the content stream", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("bug1708040.pdf", ".textLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("bug1708040.pdf", ".textLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -324,8 +284,6 @@ describe("accessibility", () => {
       );
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("No undefined id", () => {
     let pages;
@@ -472,119 +430,4 @@ describe("accessibility", () => {
       );
     });
   });
-
-  describe("Artifacts must be aria-hidden", () => {
-    let pages;
-
-    beforeEach(async () => {
-      pages = await loadAndWait("bug1937438_mml_from_latex.pdf", ".textLayer");
-    });
-
-    afterEach(async () => {
-      await closePages(pages);
-    });
-
-    it("must check that some artifacts are aria-hidden", async () => {
-      await Promise.all(
-        pages.map(async ([browserName, page]) => {
-          const parentSquareRootHidden = await page.evaluate(() => {
-            for (const span of document.querySelectorAll(".textLayer span")) {
-              if (span.textContent === "√") {
-                return span.parentElement.getAttribute("aria-hidden");
-              }
-            }
-            return false;
-          });
-          expect(parentSquareRootHidden)
-            .withContext(`In ${browserName}`)
-            .toEqual("true");
-        })
-      );
-    });
-  });
-
-  describe("No alt-text with MathML", () => {
-    let pages;
-
-    beforeEach(async () => {
-      pages = await loadAndWait("bug2004951.pdf", ".textLayer");
-    });
-
-    afterEach(async () => {
-      await closePages(pages);
-    });
-
-    it("must check that there's no alt-text on the MathML node", async () => {
-      await Promise.all(
-        pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
-          const ariaLabel = await page.$eval(
-            "span[aria-owns='p3R_mc2']",
-            el => el.getAttribute("aria-label") || ""
-          );
-          if (isSanitizerSupported) {
-            expect(ariaLabel).withContext(`In ${browserName}`).toEqual("");
-          } else {
-            expect(ariaLabel)
-              .withContext(`In ${browserName}`)
-              .toEqual("cube root of , x plus y end cube root ");
-          }
-        })
-      );
-    });
-  });
-
-  describe("Text elements must be aria-hidden when there's MathML and annotations", () => {
-    let pages;
-
-    beforeEach(async () => {
-      pages = await loadAndWait("bug2009627.pdf", ".textLayer");
-    });
-
-    afterEach(async () => {
-      await closePages(pages);
-    });
-
-    it("must check that the text in text layer is aria-hidden", async () => {
-      await Promise.all(
-        pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
-          const ariaHidden = await page.evaluate(() =>
-            Array.from(
-              document.querySelectorAll(".structTree :has(> math)")
-            ).map(el =>
-              document
-                .getElementById(el.getAttribute("aria-owns"))
-                .getAttribute("aria-hidden")
-            )
-          );
-          if (isSanitizerSupported) {
-            expect(ariaHidden)
-              .withContext(`In ${browserName}`)
-              .toEqual(["true", "true", "true"]);
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Pending in Chrome: Sanitizer API (in ${browserName}) is not supported`
-            );
-          }
-        })
-      );
-    });
-  });
->>>>>>> upstream/master
 });

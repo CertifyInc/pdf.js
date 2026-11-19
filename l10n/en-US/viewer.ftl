@@ -180,26 +180,6 @@ pdfjs-printing-not-ready = Warning: The PDF is not fully loaded for printing.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-<<<<<<< HEAD
-pdfjs-toggle-sidebar-button =
-    .title = Toggle Sidebar
-pdfjs-toggle-sidebar-notification-button =
-    .title = Toggle Sidebar (document contains outline/attachments/layers)
-pdfjs-toggle-sidebar-button-label = Toggle Sidebar
-pdfjs-document-outline-button =
-    .title = Show Document Outline (double-click to expand/collapse all items)
-pdfjs-document-outline-button-label = Document Outline
-pdfjs-attachments-button =
-    .title = Show Attachments
-pdfjs-attachments-button-label = Attachments
-pdfjs-layers-button =
-    .title = Show Layers (double-click to reset all layers to the default state)
-pdfjs-layers-button-label = Layers
-pdfjs-thumbs-button =
-    .title = Show Thumbnails
-pdfjs-thumbs-button-label = Thumbnails
-=======
->>>>>>> upstream/master
 pdfjs-current-outline-item-button =
     .title = Find Current Outline Item
 pdfjs-current-outline-item-button-label = Current Outline Item
@@ -309,11 +289,6 @@ pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fo
 
 pdfjs-editor-free-text-button =
     .title = Text
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Text
-pdfjs-editor-ink-button =
-    .title = Draw
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Change text color
 pdfjs-editor-free-text-button-label = Text
@@ -321,7 +296,6 @@ pdfjs-editor-ink-button =
     .title = Draw
 pdfjs-editor-color-picker-ink-input =
     .title = Change drawing color
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Draw
 pdfjs-editor-stamp-button =
     .title = Add or edit images
@@ -333,8 +307,6 @@ pdfjs-highlight-floating-button1 =
     .title = Highlight
     .aria-label = Highlight
 pdfjs-highlight-floating-button-label = Highlight
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Comment
     .aria-label = Comment
@@ -364,7 +336,6 @@ pdfjs-editor-signature-editor1 =
 
 pdfjs-editor-stamp-editor =
     .aria-label = Image editor
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +347,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Remove image
 pdfjs-editor-remove-highlight-button =
     .title = Remove highlight
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Remove signature
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +365,6 @@ pdfjs-editor-stamp-add-image-button-label = Add image
 pdfjs-editor-free-highlight-thickness-input = Thickness
 pdfjs-editor-free-highlight-thickness-title =
     .title = Change thickness when highlighting items other than text
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Signature controls and saved signatures
 pdfjs-editor-signature-add-signature-button =
@@ -410,18 +376,11 @@ pdfjs-editor-signature-add-signature-button-label = Add new signature
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Saved signature: { $description }
->>>>>>> upstream/master
 
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Text Editor
     .default-content = Start typing…
-<<<<<<< HEAD
-pdfjs-ink =
-    .aria-label = Draw Editor
-pdfjs-ink-canvas =
-    .aria-label = User-created image
-=======
 
 # Used to show how many comments are present in the pdf file.
 # Variables:
@@ -440,7 +399,6 @@ pdfjs-editor-comments-sidebar-close-button-label = Close the sidebar
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = See something noteworthy? Highlight it and leave a comment.
 pdfjs-editor-comments-sidebar-no-comments-link = Learn more
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
@@ -540,10 +498,6 @@ pdfjs-editor-new-alt-text-error-close-button = Close
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Downloading alt text AI model ({ $downloadedSize } of { $totalSize } MB)
     .aria-valuetext = Downloading alt text AI model ({ $downloadedSize } of { $totalSize } MB)
 
@@ -591,8 +545,6 @@ pdfjs-editor-alt-text-settings-editor-title = Alt text editor
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Show alt text editor right away when adding an image
 pdfjs-editor-alt-text-settings-show-dialog-description = Helps you make sure all your images have alt text.
 pdfjs-editor-alt-text-settings-close-button = Close
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -609,7 +561,6 @@ pdfjs-editor-undo-bar-message-freetext = Text removed
 pdfjs-editor-undo-bar-message-ink = Drawing removed
 pdfjs-editor-undo-bar-message-stamp = Image removed
 pdfjs-editor-undo-bar-message-signature = Signature removed
-pdfjs-editor-undo-bar-message-comment = Comment removed
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -816,4 +767,3 @@ pdfjs-views-manager-status-undo-button-label = Undo
 pdfjs-views-manager-status-close-button =
     .title = Close
 pdfjs-views-manager-status-close-button-label = Close
->>>>>>> upstream/master

@@ -44,17 +44,10 @@ pdfjs-save-button =
 pdfjs-save-button-label = Сохранить
 # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
 pdfjs-download-button =
-<<<<<<< HEAD
-    .title = Загрузить
-# Used in Firefox for Android as a label for the download button (“download” is a verb).
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-download-button-label = Загрузить
-=======
     .title = Скачать
 # Used in Firefox for Android as a label for the download button (“download” is a verb).
 # Length of the translation matters since we are in a mobile context, with limited screen estate.
 pdfjs-download-button-label = Скачать
->>>>>>> upstream/master
 pdfjs-bookmark-button =
     .title = Текущая страница (просмотр URL-адреса с текущей страницы)
 pdfjs-bookmark-button-label = Текущая страница
@@ -77,17 +70,10 @@ pdfjs-page-rotate-ccw-button =
     .title = Повернуть против часовой стрелки
 pdfjs-page-rotate-ccw-button-label = Повернуть против часовой стрелки
 pdfjs-cursor-text-select-tool-button =
-<<<<<<< HEAD
     .title = Включить Инструмент «Выделение текста»
 pdfjs-cursor-text-select-tool-button-label = Инструмент «Выделение текста»
 pdfjs-cursor-hand-tool-button =
     .title = Включить Инструмент «Рука»
-=======
-    .title = Включить инструмент «Выделение текста»
-pdfjs-cursor-text-select-tool-button-label = Инструмент «Выделение текста»
-pdfjs-cursor-hand-tool-button =
-    .title = Включить инструмент «Рука»
->>>>>>> upstream/master
 pdfjs-cursor-hand-tool-button-label = Инструмент «Рука»
 pdfjs-scroll-page-button =
     .title = Использовать прокрутку страниц
@@ -126,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байт)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байт)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Заголовок:
 pdfjs-document-properties-author = Автор:
 pdfjs-document-properties-subject = Тема:
@@ -146,13 +121,6 @@ pdfjs-document-properties-modification-date = Дата изменения:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Приложение:
 pdfjs-document-properties-producer = Производитель PDF:
 pdfjs-document-properties-version = Версия PDF:
@@ -297,13 +265,6 @@ pdfjs-rendering-error = При создании страницы произош�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -327,11 +288,6 @@ pdfjs-web-fonts-disabled = Веб-шрифты отключены: не удал
 
 pdfjs-editor-free-text-button =
     .title = Текст
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Текст
-pdfjs-editor-ink-button =
-    .title = Рисовать
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Изменить цвет текста
 pdfjs-editor-free-text-button-label = Текст
@@ -339,7 +295,6 @@ pdfjs-editor-ink-button =
     .title = Рисовать
 pdfjs-editor-color-picker-ink-input =
     .title = Изменить цвет прорисовки
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Рисовать
 pdfjs-editor-stamp-button =
     .title = Добавить или изменить изображения
@@ -351,8 +306,6 @@ pdfjs-highlight-floating-button1 =
     .title = Выделение
     .aria-label = Выделение
 pdfjs-highlight-floating-button-label = Выделение
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Комментировать
     .aria-label = Комментировать
@@ -380,7 +333,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Редактор подписи: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Редактор изображений
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -392,11 +344,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Удалить изображение
 pdfjs-editor-remove-highlight-button =
     .title = Удалить выделение
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Удалить подпись
->>>>>>> upstream/master
 
 ##
 
@@ -413,10 +362,8 @@ pdfjs-editor-stamp-add-image-button-label = Добавить изображен�
 pdfjs-editor-free-highlight-thickness-input = Толщина
 pdfjs-editor-free-highlight-thickness-title =
     .title = Изменить толщину при выделении элементов, кроме текста
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
-    .aria-label = Управление подписями и сохранённые подписи
+    .aria-label = Управление подписями и сохраненные подписи
 pdfjs-editor-signature-add-signature-button =
     .title = Добавить новую подпись
 pdfjs-editor-signature-add-signature-button-label = Добавить новую подпись
@@ -425,20 +372,10 @@ pdfjs-editor-signature-add-signature-button-label = Добавить новую 
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Сохранённая подпись: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Текстовый редактор
     .default-content = Начните ввод...
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Текстовый редактор
-pdfjs-free-text-default-content = Начните вводить…
-pdfjs-ink =
-    .aria-label = Редактор рисования
-pdfjs-ink-canvas =
-    .aria-label = Созданное пользователем изображение
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -455,17 +392,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Закрыть боковую
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Увидели что-то интересное? Выделите и оставьте комментарий.
 pdfjs-editor-comments-sidebar-no-comments-link = Подробнее
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Альтернативный текст
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Изменить альтернативный текст
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Изменить альтернативный текст
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Выберите вариант
 pdfjs-editor-alt-text-dialog-description = Альтернативный текст помогает, когда люди не видят изображение или оно не загружается.
 pdfjs-editor-alt-text-add-description-label = Добавить описание
@@ -485,17 +417,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Левый верхний угол — изменить размер
-pdfjs-editor-resizer-label-top-middle = Вверху посередине — изменить размер
-pdfjs-editor-resizer-label-top-right = Верхний правый угол — изменить размер
-pdfjs-editor-resizer-label-middle-right = В центре справа — изменить размер
-pdfjs-editor-resizer-label-bottom-right = Нижний правый угол — изменить размер
-pdfjs-editor-resizer-label-bottom-middle = Внизу посередине — изменить размер
-pdfjs-editor-resizer-label-bottom-left = Нижний левый угол — изменить размер
-pdfjs-editor-resizer-label-middle-left = В центре слева — изменить размер
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Левый верхний угол — изменить размер
 pdfjs-editor-resizer-top-middle =
@@ -561,10 +482,6 @@ pdfjs-editor-new-alt-text-error-close-button = Закрыть
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Загрузка модели ИИ для альтернативного текста ({ $downloadedSize } из { $totalSize } МБ)
     .aria-valuetext = Загрузка модели ИИ для альтернативного текста ({ $downloadedSize } из { $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -598,18 +515,12 @@ pdfjs-editor-alt-text-settings-create-model-description = Предлагает �
 pdfjs-editor-alt-text-settings-download-model-label = ИИ-модель альтернативного текста ({ $totalSize } МБ)
 pdfjs-editor-alt-text-settings-ai-model-description = Запускается локально на вашем устройстве, поэтому ваши данные остаются конфиденциальными. Требуется для автоматического альтернативного текста.
 pdfjs-editor-alt-text-settings-delete-model-button = Удалить
-<<<<<<< HEAD
-pdfjs-editor-alt-text-settings-download-model-button = Загрузить
-=======
 pdfjs-editor-alt-text-settings-download-model-button = Скачать
->>>>>>> upstream/master
 pdfjs-editor-alt-text-settings-downloading-model-button = Загрузка…
 pdfjs-editor-alt-text-settings-editor-title = Редактор альтернативного текста
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Сразу показывать редактор альтернативного текста при добавлении изображения
 pdfjs-editor-alt-text-settings-show-dialog-description = Помогает вам убедиться, что все ваши изображения имеют альтернативный текст.
 pdfjs-editor-alt-text-settings-close-button = Закрыть
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -739,4 +650,3 @@ pdfjs-editor-add-signature-edit-button-label = Изменить описание
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Изменить описание
->>>>>>> upstream/master

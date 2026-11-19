@@ -88,11 +88,7 @@ pdfjs-scroll-wrapped-button =
     .title = Χρήση κυκλικής κύλισης
 pdfjs-scroll-wrapped-button-label = Κυκλική κύλιση
 pdfjs-spread-none-button =
-<<<<<<< HEAD
-    .title = Να μη γίνει σύνδεση επεκτάσεων σελίδων
-=======
     .title = Να μην γίνει σύνδεση των επεκτάσεων σελίδων
->>>>>>> upstream/master
 pdfjs-spread-none-button-label = Χωρίς επεκτάσεις
 pdfjs-spread-odd-button =
     .title = Σύνδεση επεκτάσεων σελίδων ξεκινώντας από τις μονές σελίδες
@@ -116,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Τίτλος:
 pdfjs-document-properties-author = Συγγραφέας:
 pdfjs-document-properties-subject = Θέμα:
@@ -136,13 +121,6 @@ pdfjs-document-properties-modification-date = Ημερομηνία τροποπ�
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Δημιουργός:
 pdfjs-document-properties-producer = Παραγωγός PDF:
 pdfjs-document-properties-version = Έκδοση PDF:
@@ -280,22 +258,11 @@ pdfjs-page-landmark =
 pdfjs-loading-error = Προέκυψε σφάλμα κατά τη φόρτωση του PDF.
 pdfjs-invalid-file-error = Μη έγκυρο ή κατεστραμμένο αρχείο PDF.
 pdfjs-missing-file-error = Λείπει αρχείο PDF.
-<<<<<<< HEAD
-pdfjs-unexpected-response-error = Μη αναμενόμενη απόκριση από το διακομιστή.
-=======
 pdfjs-unexpected-response-error = Απρόσμενη απάντηση διακομιστή.
->>>>>>> upstream/master
 pdfjs-rendering-error = Προέκυψε σφάλμα κατά την εμφάνιση της σελίδας.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -310,11 +277,7 @@ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", tim
 ## Password
 
 pdfjs-password-label = Εισαγάγετε τον κωδικό πρόσβασης για να ανοίξετε αυτό το αρχείο PDF.
-<<<<<<< HEAD
-pdfjs-password-invalid = Μη έγκυρος κωδικός πρόσβασης. Παρακαλώ δοκιμάστε ξανά.
-=======
 pdfjs-password-invalid = Μη έγκυρος κωδικός πρόσβασης. Δοκιμάστε ξανά.
->>>>>>> upstream/master
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Ακύρωση
 pdfjs-web-fonts-disabled = Οι γραμματοσειρές ιστού είναι ανενεργές: δεν είναι δυνατή η χρήση των ενσωματωμένων γραμματοσειρών PDF.
@@ -323,11 +286,6 @@ pdfjs-web-fonts-disabled = Οι γραμματοσειρές ιστού είνα
 
 pdfjs-editor-free-text-button =
     .title = Κείμενο
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Κείμενο
-pdfjs-editor-ink-button =
-    .title = Σχέδιο
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Αλλαγή χρώματος κειμένου
 pdfjs-editor-free-text-button-label = Κείμενο
@@ -335,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Σχέδιο
 pdfjs-editor-color-picker-ink-input =
     .title = Αλλαγή χρώματος σχεδίου
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Σχέδιο
 pdfjs-editor-stamp-button =
     .title = Προσθήκη ή επεξεργασία εικόνων
@@ -347,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Επισήμανση
     .aria-label = Επισήμανση
 pdfjs-highlight-floating-button-label = Επισήμανση
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Σχόλιο
     .aria-label = Σχόλιο
@@ -376,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Επεξεργασία υπογραφής: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Επεξεργασία εικόνας
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -388,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Αφαίρεση εικόνας
 pdfjs-editor-remove-highlight-button =
     .title = Αφαίρεση επισήμανσης
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Αφαίρεση υπογραφής
->>>>>>> upstream/master
 
 ##
 
@@ -409,19 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Προσθήκη εικόνας
 pdfjs-editor-free-highlight-thickness-input = Πάχος
 pdfjs-editor-free-highlight-thickness-title =
     .title = Αλλαγή πάχους κατά την επισήμανση στοιχείων εκτός κειμένου
-<<<<<<< HEAD
-# .default-content is used as a placeholder in an empty text editor.
-pdfjs-free-text2 =
-    .aria-label = Επεξεργασία κειμένου
-    .default-content = Ξεκινήστε την πληκτρολόγηση…
-pdfjs-free-text =
-    .aria-label = Επεξεργασία κειμένου
-pdfjs-free-text-default-content = Ξεκινήστε να πληκτρολογείτε…
-pdfjs-ink =
-    .aria-label = Επεξεργασία σχεδίων
-pdfjs-ink-canvas =
-    .aria-label = Εικόνα από τον χρήστη
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Στοιχεία ελέγχου υπογραφής και αποθηκευμένες υπογραφές
 pdfjs-editor-signature-add-signature-button =
@@ -451,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Κλείσιμο πλευρι
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Βλέπετε κάτι αξιοσημείωτο; Επισημάνετε το και αφήστε ένα σχόλιο.
 pdfjs-editor-comments-sidebar-no-comments-link = Μάθετε περισσότερα
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Εναλλακτικό κείμενο
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Επεξεργασία εναλλακτικού κειμένου
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Επεξεργασία εναλλακτικού κειμένου
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Διαλέξτε μια επιλογή
 pdfjs-editor-alt-text-dialog-description = Το εναλλακτικό κείμενο είναι χρήσιμο όταν οι άνθρωποι δεν μπορούν να δουν την εικόνα ή όταν αυτή δεν φορτώνεται.
 pdfjs-editor-alt-text-add-description-label = Προσθήκη περιγραφής
@@ -481,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Επάνω αριστερή γωνία — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-top-middle = Μέσο επάνω πλευράς — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-top-right = Επάνω δεξιά γωνία — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-middle-right = Μέσο δεξιάς πλευράς — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-bottom-right = Κάτω δεξιά γωνία — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-bottom-middle = Μέσο κάτω πλευράς — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-bottom-left = Κάτω αριστερή γωνία — αλλαγή μεγέθους
-pdfjs-editor-resizer-label-middle-left = Μέσο αριστερής πλευράς — αλλαγή μεγέθους
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Επάνω αριστερή γωνία — αλλαγή μεγέθους
 pdfjs-editor-resizer-top-middle =
@@ -557,14 +479,8 @@ pdfjs-editor-new-alt-text-error-close-button = Κλείσιμο
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Λήψη μοντέλου AI εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
-    .aria-valuetext = Λήψη μοντέλου AI εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Λήψη μοντέλου ΤΝ εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
     .aria-valuetext = Λήψη μοντέλου ΤΝ εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
->>>>>>> upstream/master
 # This is a button that users can click to edit the alt text they have already added.
 pdfjs-editor-new-alt-text-added-button =
     .aria-label = Προστέθηκε εναλλακτικό κείμενο
@@ -593,11 +509,7 @@ pdfjs-editor-alt-text-settings-create-model-button-label = Αυτόματη δη
 pdfjs-editor-alt-text-settings-create-model-description = Προτείνει περιγραφές για άτομα που δεν μπορούν να δουν την εικόνα ή όταν η εικόνα δεν φορτώνεται.
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
-<<<<<<< HEAD
-pdfjs-editor-alt-text-settings-download-model-label = Μοντέλο AI εναλλακτικού κειμένου ({ $totalSize } MB)
-=======
 pdfjs-editor-alt-text-settings-download-model-label = Μοντέλο ΤΝ εναλλακτικού κειμένου ({ $totalSize } MB)
->>>>>>> upstream/master
 pdfjs-editor-alt-text-settings-ai-model-description = Εκτελείται τοπικά στη συσκευή σας, ώστε τα δεδομένα σας να παραμένουν ιδιωτικά. Απαιτείται για τη δημιουργία του αυτόματου εναλλακτικού κειμένου.
 pdfjs-editor-alt-text-settings-delete-model-button = Διαγραφή
 pdfjs-editor-alt-text-settings-download-model-button = Λήψη
@@ -606,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Επεξεργασία εναλλ�
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Άμεση εμφάνιση της επεξεργασίας εναλλακτικού κειμένου κατά την προσθήκη εικόνας
 pdfjs-editor-alt-text-settings-show-dialog-description = Σας βοηθά να βεβαιωθείτε ότι όλες οι εικόνες σας έχουν εναλλακτικό κείμενο.
 pdfjs-editor-alt-text-settings-close-button = Κλείσιμο
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -736,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Επεξεργασία περιγ
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Επεξεργασία περιγραφής
->>>>>>> upstream/master

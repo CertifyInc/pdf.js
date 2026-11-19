@@ -13,11 +13,7 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-import { closePages, loadAndWait } from "./test_utils.mjs";
-=======
 import { closePages, FSI, loadAndWait, PDI } from "./test_utils.mjs";
->>>>>>> upstream/master
 
 function fuzzyMatch(a, b, browserName, pixelFuzz = 3) {
   expect(a)
@@ -32,19 +28,11 @@ describe("find bar", () => {
   describe("highlight all", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("find_all.pdf", ".textLayer", 100);
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("find_all.pdf", ".textLayer", 100);
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -53,11 +41,7 @@ describe("find bar", () => {
         pages.map(async ([browserName, page]) => {
           // Highlight all occurrences of the letter A (case insensitive).
           await page.click("#viewFindButton");
-<<<<<<< HEAD
-          await page.waitForSelector("#viewFindButton", { hidden: false });
-=======
           await page.waitForSelector("#findInput", { visible: true });
->>>>>>> upstream/master
           await page.type("#findInput", "a");
           await page.click("#findHighlightAll + label");
           await page.waitForSelector(".textLayer .highlight");
@@ -105,19 +89,11 @@ describe("find bar", () => {
   describe("highlight all (XFA)", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("xfa_imm5257e.pdf", ".xfaLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("xfa_imm5257e.pdf", ".xfaLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -125,11 +101,7 @@ describe("find bar", () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           await page.click("#viewFindButton");
-<<<<<<< HEAD
-          await page.waitForSelector("#viewFindButton", { hidden: false });
-=======
           await page.waitForSelector("#findInput", { visible: true });
->>>>>>> upstream/master
           await page.type("#findInput", "preferences");
           await page.waitForSelector("#findInput[data-status='']");
           await page.waitForSelector(".xfaLayer .highlight");
@@ -138,13 +110,6 @@ describe("find bar", () => {
           );
           const resultElement = await page.waitForSelector("#findResultsCount");
           const resultText = await resultElement.evaluate(el => el.textContent);
-<<<<<<< HEAD
-          /** Unicode bidi isolation characters. */
-          const FSI = "\u2068";
-          const PDI = "\u2069";
-          // Fluent adds these markers to the result text.
-=======
->>>>>>> upstream/master
           expect(resultText).toEqual(`${FSI}1${PDI} of ${FSI}1${PDI} match`);
           const selectedElement = await page.waitForSelector(
             ".highlight.selected"
@@ -157,8 +122,6 @@ describe("find bar", () => {
       );
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("issue19207.pdf", () => {
     let pages;
@@ -214,5 +177,4 @@ describe("find bar", () => {
       );
     });
   });
->>>>>>> upstream/master
 });

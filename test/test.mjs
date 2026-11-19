@@ -672,10 +672,7 @@ function checkRefTestResults(browser, id, results) {
     case "partial":
     case "text":
     case "highlight":
-<<<<<<< HEAD
-=======
     case "extract":
->>>>>>> upstream/master
       checkEq(task, results, browser, session.masterMode);
       break;
     case "fbf":
@@ -763,10 +760,7 @@ function refTestPostHandler(parsedUrl, req, res) {
     taskResults[round][page] = {
       failure,
       snapshot,
-<<<<<<< HEAD
-=======
       baselineSnapshot,
->>>>>>> upstream/master
       viewportWidth: data.viewportWidth,
       viewportHeight: data.viewportHeight,
       outputScale: data.outputScale,
@@ -781,14 +775,10 @@ function refTestPostHandler(parsedUrl, req, res) {
       });
     }
 
-<<<<<<< HEAD
-    var isDone = taskResults.at(-1)?.[lastPageNum - 1];
-=======
     const lastTaskResults = taskResults.at(-1);
     const isDone =
       lastTaskResults?.[lastPageNum - 1] ||
       lastTaskResults?.filter(result => !!result).length === numberOfTasks;
->>>>>>> upstream/master
     if (isDone) {
       checkRefTestResults(browser, id, taskResults);
       session.remaining--;
@@ -840,11 +830,7 @@ async function startIntegrationTest() {
   onAllSessionsClosed = onAllSessionsClosedAfterTests("integration");
   startServer();
 
-<<<<<<< HEAD
-  const { runTests } = await import("./integration-boot.mjs");
-=======
   const { runTests } = await import("./integration/jasmine-boot.js");
->>>>>>> upstream/master
   await startBrowsers({
     baseUrl: null,
     initializeSession: session => {
@@ -944,11 +930,6 @@ async function startBrowser({
   const printFile = path.join(tempDir, "print.pdf");
 
   if (browserName === "chrome") {
-<<<<<<< HEAD
-    // Run tests with the CDP protocol for Chrome only given that the Linux bot
-    // crashes with timeouts or OOM if WebDriver BiDi is used (issue #17961).
-    options.protocol = "cdp";
-=======
     // Slow down protocol calls by the given number of milliseconds. In Chrome
     // protocol calls are faster than in Firefox and thus trigger in quicker
     // succession. This can cause intermittent failures because new protocol
@@ -956,7 +937,6 @@ async function startBrowser({
     // a chance to be processed (essentially causing events to get lost). This
     // value gives Chrome a more similar execution speed as Firefox.
     options.slowMo = 5;
->>>>>>> upstream/master
 
     // avoid crash
     options.args = ["--no-sandbox", "--disable-setuid-sandbox"];
@@ -985,27 +965,14 @@ async function startBrowser({
       print_printer: "PDF",
       "print.printer_PDF.print_to_file": true,
       "print.printer_PDF.print_to_filename": printFile,
-<<<<<<< HEAD
-      // Enable OffscreenCanvas
-      "gfx.offscreencanvas.enabled": true,
       // Disable gpu acceleration
       "gfx.canvas.accelerated": false,
-      // Enable the `round` CSS function.
-      "layout.css.round.enabled": true,
-      // This allow to copy some data in the clipboard.
-      "dom.events.asyncClipboard.clipboardItem": true,
-=======
-      // Disable gpu acceleration
-      "gfx.canvas.accelerated": false,
->>>>>>> upstream/master
       // It's helpful to see where the caret is.
       "accessibility.browsewithcaret": true,
       // Disable the newtabpage stuff.
       "browser.newtabpage.enabled": false,
       // Disable network connections to Contile.
       "browser.topsites.contile.enabled": false,
-<<<<<<< HEAD
-=======
       // Disable logging for remote settings.
       "services.settings.loglevel": "off",
       // Disable AI/ML functionality.
@@ -1014,7 +981,6 @@ async function startBrowser({
       "browser.ml.linkPreview.enabled": false,
       "browser.tabs.groups.smart.enabled": false,
       "browser.tabs.groups.smart.userEnabled": false,
->>>>>>> upstream/master
       ...extraPrefsFirefox,
     };
   }

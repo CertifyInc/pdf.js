@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байтів)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } кБ ({ $size_b } байтів)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байтів)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Заголовок:
 pdfjs-document-properties-author = Автор:
 pdfjs-document-properties-subject = Тема:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Дата зміни:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Створено:
 pdfjs-document-properties-producer = Виробник PDF:
 pdfjs-document-properties-version = Версія PDF:
@@ -283,13 +265,6 @@ pdfjs-rendering-error = Під час виведення сторінки ста
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -307,11 +282,7 @@ pdfjs-password-label = Введіть пароль для відкриття ц�
 pdfjs-password-invalid = Неправильний пароль. Спробуйте ще раз.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Скасувати
-<<<<<<< HEAD
-pdfjs-web-fonts-disabled = Веб-шрифти вимкнено: неможливо використати вбудовані у PDF шрифти.
-=======
 pdfjs-web-fonts-disabled = Вебшрифти вимкнено: неможливо використати вбудовані у PDF шрифти.
->>>>>>> upstream/master
 
 ## Editing
 
@@ -331,8 +302,6 @@ pdfjs-highlight-floating-button1 =
     .title = Підсвітити
     .aria-label = Підсвітити
 pdfjs-highlight-floating-button-label = Підсвітити
-<<<<<<< HEAD
-=======
 pdfjs-editor-signature-button =
     .title = Додати підпис
 pdfjs-editor-signature-button-label = Додати підпис
@@ -352,7 +321,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Редактор підпису: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Редактор зображень
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -363,13 +331,9 @@ pdfjs-editor-remove-freetext-button =
 pdfjs-editor-remove-stamp-button =
     .title = Вилучити зображення
 pdfjs-editor-remove-highlight-button =
-<<<<<<< HEAD
-    .title = Вилучити підсвічування
-=======
     .title = Вилучити підсвічення
 pdfjs-editor-remove-signature-button =
     .title = Вилучити підпис
->>>>>>> upstream/master
 
 ##
 
@@ -385,9 +349,6 @@ pdfjs-editor-stamp-add-image-button-label = Додати зображення
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Товщина
 pdfjs-editor-free-highlight-thickness-title =
-<<<<<<< HEAD
-    .title = Змінюйте товщину під час підсвічування елементів, крім тексту
-=======
     .title = Змінюйте товщину під час підсвічення елементів, крім тексту
 pdfjs-editor-add-signature-container =
     .aria-label = Елементи керування підписами та збережені підписи
@@ -399,33 +360,16 @@ pdfjs-editor-signature-add-signature-button-label = Додати новий пі
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Збережений підпис: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Текстовий редактор
     .default-content = Напишіть щось…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Текстовий редактор
-pdfjs-free-text-default-content = Почніть вводити…
-pdfjs-ink =
-    .aria-label = Графічний редактор
-pdfjs-ink-canvas =
-    .aria-label = Зображення, створене користувачем
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Альтернативний текст
-pdfjs-editor-alt-text-edit-button-label = Змінити альтернативний текст
-=======
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Альтернативний текст
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Редагувати альтернативний текст
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Вибрати варіант
 pdfjs-editor-alt-text-dialog-description = Альтернативний текст допомагає, коли зображення не видно або коли воно не завантажується.
 pdfjs-editor-alt-text-add-description-label = Додати опис
@@ -438,27 +382,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Позначено декоратив
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Наприклад, “Молодий чоловік сідає за стіл їсти”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Альтернативний текст
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Верхній лівий кут – зміна розміру
-pdfjs-editor-resizer-label-top-middle = Вгорі посередині – зміна розміру
-pdfjs-editor-resizer-label-top-right = Верхній правий кут – зміна розміру
-pdfjs-editor-resizer-label-middle-right = Праворуч посередині – зміна розміру
-pdfjs-editor-resizer-label-bottom-right = Нижній правий кут – зміна розміру
-pdfjs-editor-resizer-label-bottom-middle = Внизу посередині – зміна розміру
-pdfjs-editor-resizer-label-bottom-left = Нижній лівий кут – зміна розміру
-pdfjs-editor-resizer-label-middle-left = Ліворуч посередині – зміна розміру
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Верхній лівий кут – зміна розміру
 pdfjs-editor-resizer-top-middle =
@@ -479,11 +409,7 @@ pdfjs-editor-resizer-middle-left =
 ## Color picker
 
 # This means "Color used to highlight text"
-<<<<<<< HEAD
-pdfjs-editor-highlight-colorpicker-label = Колір підсвічування
-=======
 pdfjs-editor-highlight-colorpicker-label = Колір підсвічення
->>>>>>> upstream/master
 pdfjs-editor-colorpicker-button =
     .title = Змінити колір
 pdfjs-editor-colorpicker-dropdown =
@@ -528,16 +454,6 @@ pdfjs-editor-new-alt-text-error-close-button = Закрити
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
-    .aria-valuetext = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = Альтернативний текст додано
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = Відсутній альтернативний текст
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
     .aria-valuetext = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -551,7 +467,6 @@ pdfjs-editor-new-alt-text-missing-button-label = Відсутній альтер
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = Переглянути альтернативний текст
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Переглянути альтернативний текст
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -578,8 +493,6 @@ pdfjs-editor-alt-text-settings-editor-title = Редактор альтерна�
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Показувати редактор альтернативного тексту під час додавання зображення
 pdfjs-editor-alt-text-settings-show-dialog-description = Допомагає переконатися, що всі ваші зображення мають альтернативний текст.
 pdfjs-editor-alt-text-settings-close-button = Закрити
-<<<<<<< HEAD
-=======
 
 ## "Annotations removed" bar
 
@@ -671,4 +584,3 @@ pdfjs-editor-add-signature-edit-button-label = Редагувати опис
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Редагувати опис
->>>>>>> upstream/master

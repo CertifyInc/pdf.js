@@ -14,22 +14,15 @@
  */
 
 import {
-<<<<<<< HEAD
-=======
   applyOpacity,
   findContrastColor,
->>>>>>> upstream/master
   getFilenameFromUrl,
   getPdfFilenameFromUrl,
   isValidFetchUrl,
   PDFDateString,
   renderRichText,
 } from "../../src/display/display_utils.js";
-<<<<<<< HEAD
-import { toBase64Util } from "../../src/shared/util.js";
-=======
 import { isNodeJS, toBase64Util } from "../../src/shared/util.js";
->>>>>>> upstream/master
 
 describe("display_utils", function () {
   describe("getFilenameFromUrl", function () {

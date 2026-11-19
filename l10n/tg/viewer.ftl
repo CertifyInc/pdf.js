@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байт)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байт)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Сарлавҳа:
 pdfjs-document-properties-author = Муаллиф:
 pdfjs-document-properties-subject = Мавзуъ:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Санаи тағйирот:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Эҷодкунанда:
 pdfjs-document-properties-producer = Таҳиякунандаи «PDF»:
 pdfjs-document-properties-version = Версияи «PDF»:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Ҳангоми шаклсозии саҳифа хато 
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Шрифтҳои интернетӣ ғайрифаъ�
 
 pdfjs-editor-free-text-button =
     .title = Матн
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Матн
-pdfjs-editor-ink-button =
-    .title = Расмкашӣ
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Иваз кардани ранги матн
 pdfjs-editor-free-text-button-label = Матн
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Расмкашӣ
 pdfjs-editor-color-picker-ink-input =
     .title = Иваз кардани ранги расмкашӣ
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Расмкашӣ
 pdfjs-editor-stamp-button =
     .title = Илова ё таҳрир кардани тасвирҳо
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Ҷудокунӣ
     .aria-label = Ҷудокунӣ
 pdfjs-highlight-floating-button-label = Ҷудокунӣ
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Шарҳ
     .aria-label = Шарҳ
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Муҳаррири имзо: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Муҳаррири тасвир
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Тоза кардани тасвир
 pdfjs-editor-remove-highlight-button =
     .title = Тоза кардани ҷудокунӣ
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Тоза кардани имзо
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Илова кардани тасви
 pdfjs-editor-free-highlight-thickness-input = Ғафсӣ
 pdfjs-editor-free-highlight-thickness-title =
     .title = Иваз кардани ғафсӣ ҳангоми ҷудокунии унсурҳо ба ғайр аз матн
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Идоракунии имзоҳо ва имзоҳои гузошташуда
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Илова кардани и
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Имзои гузошташуда: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Муҳаррири матн
     .default-content = Матнро ворид кунед…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Муҳаррири матн
-pdfjs-free-text-default-content = Нависед…
-pdfjs-ink =
-    .aria-label = Муҳаррири расмкашӣ
-pdfjs-ink-canvas =
-    .aria-label = Тасвири эҷодкардаи корбар
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Пӯшидани навори
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Чизи диққатангезро мушоҳида кардед? Онро қайд кунед ва ба он шарҳ гузоред.
 pdfjs-editor-comments-sidebar-no-comments-link = Маълумоти бештар
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Матни иловагӣ
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Таҳрир кардани матни ивазкунанда
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Таҳрир кардани матни иловагӣ
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Имконеро интихоб намоед
 pdfjs-editor-alt-text-dialog-description = Вақте ки одамон тасвирро дида наметавонанд ё вақте ки тасвир бор карда намешавад, матни иловагӣ (Alt text) кумак мерасонад.
 pdfjs-editor-alt-text-add-description-label = Илова кардани тавсиф
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Кунҷи чапи боло — тағйир додани андоза
-pdfjs-editor-resizer-label-top-middle = Канори миёнаи боло — тағйир додани андоза
-pdfjs-editor-resizer-label-top-right = Кунҷи рости боло — тағйир додани андоза
-pdfjs-editor-resizer-label-middle-right = Канори миёнаи рост — тағйир додани андоза
-pdfjs-editor-resizer-label-bottom-right = Кунҷи рости поён — тағйир додани андоза
-pdfjs-editor-resizer-label-bottom-middle = Канори миёнаи поён — тағйир додани андоза
-pdfjs-editor-resizer-label-bottom-left = Кунҷи чапи поён — тағйир додани андоза
-pdfjs-editor-resizer-label-middle-left = Канори миёнаи чап — тағйир додани андоза
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Кунҷи чапи боло — тағйир додани андоза
 pdfjs-editor-resizer-top-middle =
@@ -531,27 +466,21 @@ pdfjs-editor-new-alt-text-dialog-edit-label = Таҳрир кардани мат
 pdfjs-editor-new-alt-text-dialog-add-label = Илова кардани матни иловагӣ (тафсири тасвир)
 pdfjs-editor-new-alt-text-textarea =
     .placeholder = Тафсири худро дар ин ҷо нависед…
-<<<<<<< HEAD
-=======
 # This text refers to the alt text box above this description. It offers a definition of alt text.
 pdfjs-editor-new-alt-text-description = Тавсифи мухтасар барои одамоне, ки аксҳоро дида наметавонанд ё вақте ки аксҳо кушода намешаванд.
 # This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
 pdfjs-editor-new-alt-text-disclaimer1 = Ин матни ивазкунанда ба таври худкор сохта шудааст ва шояд нодуруст бошад.
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Маълумоти бештар
 pdfjs-editor-new-alt-text-create-automatically-button-label = Ба таври худкор эҷод кардани матни иловагӣ
 pdfjs-editor-new-alt-text-not-now-button = Ҳоло не
 pdfjs-editor-new-alt-text-error-title = Матни иловагӣ ба таври худкор эҷод карда нашуд
 pdfjs-editor-new-alt-text-error-description = Лутфан, матни иловагии худро ворид кунед ё баъдтар аз нав кӯшиш кунед.
 pdfjs-editor-new-alt-text-error-close-button = Пӯшидан
-<<<<<<< HEAD
-=======
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Боргирии модели зеҳни сунъӣ (AI) барои матни ивазкунанда ({ $downloadedSize } аз { $totalSize } МБ)
     .aria-valuetext = Боргирии модели зеҳни сунъӣ (AI) барои матни ивазкунанда ({ $downloadedSize } аз { $totalSize } МБ)
->>>>>>> upstream/master
 # This is a button that users can click to edit the alt text they have already added.
 pdfjs-editor-new-alt-text-added-button =
     .aria-label = Матни иловагӣ илова карда шуд
@@ -577,21 +506,15 @@ pdfjs-image-alt-text-settings-button-label = Танзимоти матни ил�
 pdfjs-editor-alt-text-settings-dialog-label = Танзимоти матни иловагии тасвир
 pdfjs-editor-alt-text-settings-automatic-title = Матни иловагии худкор
 pdfjs-editor-alt-text-settings-create-model-button-label = Ба таври худкор эҷод кардани матни иловагӣ
-<<<<<<< HEAD
-=======
 pdfjs-editor-alt-text-settings-create-model-description = Ин имкон барои расонидани кумак ба одамоне, ки аксҳоро дида наметавонанд ё вақте ки аксҳо кушода намешаванд, тавсифи аксҳоро пешниҳод мекунад.
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 pdfjs-editor-alt-text-settings-download-model-label = Модели зеҳни сунъӣ «AI» барои матни ивазкунанда ({ $totalSize } МБ)
 pdfjs-editor-alt-text-settings-ai-model-description = Дар дастгоҳи шумо ба таври маҳаллӣ кор мекунад, бинобар ин махфияти маълумоти шахсии шумо нигоҳ дошта мешавад. Барои матни ивазкунандаи худкор лозим аст.
->>>>>>> upstream/master
 pdfjs-editor-alt-text-settings-delete-model-button = Нест кардан
 pdfjs-editor-alt-text-settings-download-model-button = Боргирӣ кардан
 pdfjs-editor-alt-text-settings-downloading-model-button = Дар ҳоли боргирӣ…
 pdfjs-editor-alt-text-settings-editor-title = Муҳаррири матни иловагӣ
-<<<<<<< HEAD
-pdfjs-editor-alt-text-settings-close-button = Пӯшидан
-=======
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Дарҳол нишон додани муҳаррири матни ивазкунанда ҳангоми иловакунии тасвир
 pdfjs-editor-alt-text-settings-show-dialog-description = Ба шумо кумак мекунад, ки боварӣ ҳосил кунед, ки ҳамаи тасвирҳои шумо дорои матни ивазкунанда мебошанд.
 pdfjs-editor-alt-text-settings-close-button = Пӯшидан
@@ -723,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Таҳрир кардани та�
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Таҳрир кардани тавсиф
->>>>>>> upstream/master

@@ -1,4 +1,4 @@
-﻿/* Copyright 2016 Mozilla Foundation
+/* Copyright 2016 Mozilla Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,7 +211,6 @@ function createWebpackAlias(defines) {
     "web-pdf_layer_viewer": "web/pdf_layer_viewer.js",
     "web-pdf_outline_viewer": "web/pdf_outline_viewer.js",
     "web-pdf_presentation_mode": "web/pdf_presentation_mode.js",
-    "web-pdf_sidebar": "web/pdf_sidebar.js",
     "web-pdf_thumbnail_viewer": "web/pdf_thumbnail_viewer.js",
     "web-preferences": "",
     "web-print_service": "",
@@ -695,10 +694,6 @@ function createWasmBundle() {
     ),
     gulp.src(["external/qcms/*.wasm", "external/qcms/LICENSE_*"], {
       base: "external/qcms",
-      encoding: false,
-    }),
-    gulp.src(["external/jbig2/*.wasm", "external/jbig2/LICENSE_*"], {
-      base: "external/jbig2",
       encoding: false,
     }),
   ]);
@@ -1204,7 +1199,16 @@ gulp.task(
 function buildComponents(defines, dir) {
   fs.rmSync(dir, { recursive: true, force: true });
 
-  const COMPONENTS_IMAGES = ["web/images/*.svg", "web/images/*.gif"];
+  const COMPONENTS_IMAGES = [
+    "web/images/annotation-*.svg",
+    "web/images/loading-icon.gif",
+    "web/images/altText_*.svg",
+    "web/images/editor-toolbar-*.svg",
+    "web/images/messageBar_*.svg",
+    "web/images/toolbarButton-{editorHighlight,menuArrow}.svg",
+    "web/images/cursor-*.svg",
+    "web/images/comment-*.svg",
+  ];
 
   return ordered([
     createComponentsBundle(defines).pipe(gulp.dest(dir)),
@@ -1692,7 +1696,6 @@ function buildLib(defines, dir) {
     gulp.src("test/unit/*.js", { base: ".", encoding: false }),
     gulp.src("external/openjpeg/*.js", { base: "openjpeg/", encoding: false }),
     gulp.src("external/qcms/*.js", { base: "qcms/", encoding: false }),
-    gulp.src("external/jbig2/*.js", { base: "jbig2/", encoding: false }),
   ]);
 
   return buildLibHelper(bundleDefines, inputStream, dir);
@@ -2204,7 +2207,7 @@ gulp.task(
     },
     function watchWasm() {
       gulp.watch(
-        ["external/openjpeg/*", "external/qcms/*", "external/jbig2/*"],
+        ["external/openjpeg/*", "external/qcms/*"],
         { ignoreInitial: false },
         gulp.series("dev-wasm")
       );
@@ -2366,7 +2369,7 @@ function packageJson() {
     bugs: DIST_BUGS_URL,
     license: DIST_LICENSE,
     optionalDependencies: {
-      "@napi-rs/canvas": "^0.1.88",
+      "@napi-rs/canvas": "^0.1.84",
     },
     browser: {
       canvas: false,

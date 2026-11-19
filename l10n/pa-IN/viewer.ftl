@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } ਬਾਈਟ)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } ਬਾਈਟ)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } ਬਾਈਟ)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = ਟਾਈਟਲ:
 pdfjs-document-properties-author = ਲੇਖਕ:
 pdfjs-document-properties-subject = ਵਿਸ਼ਾ:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = ਸੋਧ ਦੀ ਮਿਤੀ:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = ਨਿਰਮਾਤਾ:
 pdfjs-document-properties-producer = PDF ਪ੍ਰੋਡਿਊਸਰ:
 pdfjs-document-properties-version = PDF ਵਰਜਨ:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = ਸਫ਼ਾ ਰੈਡਰ ਕਰਨ ਦੇ ਦੌਰਾ�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = ਵੈਬ ਫੋਂਟ ਬੰਦ ਹਨ: ਇੰਬੈ
 
 pdfjs-editor-free-text-button =
     .title = ਲਿਖਤ
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = ਲਿਖਤ
-pdfjs-editor-ink-button =
-    .title = ਵਾਹੋ
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = ਲਿਖਤ ਦੇ ਰੰਗ ਨੂੰ ਬਦਲੋ
 pdfjs-editor-free-text-button-label = ਲਿਖਤ
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = ਵਾਹੋ
 pdfjs-editor-color-picker-ink-input =
     .title = ਡਰਾਇੰਗ ਰੰਗ ਨੂੰ ਬਦਲੋ
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = ਵਾਹੋ
 pdfjs-editor-stamp-button =
     .title = ਚਿੱਤਰ ਜੋੜੋ ਜਾਂ ਸੋਧੋ
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = ਹਾਈਲਾਈਟ
     .aria-label = ਹਾਈਲਾਈਟ
 pdfjs-highlight-floating-button-label = ਹਾਈਲਾਈਟ
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = ਟਿੱਪਣੀ
     .aria-label = ਟਿੱਪਣੀ
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = ਦਸਤਖ਼ਤ ਐਡੀਟਰ: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = ਚਿੱਤਰ ਸੰਪਾਦਕ
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = ਚਿੱਤਰ ਨੂੰ ਹਟਾਓ
 pdfjs-editor-remove-highlight-button =
     .title = ਹਾਈਲਾਈਟ ਨੂੰ ਹਟਾਓ
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = ਦਸਤਖ਼ਤ ਨੂੰ ਹਟਾਓ
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = ਚਿੱਤਰ ਜੋੜੋ
 pdfjs-editor-free-highlight-thickness-input = ਮੋਟਾਈ
 pdfjs-editor-free-highlight-thickness-title =
     .title = ਚੀਜ਼ਾਂ ਨੂੰ ਹੋਰ ਲਿਖਤਾਂ ਤੋਂ ਉਘਾੜਨ ਸਮੇਂ ਮੋਟਾਈ ਨੂੰ ਬਦਲੋ
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = ਦਸਤਖ਼ਤ ਕੰਟਰੋਲ ਅਤੇ ਸੰਭਾਲੇ ਹੋਏ ਦਸਤਖ਼ਤ
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = ਨਵੇਂ ਦਸਤਖ਼
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = ਸੰਭਾਲੇ ਦਸਤਖ਼ਤ: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = ਲਿਖਤ ਐਡੀਟਰ
     .default-content = …ਲਿਖਣਾ ਸ਼ੁਰੂ ਕਰੋ
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = ਲਿਖਤ ਐਡੀਟਰ
-pdfjs-free-text-default-content = …ਲਿਖਣਾ ਸ਼ੁਰੂ ਕਰੋ
-pdfjs-ink =
-    .aria-label = ਵਹਾਉਣ ਐਡੀਟਰ
-pdfjs-ink-canvas =
-    .aria-label = ਵਰਤੋਂਕਾਰ ਵਲੋਂ ਬਣਾਇਆ ਚਿੱਤਰ
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = ਬਾਹੀ ਨੂੰ ਬੰ
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = ਕੀ ਕੁਝ ਧਿਆਨ ਦੇਣ ਯੋਗ ਵੇਖਿਆ ਹੈ? ਇਸ ਨੂੰ ਉਘਾੜੋ ਅਤੇ ਟਿੱਪਣੀ ਦਿਓ।
 pdfjs-editor-comments-sidebar-no-comments-link = ਹੋਰ ਜਾਣੋ
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = ਬਦਲਵੀਂ ਲਿਖਤ
 pdfjs-editor-alt-text-edit-button =
     .aria-label = ਬਦਲਵੀ ਲਿਖਤ ਨੂੰ ਸੋਧੋ
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = ਬਦਲਵੀ ਲਿਖਤ ਨੂੰ ਸੋਧੋ
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = ਚੋਣ ਕਰੋ
 pdfjs-editor-alt-text-dialog-description = ਚਿੱਤਰ ਨਾ ਦਿੱਸਣ ਜਾਂ ਲੋਡ ਨਾ ਹੋਣ ਦੀ ਹਾਲਤ ਵਿੱਚ Alt ਲਿਖਤ (ਬਦਲਵੀਂ ਲਿਖਤ) ਲੋਕਾਂ ਲਈ ਮਦਦਗਾਰ ਹੁੰਦੀ ਹੈ।
 pdfjs-editor-alt-text-add-description-label = ਵਰਣਨ ਜੋੜੋ
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = ਉੱਤੇ ਖੱਬਾ ਕੋਨਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-top-middle = ਉੱਤੇ ਮੱਧ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-top-right = ਉੱਤੇ ਸੱਜਾ ਕੋਨਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-middle-right = ਮੱਧ ਸੱਜਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-bottom-right = ਹੇਠਾਂ ਸੱਜਾ ਕੋਨਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-bottom-middle = ਹੇਠਾਂ ਮੱਧ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-bottom-left = ਹੇਠਾਂ ਖੱਬਾ ਕੋਨਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-pdfjs-editor-resizer-label-middle-left = ਮੱਧ ਖੱਬਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = ਉੱਤੇ ਖੱਬਾ ਕੋਨਾ — ਮੁੜ-ਆਕਾਰ ਕਰੋ
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = ਬੰਦ ਕਰੋ
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = ਬਦਲਵਾਂ ਲਿਖਤ AI ਮਾਡਲ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ({ $totalSize } MB ਵਿੱਚੋਂ { $downloadedSize })
     .aria-valuetext = ਬਦਲਵਾਂ ਲਿਖਤ AI ਮਾਡਲ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ({ $totalSize } MB ਵਿੱਚੋਂ { $downloadedSize })
 # This is a button that users can click to edit the alt text they have already added.
@@ -587,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = ਬਦਲਵੀਂ ਲਿਖਤ �
 pdfjs-editor-alt-text-settings-show-dialog-button-label = ਜਦੋਂ ਵਿੱਚ ਚਿੱਤਰ ਜੋੜਿਆ ਜਾਵੇ ਤਾਂ ਫ਼ੌਰਨ ਬਦਲਵੀ ਲਿਖਤ ਸੰਪਾਦਕ ਵੇਖਾਓ
 pdfjs-editor-alt-text-settings-show-dialog-description = ਤੁਹਾਡੀ ਮਦਦ ਕਰਦਾ ਹੈ ਕਿ ਤੁਹਾਡੇ ਸਾਰੇ ਚਿੱਤਰਾਂ ਲਈ ਬਦਲਵੀਂ ਲਿਖਤ ਮੌਜੂਦ ਹੋਵੇ।
 pdfjs-editor-alt-text-settings-close-button = ਬੰਦ ਕਰੋ
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -717,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = ਵਰਣਨ ਨੂੰ ਸੋਧ�
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = ਵਰਣਨ ਨੂੰ ਸੋਧੋ
->>>>>>> upstream/master

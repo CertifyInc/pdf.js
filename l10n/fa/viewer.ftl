@@ -39,9 +39,6 @@ pdfjs-open-file-button-label = باز کردن
 pdfjs-print-button =
     .title = چاپ
 pdfjs-print-button-label = چاپ
-<<<<<<< HEAD
-pdfjs-save-button-label = ذخیره
-=======
 pdfjs-save-button =
     .title = ذخیره
 pdfjs-save-button-label = ذخیره
@@ -54,7 +51,6 @@ pdfjs-download-button-label = دریافت
 pdfjs-bookmark-button =
     .title = صفحه فعلی (مشاهده نشانی اینترنتی از صفحه فعلی)
 pdfjs-bookmark-button-label = صفحه فعلی
->>>>>>> upstream/master
 
 ##  Secondary toolbar and context menu
 
@@ -79,42 +75,24 @@ pdfjs-cursor-text-select-tool-button-label = ابزارِ انتخابِ متن
 pdfjs-cursor-hand-tool-button =
     .title = فعال کردن ابزارِ دست
 pdfjs-cursor-hand-tool-button-label = ابزار دست
-<<<<<<< HEAD
-=======
 pdfjs-scroll-page-button =
     .title = استفاده از پیمایش صفحه
 pdfjs-scroll-page-button-label = پیمایش صفحه
->>>>>>> upstream/master
 pdfjs-scroll-vertical-button =
     .title = استفاده از پیمایش عمودی
 pdfjs-scroll-vertical-button-label = پیمایش عمودی
 pdfjs-scroll-horizontal-button =
     .title = استفاده از پیمایش افقی
 pdfjs-scroll-horizontal-button-label = پیمایش افقی
-<<<<<<< HEAD
-=======
 pdfjs-spread-none-button =
     .title = صفحات پیوسته را یکی نکنید
 pdfjs-spread-none-button-label = بدون صفحات پیوسته
->>>>>>> upstream/master
 
 ## Document properties dialog
 
 pdfjs-document-properties-button =
     .title = خصوصیات سند...
 pdfjs-document-properties-button-label = خصوصیات سند...
-<<<<<<< HEAD
-pdfjs-document-properties-file-name = نام فایل:
-pdfjs-document-properties-file-size = حجم پرونده:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } کیلوبایت ({ $size_b } بایت)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } مگابایت ({ $size_b } بایت)
-=======
 pdfjs-document-properties-file-name = نام پرونده:
 pdfjs-document-properties-file-size = حجم پرونده:
 # Variables:
@@ -125,7 +103,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } مگابایت ({ $b } بایت)
->>>>>>> upstream/master
 pdfjs-document-properties-title = عنوان:
 pdfjs-document-properties-author = نویسنده:
 pdfjs-document-properties-subject = موضوع:
@@ -133,14 +110,8 @@ pdfjs-document-properties-keywords = کلیدواژه‌ها:
 pdfjs-document-properties-creation-date = تاریخ ایجاد:
 pdfjs-document-properties-modification-date = تاریخ ویرایش:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }، { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = ایجاد کننده:
 pdfjs-document-properties-producer = ایجاد کننده PDF:
 pdfjs-document-properties-version = نسخه PDF:
@@ -261,12 +232,9 @@ pdfjs-rendering-error = هنگام بارگیری صفحه خطایی رخ دا�
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } Annotation]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -284,8 +252,6 @@ pdfjs-editor-free-text-button-label = متن
 pdfjs-editor-ink-button =
     .title = کشیدن
 pdfjs-editor-ink-button-label = کشیدن
-<<<<<<< HEAD
-=======
 pdfjs-editor-stamp-button =
     .title = افزودن یا ویرایش تصاویر
 pdfjs-editor-stamp-button-label = افزودن یا ویرایش تصاویر
@@ -299,20 +265,10 @@ pdfjs-highlight-floating-button-label = برجسته کردن
 
 ##
 
->>>>>>> upstream/master
 # Editor Parameters
 pdfjs-editor-free-text-color-input = رنگ
 pdfjs-editor-free-text-size-input = اندازه
 pdfjs-editor-ink-color-input = رنگ
-<<<<<<< HEAD
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-=======
 pdfjs-editor-stamp-add-image-button =
     .title = افزودن تصویر
 pdfjs-editor-stamp-add-image-button-label = افزودن تصویر
@@ -364,4 +320,3 @@ pdfjs-editor-alt-text-settings-delete-model-button = حذف
 pdfjs-editor-alt-text-settings-download-model-button = دریافت
 pdfjs-editor-alt-text-settings-downloading-model-button = در حال دریافت…
 pdfjs-editor-alt-text-settings-close-button = بستن
->>>>>>> upstream/master

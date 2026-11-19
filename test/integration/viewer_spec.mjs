@@ -17,17 +17,11 @@ import {
   awaitPromise,
   closePages,
   createPromise,
-<<<<<<< HEAD
-  getSpanRectFromText,
-  loadAndWait,
-  scrollIntoView,
-=======
   getRect,
   getSpanRectFromText,
   loadAndWait,
   scrollIntoView,
   waitForPageChanging,
->>>>>>> upstream/master
   waitForPageRendered,
 } from "./test_utils.mjs";
 import { PNG } from "pngjs";
@@ -36,11 +30,7 @@ describe("PDF viewer", () => {
   describe("Zoom origin", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       pages = await loadAndWait(
         "tracemonkey.pdf",
         ".textLayer .endOfContent",
@@ -50,29 +40,6 @@ describe("PDF viewer", () => {
       );
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-      await closePages(pages);
-    });
-
-    async function getTextAt(page, pageNumber, coordX, coordY) {
-      await page.waitForFunction(
-        pageNum =>
-          !document.querySelector(
-            `.page[data-page-number="${pageNum}"] > .textLayer`
-          ).hidden,
-        {},
-        pageNumber
-      );
-      return page.evaluate(
-        (x, y) => document.elementFromPoint(x, y)?.textContent,
-        coordX,
-        coordY
-      );
-    }
-
-    it("supports specifiying a custom origin", async () => {
-=======
     afterEach(async () => {
       await closePages(pages);
     });
@@ -111,7 +78,6 @@ describe("PDF viewer", () => {
     }
 
     it("supports specifying a custom origin", async () => {
->>>>>>> upstream/master
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           // We use this text span of page 2 because:
@@ -125,38 +91,8 @@ describe("PDF viewer", () => {
           const originX = rect.x + rect.width / 2;
           const originY = rect.y + rect.height / 2;
 
-<<<<<<< HEAD
-          await page.evaluate(
-            origin => {
-              window.PDFViewerApplication.pdfViewer.increaseScale({
-                scaleFactor: 2,
-                origin,
-              });
-            },
-            [originX, originY]
-          );
-          const textAfterZoomIn = await getTextAt(page, 2, originX, originY);
-          expect(textAfterZoomIn)
-            .withContext(`In ${browserName}, zoom in`)
-            .toBe(text);
-
-          await page.evaluate(
-            origin => {
-              window.PDFViewerApplication.pdfViewer.decreaseScale({
-                scaleFactor: 0.8,
-                origin,
-              });
-            },
-            [originX, originY]
-          );
-          const textAfterZoomOut = await getTextAt(page, 2, originX, originY);
-          expect(textAfterZoomOut)
-            .withContext(`In ${browserName}, zoom out`)
-            .toBe(text);
-=======
           await waitForTextAfterZoom(page, originX, originY, 2, text);
           await waitForTextAfterZoom(page, originX, originY, 0.8, text);
->>>>>>> upstream/master
         })
       );
     });
@@ -165,19 +101,11 @@ describe("PDF viewer", () => {
   describe("Zoom with the mouse wheel", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("empty.pdf", ".textLayer .endOfContent", 1000);
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("empty.pdf", ".textLayer .endOfContent", 1000);
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -207,19 +135,11 @@ describe("PDF viewer", () => {
   describe("Zoom commands", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".textLayer .endOfContent");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".textLayer .endOfContent");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -265,11 +185,7 @@ describe("PDF viewer", () => {
     describe("forced (maxCanvasPixels: 0)", () => {
       let pages;
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-=======
       beforeEach(async () => {
->>>>>>> upstream/master
         pages = await loadAndWait(
           "tracemonkey.pdf",
           ".textLayer .endOfContent",
@@ -279,11 +195,7 @@ describe("PDF viewer", () => {
         );
       });
 
-<<<<<<< HEAD
-      afterAll(async () => {
-=======
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
@@ -339,11 +251,7 @@ describe("PDF viewer", () => {
 
       const MAX_CANVAS_PIXELS = new Map();
 
-<<<<<<< HEAD
-      beforeAll(async () => {
-=======
       beforeEach(async () => {
->>>>>>> upstream/master
         pages = await loadAndWait(
           "tracemonkey.pdf",
           ".textLayer .endOfContent",
@@ -357,16 +265,6 @@ describe("PDF viewer", () => {
             return { maxCanvasPixels };
           }
         );
-<<<<<<< HEAD
-      });
-
-      beforeEach(async () => {
-        await Promise.all(
-          pages.map(async ([browserName, page]) => {
-            await page.evaluate(() => {
-              window.PDFViewerApplication.pdfViewer.currentScale = 0.5;
-            });
-=======
 
         await Promise.all(
           pages.map(async ([browserName, page]) => {
@@ -384,16 +282,11 @@ describe("PDF viewer", () => {
             ) {
               await awaitPromise(handle);
             }
->>>>>>> upstream/master
           })
         );
       });
 
-<<<<<<< HEAD
-      afterAll(async () => {
-=======
       afterEach(async () => {
->>>>>>> upstream/master
         await closePages(pages);
       });
 
@@ -427,20 +320,14 @@ describe("PDF viewer", () => {
             const originalCanvasSize = await getCanvasSize(page);
             const factor = 2;
 
-<<<<<<< HEAD
-=======
             const handle = await waitForPageRendered(page, 1);
->>>>>>> upstream/master
             await page.evaluate(scaleFactor => {
               window.PDFViewerApplication.pdfViewer.increaseScale({
                 drawingDelay: 0,
                 scaleFactor,
               });
             }, factor);
-<<<<<<< HEAD
-=======
             await awaitPromise(handle);
->>>>>>> upstream/master
 
             const canvasSize = await getCanvasSize(page);
 
@@ -461,20 +348,14 @@ describe("PDF viewer", () => {
             const originalCanvasSize = await getCanvasSize(page);
             const factor = 4;
 
-<<<<<<< HEAD
-=======
             const handle = await waitForPageRendered(page, 1);
->>>>>>> upstream/master
             await page.evaluate(scaleFactor => {
               window.PDFViewerApplication.pdfViewer.increaseScale({
                 drawingDelay: 0,
                 scaleFactor,
               });
             }, factor);
-<<<<<<< HEAD
-=======
             await awaitPromise(handle);
->>>>>>> upstream/master
 
             const canvasSize = await getCanvasSize(page);
 
@@ -483,21 +364,12 @@ describe("PDF viewer", () => {
               .toBeLessThan(originalCanvasSize * factor ** 2);
 
             expect(canvasSize)
-<<<<<<< HEAD
-              .withContext(`In ${browserName}, <= MAX_CANVAS_PIXELS`)
-              .toBeLessThanOrEqual(MAX_CANVAS_PIXELS.get(browserName));
-
-            expect(canvasSize)
-              .withContext(`In ${browserName}, > MAX_CANVAS_PIXELS * 0.99`)
-              .toBeGreaterThan(MAX_CANVAS_PIXELS.get(browserName) * 0.99);
-=======
               .withContext(`In ${browserName}, <= MAX_CANVAS_PIXELS / 4`)
               .toBeLessThanOrEqual(MAX_CANVAS_PIXELS.get(browserName) / 4);
 
             expect(canvasSize)
               .withContext(`In ${browserName}, > MAX_CANVAS_PIXELS / 4 * 0.95`)
               .toBeGreaterThan((MAX_CANVAS_PIXELS.get(browserName) / 4) * 0.95);
->>>>>>> upstream/master
           })
         );
       });
@@ -507,17 +379,6 @@ describe("PDF viewer", () => {
   describe("Canvas fits the page", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait(
-        "issue18694.pdf",
-        ".textLayer .endOfContent",
-        "page-width"
-      );
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait(
         "issue18694.pdf",
@@ -529,38 +390,19 @@ describe("PDF viewer", () => {
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
     it("must check that canvas perfectly fits the page whatever the zoom level is", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-          const debug = false;
-
-=======
->>>>>>> upstream/master
           // The pdf has a single page with a red background.
           // We set the viewer background to red, because when screenshoting
           // some part of the viewer background can be visible.
           // But here we don't care about the viewer background: we only
           // care about the page background and the canvas default color.
-<<<<<<< HEAD
-
           await page.evaluate(() => {
             document.body.style.background = "#ff0000";
-            const toolbar = document.querySelector(".toolbar");
-            toolbar.style.display = "none";
-          });
-          await page.waitForSelector(".toolbar", { visible: false });
-          await page.evaluate(() => {
-            const p = document.querySelector(`.page[data-page-number="1"]`);
-            p.style.border = "none";
-=======
-          await page.evaluate(() => {
-            document.body.style.background = "#ff0000";
->>>>>>> upstream/master
           });
 
           for (let i = 0; ; i++) {
@@ -570,14 +412,7 @@ describe("PDF viewer", () => {
             await scrollIntoView(page, `.page[data-page-number="1"]`);
 
             const element = await page.$(`.page[data-page-number="1"]`);
-<<<<<<< HEAD
-            const png = await element.screenshot({
-              type: "png",
-              path: debug ? `foo${i}.png` : "",
-            });
-=======
             const png = await element.screenshot({ type: "png" });
->>>>>>> upstream/master
             const pageImage = PNG.sync.read(Buffer.from(png));
             let buffer = new Uint32Array(pageImage.data.buffer);
 
@@ -600,8 +435,6 @@ describe("PDF viewer", () => {
       );
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("Detail view on zoom", () => {
     const BASE_MAX_CANVAS_PIXELS = 1e6;
@@ -1664,5 +1497,4 @@ describe("PDF viewer", () => {
       );
     });
   });
->>>>>>> upstream/master
 });

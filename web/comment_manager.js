@@ -982,15 +982,9 @@ class CommentPopup {
           },
         },
       });
-      const editor = this.#editor;
-      const savedData = editor.comment;
+      this.#editor.comment = null;
+      this.#editor.focus();
       this.destroy();
-      if (savedData?.text) {
-        editor._uiManager.deleteComment(editor, savedData);
-      } else {
-        editor.comment = null;
-      }
-      editor.focus();
     });
     del.addEventListener("contextmenu", noContextMenu);
     buttons.append(edit, del);

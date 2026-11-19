@@ -37,10 +37,6 @@ pdfjs-open-file-button =
     .title = Deschide un fișier
 pdfjs-open-file-button-label = Deschide
 pdfjs-print-button =
-<<<<<<< HEAD
-    .title = Tipărește
-pdfjs-print-button-label = Tipărește
-=======
     .title = Printează
 pdfjs-print-button-label = Printează
 pdfjs-save-button =
@@ -55,7 +51,6 @@ pdfjs-download-button-label = Descarcă
 pdfjs-bookmark-button =
     .title = Pagina curentă (Vezi URL din pagina curentă)
 pdfjs-bookmark-button-label = Pagină curentă
->>>>>>> upstream/master
 
 ##  Secondary toolbar and context menu
 
@@ -80,12 +75,9 @@ pdfjs-cursor-text-select-tool-button-label = Instrumentul de selecție a textulu
 pdfjs-cursor-hand-tool-button =
     .title = Activează instrumentul mână
 pdfjs-cursor-hand-tool-button-label = Unealta mână
-<<<<<<< HEAD
-=======
 pdfjs-scroll-page-button =
     .title = Folosește derularea paginilor
 pdfjs-scroll-page-button-label = Derulare pagini
->>>>>>> upstream/master
 pdfjs-scroll-vertical-button =
     .title = Folosește derularea verticală
 pdfjs-scroll-vertical-button-label = Derulare verticală
@@ -113,15 +105,6 @@ pdfjs-document-properties-button-label = Proprietățile documentului…
 pdfjs-document-properties-file-name = Numele fișierului:
 pdfjs-document-properties-file-size = Mărimea fișierului:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } byți)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byți)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } octeți)
@@ -129,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } octeți)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titlu:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Subiect:
@@ -137,14 +119,8 @@ pdfjs-document-properties-keywords = Cuvinte cheie:
 pdfjs-document-properties-creation-date = Data creării:
 pdfjs-document-properties-modification-date = Data modificării:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Autor:
 pdfjs-document-properties-producer = Producător PDF:
 pdfjs-document-properties-version = Versiune PDF:
@@ -180,15 +156,6 @@ pdfjs-document-properties-close-button = Închide
 
 ## Print
 
-<<<<<<< HEAD
-pdfjs-print-progress-message = Se pregătește documentul pentru tipărire…
-# Variables:
-#   $progress (Number) - percent value
-pdfjs-print-progress-percent = { $progress }%
-pdfjs-print-progress-close-button = Renunță
-pdfjs-printing-not-supported = Avertisment: Tipărirea nu este suportată în totalitate de acest browser.
-pdfjs-printing-not-ready = Avertisment: PDF-ul nu este încărcat complet pentru tipărire.
-=======
 pdfjs-print-progress-message = Se pregătește documentul pentru printare…
 # Variables:
 #   $progress (Number) - percent value
@@ -196,27 +163,11 @@ pdfjs-print-progress-percent = { $progress }%
 pdfjs-print-progress-close-button = Anulează
 pdfjs-printing-not-supported = Avertisment: Printarea nu este suportată complet de acest browser.
 pdfjs-printing-not-ready = Avertisment: PDF-ul nu este încărcat complet pentru printare.
->>>>>>> upstream/master
 
 ## Tooltips and alt text for side panel toolbar buttons
 
 pdfjs-toggle-sidebar-button =
     .title = Comută bara laterală
-<<<<<<< HEAD
-pdfjs-toggle-sidebar-button-label = Comută bara laterală
-pdfjs-document-outline-button =
-    .title = Afișează schița documentului (dublu-clic pentru a extinde/restrânge toate elementele)
-pdfjs-document-outline-button-label = Schița documentului
-pdfjs-attachments-button =
-    .title = Afișează atașamentele
-pdfjs-attachments-button-label = Atașamente
-pdfjs-thumbs-button =
-    .title = Afișează miniaturi
-pdfjs-thumbs-button-label = Miniaturi
-pdfjs-findbar-button =
-    .title = Caută în document
-pdfjs-findbar-button-label = Caută
-=======
 pdfjs-toggle-sidebar-notification-button =
     .title = Comută bara laterală (documentul conține schițe/atașamente/straturi)
 pdfjs-toggle-sidebar-button-label = Comută bara laterală
@@ -239,7 +190,6 @@ pdfjs-findbar-button =
     .title = Caută în document
 pdfjs-findbar-button-label = Caută
 pdfjs-additional-layers = Straturi suplimentare
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
@@ -265,11 +215,6 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = Înainte
 pdfjs-find-highlight-checkbox = Evidențiază toate aparițiile
 pdfjs-find-match-case-checkbox-label = Ține cont de majuscule și minuscule
-<<<<<<< HEAD
-pdfjs-find-entire-word-checkbox-label = Cuvinte întregi
-pdfjs-find-reached-top = Am ajuns la începutul documentului, continuă de la sfârșit
-pdfjs-find-reached-bottom = Am ajuns la sfârșitul documentului, continuă de la început
-=======
 pdfjs-find-match-diacritics-checkbox-label = Respectă diacriticele
 pdfjs-find-entire-word-checkbox-label = Cuvinte întregi
 pdfjs-find-reached-top = Am ajuns la începutul documentului, continuă de la sfârșit
@@ -291,7 +236,6 @@ pdfjs-find-match-count-limit =
         [few] Mai mult de { $limit } rezultate
        *[other] Mai mult de { $limit } de rezultate
     }
->>>>>>> upstream/master
 pdfjs-find-not-found = Nu s-a găsit textul
 
 ## Predefined zoom values
@@ -306,13 +250,10 @@ pdfjs-page-scale-percent = { $scale }%
 
 ## PDF page
 
-<<<<<<< HEAD
-=======
 # Variables:
 #   $page (Number) - the page number
 pdfjs-page-landmark =
     .aria-label = Pagina { $page }
->>>>>>> upstream/master
 
 ## Loading indicator messages
 
@@ -324,13 +265,6 @@ pdfjs-rendering-error = A intervenit o eroare la randarea paginii.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -338,32 +272,20 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Adnotare { $type }]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
 pdfjs-password-label = Introdu parola pentru a deschide acest fișier PDF.
 pdfjs-password-invalid = Parolă nevalidă. Te rugăm să încerci din nou.
 pdfjs-password-ok-button = OK
-<<<<<<< HEAD
-pdfjs-password-cancel-button = Renunță
-=======
 pdfjs-password-cancel-button = Anulează
->>>>>>> upstream/master
 pdfjs-web-fonts-disabled = Fonturile web sunt dezactivate: nu se pot folosi fonturile PDF încorporate.
 
 ## Editing
 
-<<<<<<< HEAD
-
-## Alt-text dialog
-
-=======
 pdfjs-editor-free-text-button =
     .title = Text
 pdfjs-editor-color-picker-free-text-input =
@@ -490,13 +412,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Text alternativ
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Colțul din stânga sus — redimensionează
 pdfjs-editor-resizer-top-middle =
@@ -730,4 +649,3 @@ pdfjs-editor-add-signature-edit-button-label = Editează descrierea
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Editează descrierea
->>>>>>> upstream/master

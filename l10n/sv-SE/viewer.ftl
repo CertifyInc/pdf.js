@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } kB ({ $size_b } byte)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byte)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titel:
 pdfjs-document-properties-author = Författare:
 pdfjs-document-properties-subject = Ämne:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Ändrades:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Skapare:
 pdfjs-document-properties-producer = PDF-producent:
 pdfjs-document-properties-version = PDF-version:
@@ -281,13 +263,6 @@ pdfjs-rendering-error = Ett fel uppstod vid visning av sidan.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +286,6 @@ pdfjs-web-fonts-disabled = Webbtypsnitt är inaktiverade: kan inte använda inb�
 
 pdfjs-editor-free-text-button =
     .title = Text
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Text
-pdfjs-editor-ink-button =
-    .title = Rita
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Ändra textfärg
 pdfjs-editor-free-text-button-label = Text
@@ -323,7 +293,6 @@ pdfjs-editor-ink-button =
     .title = Rita
 pdfjs-editor-color-picker-ink-input =
     .title = Ändra ritningsfärg
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Rita
 pdfjs-editor-stamp-button =
     .title = Lägg till eller redigera bilder
@@ -335,8 +304,6 @@ pdfjs-highlight-floating-button1 =
     .title = Markera
     .aria-label = Markera
 pdfjs-highlight-floating-button-label = Markera
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
     .title = Kommentar
     .aria-label = Kommentar
@@ -364,7 +331,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Signaturredigerare: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Bildredigerare
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Ta bort bild
 pdfjs-editor-remove-highlight-button =
     .title = Ta bort markering
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Ta bort signatur
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +360,6 @@ pdfjs-editor-stamp-add-image-button-label = Lägg till bild
 pdfjs-editor-free-highlight-thickness-input = Tjocklek
 pdfjs-editor-free-highlight-thickness-title =
     .title = Ändra tjocklek när du markerar andra objekt än text
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Signaturkontroller och sparade signaturer
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +370,10 @@ pdfjs-editor-signature-add-signature-button-label = Lägg till ny signatur
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Sparad signatur: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Textredigerare
     .default-content = Börja skriva…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Textredigerare
-pdfjs-free-text-default-content = Börja skriva…
-pdfjs-ink =
-    .aria-label = Ritredigerare
-pdfjs-ink-canvas =
-    .aria-label = Användarskapad bild
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -438,17 +389,12 @@ pdfjs-editor-comments-sidebar-close-button-label = Stäng sidofältet
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Ser du något anmärkningsvärt? Markera det och lämna en kommentar.
 pdfjs-editor-comments-sidebar-no-comments-link = Läs mer
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternativ text
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Redigera alternativ text
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Redigera alternativ text
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Välj ett alternativ
 pdfjs-editor-alt-text-dialog-description = Alt text (alternativ text) hjälper till när människor inte kan se bilden eller när den inte laddas.
 pdfjs-editor-alt-text-add-description-label = Lägg till en beskrivning
@@ -468,17 +414,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Det övre vänstra hörnet — ändra storlek
-pdfjs-editor-resizer-label-top-middle = Överst i mitten — ändra storlek
-pdfjs-editor-resizer-label-top-right = Det övre högra hörnet — ändra storlek
-pdfjs-editor-resizer-label-middle-right = Mitten höger — ändra storlek
-pdfjs-editor-resizer-label-bottom-right = Nedre högra hörnet — ändra storlek
-pdfjs-editor-resizer-label-bottom-middle = Nedre mitten — ändra storlek
-pdfjs-editor-resizer-label-bottom-left = Nedre vänstra hörnet — ändra storlek
-pdfjs-editor-resizer-label-middle-left = Mitten till vänster — ändra storlek
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Det övre vänstra hörnet — ändra storlek
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +479,6 @@ pdfjs-editor-new-alt-text-error-close-button = Stäng
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Hämtar AI-modell med alternativ text ({ $downloadedSize } av { $totalSize } MB)
     .aria-valuetext = Hämtar AI-modell med alternativ text ({ $downloadedSize } av { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -587,8 +518,6 @@ pdfjs-editor-alt-text-settings-editor-title = Alternativ textredigerare
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Visa alternativ textredigerare direkt när du lägger till en bild
 pdfjs-editor-alt-text-settings-show-dialog-description = Hjälper dig att se till att alla dina bilder har alternativ text.
 pdfjs-editor-alt-text-settings-close-button = Stäng
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -717,4 +646,3 @@ pdfjs-editor-add-signature-edit-button-label = Redigera beskrivning
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Redigera beskrivning
->>>>>>> upstream/master

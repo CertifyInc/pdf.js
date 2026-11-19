@@ -12,11 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
-/* globals pdfjsLib, pdfjsTestingUtils, pdfjsViewer */
-=======
 /* globals pdfjsLib, _pdfjsTestingUtils, pdfjsViewer */
->>>>>>> upstream/master
 
 const {
   AnnotationLayer,
@@ -30,19 +26,12 @@ const {
   TextLayer,
   XfaLayer,
 } = pdfjsLib;
-<<<<<<< HEAD
-const { HighlightOutliner } = pdfjsTestingUtils;
-=======
 const { HighlightOutliner } = _pdfjsTestingUtils;
->>>>>>> upstream/master
 const { GenericL10n, parseQueryString, SimpleLinkService } = pdfjsViewer;
 
 const WAITING_TIME = 100; // ms
 const CMAP_URL = "/build/generic/web/cmaps/";
-<<<<<<< HEAD
-=======
 const ICC_URL = "/build/generic/web/iccs/";
->>>>>>> upstream/master
 const STANDARD_FONT_DATA_URL = "/build/generic/web/standard_fonts/";
 const WASM_URL = "/build/generic/web/wasm/";
 const IMAGE_RESOURCES_PATH = "/web/images/";
@@ -119,35 +108,6 @@ async function inlineImages(node, silentErrors = false) {
           }
           return response.blob();
         })
-<<<<<<< HEAD
-        // eslint-disable-next-line arrow-body-style
-        .then(blob => {
-          return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              resolve(reader.result);
-            };
-            reader.onerror = reject;
-
-            reader.readAsDataURL(blob);
-          });
-        })
-        // eslint-disable-next-line arrow-body-style
-        .then(dataUrl => {
-          return new Promise((resolve, reject) => {
-            image.onload = resolve;
-            image.onerror = evt => {
-              if (silentErrors) {
-                resolve();
-                return;
-              }
-              reject(evt);
-            };
-
-            image.src = dataUrl;
-          });
-        })
-=======
         .then(
           blob =>
             new Promise((resolve, reject) => {
@@ -175,7 +135,6 @@ async function inlineImages(node, silentErrors = false) {
               image.src = dataUrl;
             })
         )
->>>>>>> upstream/master
         .catch(reason => {
           throw new Error(`Error inlining image (${url}): ${reason}`);
         })
@@ -287,13 +246,7 @@ class Rasterize {
       div.className = "annotationLayer";
 
       const [common, overrides] = await this.annotationStylePromise;
-<<<<<<< HEAD
-      style.textContent =
-        `${common}\n${overrides}\n` +
-        `:root { --scale-factor: ${viewport.scale} }`;
-=======
       style.textContent = `${common}\n${overrides}\n${this.createRootCSS(viewport)}`;
->>>>>>> upstream/master
 
       const annotationViewport = viewport.clone({ dontFlip: true });
       const annotationImageMap = await convertCanvasesToImages(
@@ -304,15 +257,8 @@ class Rasterize {
       // Rendering annotation layer as HTML.
       const parameters = {
         annotations,
-<<<<<<< HEAD
-        linkService: new SimpleLinkService(),
         imageResourcesPath,
         renderForms,
-        annotationStorage,
-=======
-        imageResourcesPath,
-        renderForms,
->>>>>>> upstream/master
         fieldObjects,
       };
 
@@ -324,11 +270,8 @@ class Rasterize {
         annotationCanvasMap: annotationImageMap,
         page,
         viewport: annotationViewport,
-<<<<<<< HEAD
-=======
         linkService: new SimpleLinkService(),
         annotationStorage,
->>>>>>> upstream/master
       });
       await annotationLayer.render(parameters);
       await annotationLayer.showPopups();
@@ -362,13 +305,7 @@ class Rasterize {
       svg.setAttribute("font-size", 1);
 
       const [common, overrides] = await this.textStylePromise;
-<<<<<<< HEAD
-      style.textContent =
-        `${common}\n${overrides}\n` +
-        `:root { --scale-factor: ${viewport.scale} }`;
-=======
       style.textContent = `${common}\n${overrides}\n${this.createRootCSS(viewport)}`;
->>>>>>> upstream/master
 
       // Rendering text layer as HTML.
       const textLayer = new TextLayer({
@@ -395,13 +332,7 @@ class Rasterize {
       svg.setAttribute("font-size", 1);
 
       const [common, overrides] = await this.drawLayerStylePromise;
-<<<<<<< HEAD
-      style.textContent =
-        `${common}\n${overrides}` +
-        `:root { --scale-factor: ${viewport.scale} }`;
-=======
       style.textContent = `${common}\n${overrides}\n${this.createRootCSS(viewport)}`;
->>>>>>> upstream/master
 
       // Rendering text layer as HTML.
       const textLayer = new TextLayer({
@@ -423,15 +354,9 @@ class Rasterize {
         let x = parseFloat(left) / 100;
         let y = parseFloat(top) / 100;
         if (isNaN(x)) {
-<<<<<<< HEAD
-          posRegex ||= /^calc\(var\(--scale-factor\)\*(.*)px\)$/;
-          // The element is tagged so we've to extract the position from the
-          // string, e.g. `calc(var(--scale-factor)*66.32px)`.
-=======
           posRegex ||= /^calc\(var\(--total-scale-factor\)\s*\*(.*)px\)$/;
           // The element is tagged so we've to extract the position from the
           // string, e.g. `calc(var(--total-scale-factor)*66.32px)`.
->>>>>>> upstream/master
           let match = left.match(posRegex);
           if (match) {
             x = parseFloat(match[1]) / pageWidth;
@@ -452,11 +377,7 @@ class Rasterize {
           height: height / pageHeight,
         });
       }
-<<<<<<< HEAD
-      // We set the borderWidth to 0.001 to slighly increase the size of the
-=======
       // We set the borderWidth to 0.001 to slightly increase the size of the
->>>>>>> upstream/master
       // boxes so that they can be merged together.
       const outliner = new HighlightOutliner(boxes, /* borderWidth = */ 0.001);
       // We set the borderWidth to 0.0025 in order to have an outline which is
@@ -469,10 +390,6 @@ class Rasterize {
       );
       const drawLayer = new DrawLayer({ pageIndex: 0 });
       drawLayer.setParent(div);
-<<<<<<< HEAD
-      drawLayer.draw(outliner.getOutlines(), "orange", 0.4);
-      drawLayer.drawOutline(outlinerForOutline.getOutlines());
-=======
       const outlines = outliner.getOutlines();
       drawLayer.draw(
         {
@@ -507,7 +424,6 @@ class Rasterize {
         },
         /* mustRemoveSelfIntersections = */ false
       );
->>>>>>> upstream/master
 
       svg.append(foreignObject);
 
@@ -590,10 +506,7 @@ class Driver {
     this.inFlightRequests = 0;
     this.testFilter = JSON.parse(params.get("testfilter") || "[]");
     this.xfaOnly = params.get("xfaonly") === "true";
-<<<<<<< HEAD
-=======
     this.masterMode = params.get("mastermode") === "true";
->>>>>>> upstream/master
 
     // Create a working canvas
     this.canvas = document.createElement("canvas");
@@ -679,8 +592,6 @@ class Driver {
       task.stats = { times: [] };
       task.enableXfa = task.enableXfa === true;
 
-<<<<<<< HEAD
-=======
       if (task.includePages && task.type === "extract") {
         if (this.masterMode) {
           const includePages = [];
@@ -700,7 +611,6 @@ class Driver {
         }
       }
 
->>>>>>> upstream/master
       const prevFile = md5FileMap.get(task.md5);
       if (prevFile) {
         if (task.file !== prevFile) {
@@ -714,20 +624,10 @@ class Driver {
         md5FileMap.set(task.md5, task.file);
       }
 
-<<<<<<< HEAD
-=======
       this._log(
         `[${this.currentTask + 1}/${this.manifest.length}] ${task.id}:\n`
       );
 
-      if (task.type === "skip-because-failing") {
-        this._log(`  Skipping file "${task.file} because it's failing"\n`);
-        this.currentTask++;
-        this._nextTask();
-        return;
-      }
-
->>>>>>> upstream/master
       // Support *linked* test-cases for the other suites, e.g. unit- and
       // integration-tests, without needing to run them as reference-tests.
       if (task.type === "other") {
@@ -742,18 +642,7 @@ class Driver {
         return;
       }
 
-<<<<<<< HEAD
-      if (task.noChrome && window?.chrome) {
-        this._log(`Skipping file "${task.file}" (because on Chrome)\n`);
-        this.currentTask++;
-        this._nextTask();
-        return;
-      }
-
-      this._log('Loading file "' + task.file + '"\n');
-=======
       this._log(`  Loading file "${task.file}"\n`);
->>>>>>> upstream/master
 
       try {
         let xfaStyleElement = null;
@@ -768,22 +657,15 @@ class Driver {
         }
         const isOffscreenCanvasSupported =
           task.isOffscreenCanvasSupported === false ? false : undefined;
-<<<<<<< HEAD
-=======
         const disableFontFace = task.disableFontFace === true;
->>>>>>> upstream/master
 
         const loadingTask = getDocument({
           url: new URL(task.file, window.location),
           password: task.password,
           cMapUrl: CMAP_URL,
-<<<<<<< HEAD
-          standardFontDataUrl: STANDARD_FONT_DATA_URL,
-=======
           iccUrl: ICC_URL,
           standardFontDataUrl: STANDARD_FONT_DATA_URL,
           wasmUrl: WASM_URL,
->>>>>>> upstream/master
           disableAutoFetch: !task.enableAutoFetch,
           pdfBug: true,
           useSystemFonts: task.useSystemFonts,
@@ -796,11 +678,6 @@ class Driver {
         });
         let promise = loadingTask.promise;
 
-<<<<<<< HEAD
-        if (task.annotationStorage) {
-          for (const annotation of Object.values(task.annotationStorage)) {
-            const { bitmapName, quadPoints } = annotation;
-=======
         if (!this.masterMode && task.type === "extract") {
           promise = promise.then(async doc => {
             const data = await doc.extractPages([
@@ -818,7 +695,6 @@ class Driver {
         if (task.annotationStorage) {
           for (const annotation of Object.values(task.annotationStorage)) {
             const { bitmapName, quadPoints, paths, outlines } = annotation;
->>>>>>> upstream/master
             if (bitmapName) {
               promise = promise.then(async doc => {
                 const response = await fetch(
@@ -856,8 +732,6 @@ class Driver {
               // like IRL (in order to avoid bugs like bug 1907958).
               annotation.quadPoints = new Float32Array(quadPoints);
             }
-<<<<<<< HEAD
-=======
             if (paths) {
               for (let i = 0, ii = paths.lines.length; i < ii; i++) {
                 paths.lines[i] = Float32Array.from(
@@ -888,7 +762,6 @@ class Driver {
                 );
               }
             }
->>>>>>> upstream/master
           }
         }
 
@@ -903,11 +776,7 @@ class Driver {
                 await page.getAnnotations({ intent: "display" });
               }
             }
-<<<<<<< HEAD
-            doc.annotationStorage.setAll(task.annotationStorage);
-=======
             doc.annotationStorage._setValues(task.annotationStorage);
->>>>>>> upstream/master
 
             const data = await doc.saveDocument();
             await loadingTask.destroy();
@@ -1027,16 +896,12 @@ class Driver {
       }
     }
 
-<<<<<<< HEAD
-    if (task.skipPages?.includes(task.pageNum)) {
-=======
     if (
       task.skipPages?.includes(task.pageNum) ||
       (this.masterMode &&
         task.includePages &&
         !task.includePages.includes(task.pageNum - 1))
     ) {
->>>>>>> upstream/master
       this._log(
         `    Skipping page ${task.pageNum}/${task.pdfDoc.numPages}...\n`
       );
@@ -1055,11 +920,7 @@ class Driver {
           page => {
             // Default to creating the test images at the devices pixel ratio,
             // unless the test explicitly specifies an output scale.
-<<<<<<< HEAD
-            const outputScale = task.outputScale || window.devicePixelRatio;
-=======
             const outputScale = task.outputScale || OutputScale.pixelRatio;
->>>>>>> upstream/master
             let viewport = page.getViewport({
               scale: PixelsPerInch.PDF_TO_CSS_UNITS,
             });
@@ -1098,18 +959,11 @@ class Driver {
               renderPrint = false,
               renderXfa = false,
               annotationCanvasMap = null,
-<<<<<<< HEAD
-              pageColors = null;
-
-            if (task.annotationStorage) {
-              task.pdfDoc.annotationStorage.setAll(task.annotationStorage);
-=======
               pageColors = null,
               partialCrop = null;
 
             if (task.annotationStorage) {
               task.pdfDoc.annotationStorage._setValues(task.annotationStorage);
->>>>>>> upstream/master
             }
 
             let textLayerCanvas, annotationLayerCanvas, annotationLayerContext;
@@ -1154,12 +1008,6 @@ class Driver {
               textLayerCanvas = null;
               // We fetch the `eq` specific test subtypes here, to avoid
               // accidentally changing the behaviour for other types of tests.
-<<<<<<< HEAD
-              renderAnnotations = !!task.annotations;
-              renderForms = !!task.forms;
-              renderPrint = !!task.print;
-              renderXfa = !!task.enableXfa;
-=======
 
               partialCrop = task.partial;
               if (!partialCrop) {
@@ -1168,7 +1016,6 @@ class Driver {
                 renderPrint = !!task.print;
                 renderXfa = !!task.enableXfa;
               }
->>>>>>> upstream/master
               pageColors = task.pageColors || null;
 
               // Render the annotation layer if necessary.
@@ -1261,11 +1108,7 @@ class Driver {
               this._snapshot(task, error);
             };
             initPromise
-<<<<<<< HEAD
-              .then(data => {
-=======
               .then(async data => {
->>>>>>> upstream/master
                 const renderTask = page.render(renderContext);
 
                 if (task.renderTaskOnContinue) {
@@ -1274,26 +1117,6 @@ class Driver {
                     setTimeout(cont, RENDER_TASK_ON_CONTINUE_DELAY);
                   };
                 }
-<<<<<<< HEAD
-                return renderTask.promise.then(() => {
-                  if (annotationCanvasMap) {
-                    Rasterize.annotationLayer(
-                      annotationLayerContext,
-                      viewport,
-                      outputScale,
-                      data,
-                      annotationCanvasMap,
-                      task.pdfDoc.annotationStorage,
-                      task.fieldObjects,
-                      page,
-                      IMAGE_RESOURCES_PATH,
-                      renderForms
-                    ).then(() => {
-                      completeRender(false);
-                    });
-                  } else {
-                    completeRender(false);
-=======
                 await renderTask.promise;
 
                 if (partialCrop) {
@@ -1365,7 +1188,6 @@ class Driver {
                   if (page.stats) {
                     // Get the page stats *before* running cleanup.
                     task.stats = page.stats;
->>>>>>> upstream/master
                   }
                   page.cleanup(/* resetStats = */ true);
                   this._snapshot(
@@ -1426,16 +1248,12 @@ class Driver {
     this._log("Snapshotting... ");
 
     const dataUrl = this.canvas.toDataURL("image/png");
-<<<<<<< HEAD
-    this._sendResult(dataUrl, task, failure).then(() => {
-=======
 
     if (baselineDataUrl && baselineDataUrl !== dataUrl) {
       failure ||= "Optimized rendering differs from full rendering.";
     }
 
     this._sendResult(dataUrl, task, failure, baselineDataUrl).then(() => {
->>>>>>> upstream/master
       this._log(
         "done" + (failure ? " (failed !: " + failure + ")" : "") + "\n"
       );
@@ -1489,11 +1307,7 @@ class Driver {
     }
   }
 
-<<<<<<< HEAD
-  _sendResult(snapshot, task, failure) {
-=======
   _sendResult(snapshot, task, failure, baselineSnapshot = null) {
->>>>>>> upstream/master
     const result = JSON.stringify({
       browser: this.browser,
       id: task.id,
@@ -1535,11 +1349,7 @@ class Driver {
         resolve();
       })
       .catch(reason => {
-<<<<<<< HEAD
-        console.warn(`Driver._send failed (${url}): ${reason}`);
-=======
         console.warn(`Driver._send failed (${url}):`, reason);
->>>>>>> upstream/master
 
         this.inFlightRequests--;
         resolve();
