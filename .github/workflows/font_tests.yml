@@ -48,15 +48,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Newer npm skips dependency install scripts, including Puppeteer's
-      # browser download, and the runner's Puppeteer cache can hold browser
-      # folders without executables, which Puppeteer refuses to repair.
-      - name: Install test browsers
-        shell: bash
-        run: |
-          rm -rf ~/.cache/puppeteer
-          npx puppeteer browsers install
-
       - name: Use Python 3.14
         uses: actions/setup-python@v6
         with:
