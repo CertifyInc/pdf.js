@@ -451,12 +451,13 @@ const defaultOptions = new Map([
     },
   ],
   // Not a preference: preferences can be overridden from localStorage, and
-  // receipts are untrusted PDFs.
+  // receipts are untrusted PDFs. Only the TESTING build, which upstream's
+  // scripting tests run against, keeps it on; it is never published.
   [
     "enableScripting",
     {
       /** @type {boolean} */
-      value: false,
+      value: typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING"),
       kind: OptionKind.VIEWER,
     },
   ],
