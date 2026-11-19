@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { noContextMenu, stopEvent } from "../display_utils.js";
+import { noContextMenu, stopEvent } from "../dom_utils.js";
 
 class Comment {
   #commentStandaloneButton = null;
@@ -311,6 +311,20 @@ class Comment {
     }
     this.#text = text;
     this.#date = new Date();
+    this.#deleted = false;
+  }
+
+  /**
+   * Restore the comment data (used for undo).
+   * @param {object} data - The comment data to restore.
+   * @param {string} data.text - The comment text.
+   * @param {string|null} data.richText - The rich text content.
+   * @param {Date|null} data.date - The original date.
+   */
+  restoreData({ text, richText, date }) {
+    this.#text = text;
+    this.#richText = richText;
+    this.#date = date;
     this.#deleted = false;
   }
 

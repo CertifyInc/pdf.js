@@ -27,10 +27,7 @@ function decodeString(str) {
 }
 
 class DatasetXMLParser extends SimpleXMLParser {
-  constructor(options) {
-    super(options);
-    this.node = null;
-  }
+  node = null;
 
   onEndElement(name) {
     const node = super.onEndElement(name);
@@ -69,11 +66,9 @@ class DatasetReader {
     }
 
     const first = node.firstChild;
-    if (first?.nodeName === "value") {
-      return node.children.map(child => decodeString(child.textContent));
-    }
-
-    return decodeString(node.textContent);
+    return first?.nodeName === "value"
+      ? node.children.map(child => decodeString(child.textContent))
+      : decodeString(node.textContent);
   }
 }
 

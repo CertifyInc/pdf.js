@@ -41,7 +41,7 @@ class Sidebar {
   #prevX = 0;
 
   /**
-   * @typedef {Object} SidebarElements
+   * @typedef {object} SidebarElements
    * @property {HTMLElement} sidebar - The sidebar element.
    * @property {HTMLElement} resizer - The sidebar resizer element.
    * @property {HTMLElement} toggleButton - The button used to toggle the
@@ -54,7 +54,12 @@ class Sidebar {
    * @param {boolean} ltr
    * @param {boolean} isResizerOnTheLeft
    */
-  constructor({ sidebar, resizer, toggleButton }, ltr, isResizerOnTheLeft) {
+  constructor(
+    { sidebar, resizer, toggleButton },
+    ltr,
+    isResizerOnTheLeft,
+    globalAbortSignal
+  ) {
     this._sidebar = sidebar;
     this.#coefficient = ltr === isResizerOnTheLeft ? -1 : 1;
     this.#resizer = resizer;
@@ -64,18 +69,19 @@ class Sidebar {
     this.#initialWidth = this.#width = parseFloat(
       style.getPropertyValue("--sidebar-width")
     );
-    resizer.ariaValueMin = parseFloat(
-      style.getPropertyValue("--sidebar-min-width")
-    );
-    resizer.ariaValueMax = parseFloat(
-      style.getPropertyValue("--sidebar-max-width")
-    );
+    resizer.ariaValueMin =
+      parseFloat(style.getPropertyValue("--sidebar-min-width")) || 0;
+    resizer.ariaValueMax =
+      parseFloat(style.getPropertyValue("--sidebar-max-width")) || Infinity;
     resizer.ariaValueNow = this.#width;
 
     this.#makeSidebarResizable();
     toggleButton.addEventListener("click", this.toggle.bind(this));
     this._isOpen = false;
     sidebar.hidden = true;
+    globalAbortSignal?.addEventListener("abort", this.destroy.bind(this), {
+      once: true,
+    });
 
     this.#resizeObserver = new ResizeObserver(
       ([
@@ -123,7 +129,7 @@ class Sidebar {
       window.addEventListener(
         "pointermove",
         ev => {
-          if (!pointerMoveAC) {
+          if (!pointerMoveAC || Math.abs(ev.clientX - this.#prevX) < 1) {
             return;
           }
           stopEvent(ev);
@@ -200,7 +206,7 @@ class Sidebar {
 
   /**
    * Callback to be executed when the sidebar is being resized.
-   * @param {number} newWidth - The new width of the sidebar in pixels.
+   * @param {number} _newWidth - The new width of the sidebar in pixels.
    */
   onResizing(_newWidth) {}
 

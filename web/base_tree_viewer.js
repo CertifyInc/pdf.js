@@ -16,7 +16,6 @@
 import { removeNullCharacters } from "./ui_utils.js";
 import { stopEvent } from "pdfjs-lib";
 
-const TREEITEM_OFFSET_TOP = -100; // px
 const TREEITEM_SELECTED_CLASS = "selected";
 
 class BaseTreeViewer {
@@ -90,7 +89,6 @@ class BaseTreeViewer {
 
   /**
    * Collapse or expand the subtree of a tree item.
-   *
    * @param {Element} root - the root of the item (sub)tree.
    * @param {boolean} show - whether to show the item (sub)tree. If false,
    *   the item subtree rooted at `root` will be collapsed.
@@ -131,7 +129,7 @@ class BaseTreeViewer {
         target.classList.toggle("treeItemsHidden");
         if (e.shiftKey) {
           const shouldShowAll = !target.classList.contains("treeItemsHidden");
-          this._toggleTreeItem(this.container, shouldShowAll);
+          this._toggleTreeItem(target.parentNode, shouldShowAll);
         }
       });
     }
@@ -185,10 +183,12 @@ class BaseTreeViewer {
 
     this._updateCurrentTreeItem(treeItem);
 
-    this.container.scrollTo(
-      treeItem.offsetLeft,
-      treeItem.offsetTop + TREEITEM_OFFSET_TOP
-    );
+    treeItem.scrollIntoView({
+      behavior: "instant",
+      block: "center",
+      inline: "center",
+      container: "nearest",
+    });
   }
 }
 

@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-import { RenderingStates, ScrollMode, SpreadMode } from "./ui_utils.js";
+import { ScrollMode, SpreadMode } from "./ui_utils.js";
 import { AppOptions } from "./app_options.js";
 import { LinkTarget } from "./pdf_link_service.js";
 import { PDFViewerApplication } from "./app.js";
+import { RenderingStates } from "./renderable_view.js";
 
 const AppConstants =
   typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")
@@ -69,6 +70,24 @@ function getViewerConfiguration() {
       editorSignatureButton: document.getElementById("editorSignatureButton"),
       editorSignatureParamsToolbar: document.getElementById(
         "editorSignatureParamsToolbar"
+      ),
+      signaturePropertiesButton: document.getElementById(
+        "signaturePropertiesButton"
+      ),
+      signaturePropertiesPanel: document.getElementById(
+        "signaturePropertiesPanel"
+      ),
+      signaturePropertiesContainer: document.getElementById(
+        "signaturePropertiesContainer"
+      ),
+      signaturePropertiesBanner: document.getElementById(
+        "signaturePropertiesBanner"
+      ),
+      signaturePropertiesList: document.getElementById(
+        "signaturePropertiesList"
+      ),
+      signaturePropertiesSeparator: document.getElementById(
+        "signaturePropertiesSeparator"
       ),
       download: document.getElementById("downloadButton"),
     },
@@ -123,15 +142,59 @@ function getViewerConfiguration() {
       outlinesView: document.getElementById("outlinesView"),
       attachmentsView: document.getElementById("attachmentsView"),
       layersView: document.getElementById("layersView"),
-      viewsManagerAddFileButton: document.getElementById(
-        "viewsManagerAddFileButton"
-      ),
+      viewsManagerAddFile: {
+        button: document.getElementById("viewsManagerAddFileButton"),
+        picker: document.getElementById("viewsManagerAddFilePicker"),
+      },
       viewsManagerCurrentOutlineButton: document.getElementById(
         "viewsManagerCurrentOutlineButton"
       ),
       viewsManagerHeaderLabel: document.getElementById(
         "viewsManagerHeaderLabel"
       ),
+      viewsManagerStatus: document.getElementById("viewsManagerStatus"),
+      viewsManagerStatusBar: {
+        viewsManagerStatusAction: document.getElementById(
+          "viewsManagerStatusAction"
+        ),
+        viewsManagerStatusActionDeselectButton: document.getElementById(
+          "viewsManagerStatusActionDeselectButton"
+        ),
+        viewsManagerStatusActionLabel: document.getElementById(
+          "viewsManagerStatusActionLabel"
+        ),
+      },
+      viewsManagerUndoBar: {
+        viewsManagerStatusUndo: document.getElementById(
+          "viewsManagerStatusUndo"
+        ),
+        viewsManagerStatusUndoLabel: document.getElementById(
+          "viewsManagerStatusUndoLabel"
+        ),
+        viewsManagerStatusUndoButton: document.getElementById(
+          "viewsManagerStatusUndoButton"
+        ),
+        viewsManagerStatusUndoCloseButton: document.getElementById(
+          "viewsManagerStatusUndoCloseButton"
+        ),
+      },
+      viewsManagerWaitingBar: {
+        container: document.getElementById("viewsManagerStatusWaiting"),
+        closeButton: document.getElementById(
+          "viewsManagerStatusWaitingCloseButton"
+        ),
+        label: document.getElementById("viewsManagerStatusWaitingLabel"),
+      },
+      manageMenu: {
+        button: document.getElementById("viewsManagerStatusActionButton"),
+        menu: document.getElementById("viewsManagerStatusActionOptions"),
+        copy: document.getElementById("viewsManagerStatusActionCopy"),
+        cut: document.getElementById("viewsManagerStatusActionCut"),
+        delete: document.getElementById("viewsManagerStatusActionDelete"),
+        exportSelected: document.getElementById(
+          "viewsManagerStatusActionExport"
+        ),
+      },
     },
     findBar: {
       bar: document.getElementById("findbar"),
@@ -210,10 +273,7 @@ function getViewerConfiguration() {
     altTextSettingsDialog: {
       dialog: document.getElementById("altTextSettingsDialog"),
       createModelButton: document.getElementById("createModelButton"),
-      aiModelSettings: document.getElementById("aiModelSettings"),
       learnMore: document.getElementById("altTextSettingsLearnMore"),
-      deleteModelButton: document.getElementById("deleteModelButton"),
-      downloadModelButton: document.getElementById("downloadModelButton"),
       showAltTextDialogButton: document.getElementById(
         "showAltTextDialogButton"
       ),
@@ -292,6 +352,14 @@ function getViewerConfiguration() {
       undoButton: document.getElementById("editorUndoBarUndoButton"),
       closeButton: document.getElementById("editorUndoBarCloseButton"),
     },
+    ...(typeof PDFJSDev === "undefined" ||
+    PDFJSDev.test("MOZCENTRAL && !GECKOVIEW")
+      ? {
+          featuresNotification: document.getElementById(
+            "pdfFeaturesNotification"
+          ),
+        }
+      : {}),
     editCommentDialog: {
       dialog: document.getElementById("commentManagerDialog"),
       toolbar: document.getElementById("commentManagerToolbar"),
@@ -328,14 +396,9 @@ function webViewerLoad() {
       console.error("webviewerloaded:", ex);
       document.dispatchEvent(event);
     }
-    // Must be absolute: `PDFViewerApplication.run` URL-encodes a relative
-    // `defaultUrl`, which would turn its query string into part of the path.
     AppOptions.set(
       "defaultUrl",
-      new URL(
-        `../../../PDFPipe.aspx${window.decodeURIComponent(location.search)}`,
-        location.href
-      ).href
+      `../../../PDFPipe.aspx${window.decodeURIComponent(location.search)}`
     );
   }
   PDFViewerApplication.run(config);

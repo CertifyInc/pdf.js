@@ -45,7 +45,8 @@ class CommentManager {
     linkService,
     overlayManager,
     ltr,
-    hasForcedColors
+    hasForcedColors,
+    globalAbortSignal
   ) {
     const dateFormat = new Intl.DateTimeFormat(undefined, {
       dateStyle: "long",
@@ -69,7 +70,8 @@ class CommentManager {
       linkService,
       this.#popup,
       dateFormat,
-      ltr
+      ltr,
+      globalAbortSignal
     );
     this.#popup.sidebar = this.#sidebar;
     CommentManager.#hasForcedColors = hasForcedColors;
@@ -130,7 +132,7 @@ class CommentManager {
     return this.#hasForcedColors
       ? null
       : findContrastColor(
-          applyOpacity(...color, opacity ?? 1),
+          applyOpacity(color, opacity ?? 1),
           CSSConstants.commentForegroundColor
         );
   }
@@ -188,12 +190,14 @@ class CommentSidebar extends Sidebar {
     linkService,
     popup,
     dateFormat,
-    ltr
+    ltr,
+    globalAbortSignal
   ) {
     super(
       { sidebar, resizer: sidebarResizer, toggleButton: commentToolbarButton },
       ltr,
-      /* isResizerOnTheLeft = */ true
+      /* isResizerOnTheLeft = */ true,
+      globalAbortSignal
     );
     this.#sidebarTitle = sidebarTitle;
     this.#commentsList = commentsList;
@@ -266,9 +270,7 @@ class CommentSidebar extends Sidebar {
     if (ids.length === 0 || !this.#idsToElements) {
       return;
     }
-    if (
-      new Set(this.#idsToElements.keys()).difference(new Set(ids)).size === 0
-    ) {
+    if (new Set(this.#idsToElements.keys()).isSubsetOf(new Set(ids))) {
       this.#removeAll();
       return;
     }
@@ -584,10 +586,9 @@ class CommentSidebar extends Sidebar {
     if (a.rect[1] !== b.rect[1]) {
       return b.rect[1] - a.rect[1];
     }
-    if (a.rect[2] !== b.rect[2]) {
-      return a.rect[2] - b.rect[2];
-    }
-    return a.id.localeCompare(b.id);
+    return a.rect[2] !== b.rect[2]
+      ? a.rect[2] - b.rect[2]
+      : a.id.localeCompare(b.id);
   }
 }
 
@@ -607,6 +608,8 @@ class CommentDialog {
   #title;
 
   #saveButton;
+
+  #saveButtonLabel;
 
   #uiManager;
 
@@ -633,6 +636,7 @@ class CommentDialog {
     this.#overlayManager = overlayManager;
     this.#eventBus = eventBus;
     this.#saveButton = saveButton;
+    this.#saveButtonLabel = saveButton.firstElementChild;
     this.#title = title;
     this.#isLTR = ltr;
 
@@ -740,7 +744,7 @@ class CommentDialog {
         "data-l10n-id",
         "pdfjs-editor-edit-comment-dialog-title-when-editing"
       );
-      this.#saveButton.setAttribute(
+      this.#saveButtonLabel.setAttribute(
         "data-l10n-id",
         "pdfjs-editor-edit-comment-dialog-save-button-when-editing"
       );
@@ -749,7 +753,7 @@ class CommentDialog {
         "data-l10n-id",
         "pdfjs-editor-edit-comment-dialog-title-when-adding"
       );
-      this.#saveButton.setAttribute(
+      this.#saveButtonLabel.setAttribute(
         "data-l10n-id",
         "pdfjs-editor-edit-comment-dialog-save-button-when-adding"
       );
@@ -982,9 +986,15 @@ class CommentPopup {
           },
         },
       });
-      this.#editor.comment = null;
-      this.#editor.focus();
+      const editor = this.#editor;
+      const savedData = editor.comment;
       this.destroy();
+      if (savedData?.text) {
+        editor._uiManager.deleteComment(editor, savedData);
+      } else {
+        editor.comment = null;
+      }
+      editor.focus();
     });
     del.addEventListener("contextmenu", noContextMenu);
     buttons.append(edit, del);
@@ -1088,6 +1098,7 @@ class CommentPopup {
 
     if (isSelected) {
       visibility ??=
+        // eslint-disable-next-line unicorn/prefer-logical-operator-over-ternary
         this.#editor === editor ? !this.#selected || !this.#visible : true;
     } else {
       if (this.#selected) {

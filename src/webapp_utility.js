@@ -19,7 +19,6 @@ function loadThumbnailDocument(url) {
     cMapUrl: pdfjsUrl("web/cmaps/"),
     standardFontDataUrl: pdfjsUrl("web/standard_fonts/"),
     wasmUrl: pdfjsUrl("web/wasm/"),
-    isEvalSupported: false,
   }).promise;
 }
 

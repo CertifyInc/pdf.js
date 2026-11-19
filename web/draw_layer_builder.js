@@ -16,12 +16,20 @@
 import { DrawLayer } from "pdfjs-lib";
 
 /**
- * @typedef {Object} DrawLayerBuilderOptions
+ * @typedef DrawLayerBuilderOptions
+ *   Configuration for {@linkcode DrawLayerBuilder}.
  * @property {number} pageIndex
+ *   Zero-based page index.
+ * @property {Element | null} [textLayer]
+ *   Text layer element (optional).
+ * @property {object | null} [filterFactory]
+ *   Filter factory used to style selections (optional).
+ * @property {object | null} [pageColors]
+ *   Page foreground/background colors for HCM (optional).
  */
 
 /**
- * @typedef {Object} DrawLayerBuilderRenderOptions
+ * @typedef {object} DrawLayerBuilderRenderOptions
  * @property {string} [intent] - The default value is "display".
  */
 
@@ -30,9 +38,13 @@ class DrawLayerBuilder {
 
   /**
    * @param {DrawLayerBuilderOptions} options
+   *   Configuration.
    */
   constructor(options) {
     this.pageIndex = options.pageIndex;
+    this.textLayer = options.textLayer || null;
+    this.filterFactory = options.filterFactory || null;
+    this.pageColors = options.pageColors || null;
   }
 
   /**
@@ -45,16 +57,16 @@ class DrawLayerBuilder {
     }
     this.#drawLayer = new DrawLayer({
       pageIndex: this.pageIndex,
+      textLayer: this.textLayer,
+      filterFactory: this.filterFactory,
+      pageColors: this.pageColors,
     });
   }
 
   cancel() {
     this._cancelled = true;
 
-    if (!this.#drawLayer) {
-      return;
-    }
-    this.#drawLayer.destroy();
+    this.#drawLayer?.destroy();
     this.#drawLayer = null;
   }
 

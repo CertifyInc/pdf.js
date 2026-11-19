@@ -21,16 +21,22 @@ import {
   dragAndDrop,
   getEditorSelector,
   getRect,
+  getSpanRectFromText,
   highlightSpan,
   kbModifierDown,
   kbModifierUp,
+  kbRedo,
+  kbUndo,
   loadAndWait,
   scrollIntoView,
   selectEditor,
   switchToEditor,
   waitAndClick,
+  waitForBrowserTrip,
   waitForSerialized,
+  waitForTextToBe,
   waitForTimeout,
+  waitForTooltipToBe,
 } from "./test_utils.mjs";
 
 const switchToHighlight = switchToEditor.bind(null, "Highlight");
@@ -109,7 +115,7 @@ describe("Comment", () => {
         ".annotationEditorLayer",
         "page-width",
         null,
-        { enableComment: true, localeProperties: "ar" }
+        { enableComment: true, locale: "ar" }
       );
     });
 
@@ -271,11 +277,7 @@ describe("Comment", () => {
 
           let commentButtonSelector = `${getEditorSelector(0)} button.comment`;
           await page.waitForSelector(commentButtonSelector, { visible: true });
-          let title = await page.evaluate(
-            selector => document.querySelector(selector).title,
-            commentButtonSelector
-          );
-          expect(title).withContext(`In ${browserName}`).toEqual("Add comment");
+          await waitForTooltipToBe(page, commentButtonSelector, "Add comment");
           await page.click(commentButtonSelector);
 
           const textInputSelector = "#commentManagerTextInput";
@@ -290,13 +292,7 @@ describe("Comment", () => {
           await page.waitForSelector(commentButtonSelector, {
             visible: true,
           });
-          title = await page.evaluate(selector => {
-            const button = document.querySelector(selector);
-            return button.title;
-          }, commentButtonSelector);
-          expect(title)
-            .withContext(`In ${browserName}`)
-            .toEqual("Show comment");
+          await waitForTooltipToBe(page, commentButtonSelector, "Show comment");
         })
       );
     });
@@ -318,11 +314,11 @@ describe("Comment", () => {
           await page.waitForSelector(popupSelector, {
             visible: true,
           });
-          let popupText = await page.evaluate(
-            selector => document.querySelector(selector).textContent,
-            `${popupSelector} .commentPopupText`
+          await waitForTextToBe(
+            page,
+            `${popupSelector} .commentPopupText`,
+            comment
           );
-          expect(popupText).withContext(`In ${browserName}`).toEqual(comment);
 
           await page.hover("#editorHighlightButton");
           await switchToHighlight(page, /* disable = */ true);
@@ -336,11 +332,11 @@ describe("Comment", () => {
           await page.waitForSelector(popupSelector, {
             visible: true,
           });
-          popupText = await page.evaluate(
-            selector => document.querySelector(selector).textContent,
-            `${popupSelector} .commentPopupText`
+          await waitForTextToBe(
+            page,
+            `${popupSelector} .commentPopupText`,
+            comment
           );
-          expect(popupText).withContext(`In ${browserName}`).toEqual(comment);
         })
       );
     });
@@ -533,7 +529,11 @@ describe("Comment", () => {
             await page.mouse.down();
 
             const steps = 20;
-            await page.mouse.move(startX - extraWidth, startY, { steps });
+            for (let i = 1; i <= steps; i++) {
+              const x = Math.round(startX - (extraWidth * i) / steps);
+              await page.mouse.move(x, startY);
+              await waitForBrowserTrip(page);
+            }
             await page.mouse.up();
 
             const rectAfter = await getRect(page, sidebarSelector);
@@ -570,6 +570,7 @@ describe("Comment", () => {
               await kbModifierDown(page);
               await page.keyboard.press(arrowKey);
               await kbModifierUp(page);
+              await waitForBrowserTrip(page);
             }
 
             const rectAfter = await getRect(page, sidebarSelector);
@@ -587,6 +588,7 @@ describe("Comment", () => {
             const arrowKey = extraWidth > 0 ? "ArrowLeft" : "ArrowRight";
             for (let i = 0; i < Math.abs(extraWidth); i++) {
               await page.keyboard.press(arrowKey);
+              await waitForBrowserTrip(page);
             }
 
             const rectAfter = await getRect(page, sidebarSelector);
@@ -611,8 +613,9 @@ describe("Comment", () => {
               Array.from(
                 document.querySelectorAll(
                   `#editorCommentParamsToolbar ul > li > time`
-                )
-              ).map(time => new Date(time.getAttribute("datetime")))
+                ),
+                time => new Date(time.getAttribute("datetime"))
+              )
             );
             for (let i = 0; i < dates.length - 1; i++) {
               expect(dates[i])
@@ -653,17 +656,11 @@ describe("Comment", () => {
           await waitAndClick(page, firstElementSelector);
           const popupSelector = "#commentPopup";
           await page.waitForSelector(popupSelector, { visible: true });
-          const popupTextSelector = `${popupSelector} .commentPopupText`;
-          await page.waitForSelector(popupTextSelector, {
-            visible: true,
-          });
-          const popupText = await page.evaluate(
-            selector => document.querySelector(selector).textContent,
-            popupTextSelector
+          await waitForTextToBe(
+            page,
+            `${popupSelector} .commentPopupText`,
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
           );
-          expect(popupText)
-            .withContext(`In ${browserName}`)
-            .toEqual("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
           // Click again to unselect the comment.
           await waitAndClick(page, firstElementSelector);
@@ -902,7 +899,7 @@ describe("Comment", () => {
               ),
             editorSelector
           );
-          expect(hasCommentButton).withContext(`In ${browserName}`).toBe(false);
+          expect(hasCommentButton).withContext(`In ${browserName}`).toBeFalse();
         })
       );
     });
@@ -955,12 +952,295 @@ describe("Comment", () => {
           await page.waitForSelector(commentPopupSelector, {
             visible: true,
           });
-          const popupTextSelector = `${commentPopupSelector} .commentPopupText`;
-          const popupText = await page.evaluate(
-            selector => document.querySelector(selector).textContent,
-            popupTextSelector
+          await waitForTextToBe(
+            page,
+            `${commentPopupSelector} .commentPopupText`,
+            comment
           );
-          expect(popupText).withContext(`In ${browserName}`).toEqual(comment);
+        })
+      );
+    });
+  });
+
+  describe("Undo deletion popup for comments (bug 1999154)", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait(
+        "tracemonkey.pdf",
+        ".annotationEditorLayer",
+        "page-fit",
+        null,
+        { enableComment: true }
+      );
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that deleting a comment can be undone using the undo button", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          const editorSelector = getEditorSelector(0);
+          const comment = "Test comment for undo";
+          await editComment(page, editorSelector, comment);
+
+          // Stay in highlight mode - don't disable it
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          // Capture the date before deletion
+          const dateBefore = await page.evaluate(
+            () =>
+              document.querySelector("#commentPopup .commentPopupTime")
+                ?.textContent
+          );
+
+          await waitAndClick(page, "button.commentPopupDelete");
+
+          await page.waitForSelector("#editorUndoBar", { visible: true });
+          await page.waitForSelector("#editorUndoBarUndoButton", {
+            visible: true,
+          });
+          await page.click("#editorUndoBarUndoButton");
+
+          // Check that the comment is restored by hovering to show the popup
+          await page.hover(`${editorSelector} .annotationCommentButton`);
+          await page.waitForSelector("#commentPopup", { visible: true });
+          await waitForTextToBe(
+            page,
+            "#commentPopup .commentPopupText",
+            comment
+          );
+
+          // Check that the date is preserved
+          const dateAfter = await page.evaluate(
+            () =>
+              document.querySelector("#commentPopup .commentPopupTime")
+                ?.textContent
+          );
+          expect(dateAfter)
+            .withContext(`In ${browserName}`)
+            .toEqual(dateBefore);
+        })
+      );
+    });
+
+    it("must check that the undo deletion popup displays 'Comment removed' message", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          const editorSelector = getEditorSelector(0);
+          await editComment(page, editorSelector, "Test comment");
+
+          // Stay in highlight mode - don't disable it
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+          await waitAndClick(page, "button.commentPopupDelete");
+          await waitForTextToBe(
+            page,
+            "#editorUndoBarMessage",
+            "Comment removed"
+          );
+        })
+      );
+    });
+
+    it("must check that the undo bar closes when clicking the close button", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          const editorSelector = getEditorSelector(0);
+          await editComment(page, editorSelector, "Test comment");
+
+          // Stay in highlight mode - don't disable it
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+          await waitAndClick(page, "button.commentPopupDelete");
+
+          await page.waitForSelector("#editorUndoBar", { visible: true });
+          await waitAndClick(page, "#editorUndoBarCloseButton");
+          await page.waitForSelector("#editorUndoBar", { hidden: true });
+        })
+      );
+    });
+
+    it("must check that deleting a comment can be undone using Ctrl+Z", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          const editorSelector = getEditorSelector(0);
+          const comment = "Test comment for Ctrl+Z undo";
+          await editComment(page, editorSelector, comment);
+
+          // Stay in highlight mode - don't disable it
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+          await waitAndClick(page, "button.commentPopupDelete");
+
+          await page.waitForSelector("#editorUndoBar", { visible: true });
+
+          // Use Ctrl+Z to undo
+          await kbUndo(page);
+
+          // The undo bar should be hidden after undo
+          await page.waitForSelector("#editorUndoBar", { hidden: true });
+
+          // Check that the comment is restored by hovering to show the popup
+          await page.hover(`${editorSelector} .annotationCommentButton`);
+          await page.waitForSelector("#commentPopup", { visible: true });
+          await waitForTextToBe(
+            page,
+            "#commentPopup .commentPopupText",
+            comment
+          );
+        })
+      );
+    });
+
+    it("must check that the comment popup is hidden after redo", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          const editorSelector = getEditorSelector(0);
+          const comment = "Test comment for redo";
+          await editComment(page, editorSelector, comment);
+
+          // Show the popup by clicking the comment button
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          // Delete the comment
+          await waitAndClick(page, "button.commentPopupDelete");
+          await page.waitForSelector("#editorUndoBar", { visible: true });
+
+          // Undo the deletion
+          await kbUndo(page);
+          await page.waitForSelector("#editorUndoBar", { hidden: true });
+
+          // Show the popup again by clicking the comment button
+          await waitAndClick(
+            page,
+            `${editorSelector} .annotationCommentButton`
+          );
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          // Redo the deletion - popup should be hidden
+          await kbRedo(page);
+          await page.waitForSelector("#commentPopup", { hidden: true });
+        })
+      );
+    });
+  });
+
+  describe("Must close comment popups (bug 1989406)", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait(
+        "tracemonkey.pdf",
+        ".annotationEditorLayer",
+        "page-fit",
+        null,
+        { enableComment: true }
+      );
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must close a comment popup on escape", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          await editComment(page, getEditorSelector(0), "hi");
+          const rect = await getSpanRectFromText(page, 1, "Introduction");
+
+          // Unfocus.
+          await page.mouse.click(rect.x, rect.y);
+
+          await waitAndClick(page, ".annotationCommentButton");
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          await page.keyboard.press("Escape");
+
+          await page.waitForSelector("#commentPopup", { hidden: true });
+        })
+      );
+    });
+
+    it("must close a comment popup on click outside", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+          await highlightSpan(page, 1, "Abstract");
+          await editComment(page, getEditorSelector(0), "hi");
+          const rect = await getSpanRectFromText(page, 1, "Introduction");
+
+          // Unfocus.
+          await page.mouse.click(rect.x, rect.y);
+
+          await waitAndClick(page, ".annotationCommentButton");
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          // Click outside the popup.
+          await page.mouse.click(rect.x, rect.y);
+
+          await page.waitForSelector("#commentPopup", { hidden: true });
+        })
+      );
+    });
+
+    it("must close a comment popup on click on other highlight", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          await switchToHighlight(page);
+
+          await highlightSpan(page, 1, "Abstract");
+          await editComment(page, getEditorSelector(0), "hello");
+
+          await highlightSpan(page, 1, "Introduction");
+          await editComment(page, getEditorSelector(1), "world");
+
+          // Open "Abstract" comment popup.
+          await waitAndClick(page, ".annotationCommentButton");
+
+          await page.waitForSelector("#commentPopup", { visible: true });
+
+          // Click on "Introduction" highlight.
+          await waitAndClick(page, getEditorSelector(1));
+
+          await page.waitForSelector("#commentPopup", { hidden: true });
         })
       );
     });

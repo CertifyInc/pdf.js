@@ -17,19 +17,22 @@ import {
   awaitPromise,
   closePages,
   copy,
+  decodePNG,
   FSI,
   getEditorSelector,
   getRect,
+  kbRedo,
+  kbUndo,
   loadAndWait,
   paste,
   PDI,
   switchToEditor,
   waitForPointerUp,
+  waitForTextToBe,
   waitForTimeout,
 } from "./test_utils.mjs";
 import fs from "fs";
 import path from "path";
-import { PNG } from "pngjs";
 
 const __dirname = import.meta.dirname;
 
@@ -177,13 +180,10 @@ describe("Signature Editor", () => {
           const editorSelector = getEditorSelector(0);
           await page.waitForSelector(editorSelector, { visible: true });
           await page.waitForSelector(
-            `.canvasWrapper > svg use[href="#path_p1_0"]`,
+            `.canvasWrapper > svg use[href="#path_0"]`,
             { visible: true }
           );
-
-          await page.waitForFunction(
-            `document.getElementById("viewer-alert").textContent === "Signature added"`
-          );
+          await waitForTextToBe(page, "#viewer-alert", "Signature added");
 
           // Check the tooltip.
           await page.waitForSelector(
@@ -282,7 +282,7 @@ describe("Signature Editor", () => {
           });
 
           await page.waitForSelector(
-            ".canvasWrapper > svg use[href='#path_p1_0']"
+            ".canvasWrapper > svg use[href='#path_0']"
           );
         })
       );
@@ -340,7 +340,7 @@ describe("Signature Editor", () => {
           });
 
           await page.waitForSelector(
-            ".canvasWrapper > svg use[href='#path_p1_0']"
+            ".canvasWrapper > svg use[href='#path_0']"
           );
         })
       );
@@ -427,7 +427,7 @@ describe("Signature Editor", () => {
           const editorSelector = getEditorSelector(0);
           await page.waitForSelector(editorSelector, { visible: true });
           await page.waitForSelector(
-            `.canvasWrapper > svg use[href="#path_p1_0"]`,
+            `.canvasWrapper > svg use[href="#path_0"]`,
             { visible: true }
           );
 
@@ -527,13 +527,13 @@ describe("Signature Editor", () => {
           const editorSelector = getEditorSelector(0);
           await page.waitForSelector(editorSelector, { visible: true });
           await page.waitForSelector(
-            `.canvasWrapper > svg use[href="#path_p1_0"]`,
+            `.canvasWrapper > svg use[href="#path_0"]`,
             { visible: true }
           );
 
           const color = await page.evaluate(() => {
             const use = document.querySelector(
-              `.canvasWrapper > svg use[href="#path_p1_0"]`
+              `.canvasWrapper > svg use[href="#path_0"]`
             );
             return use.parentNode.getAttribute("fill");
           });
@@ -583,13 +583,13 @@ describe("Signature Editor", () => {
           const editorSelector = getEditorSelector(0);
           await page.waitForSelector(editorSelector, { visible: true });
           await page.waitForSelector(
-            `.canvasWrapper > svg use[href="#path_p1_0"]`,
+            `.canvasWrapper > svg use[href="#path_0"]`,
             { visible: true }
           );
 
           const color = await page.evaluate(() => {
             const use = document.querySelector(
-              `.canvasWrapper > svg use[href="#path_p1_0"]`
+              `.canvasWrapper > svg use[href="#path_0"]`
             );
             return use.parentNode.getAttribute("fill");
           });
@@ -624,11 +624,11 @@ describe("Signature Editor", () => {
       contentHeight = y1 - y0;
     }
 
-    beforeAll(() => {
+    beforeAll(async () => {
       const data = fs.readFileSync(
         path.join(__dirname, "../images/samplesignature.png")
       );
-      const png = PNG.sync.read(data);
+      const png = await decodePNG(data);
       getContentAspectRatio(png);
     });
 
@@ -672,7 +672,7 @@ describe("Signature Editor", () => {
           });
           const { width, height } = await getRect(
             page,
-            ".canvasWrapper > svg use[href='#path_p1_0']"
+            ".canvasWrapper > svg use[href='#path_0']"
           );
 
           expect(Math.abs(contentWidth / width - contentHeight / height))
@@ -767,6 +767,86 @@ describe("Signature Editor", () => {
           );
           await page.click("#addSignatureErrorCloseButton");
           await page.waitForSelector("#addSignatureError", { visible: false });
+        })
+      );
+    });
+  });
+
+  describe("Issue 22130", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("empty.pdf", ".annotationEditorLayer", null, {
+        eventBusSetup: eventBus => {
+          window.editorStates = {};
+          eventBus.on("editingstateschanged", ({ details }) => {
+            Object.assign(window.editorStates, details);
+          });
+        },
+      });
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that cancelling the dialog doesn't add anything to the undo stack", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          const getStates = () =>
+            page.evaluate(() => {
+              const { hasSomethingToUndo, hasSomethingToRedo } =
+                window.editorStates;
+              return { hasSomethingToUndo, hasSomethingToRedo };
+            });
+
+          await switchToSignature(page);
+          await page.click("#editorSignatureAddSignature");
+          await page.waitForSelector("#addSignatureDialog", {
+            visible: true,
+          });
+          await page.click("#addSignatureCancelButton");
+          await page.waitForSelector("#addSignatureDialog", {
+            visible: false,
+          });
+          await page.waitForFunction(
+            sel => !document.querySelector(sel),
+            {},
+            getEditorSelector(0)
+          );
+
+          expect(await getStates())
+            .withContext(`In ${browserName}`)
+            .toEqual({ hasSomethingToUndo: false, hasSomethingToRedo: false });
+
+          await page.click("#editorSignatureAddSignature");
+          await page.waitForSelector("#addSignatureDialog", {
+            visible: true,
+          });
+          await page.type("#addSignatureTypeInput", "PDF.js");
+          await page.waitForSelector(`${addButtonSelector}:not(:disabled)`);
+          await page.click(addButtonSelector);
+
+          const editorSelector = getEditorSelector(1);
+          await page.waitForSelector(editorSelector, { visible: true });
+
+          expect(await getStates())
+            .withContext(`In ${browserName}`)
+            .toEqual({ hasSomethingToUndo: true, hasSomethingToRedo: false });
+
+          await kbUndo(page);
+          await page.waitForSelector(editorSelector, { hidden: true });
+
+          expect(await getStates())
+            .withContext(`In ${browserName}`)
+            .toEqual({ hasSomethingToUndo: false, hasSomethingToRedo: true });
+
+          await kbRedo(page);
+          await page.waitForSelector(editorSelector, { visible: true });
+
+          expect(await getStates())
+            .withContext(`In ${browserName}`)
+            .toEqual({ hasSomethingToUndo: true, hasSomethingToRedo: false });
         })
       );
     });

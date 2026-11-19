@@ -190,6 +190,19 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
             },
           ];
           path.replaceWith(t.importExpression(source));
+        } else if (t.isIdentifier(node.callee, { name: "__eager_import__" })) {
+          if (node.arguments.length !== 1) {
+            throw new Error("Invalid `__eager_import__` usage.");
+          }
+          // Replace it with a standard `import`-call and inline the module.
+          const source = node.arguments[0];
+          source.leadingComments = [
+            {
+              type: "CommentBlock",
+              value: "webpackMode: 'eager'",
+            },
+          ];
+          path.replaceWith(t.importExpression(source));
         }
       },
       "BlockStatement|StaticBlock": {
@@ -276,17 +289,71 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
         },
       },
       MemberExpression(path) {
-        // The Emscripten Compiler (emcc) generates code that allows the caller
-        // to provide the Wasm module (thorugh Module.instantiateWasm), with
-        // a fallback in case .instantiateWasm is not provided.
-        // We always define instantiateWasm, so we can hard-code the check
-        // and let our dead code elimination logic remove the unused fallback.
-        if (
-          path.parentPath.isIfStatement({ test: path.node }) &&
-          path.matchesPattern("Module.instantiateWasm")
-        ) {
-          path.replaceWith(t.booleanLiteral(true));
+        // WasmImage provides Module.instantiateWasm, so remove Emscripten's
+        // fallback when guarded by this property.
+        if (!path.matchesPattern("Module.instantiateWasm")) {
+          return;
         }
+        const { parentPath } = path;
+        if (parentPath.isIfStatement({ test: path.node })) {
+          path.replaceWith(t.booleanLiteral(true));
+          return;
+        }
+        let initPath = path;
+        while (
+          initPath.parentPath.isSequenceExpression() &&
+          initPath.parentPath.node.expressions.at(-1) === initPath.node
+        ) {
+          initPath = initPath.parentPath;
+        }
+        const declarationPath = initPath.parentPath;
+        if (
+          declarationPath.isVariableDeclarator({ init: initPath.node }) &&
+          t.isIdentifier(declarationPath.node.id)
+        ) {
+          // Emscripten may guard an alias instead.
+          const binding = path.scope.getBinding(declarationPath.node.id.name);
+          if (
+            !binding?.constant ||
+            binding.path.node !== declarationPath.node ||
+            !Number.isInteger(declarationPath.node.end)
+          ) {
+            return;
+          }
+          for (const refPath of binding?.referencePaths ?? []) {
+            if (
+              Number.isInteger(refPath.node.start) &&
+              refPath.node.start >= declarationPath.node.end &&
+              refPath.parentPath.isIfStatement({ test: refPath.node })
+            ) {
+              refPath.replaceWith(t.booleanLiteral(true));
+            }
+          }
+        }
+      },
+    },
+  };
+}
+
+function babelPluginStripSrcPath() {
+  return {
+    name: "babel-plugin-strip-src-path",
+    visitor: {
+      "ImportDeclaration|ExportNamedDeclaration|ExportAllDeclaration":
+        function ({ node }) {
+          if (node.source?.value.includes("/src/")) {
+            node.source.value = node.source.value.replace("/src/", "/");
+          }
+        },
+    },
+  };
+}
+
+function babelPluginAddHeaderComment(babel, { header }) {
+  return {
+    visitor: {
+      Program(path) {
+        path.addComment("leading", header);
       },
     },
   };
@@ -299,4 +366,9 @@ function preprocessPDFJSCode(ctx, content) {
   }).code;
 }
 
-export { babelPluginPDFJSPreprocessor, preprocessPDFJSCode };
+export {
+  babelPluginAddHeaderComment,
+  babelPluginPDFJSPreprocessor,
+  babelPluginStripSrcPath,
+  preprocessPDFJSCode,
+};
