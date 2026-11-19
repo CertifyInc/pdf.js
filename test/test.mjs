@@ -1000,7 +1000,11 @@ async function startBrowsers({ baseUrl, initializeSession }) {
   // Remove old browser revisions from Puppeteer's cache. Updating Puppeteer can
   // cause new browser revisions to be downloaded, so trimming the cache will
   // prevent the disk from filling up over time.
-  await puppeteer.trimCache();
+  // Skipped on CI: CI runners start empty, and with this Puppeteer version the
+  // trim removes the browsers that were just installed.
+  if (!process.env.CI) {
+    await puppeteer.trimCache();
+  }
 
   const browserNames = ["firefox", "chrome"];
   if (options.noChrome) {

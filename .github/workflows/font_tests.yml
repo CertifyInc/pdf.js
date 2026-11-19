@@ -56,8 +56,6 @@ jobs:
         run: |
           rm -rf ~/.cache/puppeteer
           npx puppeteer browsers install
-          npx puppeteer browsers list
-          find ~/.cache/puppeteer -maxdepth 3
 
       - name: Use Python 3.14
         uses: actions/setup-python@v6
