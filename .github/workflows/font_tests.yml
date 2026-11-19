@@ -52,9 +52,10 @@ jobs:
       # browser download, and the runner's Puppeteer cache can hold browser
       # folders without executables, which Puppeteer refuses to repair.
       - name: Install test browsers
+        shell: bash
         run: |
-          node -e "require('fs').rmSync(require('path').join(require('os').homedir(), '.cache', 'puppeteer'), { recursive: true, force: true })"
-          node node_modules/puppeteer/install.mjs
+          rm -rf ~/.cache/puppeteer
+          npx puppeteer browsers install
 
       - name: Use Python 3.14
         uses: actions/setup-python@v6
