@@ -1685,7 +1685,7 @@ function buildLib(defines, dir) {
     gulp.src(
       [
         "src/{core,display,shared}/**/*.js",
-        "src/{pdf,pdf.image_decoders,pdf.worker}.js",
+        "src/{pdf,pdf.image_decoders,pdf.worker,webapp_utility}.js",
       ],
       { base: "src/", encoding: false }
     ),

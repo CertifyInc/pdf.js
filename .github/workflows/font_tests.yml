@@ -48,6 +48,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Newer npm skips dependency install scripts, including Puppeteer's
+      # browser download.
+      - name: Install test browsers
+        run: node node_modules/puppeteer/install.mjs
+
       - name: Use Python 3.14
         uses: actions/setup-python@v6
         with:

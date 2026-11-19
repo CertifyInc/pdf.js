@@ -96,12 +96,6 @@
       "type": "boolean",
       "default": false
     },
-    "enableScripting": {
-      "title": "Enable active content (JavaScript) in PDFs",
-      "type": "boolean",
-      "description": "Whether to allow execution of active content (JavaScript) by PDF files.",
-      "default": false
-    },
     "enableHighlightFloatingButton": {
       "type": "boolean",
       "default": false
