@@ -2852,6 +2852,7 @@ gulp.task("lint-licenses", function (done) {
     "test/add_test.mjs",
     "src/license_header_libre.js",
     "src/shared/murmurhash3.js",
+    "src/webapp_utility.js",
     "test/font/font_core_spec.js",
     "test/font/font_fpgm_spec.js",
     "test/font/font_os2_spec.js",
