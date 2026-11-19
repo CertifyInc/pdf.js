@@ -328,9 +328,14 @@ function webViewerLoad() {
       console.error("webviewerloaded:", ex);
       document.dispatchEvent(event);
     }
+    // Must be absolute: `PDFViewerApplication.run` URL-encodes a relative
+    // `defaultUrl`, which would turn its query string into part of the path.
     AppOptions.set(
       "defaultUrl",
-      `../../../PDFPipe.aspx${window.decodeURIComponent(location.search)}`
+      new URL(
+        `../../../PDFPipe.aspx${window.decodeURIComponent(location.search)}`,
+        location.href
+      ).href
     );
   }
   PDFViewerApplication.run(config);
