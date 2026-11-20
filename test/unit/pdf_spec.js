@@ -49,11 +49,6 @@ import {
   RenderingCancelledException,
 } from "../../src/display/display_utils.js";
 import {
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
-  getViewerSrc,
-} from "../../src/webapp_utility.js";
-import {
   build,
   getDocument,
   PDFDataRangeTransport,
@@ -99,8 +94,6 @@ const expectedAPI = Object.freeze({
   AnnotationMode,
   AnnotationType,
   applyOpacity,
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
   build,
   ColorPicker,
   createValidAbsoluteUrl,
@@ -116,7 +109,6 @@ const expectedAPI = Object.freeze({
   getRGB,
   getRGBA,
   getUuid,
-  getViewerSrc,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,

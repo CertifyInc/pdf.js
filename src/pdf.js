@@ -58,11 +58,6 @@ import {
   RenderingCancelledException,
 } from "./display/display_utils.js";
 import {
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
-  getViewerSrc,
-} from "./webapp_utility.js";
-import {
   build,
   getDocument,
   PDFDataRangeTransport,
@@ -115,8 +110,6 @@ globalThis.pdfjsLib = {
   AnnotationMode,
   AnnotationType,
   applyOpacity,
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
   build,
   ColorPicker,
   createValidAbsoluteUrl,
@@ -132,7 +125,6 @@ globalThis.pdfjsLib = {
   getRGB,
   getRGBA,
   getUuid,
-  getViewerSrc,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,
@@ -183,8 +175,6 @@ export {
   AnnotationMode,
   AnnotationType,
   applyOpacity,
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
   build,
   ColorPicker,
   createValidAbsoluteUrl,
@@ -200,7 +190,6 @@ export {
   getRGB,
   getRGBA,
   getUuid,
-  getViewerSrc,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,
