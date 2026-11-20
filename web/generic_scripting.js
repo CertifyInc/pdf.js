@@ -17,20 +17,14 @@ import { getPdfFilenameFromUrl } from "pdfjs-lib";
 
 async function docProperties(pdfDocument) {
   const url = "",
-    baseUrl = url.split("#", 1)[0];
-  // eslint-disable-next-line prefer-const
-  let { info, metadata, contentDispositionFilename, contentLength } =
+    baseUrl = "";
+  const { info, metadata, contentDispositionFilename, contentLength } =
     await pdfDocument.getMetadata();
-
-  if (!contentLength) {
-    const { length } = await pdfDocument.getDownloadInfo();
-    contentLength = length;
-  }
 
   return {
     ...info,
     baseURL: baseUrl,
-    filesize: contentLength,
+    filesize: contentLength || (await pdfDocument.getDownloadInfo()).length,
     filename: contentDispositionFilename || getPdfFilenameFromUrl(url),
     metadata: metadata?.getRaw(),
     authors: metadata?.get("dc:creator"),
@@ -40,15 +34,17 @@ async function docProperties(pdfDocument) {
 }
 
 class GenericScripting {
-  constructor(sandboxBundleSrc) {
+  constructor(sandboxBundleSrc, wasmUrl) {
     this._ready = new Promise((resolve, reject) => {
       const sandbox =
         typeof PDFJSDev === "undefined"
           ? import(sandboxBundleSrc) // eslint-disable-line no-unsanitized/method
-          : __non_webpack_import__(sandboxBundleSrc);
+          : __raw_import__(sandboxBundleSrc);
       sandbox
         .then(pdfjsSandbox => {
-          resolve(pdfjsSandbox.QuickJSSandbox());
+          resolve(
+            pdfjsSandbox.QuickJSSandbox(new URL(wasmUrl, location.href).href)
+          );
         })
         .catch(reject);
     });

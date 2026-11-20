@@ -105,15 +105,6 @@ pdfjs-document-properties-button-label = Propiedades del documento…
 pdfjs-document-properties-file-name = Nombre del archivo:
 pdfjs-document-properties-file-size = Tamaño del archivo:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
@@ -121,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Título:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Asunto:
@@ -129,14 +119,8 @@ pdfjs-document-properties-keywords = Palabras claves:
 pdfjs-document-properties-creation-date = Fecha de creación:
 pdfjs-document-properties-modification-date = Fecha de modificación:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creador:
 pdfjs-document-properties-producer = Productor PDF:
 pdfjs-document-properties-version = Versión PDF:
@@ -169,6 +153,7 @@ pdfjs-document-properties-linearized = Vista rápida de la web:
 pdfjs-document-properties-linearized-yes = Sí
 pdfjs-document-properties-linearized-no = No
 pdfjs-document-properties-close-button = Cerrar
+pdfjs-digital-signature-properties-view-certificate = Ver certificado
 
 ## Print
 
@@ -177,28 +162,11 @@ pdfjs-print-progress-message = Preparando documento para impresión…
 #   $progress (Number) - percent value
 pdfjs-print-progress-percent = { $progress }%
 pdfjs-print-progress-close-button = Cancelar
-pdfjs-printing-not-supported = Advertencia: La impresión no esta completamente soportada por este navegador.
-pdfjs-printing-not-ready = Advertencia: El PDF no cargo completamente para impresión.
+pdfjs-printing-not-supported = Advertencia: La impresión no está completamente soportada por este navegador.
+pdfjs-printing-not-ready = Advertencia: El PDF no cargó completamente para impresión.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Cambiar barra lateral
-pdfjs-toggle-sidebar-notification-button =
-    .title = Alternar barra lateral (el documento contiene esquemas/adjuntos/capas)
-pdfjs-toggle-sidebar-button-label = Cambiar barra lateral
-pdfjs-document-outline-button =
-    .title = Mostrar esquema del documento (doble clic para expandir/contraer todos los elementos)
-pdfjs-document-outline-button-label = Esquema del documento
-pdfjs-attachments-button =
-    .title = Mostrar adjuntos
-pdfjs-attachments-button-label = Adjuntos
-pdfjs-layers-button =
-    .title = Mostrar capas (doble clic para restablecer todas las capas al estado predeterminado)
-pdfjs-layers-button-label = Capas
-pdfjs-thumbs-button =
-    .title = Mostrar miniaturas
-pdfjs-thumbs-button-label = Miniaturas
 pdfjs-current-outline-item-button =
     .title = Buscar elemento de esquema actual
 pdfjs-current-outline-item-button-label = Elemento de esquema actual
@@ -211,18 +179,23 @@ pdfjs-additional-layers = Capas adicionales
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Página { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura de la página { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Seleccionar página { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Página { $page } de { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Buscar
     .placeholder = Buscar en el documento…
+    .title = Buscar
 pdfjs-find-previous-button =
     .title = Ir a la anterior frase encontrada
 pdfjs-find-previous-button-label = Anterior
@@ -272,20 +245,13 @@ pdfjs-page-landmark =
 ## Loading indicator messages
 
 pdfjs-loading-error = Un error ocurrió al cargar el PDF.
-pdfjs-invalid-file-error = Archivo PDF invalido o dañado.
+pdfjs-invalid-file-error = Archivo PDF inválido o dañado.
 pdfjs-missing-file-error = Archivo PDF no encontrado.
 pdfjs-unexpected-response-error = Respuesta inesperada del servidor.
 pdfjs-rendering-error = Un error ocurrió al renderizar la página.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -293,12 +259,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } anotación]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -312,11 +275,6 @@ pdfjs-web-fonts-disabled = Las fuentes web están desactivadas: es imposible usa
 
 pdfjs-editor-free-text-button =
     .title = Texto
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Texto
-pdfjs-editor-ink-button =
-    .title = Dibujar
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Cambiar el color del texto
 pdfjs-editor-free-text-button-label = Texto
@@ -324,7 +282,6 @@ pdfjs-editor-ink-button =
     .title = Dibujar
 pdfjs-editor-color-picker-ink-input =
     .title = Cambiar el color del dibujo
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Dibujar
 pdfjs-editor-stamp-button =
     .title = Agregar o editar imágenes
@@ -333,18 +290,16 @@ pdfjs-editor-highlight-button =
     .title = Destacar
 pdfjs-editor-highlight-button-label = Destacar
 pdfjs-highlight-floating-button1 =
-    .title = Destacados
     .aria-label = Destacados
+    .title = Destacados
 pdfjs-highlight-floating-button-label = Destacados
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Comentario
     .aria-label = Comentario
+    .title = Comentario
 pdfjs-comment-floating-button-label = Comentario
 pdfjs-editor-comment-button =
-    .title = Comentario
     .aria-label = Comentario
+    .title = Comentario
 pdfjs-editor-comment-button-label = Comentario
 pdfjs-editor-signature-button =
     .title = Agregar firma
@@ -365,7 +320,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Editor de firmas: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Editor de imágenes
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -377,11 +331,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Eliminar imagen
 pdfjs-editor-remove-highlight-button =
     .title = Eliminar destacado
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Eliminar firma
->>>>>>> upstream/master
 
 ##
 
@@ -389,7 +340,7 @@ pdfjs-editor-remove-signature-button =
 pdfjs-editor-free-text-color-input = Color
 pdfjs-editor-free-text-size-input = Tamaño
 pdfjs-editor-ink-color-input = Color
-pdfjs-editor-ink-thickness-input = Grossor
+pdfjs-editor-ink-thickness-input = Grosor
 pdfjs-editor-ink-opacity-input = Opacidad
 pdfjs-editor-stamp-add-image-button =
     .title = Agregar imagen
@@ -398,21 +349,6 @@ pdfjs-editor-stamp-add-image-button-label = Agregar imagen
 pdfjs-editor-free-highlight-thickness-input = Espesor
 pdfjs-editor-free-highlight-thickness-title =
     .title = Cambiar el grosor al resaltar elementos que no sean texto
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor de texto
-pdfjs-free-text-default-content = Empieza a escribir…
-pdfjs-ink =
-    .aria-label = Editor de dibujo
-pdfjs-ink-canvas =
-    .aria-label = Imagen creada por el usuario
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Texto alternativo
-pdfjs-editor-alt-text-edit-button-label = Editar texto alternativo
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Controles de firma y firmas guardadas
 pdfjs-editor-signature-add-signature-button =
@@ -436,8 +372,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Comentarios
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Cerrar la barra lateral
     .aria-label = Cerrar la barra lateral
+    .title = Cerrar la barra lateral
 pdfjs-editor-comments-sidebar-close-button-label = Cerrar la barra lateral
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = ¿Ves algo interesante? Resáltalo y deja un comentario.
@@ -448,7 +384,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = Saber más
 pdfjs-editor-alt-text-button-label = Texto alternativo
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Editar texto alternativo
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Elige una opción
 pdfjs-editor-alt-text-dialog-description = El texto alternativo (texto alternativo) ayuda cuando las personas no pueden ver la imagen o cuando no se carga.
 pdfjs-editor-alt-text-add-description-label = Añadir una descripción
@@ -461,26 +396,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Marcado como decorativo
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Por ejemplo: “Un joven se sienta a la mesa a comer”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Texto alternativo
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Esquina superior izquierda: cambiar el tamaño
-pdfjs-editor-resizer-label-top-middle = Arriba en el medio: cambiar el tamaño
-pdfjs-editor-resizer-label-top-right = Esquina superior derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-middle-right = Centro derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-right = Esquina inferior derecha: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-middle = Abajo en el medio: cambiar el tamaño
-pdfjs-editor-resizer-label-bottom-left = Esquina inferior izquierda: cambiar el tamaño
-pdfjs-editor-resizer-label-middle-left = Centro izquierda: cambiar el tamaño
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Esquina superior izquierda — redimensionar
 pdfjs-editor-resizer-top-middle =
@@ -497,7 +419,6 @@ pdfjs-editor-resizer-bottom-left =
     .aria-label = Esquina inferior izquierda — redimensionar
 pdfjs-editor-resizer-middle-left =
     .aria-label = Borde izquierdo en el medio — redimensionar
->>>>>>> upstream/master
 
 ## Color picker
 
@@ -528,11 +449,6 @@ pdfjs-editor-highlight-show-all-button =
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-
-## Image alt-text settings
-
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = Editar texto alternativo (descripción de la imagen)
 # Modal header positioned above a text box where users can add the alt text.
@@ -580,13 +496,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Ajustes del texto alternativo de l
 pdfjs-editor-alt-text-settings-automatic-title = Texto alternativo automático
 pdfjs-editor-alt-text-settings-create-model-button-label = Crear texto alternativo automáticamente
 pdfjs-editor-alt-text-settings-create-model-description = Sugiere descripciones para ayudar a las personas que no pueden ver la imagen o cuando la imagen no se carga.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modelo de IA de texto alternativo ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Se ejecuta localmente en el dispositivo para que los datos se mantengan privados. Requerido para texto alternativo automático.
-pdfjs-editor-alt-text-settings-delete-model-button = Eliminar
-pdfjs-editor-alt-text-settings-download-model-button = Descargar
-pdfjs-editor-alt-text-settings-downloading-model-button = Descargando…
 pdfjs-editor-alt-text-settings-editor-title = Editor de texto alternativo
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostrar el editor de texto alternativo inmediatamente al añadir una imagen
 pdfjs-editor-alt-text-settings-show-dialog-description = Te ayuda a asegurarte de que todas tus imágenes tengan texto alternativo.
@@ -607,6 +516,7 @@ pdfjs-editor-undo-bar-message-freetext = Texto eliminado
 pdfjs-editor-undo-bar-message-ink = Dibujo eliminado
 pdfjs-editor-undo-bar-message-stamp = Imagen eliminada
 pdfjs-editor-undo-bar-message-signature = Firma eliminada
+pdfjs-editor-undo-bar-message-comment = Comentario eliminado
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -643,7 +553,7 @@ pdfjs-editor-add-signature-type-input =
     .aria-label = Escribe tu firma
     .placeholder = Escribe tu firma
 pdfjs-editor-add-signature-draw-placeholder = Dibuja tu firma
-pdfjs-editor-add-signature-draw-thickness-range-label = Grossor
+pdfjs-editor-add-signature-draw-thickness-range-label = Grosor
 # Variables:
 #   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
 pdfjs-editor-add-signature-draw-thickness-range =
@@ -706,6 +616,95 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Cancelar
 pdfjs-editor-add-comment-button =
     .title = Añadir comentario
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Cambiar barra lateral (índice de contenidos del documento/miniaturas/adjuntos/capas)
+pdfjs-toggle-views-manager-button1-label = Administrar páginas
+pdfjs-views-manager-sidebar =
+    .aria-label = Barra lateral
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Cambiar tamaño de la barra lateral
+pdfjs-views-manager-view-selector-button =
+    .title = Vistas
+pdfjs-views-manager-view-selector-button-label = Vistas
+pdfjs-views-manager-pages-title = Páginas
+pdfjs-views-manager-outlines-title1 = Esquema del documento
+    .title = Esquema del documento (haz doble clic para expandir/contraer todos los elementos)
+pdfjs-views-manager-attachments-title = Adjuntos
+pdfjs-views-manager-layers-title1 = Capas
+    .title = Capas (haz doble clic para restablecer todas las capas a su estado predeterminado)
+pdfjs-views-manager-pages-option-label = Páginas
+pdfjs-views-manager-outlines-option-label = Esquema del documento
+pdfjs-views-manager-attachments-option-label = Adjuntos
+pdfjs-views-manager-layers-option-label = Capas
+pdfjs-views-manager-add-file-button =
+    .title = Agregar archivo
+pdfjs-views-manager-add-file-button-label = Agregar archivo
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } seleccionado
+       *[other] { $count } seleccionados
+    }
+pdfjs-views-manager-pages-status-none-action-label = Seleccionar páginas
+pdfjs-views-manager-pages-status-action-button-label = Administrar
+pdfjs-views-manager-pages-status-copy-button-label = Copiar
+pdfjs-views-manager-pages-status-cut-button-label = Cortar
+pdfjs-views-manager-pages-status-delete-button-label = Eliminar
+pdfjs-views-manager-pages-status-export-selected-button-label = Exportar seleccionado…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 página cortada
+       *[other] { $count } páginas cortadas
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 página copiada
+       *[other] { $count } páginas copiadas
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 página eliminada
+       *[other] { $count } páginas eliminadas
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Preparando tu archivo…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Subiendo archivo…
+pdfjs-views-manager-status-warning-cut-label = No se pudo cortar. Actualiza la página y vuelve a intentarlo.
+pdfjs-views-manager-status-warning-copy-label = No se pudo pegar. Actualiza la página y vuelve a intentarlo.
+pdfjs-views-manager-status-warning-delete-label = No se pudo eliminar. Actualiza la página y vuelve a intentarlo.
+pdfjs-views-manager-status-warning-save-label = No se pudo guardar. Actualiza la página y vuelve a intentarlo.
+pdfjs-views-manager-status-undo-button-label = Deshacer
+pdfjs-views-manager-status-done-button-label = Hecho
+pdfjs-views-manager-status-close-button =
+    .title = Cerrar
+pdfjs-views-manager-status-close-button-label = Cerrar
+pdfjs-views-manager-paste-button-label = Pegar
+pdfjs-views-manager-paste-button-before =
+    .title = Pegar antes de la primera página
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Pegar después de la página { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NUEVO
+pdfjs-views-manager-waiting-for-file = Subiendo archivo…
+pdfjs-toggle-views-manager-button1 =
+    .title = Administrar páginas
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -719,4 +718,3 @@ pdfjs-editor-add-signature-edit-button-label = Editar descripción
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Editar descripción
->>>>>>> upstream/master

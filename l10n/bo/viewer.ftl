@@ -89,30 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Document Properties…
 pdfjs-document-properties-file-name = File name:
 pdfjs-document-properties-file-size = File size:
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Title:
 pdfjs-document-properties-author = Author:
 pdfjs-document-properties-subject = Subject:
 pdfjs-document-properties-keywords = Keywords:
 pdfjs-document-properties-creation-date = Creation Date:
 pdfjs-document-properties-modification-date = Modification Date:
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creator:
 pdfjs-document-properties-producer = PDF Producer:
 pdfjs-document-properties-version = PDF Version:
@@ -158,18 +140,6 @@ pdfjs-printing-not-ready = Warning: The PDF is not fully loaded for printing.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Toggle Sidebar
-pdfjs-toggle-sidebar-button-label = Toggle Sidebar
-pdfjs-document-outline-button =
-    .title = Show Document Outline (double-click to expand/collapse all items)
-pdfjs-document-outline-button-label = Document Outline
-pdfjs-attachments-button =
-    .title = Show Attachments
-pdfjs-attachments-button-label = Attachments
-pdfjs-thumbs-button =
-    .title = Show Thumbnails
-pdfjs-thumbs-button-label = Thumbnails
 pdfjs-findbar-button =
     .title = Find in Document
 pdfjs-findbar-button-label = Find
@@ -178,18 +148,14 @@ pdfjs-findbar-button-label = Find
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Page { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Thumbnail of Page { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Find
     .placeholder = Find in document…
+    .title = Find
 pdfjs-find-previous-button =
     .title = Find the previous occurrence of the phrase
 pdfjs-find-previous-button-label = Previous
@@ -213,12 +179,6 @@ pdfjs-page-scale-actual = Actual Size
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-<<<<<<< HEAD
-## PDF page
-
-
-=======
->>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = An error occurred while loading the PDF.
@@ -244,16 +204,3 @@ pdfjs-password-invalid = Invalid password. Please try again.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Cancel
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-<<<<<<< HEAD
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-=======
->>>>>>> upstream/master

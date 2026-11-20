@@ -65,46 +65,17 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = မှတ်တမ်းမှတ်ရာ ဂုဏ်သတ္တိများ
 pdfjs-document-properties-file-name = ဖိုင် :
 pdfjs-document-properties-file-size = ဖိုင်ဆိုဒ် :
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } ကီလိုဘိုတ် ({ $size_b }ဘိုတ်)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = ခေါင်းစဉ်‌ -
 pdfjs-document-properties-author = ရေးသားသူ:
 pdfjs-document-properties-subject = အကြောင်းအရာ:
 pdfjs-document-properties-keywords = သော့ချက် စာလုံး:
 pdfjs-document-properties-creation-date = ထုတ်လုပ်ရက်စွဲ:
 pdfjs-document-properties-modification-date = ပြင်ဆင်ရက်စွဲ:
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = ဖန်တီးသူ:
 pdfjs-document-properties-producer = PDF ထုတ်လုပ်သူ:
 pdfjs-document-properties-version = PDF ဗားရှင်း:
 pdfjs-document-properties-page-count = စာမျက်နှာအရေအတွက်:
 
-<<<<<<< HEAD
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
-=======
->>>>>>> upstream/master
 ##
 
 pdfjs-document-properties-close-button = ပိတ်
@@ -121,18 +92,6 @@ pdfjs-printing-not-ready = သတိပေးချက်: ယခု PDF ဖိ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = ဘေးတန်းဖွင့်ပိတ်
-pdfjs-toggle-sidebar-button-label = ဖွင့်ပိတ် ဆလိုက်ဒါ
-pdfjs-document-outline-button =
-    .title = စာတမ်းအကျဉ်းချုပ်ကို ပြပါ (စာရင်းအားလုံးကို ချုံ့/ချဲ့ရန် ကလစ်နှစ်ချက်နှိပ်ပါ)
-pdfjs-document-outline-button-label = စာတမ်းအကျဉ်းချုပ်
-pdfjs-attachments-button =
-    .title = တွဲချက်များ ပြပါ
-pdfjs-attachments-button-label = တွဲထားချက်များ
-pdfjs-thumbs-button =
-    .title = ပုံရိပ်ငယ်များကို ပြပါ
-pdfjs-thumbs-button-label = ပုံရိပ်ငယ်များ
 pdfjs-findbar-button =
     .title = Find in Document
 pdfjs-findbar-button-label = ရှာဖွေပါ
@@ -141,18 +100,14 @@ pdfjs-findbar-button-label = ရှာဖွေပါ
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = စာမျက်နှာ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = စာမျက်နှာရဲ့ ပုံရိပ်ငယ် { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ရှာဖွေပါ
     .placeholder = စာတမ်းထဲတွင် ရှာဖွေရန်…
+    .title = ရှာဖွေပါ
 pdfjs-find-previous-button =
     .title = စကားစုရဲ့ အရင် ​ဖြစ်ပွားမှုကို ရှာဖွေပါ
 pdfjs-find-previous-button-label = နောက်သို့
@@ -175,12 +130,6 @@ pdfjs-page-scale-actual = အမှန်တကယ်ရှိတဲ့ အရ�
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-<<<<<<< HEAD
-## PDF page
-
-
-=======
->>>>>>> upstream/master
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ဖိုင် ကိုဆွဲတင်နေချိန်မှာ အမှားတစ်ခုတွေ့ရပါတယ်။
@@ -206,16 +155,3 @@ pdfjs-password-invalid = စာဝှက် မှားသည်။ ထပ်�
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = ပယ်​ဖျက်ပါ
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-<<<<<<< HEAD
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-=======
->>>>>>> upstream/master

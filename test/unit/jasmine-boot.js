@@ -34,7 +34,6 @@
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/* globals jasmineRequire */
 
 // Modified jasmine's boot.js file to load PDF.js libraries async.
 
@@ -42,11 +41,11 @@
 
 import { GlobalWorkerOptions } from "pdfjs/display/worker_options.js";
 import { isNodeJS } from "../../src/shared/util.js";
-<<<<<<< HEAD
-import { TestReporter } from "./testreporter.js";
-=======
+import { mergeCoverageIntoGlobal } from "../coverage_utils.js";
+import { MessageHandler } from "pdfjs/shared/message_handler.js";
+import { PDFWorker } from "pdfjs/display/api.js";
+import { RendererWorker } from "pdfjs/display/renderer_worker_proxy.js";
 import { TestReporter } from "../reporter.js";
->>>>>>> upstream/master
 
 async function initializePDFJS(callback) {
   await Promise.all(
@@ -55,13 +54,12 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/annotation_storage_spec.js",
       "pdfjs-test/unit/api_spec.js",
       "pdfjs-test/unit/app_options_spec.js",
-<<<<<<< HEAD
-=======
       "pdfjs-test/unit/autolinker_spec.js",
->>>>>>> upstream/master
       "pdfjs-test/unit/bidi_spec.js",
       "pdfjs-test/unit/canvas_factory_spec.js",
+      "pdfjs-test/unit/catalog_spec.js",
       "pdfjs-test/unit/cff_parser_spec.js",
+      "pdfjs-test/unit/char_code_map_spec.js",
       "pdfjs-test/unit/cmap_spec.js",
       "pdfjs-test/unit/colorspace_spec.js",
       "pdfjs-test/unit/core_utils_spec.js",
@@ -70,34 +68,52 @@ async function initializePDFJS(callback) {
       "pdfjs-test/unit/default_appearance_spec.js",
       "pdfjs-test/unit/display_utils_spec.js",
       "pdfjs-test/unit/document_spec.js",
+      "pdfjs-test/unit/dom_utils_spec.js",
       "pdfjs-test/unit/editor_spec.js",
       "pdfjs-test/unit/encodings_spec.js",
       "pdfjs-test/unit/evaluator_spec.js",
       "pdfjs-test/unit/event_utils_spec.js",
       "pdfjs-test/unit/fetch_stream_spec.js",
+      "pdfjs-test/unit/font_loader_spec.js",
       "pdfjs-test/unit/font_substitutions_spec.js",
+      "pdfjs-test/unit/fonts_spec.js",
       "pdfjs-test/unit/function_spec.js",
+      "pdfjs-test/unit/image_resizer_spec.js",
+      "pdfjs-test/unit/image_spec.js",
+      "pdfjs-test/unit/image_utils_spec.js",
+      "pdfjs-test/unit/jpeg_stream_spec.js",
       "pdfjs-test/unit/message_handler_spec.js",
       "pdfjs-test/unit/metadata_spec.js",
       "pdfjs-test/unit/murmurhash3_spec.js",
+      "pdfjs-test/unit/name_number_tree_spec.js",
       "pdfjs-test/unit/network_spec.js",
       "pdfjs-test/unit/network_utils_spec.js",
       "pdfjs-test/unit/obj_bin_transform_spec.js",
+      "pdfjs-test/unit/operator_list_dependencies_spec.js",
       "pdfjs-test/unit/parser_spec.js",
+      "pdfjs-test/unit/pattern_spec.js",
       "pdfjs-test/unit/pdf.image_decoders_spec.js",
       "pdfjs-test/unit/pdf.worker_spec.js",
       "pdfjs-test/unit/pdf_find_controller_spec.js",
       "pdfjs-test/unit/pdf_find_utils_spec.js",
       "pdfjs-test/unit/pdf_history_spec.js",
+      "pdfjs-test/unit/pdf_link_service_spec.js",
       "pdfjs-test/unit/pdf_spec.js",
       "pdfjs-test/unit/pdf_viewer.component_spec.js",
       "pdfjs-test/unit/pdf_viewer_spec.js",
+      "pdfjs-test/unit/postscript_spec.js",
       "pdfjs-test/unit/primitives_spec.js",
       "pdfjs-test/unit/scripting_spec.js",
+      "pdfjs-test/unit/scripting_utils_spec.js",
+      "pdfjs-test/unit/sound_spec.js",
       "pdfjs-test/unit/stream_spec.js",
+      "pdfjs-test/unit/string_utils_spec.js",
+      "pdfjs-test/unit/struct_tree_layer_builder_spec.js",
       "pdfjs-test/unit/struct_tree_spec.js",
       "pdfjs-test/unit/svg_factory_spec.js",
       "pdfjs-test/unit/text_layer_spec.js",
+      "pdfjs-test/unit/to_unicode_map_spec.js",
+      "pdfjs-test/unit/touch_manager_spec.js",
       "pdfjs-test/unit/type1_parser_spec.js",
       "pdfjs-test/unit/ui_utils_spec.js",
       "pdfjs-test/unit/unicode_spec.js",
@@ -118,98 +134,86 @@ async function initializePDFJS(callback) {
   }
   // Configure the worker.
   GlobalWorkerOptions.workerSrc = "../../build/generic/build/pdf.worker.mjs";
+  GlobalWorkerOptions.rendererSrc =
+    "../../build/generic/build/pdf.renderer.mjs";
 
   callback();
 }
 
+// Merge worker coverage into window.__coverage__ before termination.
+const pendingWorkerCoverage = new Set();
+
+function installWorkerCoverageHook(WorkerClass, targetName) {
+  const originalDestroy = WorkerClass.prototype.destroy;
+  WorkerClass.prototype.destroy = function () {
+    if (this.destroyed || !this._webWorker) {
+      return originalDestroy.call(this);
+    }
+    // Run destroy() synchronously while keeping the worker alive for the
+    // coverage request.
+    const webWorker = this._webWorker;
+    const realTerminate = webWorker.terminate.bind(webWorker);
+    webWorker.terminate = () => {};
+    try {
+      originalDestroy.call(this);
+    } finally {
+      webWorker.terminate = realTerminate;
+    }
+    const handler = new MessageHandler("main", targetName, webWorker);
+    const promise = handler
+      .sendWithPromise("GetWorkerCoverage", null)
+      .then(mergeCoverageIntoGlobal)
+      .catch(e => {
+        console.warn(`Failed to collect ${targetName} coverage: ${e}`);
+      })
+      .finally(() => {
+        handler.destroy();
+        realTerminate();
+        pendingWorkerCoverage.delete(promise);
+      });
+    pendingWorkerCoverage.add(promise);
+    return undefined;
+  };
+}
+
+async function flushPendingWorkerCoverage() {
+  while (pendingWorkerCoverage.size > 0) {
+    await Promise.allSettled(pendingWorkerCoverage);
+  }
+}
+
 (function () {
-  window.jasmine = jasmineRequire.core(jasmineRequire);
-
-  jasmineRequire.html(jasmine);
-
   const env = jasmine.getEnv();
 
-  const jasmineInterface = jasmineRequire.interface(jasmine, env);
-  extend(window, jasmineInterface);
-
   // Runner Parameters
-  const queryString = new jasmine.QueryString({
-    getWindowLocation() {
-      return window.location;
-    },
-  });
+  const urls = new jasmine.HtmlReporterV2Urls();
 
-  const config = {
-    failFast: queryString.getParam("failFast"),
-    oneFailurePerSpec: queryString.getParam("oneFailurePerSpec"),
-    hideDisabled: queryString.getParam("hideDisabled"),
-  };
-
-  const random = queryString.getParam("random");
-  if (random !== undefined && random !== "") {
-    config.random = random;
-  }
-
-  const seed = queryString.getParam("seed");
-  if (seed) {
-    config.seed = seed;
-  }
+  env.configure(urls.configFromCurrentUrl());
 
   // Reporters
-  const htmlReporter = new jasmine.HtmlReporter({
-    env,
-    navigateWithNewParam(key, value) {
-      return queryString.navigateWithNewParam(key, value);
-    },
-    addToExistingQueryString(key, value) {
-      return queryString.fullStringWithNewParam(key, value);
-    },
-    getContainer() {
-      return document.body;
-    },
-    createElement() {
-      return document.createElement(...arguments);
-    },
-    createTextNode() {
-      return document.createTextNode(...arguments);
-    },
-    timer: new jasmine.Timer(),
-  });
+  const htmlReporter = new jasmine.HtmlReporterV2({ env, urls });
 
   env.addReporter(htmlReporter);
 
-  if (queryString.getParam("browser")) {
-    const testReporter = new TestReporter(queryString.getParam("browser"));
-    env.addReporter(testReporter);
+  if (window.__coverage__) {
+    // Merge worker coverage before TestReporter triggers browser teardown.
+    env.addReporter({ jasmineDone: flushPendingWorkerCoverage });
   }
 
-  // Filter which specs will be run by matching the start of the full name
-  // against the `spec` query param.
-  const specFilter = new jasmine.HtmlSpecFilter({
-    filterString() {
-      return queryString.getParam("spec");
-    },
-  });
-
-  config.specFilter = function (spec) {
-    return specFilter.matches(spec.getFullName());
-  };
-
-  env.configure(config);
+  if (urls.queryString.getParam("browser")) {
+    const testReporter = new TestReporter(urls.queryString.getParam("browser"));
+    env.addReporter(testReporter);
+  }
 
   // Sets longer timeout.
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-  function extend(destination, source) {
-    for (const property in source) {
-      destination[property] = source[property];
-    }
-    return destination;
-  }
-
   function unitTestInit() {
     initializePDFJS(function () {
-      htmlReporter.initialize();
+      if (window.__coverage__) {
+        installWorkerCoverageHook(PDFWorker, "worker");
+        installWorkerCoverageHook(RendererWorker, "renderer");
+      }
       env.execute();
     });
   }

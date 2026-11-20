@@ -25,11 +25,19 @@ class BaseStream {
     }
   }
 
+  /**
+   * @abstract
+   * @returns {number}
+   */
   // eslint-disable-next-line getter-return
   get length() {
     unreachable("Abstract getter `length` accessed");
   }
 
+  /**
+   * @abstract
+   * @returns {boolean}
+   */
   // eslint-disable-next-line getter-return
   get isEmpty() {
     unreachable("Abstract getter `isEmpty` accessed");
@@ -43,6 +51,11 @@ class BaseStream {
     unreachable("Abstract method `getByte` called");
   }
 
+  /**
+   * @abstract
+   * @param {number | undefined} [length]
+   * @returns {Uint8Array}
+   */
   getBytes(length) {
     unreachable("Abstract method `getBytes` called");
   }
@@ -64,11 +77,23 @@ class BaseStream {
     return false;
   }
 
+  get isAsyncDecoder() {
+    return false;
+  }
+
+  get isImageStream() {
+    return false;
+  }
+
   get canAsyncDecodeImageFromBuffer() {
     return false;
   }
 
-  async getTransferableImage() {
+  /**
+   * @param {number} width - The width from the image dictionary.
+   * @param {number} height - The height from the image dictionary.
+   */
+  async getTransferableImage(width, height) {
     return null;
   }
 
@@ -89,10 +114,7 @@ class BaseStream {
   getUint16() {
     const b0 = this.getByte();
     const b1 = this.getByte();
-    if (b0 === -1 || b1 === -1) {
-      return -1;
-    }
-    return (b0 << 8) + b1;
+    return b0 === -1 || b1 === -1 ? -1 : (b0 << 8) + b1;
   }
 
   getInt32() {
@@ -127,11 +149,19 @@ class BaseStream {
     unreachable("Abstract method `makeSubStream` called");
   }
 
+  clone() {
+    unreachable("Abstract method `clone` called");
+  }
+
   /**
    * @returns {Array | null}
    */
   getBaseStreams() {
     return null;
+  }
+
+  getOriginalStream() {
+    return this.stream?.getOriginalStream() || this;
   }
 }
 

@@ -81,20 +81,19 @@ const StyleMapping = new Map([
   ["kerning-mode", value => (value === "none" ? "none" : "normal")],
   [
     "xfa-font-horizontal-scale",
-    value =>
-      `scaleX(${Math.max(0, Math.min(parseInt(value) / 100)).toFixed(2)})`,
+    value => `scaleX(${Math.max(0, parseInt(value, 10) / 100).toFixed(2)})`,
   ],
   [
     "xfa-font-vertical-scale",
-    value =>
-      `scaleY(${Math.max(0, Math.min(parseInt(value) / 100)).toFixed(2)})`,
+    value => `scaleY(${Math.max(0, parseInt(value, 10) / 100).toFixed(2)})`,
   ],
   ["xfa-spacerun", ""],
   ["xfa-tab-stops", ""],
   [
     "font-size",
     (value, original) => {
-      value = original.fontSize = getMeasurement(value);
+      // The font size must be positive.
+      value = original.fontSize = Math.abs(getMeasurement(value));
       return measureToString(0.99 * value);
     },
   ],
@@ -135,8 +134,7 @@ function mapStyle(styleStr, node, richText) {
         ? `${style[key]} ${newValue}`
         : newValue;
     } else {
-      style[key.replaceAll(/-([a-zA-Z])/g, (_, x) => x.toUpperCase())] =
-        newValue;
+      style[key.replaceAll(/-([a-z])/gi, (_, x) => x.toUpperCase())] = newValue;
     }
   }
 
@@ -178,7 +176,7 @@ function mapStyle(styleStr, node, richText) {
   }
 
   if (richText && style.fontSize) {
-    style.fontSize = `calc(${style.fontSize} * var(--scale-factor))`;
+    style.fontSize = `calc(${style.fontSize} * var(--total-scale-factor))`;
   }
 
   fixTextIndent(style);
@@ -192,10 +190,9 @@ function checkStyle(node) {
 
   // Remove any non-allowed keys.
   return node.style
-    .trim()
-    .split(/\s*;\s*/)
-    .filter(s => !!s)
-    .map(s => s.split(/\s*:\s*/, 2))
+    .split(";")
+    .filter(s => !!s.trim())
+    .map(s => s.split(":", 2).map(t => t.trim()))
     .filter(([key, value]) => {
       if (key === "font-family") {
         node[$globalData].usedTypefaces.add(value);
@@ -268,7 +265,7 @@ class XhtmlObject extends XmlObject {
           xfaFont.letterSpacing = getMeasurement(value);
           break;
         case "margin":
-          const values = value.split(/ \t/).map(x => getMeasurement(x));
+          const values = value.split(/ \t/).map(getMeasurement);
           switch (values.length) {
             case 1:
               margin.top =
@@ -499,10 +496,7 @@ class P extends XhtmlObject {
 
   [$text]() {
     const siblings = this[$getParent]()[$getChildren]();
-    if (siblings.at(-1) === this) {
-      return super[$text]();
-    }
-    return super[$text]() + "\n";
+    return siblings.at(-1) === this ? super[$text]() : super[$text]() + "\n";
   }
 }
 
@@ -532,10 +526,9 @@ class Ul extends XhtmlObject {
 
 class XhtmlNamespace {
   static [$buildXFAObject](name, attributes) {
-    if (XhtmlNamespace.hasOwnProperty(name)) {
-      return XhtmlNamespace[name](attributes);
-    }
-    return undefined;
+    return Object.hasOwn(XhtmlNamespace, name)
+      ? XhtmlNamespace[name](attributes)
+      : undefined;
   }
 
   static a(attributes) {

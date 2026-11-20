@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { stopEvent } from "pdfjs-lib";
+
 // Class name of element which can be grabbed.
 const CSS_CLASS_GRAB = "grab-to-pan-grab";
 
 /**
- * @typedef {Object} GrabToPanOptions
+ * @typedef {object} GrabToPanOptions
  * @property {HTMLElement} element
  */
 
@@ -71,18 +73,9 @@ class GrabToPan {
     }
   }
 
-  toggle() {
-    if (this.#activateAC) {
-      this.deactivate();
-    } else {
-      this.activate();
-    }
-  }
-
   /**
    * Whether to not pan if the target element is clicked.
    * Override this method to change the default behaviour.
-   *
    * @param {Element} node - The target of the event.
    * @returns {boolean} Whether to not react to the click event.
    */
@@ -131,8 +124,7 @@ class GrabToPan {
       capture: true,
       signal: this.#scrollAC.signal,
     });
-    event.preventDefault();
-    event.stopPropagation();
+    stopEvent(event);
 
     const focusedElement = document.activeElement;
     if (focusedElement && !focusedElement.contains(event.target)) {

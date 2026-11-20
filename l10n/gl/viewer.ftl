@@ -105,15 +105,6 @@ pdfjs-document-properties-button-label = Propiedades do documento…
 pdfjs-document-properties-file-name = Nome do ficheiro:
 pdfjs-document-properties-file-size = Tamaño do ficheiro:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
@@ -121,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Título:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Asunto:
@@ -129,14 +119,8 @@ pdfjs-document-properties-keywords = Palabras clave:
 pdfjs-document-properties-creation-date = Data de creación:
 pdfjs-document-properties-modification-date = Data de modificación:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Creado por:
 pdfjs-document-properties-producer = Xenerador do PDF:
 pdfjs-document-properties-version = Versión de PDF:
@@ -182,23 +166,6 @@ pdfjs-printing-not-ready = Aviso: O PDF non se cargou completamente para imprimi
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Amosar/agochar a barra lateral
-pdfjs-toggle-sidebar-notification-button =
-    .title = Alternar barra lateral (o documento contén esquema/anexos/capas)
-pdfjs-toggle-sidebar-button-label = Amosar/agochar a barra lateral
-pdfjs-document-outline-button =
-    .title = Amosar a estrutura do documento (dobre clic para expandir/contraer todos os elementos)
-pdfjs-document-outline-button-label = Estrutura do documento
-pdfjs-attachments-button =
-    .title = Amosar anexos
-pdfjs-attachments-button-label = Anexos
-pdfjs-layers-button =
-    .title = Mostrar capas (prema dúas veces para restaurar todas as capas o estado predeterminado)
-pdfjs-layers-button-label = Capas
-pdfjs-thumbs-button =
-    .title = Amosar miniaturas
-pdfjs-thumbs-button-label = Miniaturas
 pdfjs-current-outline-item-button =
     .title = Atopar o elemento delimitado actualmente
 pdfjs-current-outline-item-button-label = Elemento delimitado actualmente
@@ -211,18 +178,14 @@ pdfjs-additional-layers = Capas adicionais
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Páxina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura da páxina { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Atopar
     .placeholder = Atopar no documento…
+    .title = Atopar
 pdfjs-find-previous-button =
     .title = Atopar a anterior aparición da frase
 pdfjs-find-previous-button-label = Anterior
@@ -279,13 +242,6 @@ pdfjs-rendering-error = Produciuse un erro ao representar a páxina.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -293,12 +249,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Anotación { $type }]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -319,17 +272,12 @@ pdfjs-editor-ink-button-label = Debuxo
 pdfjs-editor-stamp-button =
     .title = Engadir ou editar imaxes
 pdfjs-editor-stamp-button-label = Engadir ou editar imaxes
-<<<<<<< HEAD
-
-## Remove button for the various kind of editor.
-
-=======
 pdfjs-editor-highlight-button =
     .title = Destacar
 pdfjs-editor-highlight-button-label = Destacar
 pdfjs-highlight-floating-button1 =
-    .title = Destacar
     .aria-label = Destacar
+    .title = Destacar
 pdfjs-highlight-floating-button-label = Destacar
 pdfjs-editor-signature-button =
     .title = Engadir sinatura
@@ -355,18 +303,14 @@ pdfjs-editor-stamp-editor =
 
 pdfjs-editor-remove-ink-button =
     .title = Eliminar debuxo
->>>>>>> upstream/master
 pdfjs-editor-remove-freetext-button =
     .title = Eliminar o texto
 pdfjs-editor-remove-stamp-button =
     .title = Eliminar a imaxe
 pdfjs-editor-remove-highlight-button =
     .title = Eliminar o resaltado
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Eliminar sinatura
->>>>>>> upstream/master
 
 ##
 
@@ -381,23 +325,6 @@ pdfjs-editor-stamp-add-image-button =
 pdfjs-editor-stamp-add-image-button-label = Engadir imaxe
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Grosor
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor de texto
-pdfjs-free-text-default-content = Comezar a teclear…
-pdfjs-ink =
-    .aria-label = Editor de debuxos
-pdfjs-ink-canvas =
-    .aria-label = Imaxe creada por unha usuaria
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Texto alternativo
-pdfjs-editor-alt-text-edit-button-label = Editar o texto alternativo
-pdfjs-editor-alt-text-dialog-label = Escoller unha opción
-pdfjs-editor-alt-text-add-description-label = Engadir unha descrición
-=======
 pdfjs-editor-free-highlight-thickness-title =
     .title = Cambiar o grosor ao resaltar elementos que non sexan texto
 pdfjs-editor-add-signature-container =
@@ -424,7 +351,6 @@ pdfjs-editor-alt-text-dialog-label = Escoller unha opción
 pdfjs-editor-alt-text-dialog-description = O texto alternativo (texto alt) axuda cando as persoas non poden ver a imaxe ou cando non se carga.
 pdfjs-editor-alt-text-add-description-label = Engadir unha descrición
 pdfjs-editor-alt-text-add-description-description = Tenta escribir 1-2 frases que describan o tema, o escenario ou as accións.
->>>>>>> upstream/master
 pdfjs-editor-alt-text-mark-decorative-label = Marcar como decorativo
 pdfjs-editor-alt-text-mark-decorative-description = Utilízase para imaxes ornamentais, como bordos ou marcas de auga.
 pdfjs-editor-alt-text-cancel-button = Cancelar
@@ -433,27 +359,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Marcado como decorativo
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Por exemplo, «Un mozo séntase á mesa para comer»
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Texto alternativo
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Esquina superior esquerda: cambia o tamaño
-pdfjs-editor-resizer-label-top-middle = Medio superior: cambia o tamaño
-pdfjs-editor-resizer-label-top-right = Esquina superior dereita: cambia o tamaño
-pdfjs-editor-resizer-label-middle-right = Medio dereito: cambia o tamaño
-pdfjs-editor-resizer-label-bottom-right = Esquina inferior dereita: cambia o tamaño
-pdfjs-editor-resizer-label-bottom-middle = Abaixo medio: cambia o tamaño
-pdfjs-editor-resizer-label-bottom-left = Esquina inferior esquerda: cambia o tamaño
-pdfjs-editor-resizer-label-middle-left = Medio esquerdo: cambia o tamaño
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Esquina superior esquerda: cambia o tamaño
 pdfjs-editor-resizer-top-middle =
@@ -473,8 +385,6 @@ pdfjs-editor-resizer-middle-left =
 
 ## Color picker
 
-<<<<<<< HEAD
-=======
 # This means "Color used to highlight text"
 pdfjs-editor-highlight-colorpicker-label = Cor de resaltado
 pdfjs-editor-colorpicker-button =
@@ -491,26 +401,17 @@ pdfjs-editor-colorpicker-pink =
     .title = Rosa
 pdfjs-editor-colorpicker-red =
     .title = Vermello
->>>>>>> upstream/master
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-highlight-show-all-button-label = Amosar todo
 pdfjs-editor-highlight-show-all-button =
     .title = Amosar todo
->>>>>>> upstream/master
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-
-## Image alt-text settings
-
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = Editar texto alternativo (descrición da imaxe)
 # Modal header positioned above a text box where users can add the alt text.
@@ -558,13 +459,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Configuración do texto alternativ
 pdfjs-editor-alt-text-settings-automatic-title = Texto alternativo automático
 pdfjs-editor-alt-text-settings-create-model-button-label = Crear texto alternativo automaticamente
 pdfjs-editor-alt-text-settings-create-model-description = Suxire descricións para axudar ás persoas que non poden ver a imaxe ou cando a imaxe non se carga.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modelo de IA de texto alternativo ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Funciona localmente no teu dispositivo para que os teus datos se manteñan privados. Necesario para o texto alternativo automático.
-pdfjs-editor-alt-text-settings-delete-model-button = Eliminar
-pdfjs-editor-alt-text-settings-download-model-button = Descargar
-pdfjs-editor-alt-text-settings-downloading-model-button = Descargando…
 pdfjs-editor-alt-text-settings-editor-title = Editor de texto alternativo
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostrar o editor de texto alternativo inmediatamente ao engadir unha imaxe
 pdfjs-editor-alt-text-settings-show-dialog-description = Axúdache a asegurarte de que todas as túas imaxes teñan texto alternativo.
@@ -667,4 +561,3 @@ pdfjs-editor-add-signature-edit-button-label = Editar descrición
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Editar descrición
->>>>>>> upstream/master

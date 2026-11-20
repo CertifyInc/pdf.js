@@ -90,7 +90,6 @@ import {
   XFAObject,
   XFAObjectArray,
 } from "./xfa_object.js";
-import { fromBase64Util, Util, warn } from "../../shared/util.js";
 import {
   getBBox,
   getColor,
@@ -103,12 +102,12 @@ import {
   getStringOption,
   HTMLResult,
 } from "./utils.js";
+import { SVG_NS, Util, warn } from "../../shared/util.js";
 import { getMetrics } from "./fonts.js";
 import { recoverJsURL } from "../core_utils.js";
 import { searchNode } from "./som.js";
 
 const TEMPLATE_NS_ID = NamespaceIds.template.id;
-const SVG_NS = "http://www.w3.org/2000/svg";
 
 // In case of lr-tb (and rl-tb) layouts, we try:
 //  - to put the container at the end of a line
@@ -1321,7 +1320,7 @@ class CheckButton extends XFAObject {
   [$toHTML](availableSpace) {
     // TODO: border, shape and mark.
 
-    const style = toStyle("margin");
+    const style = toStyle(this, "margin");
     const size = measureToString(this.size);
 
     style.width = style.height = size;
@@ -1421,7 +1420,7 @@ class ChoiceList extends XFAObject {
     const field = ui[$getParent]();
     const fontSize = field.font?.size || 10;
     const optionStyle = {
-      fontSize: `calc(${fontSize}px * var(--scale-factor))`,
+      fontSize: `calc(${fontSize}px * var(--total-scale-factor))`,
     };
     const children = [];
 
@@ -2462,9 +2461,7 @@ class ExclGroup extends XFAObject {
 
     setAccess(this, attributes.class);
 
-    if (!this[$extra]) {
-      this[$extra] = Object.create(null);
-    }
+    this[$extra] ||= Object.create(null);
 
     Object.assign(this[$extra], {
       children,
@@ -2953,9 +2950,7 @@ class Field extends XFAObject {
       }
     }
 
-    if (!ui.attributes.style) {
-      ui.attributes.style = Object.create(null);
-    }
+    ui.attributes.style ||= Object.create(null);
 
     let aElement = null;
 
@@ -3005,11 +3000,10 @@ class Field extends XFAObject {
     }
 
     if (!this.ui.imageEdit && ui.children?.[0] && this.h) {
-      borderDims = borderDims || getBorderDims(this.ui[$getExtra]());
+      borderDims ||= getBorderDims(this.ui[$getExtra]());
 
-      let captionHeight = 0;
       if (this.caption && ["top", "bottom"].includes(this.caption.placement)) {
-        captionHeight = this.caption.reserve;
+        let captionHeight = this.caption.reserve;
         if (captionHeight <= 0) {
           captionHeight = this.caption[$getExtra](availableSpace).h;
         }
@@ -3048,9 +3042,7 @@ class Field extends XFAObject {
       caption.attributes.class[0] = "xfaCaptionForCheckButton";
     }
 
-    if (!ui.attributes.class) {
-      ui.attributes.class = [];
-    }
+    ui.attributes.class ||= [];
 
     ui.children.splice(0, 0, caption);
 
@@ -3418,8 +3410,7 @@ class Image extends StringObject {
       return HTMLResult.EMPTY;
     }
 
-    let buffer =
-      this[$globalData].images && this[$globalData].images.get(this.href);
+    let buffer = this[$globalData].images?.get(this.href);
     if (!buffer && (this.href || !this[$content])) {
       // In general, we don't get remote data and use what we have
       // in the pdf itself, so no picture for non null href.
@@ -3427,7 +3418,7 @@ class Image extends StringObject {
     }
 
     if (!buffer && this.transferEncoding === "base64") {
-      buffer = fromBase64Util(this[$content]);
+      buffer = Uint8Array.fromBase64(this[$content]);
     }
 
     if (!buffer) {
@@ -3906,7 +3897,7 @@ class Occur extends XFAObject {
       attributes.max !== ""
         ? getInteger({
             data: attributes.max,
-            defaultValue: 1,
+            defaultValue: -1,
             validate: x => true,
           })
         : "";
@@ -4067,11 +4058,9 @@ class PageArea extends XFAObject {
   }
 
   [$getNextPage]() {
-    if (!this[$extra]) {
-      this[$extra] = {
-        numberOfUse: 0,
-      };
-    }
+    this[$extra] ||= {
+      numberOfUse: 0,
+    };
 
     const parent = this[$getParent]();
     if (parent.relation === "orderedOccurrence") {
@@ -4090,11 +4079,9 @@ class PageArea extends XFAObject {
 
   [$toHTML]() {
     // TODO: incomplete.
-    if (!this[$extra]) {
-      this[$extra] = {
-        numberOfUse: 1,
-      };
-    }
+    this[$extra] ||= {
+      numberOfUse: 1,
+    };
 
     const children = [];
     this[$extra].children = children;
@@ -4186,13 +4173,11 @@ class PageSet extends XFAObject {
   }
 
   [$getNextPage]() {
-    if (!this[$extra]) {
-      this[$extra] = {
-        numberOfUse: 1,
-        pageIndex: -1,
-        pageSetIndex: -1,
-      };
-    }
+    this[$extra] ||= {
+      numberOfUse: 1,
+      pageIndex: -1,
+      pageSetIndex: -1,
+    };
 
     if (this.relation === "orderedOccurrence") {
       if (this[$extra].pageIndex + 1 < this.pageArea.children.length) {
@@ -4242,11 +4227,7 @@ class PageSet extends XFAObject {
     page = this.pageArea.children.find(
       p => p.oddOrEven === "any" && p.pagePosition === "any"
     );
-    if (page) {
-      return page;
-    }
-
-    return this.pageArea.children[0];
+    return page ?? this.pageArea.children[0];
   }
 }
 
@@ -4914,10 +4895,7 @@ class Subform extends XFAObject {
 
   [$getSubformParent]() {
     const parent = this[$getParent]();
-    if (parent instanceof SubformSet) {
-      return parent[$getSubformParent]();
-    }
-    return parent;
+    return parent instanceof SubformSet ? parent[$getSubformParent]() : parent;
   }
 
   [$isBindable]() {
@@ -5067,9 +5045,7 @@ class Subform extends XFAObject {
 
     setAccess(this, attributes.class);
 
-    if (!this[$extra]) {
-      this[$extra] = Object.create(null);
-    }
+    this[$extra] ||= Object.create(null);
 
     Object.assign(this[$extra], {
       children,
@@ -5495,9 +5471,7 @@ class Template extends XFAObject {
       }
     }
 
-    if (!pageArea) {
-      pageArea = pageAreas[0];
-    }
+    pageArea ||= pageAreas[0];
 
     pageArea[$extra] = {
       numberOfUse: 1,
@@ -5721,12 +5695,7 @@ class Text extends ContentObject {
     if (typeof this[$content] === "string") {
       return this[$content]
         .split(/[\u2029\u2028\n]/)
-        .reduce((acc, line) => {
-          if (line) {
-            acc.push(line);
-          }
-          return acc;
-        }, [])
+        .filter(Boolean)
         .join("\n");
     }
     return this[$content][$text]();
@@ -5748,18 +5717,15 @@ class Text extends ContentObject {
           .map(para =>
             // Convert a paragraph into a set of <span> (for lines)
             // separated by <br>.
-            para.split(/[\u2028\n]/).reduce((acc, line) => {
-              acc.push(
-                {
-                  name: "span",
-                  value: line,
-                },
-                {
-                  name: "br",
-                }
-              );
-              return acc;
-            }, [])
+            para.split(/[\u2028\n]/).flatMap(line => [
+              {
+                name: "span",
+                value: line,
+              },
+              {
+                name: "br",
+              },
+            ])
           )
           .forEach(lines => {
             html.children.push({
@@ -6001,10 +5967,7 @@ class Ui extends XFAObject {
   [$toHTML](availableSpace) {
     // TODO: picture.
     const obj = this[$getExtra]();
-    if (obj) {
-      return obj[$toHTML](availableSpace);
-    }
-    return HTMLResult.EMPTY;
+    return obj ? obj[$toHTML](availableSpace) : HTMLResult.EMPTY;
   }
 }
 
@@ -6099,10 +6062,9 @@ class Value extends XFAObject {
 
   [$text]() {
     if (this.exData) {
-      if (typeof this.exData[$content] === "string") {
-        return this.exData[$content].trim();
-      }
-      return this.exData[$content][$text]().trim();
+      return typeof this.exData[$content] === "string"
+        ? this.exData[$content].trim()
+        : this.exData[$content][$text]().trim();
     }
     for (const name of Object.getOwnPropertyNames(this)) {
       if (name === "image") {
@@ -6157,7 +6119,7 @@ class Variables extends XFAObject {
 
 class TemplateNamespace {
   static [$buildXFAObject](name, attributes) {
-    if (TemplateNamespace.hasOwnProperty(name)) {
+    if (Object.hasOwn(TemplateNamespace, name)) {
       const node = TemplateNamespace[name](attributes);
       node[$setSetAttributes](attributes);
       return node;

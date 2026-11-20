@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байт)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байт)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Тақырыбы:
 pdfjs-document-properties-author = Авторы:
 pdfjs-document-properties-subject = Тақырыбы:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Түзету күні:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Жасаған:
 pdfjs-document-properties-producer = PDF өндірген:
 pdfjs-document-properties-version = PDF нұсқасы:
@@ -171,6 +153,27 @@ pdfjs-document-properties-linearized = Жылдам Web көрінісі:
 pdfjs-document-properties-linearized-yes = Иә
 pdfjs-document-properties-linearized-no = Жоқ
 pdfjs-document-properties-close-button = Жабу
+pdfjs-digital-signature-properties-view-certificate = Сертификатты қарау
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Себебі: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Күн мен уақыт белгісі: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Ішкі қолтаңба ({ $count })
+       *[other] Ішкі қолтаңбалар ({ $count })
+    }
 
 ## Print
 
@@ -184,23 +187,6 @@ pdfjs-printing-not-ready = Ескерту: Баспаға шығару үшін,
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Бүйір панелін көрсету/жасыру
-pdfjs-toggle-sidebar-notification-button =
-    .title = Бүйір панелін көрсету/жасыру (құжатта құрылымы/салынымдар/қабаттар бар)
-pdfjs-toggle-sidebar-button-label = Бүйір панелін көрсету/жасыру
-pdfjs-document-outline-button =
-    .title = Құжат құрылымын көрсету (барлық нәрселерді жазық қылу/жинау үшін қос шерту керек)
-pdfjs-document-outline-button-label = Құжат құрамасы
-pdfjs-attachments-button =
-    .title = Салынымдарды көрсету
-pdfjs-attachments-button-label = Салынымдар
-pdfjs-layers-button =
-    .title = Қабаттарды көрсету (барлық қабаттарды бастапқы күйге келтіру үшін екі рет шертіңіз)
-pdfjs-layers-button-label = Қабаттар
-pdfjs-thumbs-button =
-    .title = Кіші көріністерді көрсету
-pdfjs-thumbs-button-label = Кіші көріністер
 pdfjs-current-outline-item-button =
     .title = Құрылымның ағымдағы элементін табу
 pdfjs-current-outline-item-button-label = Құрылымның ағымдағы элементі
@@ -213,18 +199,23 @@ pdfjs-additional-layers = Қосымша қабаттар
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } парағы
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } парағы үшін кіші көрінісі
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = { $page } бетін таңдау
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Бет { $page }/{ $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Табу
     .placeholder = Құжаттан табу…
+    .title = Табу
 pdfjs-find-previous-button =
     .title = Осы сөздердің мәтіннен алдыңғы кездесуін табу
 pdfjs-find-previous-button-label = Алдыңғысы
@@ -281,13 +272,6 @@ pdfjs-rendering-error = Парақты өңдеу кезінде қате кет
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +295,6 @@ pdfjs-web-fonts-disabled = Веб қаріптері сөндірілген: қ�
 
 pdfjs-editor-free-text-button =
     .title = Мәтін
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Мәтін
-pdfjs-editor-ink-button =
-    .title = Сурет салу
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Мәтін түсін өзгерту
 pdfjs-editor-free-text-button-label = Мәтін
@@ -323,7 +302,6 @@ pdfjs-editor-ink-button =
     .title = Сурет салу
 pdfjs-editor-color-picker-ink-input =
     .title = Сызба түсін өзгерту
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Сурет салу
 pdfjs-editor-stamp-button =
     .title = Суреттерді қосу немесе түзету
@@ -332,18 +310,16 @@ pdfjs-editor-highlight-button =
     .title = Ерекшелеу
 pdfjs-editor-highlight-button-label = Ерекшелеу
 pdfjs-highlight-floating-button1 =
-    .title = Ерекшелеу
     .aria-label = Ерекшелеу
+    .title = Ерекшелеу
 pdfjs-highlight-floating-button-label = Ерекшелеу
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Түсіндірме
     .aria-label = Түсіндірме
+    .title = Түсіндірме
 pdfjs-comment-floating-button-label = Түсіндірме
 pdfjs-editor-comment-button =
-    .title = Түсіндірме
     .aria-label = Түсіндірме
+    .title = Түсіндірме
 pdfjs-editor-comment-button-label = Түсіндірме
 pdfjs-editor-signature-button =
     .title = Қолтаңбаны қосу
@@ -364,7 +340,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Қолтаңба түзеткіші: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Сурет редакторы
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +351,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Суретті өшіру
 pdfjs-editor-remove-highlight-button =
     .title = Түспен ерекшелеуді өшіру
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Қолтаңбаны өшіру
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +369,6 @@ pdfjs-editor-stamp-add-image-button-label = Суретті қосу
 pdfjs-editor-free-highlight-thickness-input = Қалыңдығы
 pdfjs-editor-free-highlight-thickness-title =
     .title = Мәтіннен басқа элементтерді ерекшелеу кезінде қалыңдықты өзгерту
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Қолтаңбаларды басқару және сақталған қолтаңбалар
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +379,10 @@ pdfjs-editor-signature-add-signature-button-label = Жаңа қолтаңбан�
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Сақталған қолтаңба: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Мәтін түзеткіші
     .default-content = Теріп бастаңыз…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Мәтін түзеткіші
-pdfjs-free-text-default-content = Теруді бастау…
-pdfjs-ink =
-    .aria-label = Сурет түзеткіші
-pdfjs-ink-canvas =
-    .aria-label = Пайдаланушы жасаған сурет
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -432,23 +392,18 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Түсіндірмелер
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Бүйір панелін жабу
     .aria-label = Бүйір панелін жабу
+    .title = Бүйір панелін жабу
 pdfjs-editor-comments-sidebar-close-button-label = Бүйір панелін жабу
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Назар аударарлық бірдеңе көрдіңіз бе? Оны ерекшелеп, түсіндірме қалдырыңыз.
 pdfjs-editor-comments-sidebar-no-comments-link = Көбірек білу
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Балама мәтін
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Балама мәтінді өңдеу
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Балама мәтінді өңдеу
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Опцияны таңдау
 pdfjs-editor-alt-text-dialog-description = Балама мәтін адамдар суретті көре алмағанда немесе ол жүктелмегенде көмектеседі.
 pdfjs-editor-alt-text-add-description-label = Сипаттаманы қосу
@@ -468,17 +423,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Жоғарғы сол жақ бұрыш — өлшемін өзгерту
-pdfjs-editor-resizer-label-top-middle = Жоғарғы ортасы — өлшемін өзгерту
-pdfjs-editor-resizer-label-top-right = Жоғарғы оң жақ бұрыш — өлшемін өзгерту
-pdfjs-editor-resizer-label-middle-right = Ортаңғы оң жақ — өлшемін өзгерту
-pdfjs-editor-resizer-label-bottom-right = Төменгі оң жақ бұрыш — өлшемін өзгерту
-pdfjs-editor-resizer-label-bottom-middle = Төменгі ортасы — өлшемін өзгерту
-pdfjs-editor-resizer-label-bottom-left = Төменгі сол жақ бұрыш — өлшемін өзгерту
-pdfjs-editor-resizer-label-middle-left = Ортаңғы сол жақ — өлшемін өзгерту
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Жоғарғы сол жақ бұрыш — өлшемін өзгерту
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +488,6 @@ pdfjs-editor-new-alt-text-error-close-button = Жабу
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Балама мәтін үшін ЖИ моделі жүктеп алынуда ({ $downloadedSize }/{ $totalSize } МБ)
     .aria-valuetext = Балама мәтін үшін ЖИ моделі жүктеп алынуда ({ $downloadedSize }/{ $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -576,19 +516,10 @@ pdfjs-editor-alt-text-settings-dialog-label = Суреттің балама мә
 pdfjs-editor-alt-text-settings-automatic-title = Автоматты балама мәтін
 pdfjs-editor-alt-text-settings-create-model-button-label = Балама мәтінді автоматты түрде жасау
 pdfjs-editor-alt-text-settings-create-model-description = Суретті көре алмайтын адамдар үшін немесе сурет жүктелмеген кезіне арналған сипаттамаларды ұсынады.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Баламалы мәтіннің ЖИ моделі ({ $totalSize } МБ)
-pdfjs-editor-alt-text-settings-ai-model-description = Деректеріңіз жеке болып қалуы үшін құрылғыңызда жергілікті түрде жұмыс істейді. Автоматты балама мәтін үшін қажет.
-pdfjs-editor-alt-text-settings-delete-model-button = Өшіру
-pdfjs-editor-alt-text-settings-download-model-button = Жүктеп алу
-pdfjs-editor-alt-text-settings-downloading-model-button = Жүктеліп алынуда…
 pdfjs-editor-alt-text-settings-editor-title = Баламалы мәтін редакторы
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Суретті қосқанда балама мәтін редакторын бірден көрсету
 pdfjs-editor-alt-text-settings-show-dialog-description = Барлық суреттерде балама мәтін бар екеніне көз жеткізуге көмектеседі.
 pdfjs-editor-alt-text-settings-close-button = Жабу
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -605,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = Мәтін өшірілді
 pdfjs-editor-undo-bar-message-ink = Сызба өшірілді
 pdfjs-editor-undo-bar-message-stamp = Сурет өшірілді
 pdfjs-editor-undo-bar-message-signature = Қолтаңба өшірілді
+pdfjs-editor-undo-bar-message-comment = Түсіндірме өшірілді
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -704,6 +636,163 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Бас тарту
 pdfjs-editor-add-comment-button =
     .title = Пікір қосу
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Бүйір панелін көрсету/жасыру (құжатта кіші көріністер/құрылымы/салынымдар/қабаттар бар)
+pdfjs-toggle-views-manager-button1-label = Беттерді басқару
+pdfjs-views-manager-sidebar =
+    .aria-label = Бүйір панелі
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Бүйір панелінің өлшемін өзгертуші
+pdfjs-views-manager-view-selector-button =
+    .title = Көріністер
+pdfjs-views-manager-view-selector-button-label = Көріністер
+pdfjs-views-manager-pages-title = Беттер
+pdfjs-views-manager-outlines-title1 = Құжат құрылымы
+    .title = Құжат құрылымы (барлық нәрселерді жаю/жию үшін қос шерту)
+pdfjs-views-manager-attachments-title = Салынымдар
+pdfjs-views-manager-layers-title1 = Қабаттар
+    .title = Қабаттар (барлық нәрселерді жаю/жию үшін қос шерту)
+pdfjs-views-manager-pages-option-label = Беттер
+pdfjs-views-manager-outlines-option-label = Құжаттың құрылымы
+pdfjs-views-manager-attachments-option-label = Салынымдар
+pdfjs-views-manager-layers-option-label = Қабаттар
+pdfjs-views-manager-add-file-button =
+    .title = Файлды қосу
+pdfjs-views-manager-add-file-button-label = Файлды қосу
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } таңдалды
+       *[other] { $count } таңдалды
+    }
+pdfjs-views-manager-pages-status-none-action-label = Беттерді таңдау
+pdfjs-views-manager-pages-status-action-button-label = Басқару
+pdfjs-views-manager-pages-status-copy-button-label = Көшіріп алу
+pdfjs-views-manager-pages-status-cut-button-label = Қиып алу
+pdfjs-views-manager-pages-status-delete-button-label = Өшіру
+pdfjs-views-manager-pages-status-export-selected-button-label = Таңдалғанды экспорттау…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 бет қиып алынды
+       *[other] { $count } қиып алынды
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 бет көшірілді
+       *[other] { $count } бет көшірілді
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 бет өшірілді
+       *[other] { $count } бет өшірілді
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Файлыңыз дайындалуда…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Файл жүктеп салынуда…
+pdfjs-views-manager-status-warning-cut-label = Қиып алу мүмкін болмады. Бетті жаңартып, қайталап көріңіз.
+pdfjs-views-manager-status-warning-copy-label = Көшіру мүмкін болмады. Бетті жаңартып, қайталап көріңіз.
+pdfjs-views-manager-status-warning-delete-label = Өшіру мүмкін болмады. Бетті жаңартып, қайталап көріңіз.
+pdfjs-views-manager-status-warning-save-label = Сақтау мүмкін болмады. Бетті жаңартып, қайталап көріңіз.
+pdfjs-views-manager-status-undo-button-label = Болдырмау
+pdfjs-views-manager-status-done-button-label = Дайын
+pdfjs-views-manager-status-close-button =
+    .title = Жабу
+pdfjs-views-manager-status-close-button-label = Жабу
+pdfjs-views-manager-paste-button-label = Кірістіру
+pdfjs-views-manager-paste-button-before =
+    .title = Бірінші беттің алдына кірістіру
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = { $page } бетінен кейін кірістіру
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = ЖАҢА
+pdfjs-views-manager-waiting-for-file = Файл жүктеп салынуда…
+pdfjs-toggle-views-manager-button1 =
+    .title = Беттерді басқару
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Цифрлық қолтаңба қасиеттері
+    .title = Цифрлық қолтаңба қасиеттері
+pdfjs-digital-signature-properties-button-label = Цифрлық қолтаңба қасиеттері
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Құжатқа жарамды цифрлық қолтаңбамен қол қойылған
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Құжатқа қол қойылған, бірақ { $count } цифрлық қолтаңбаны тексеру мүмкін болмады
+       *[other] Құжатқа қол қойылған, бірақ { $count } цифрлық қолтаңбаны тексеру мүмкін болмады
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Құжатқа сенімсіз { $count } сертификатпен қол қойылған
+       *[other] Құжатқа сенімсіз { $count } сертификатпен қол қойылған
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Құжатқа мерзімі өткен { $count } сертификатпен қол қойылған
+       *[other] Құжатқа мерзімі өткен { $count } сертификатпен қол қойылған
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Құжатта { $count } жарамсыз цифрлық қолтаңба бар
+       *[other] Құжатта { $count } жарамсыз цифрлық қолтаңба бар
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Құжатқа қайтарылған { $count } сертификатпен қол қойылған
+       *[other] Құжатқа қайтарылған { $count } сертификатпен қол қойылған
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Қалып-күй: Қолтаңба тексерілді
+pdfjs-digital-signature-properties-status-invalid = Қалып-күй: Қолтаңба жарамсыз
+pdfjs-digital-signature-properties-status-unknown = Қалып-күй: Тексеру мүмкін емес (қолдау көрсетілмейді)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Сертификат: Сенімді ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Сертификат: Қолжетімсіз
+pdfjs-digital-signature-properties-certificate-untrusted = Сертификат: Сенімсіз
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Сертификат: Белгісіз шығарушы ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Сертификат: Өздігінен қол қойылған ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Сертификат: Сенімсіз шығарушы ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Сертификат: Мерзімі өткен
+pdfjs-digital-signature-properties-certificate-expired-with-date = Сертификат: Мерзімі өткен ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Сертификат: Қайтарылған
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -717,4 +806,3 @@ pdfjs-editor-add-signature-edit-button-label = Сипаттаманы түзет
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Сипаттаманы түзету
->>>>>>> upstream/master

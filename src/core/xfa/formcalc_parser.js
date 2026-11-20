@@ -241,7 +241,7 @@ const OPERAND = false;
 // operation ('... * - ...' can't be a subtraction).
 // Each time an operator is met its precedence is compared with the one of the
 // operator on top of operators stack:
-//  - if top has precendence on operator then top is applied to the operands
+//  - if top has precedence on operator then top is applied to the operands
 //    on their stack;
 //  - else just push the operator.
 // For example: 1 + 2 * 3
@@ -711,11 +711,9 @@ class AstUnaryOperator extends Leaf {
   }
 
   static getOperatorOrValue(operator, arg) {
-    if (!arg.isConstant()) {
-      return new AstUnaryOperator(operator.id, arg, operator.repr);
-    }
-
-    return new AstNumber(operator.op(arg.toNumber()));
+    return !arg.isConstant()
+      ? new AstUnaryOperator(operator.id, arg, operator.repr)
+      : new AstNumber(operator.op(arg.toNumber()));
   }
 }
 
@@ -1256,10 +1254,9 @@ class Parser {
     }
 
     const [tok1, expr] = this.parseSimpleExpr();
-    if (hasVar) {
-      return [tok1, new VarDecl(identifier, expr)];
-    }
-    return [tok1, new Assignment(identifier, expr)];
+    return hasVar
+      ? [tok1, new VarDecl(identifier, expr)]
+      : [tok1, new Assignment(identifier, expr)];
   }
 
   parseFor() {

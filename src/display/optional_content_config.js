@@ -15,7 +15,6 @@
 
 import {
   info,
-  objectFromMap,
   RenderingIntentFlag,
   unreachable,
   warn,
@@ -73,6 +72,13 @@ class OptionalContentGroup {
     this.#userSet = userSet;
     this.#visible = visible;
   }
+
+  get serializable() {
+    return {
+      userSet: this.#userSet,
+      visible: this.#visible,
+    };
+  }
 }
 
 class OptionalContentConfig {
@@ -84,11 +90,19 @@ class OptionalContentConfig {
 
   #order = null;
 
-  constructor(data, renderingIntent = RenderingIntentFlag.DISPLAY) {
-    this.renderingIntent = renderingIntent;
+  #rawData;
 
-    this.name = null;
-    this.creator = null;
+  creator = null;
+
+  name = null;
+
+  constructor(
+    data,
+    renderingIntent = RenderingIntentFlag.DISPLAY,
+    groupState = null // Should *only* be used with `fromSerializable`.
+  ) {
+    this.#rawData = data;
+    this.renderingIntent = renderingIntent;
 
     if (data === null) {
       return;
@@ -103,18 +117,29 @@ class OptionalContentConfig {
       );
     }
 
-    if (data.baseState === "OFF") {
-      for (const group of this.#groups.values()) {
-        group._setVisible(INTERNAL, false);
+    if (groupState) {
+      if (groupState.size !== this.#groups.size) {
+        unreachable("Incorrect serialized groupState.");
       }
-    }
+      for (const [id, group] of groupState) {
+        this.#groups
+          .get(id)
+          ._setVisible(INTERNAL, group.visible, group.userSet);
+      }
+    } else {
+      if (data.baseState === "OFF") {
+        for (const group of this.#groups.values()) {
+          group._setVisible(INTERNAL, false);
+        }
+      }
 
-    for (const on of data.on) {
-      this.#groups.get(on)._setVisible(INTERNAL, true);
-    }
+      for (const on of data.on) {
+        this.#groups.get(on)._setVisible(INTERNAL, true);
+      }
 
-    for (const off of data.off) {
-      this.#groups.get(off)._setVisible(INTERNAL, false);
+      for (const off of data.off) {
+        this.#groups.get(off)._setVisible(INTERNAL, false);
+      }
     }
 
     // The following code must always run *last* in the constructor.
@@ -231,6 +256,9 @@ class OptionalContentConfig {
   }
 
   setVisibility(id, visible = true, preserveRB = true) {
+    if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("WORKER_THREAD")) {
+      throw new Error("Not implemented: setVisibility");
+    }
     const group = this.#groups.get(id);
     if (!group) {
       warn(`Optional content group not found: ${id}`);
@@ -256,6 +284,9 @@ class OptionalContentConfig {
   }
 
   setOCGState({ state, preserveRB }) {
+    if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("WORKER_THREAD")) {
+      throw new Error("Not implemented: setOCGState");
+    }
     let operator;
 
     for (const elem of state) {
@@ -292,17 +323,13 @@ class OptionalContentConfig {
   }
 
   getOrder() {
+    if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("WORKER_THREAD")) {
+      throw new Error("Not implemented: getOrder");
+    }
     if (!this.#groups.size) {
       return null;
     }
-    if (this.#order) {
-      return this.#order.slice();
-    }
-    return [...this.#groups.keys()];
-  }
-
-  getGroups() {
-    return this.#groups.size > 0 ? objectFromMap(this.#groups) : null;
+    return this.#order ? this.#order.slice() : [...this.#groups.keys()];
   }
 
   getGroup(id) {
@@ -319,6 +346,27 @@ class OptionalContentConfig {
       hash.update(`${id}:${group.visible}`);
     }
     return (this.#cachedGetHash = hash.hexdigest());
+  }
+
+  [Symbol.iterator]() {
+    return this.#groups.entries();
+  }
+
+  get serializable() {
+    const groupState = new Map();
+    for (const [id, group] of this.#groups) {
+      groupState.set(id, group.serializable);
+    }
+
+    return {
+      data: this.#rawData,
+      renderingIntent: this.renderingIntent,
+      groupState,
+    };
+  }
+
+  static fromSerializable({ data, renderingIntent, groupState }) {
+    return new OptionalContentConfig(data, renderingIntent, groupState);
   }
 }
 

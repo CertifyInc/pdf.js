@@ -37,10 +37,6 @@ pdfjs-open-file-button =
     .title = Deschide un fișier
 pdfjs-open-file-button-label = Deschide
 pdfjs-print-button =
-<<<<<<< HEAD
-    .title = Tipărește
-pdfjs-print-button-label = Tipărește
-=======
     .title = Printează
 pdfjs-print-button-label = Printează
 pdfjs-save-button =
@@ -55,7 +51,6 @@ pdfjs-download-button-label = Descarcă
 pdfjs-bookmark-button =
     .title = Pagina curentă (Vezi URL din pagina curentă)
 pdfjs-bookmark-button-label = Pagină curentă
->>>>>>> upstream/master
 
 ##  Secondary toolbar and context menu
 
@@ -80,12 +75,9 @@ pdfjs-cursor-text-select-tool-button-label = Instrumentul de selecție a textulu
 pdfjs-cursor-hand-tool-button =
     .title = Activează instrumentul mână
 pdfjs-cursor-hand-tool-button-label = Unealta mână
-<<<<<<< HEAD
-=======
 pdfjs-scroll-page-button =
     .title = Folosește derularea paginilor
 pdfjs-scroll-page-button-label = Derulare pagini
->>>>>>> upstream/master
 pdfjs-scroll-vertical-button =
     .title = Folosește derularea verticală
 pdfjs-scroll-vertical-button-label = Derulare verticală
@@ -113,15 +105,6 @@ pdfjs-document-properties-button-label = Proprietățile documentului…
 pdfjs-document-properties-file-name = Numele fișierului:
 pdfjs-document-properties-file-size = Mărimea fișierului:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } byți)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byți)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } octeți)
@@ -129,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } octeți)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titlu:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Subiect:
@@ -137,14 +119,8 @@ pdfjs-document-properties-keywords = Cuvinte cheie:
 pdfjs-document-properties-creation-date = Data creării:
 pdfjs-document-properties-modification-date = Data modificării:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Autor:
 pdfjs-document-properties-producer = Producător PDF:
 pdfjs-document-properties-version = Versiune PDF:
@@ -177,18 +153,31 @@ pdfjs-document-properties-linearized = Vizualizare web rapidă:
 pdfjs-document-properties-linearized-yes = Da
 pdfjs-document-properties-linearized-no = Nu
 pdfjs-document-properties-close-button = Închide
+pdfjs-digital-signature-properties-view-certificate = Vezi certificatul
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Motiv: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Marcaj temporal: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] ({ $count }) sub semnătură
+        [few] ({ $count }) sub semnături
+       *[other] ({ $count }) de sub semnături
+    }
 
 ## Print
 
-<<<<<<< HEAD
-pdfjs-print-progress-message = Se pregătește documentul pentru tipărire…
-# Variables:
-#   $progress (Number) - percent value
-pdfjs-print-progress-percent = { $progress }%
-pdfjs-print-progress-close-button = Renunță
-pdfjs-printing-not-supported = Avertisment: Tipărirea nu este suportată în totalitate de acest browser.
-pdfjs-printing-not-ready = Avertisment: PDF-ul nu este încărcat complet pentru tipărire.
-=======
 pdfjs-print-progress-message = Se pregătește documentul pentru printare…
 # Variables:
 #   $progress (Number) - percent value
@@ -196,42 +185,9 @@ pdfjs-print-progress-percent = { $progress }%
 pdfjs-print-progress-close-button = Anulează
 pdfjs-printing-not-supported = Avertisment: Printarea nu este suportată complet de acest browser.
 pdfjs-printing-not-ready = Avertisment: PDF-ul nu este încărcat complet pentru printare.
->>>>>>> upstream/master
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Comută bara laterală
-<<<<<<< HEAD
-pdfjs-toggle-sidebar-button-label = Comută bara laterală
-pdfjs-document-outline-button =
-    .title = Afișează schița documentului (dublu-clic pentru a extinde/restrânge toate elementele)
-pdfjs-document-outline-button-label = Schița documentului
-pdfjs-attachments-button =
-    .title = Afișează atașamentele
-pdfjs-attachments-button-label = Atașamente
-pdfjs-thumbs-button =
-    .title = Afișează miniaturi
-pdfjs-thumbs-button-label = Miniaturi
-pdfjs-findbar-button =
-    .title = Caută în document
-pdfjs-findbar-button-label = Caută
-=======
-pdfjs-toggle-sidebar-notification-button =
-    .title = Comută bara laterală (documentul conține schițe/atașamente/straturi)
-pdfjs-toggle-sidebar-button-label = Comută bara laterală
-pdfjs-document-outline-button =
-    .title = Afișează schița documentului (dă dublu clic pentru a extinde/restrânge toate elementele)
-pdfjs-document-outline-button-label = Schiță a documentului
-pdfjs-attachments-button =
-    .title = Afișează atașamentele
-pdfjs-attachments-button-label = Atașamente
-pdfjs-layers-button =
-    .title = Afișează straturile (dă dublu clic pentru resetarea tuturor straturilor la starea implicită)
-pdfjs-layers-button-label = Straturi
-pdfjs-thumbs-button =
-    .title = Afișează miniaturi
-pdfjs-thumbs-button-label = Miniaturi
 pdfjs-current-outline-item-button =
     .title = Găsește elementul pe schița actuală
 pdfjs-current-outline-item-button-label = Element al schiței actuale
@@ -239,24 +195,28 @@ pdfjs-findbar-button =
     .title = Caută în document
 pdfjs-findbar-button-label = Caută
 pdfjs-additional-layers = Straturi suplimentare
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pagina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura paginii { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Selectează pagina { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Pagina { $page } din { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Caută
     .placeholder = Caută în document…
+    .title = Caută
 pdfjs-find-previous-button =
     .title = Mergi la apariția anterioară a textului
 pdfjs-find-previous-button-label = Înapoi
@@ -265,11 +225,6 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = Înainte
 pdfjs-find-highlight-checkbox = Evidențiază toate aparițiile
 pdfjs-find-match-case-checkbox-label = Ține cont de majuscule și minuscule
-<<<<<<< HEAD
-pdfjs-find-entire-word-checkbox-label = Cuvinte întregi
-pdfjs-find-reached-top = Am ajuns la începutul documentului, continuă de la sfârșit
-pdfjs-find-reached-bottom = Am ajuns la sfârșitul documentului, continuă de la început
-=======
 pdfjs-find-match-diacritics-checkbox-label = Respectă diacriticele
 pdfjs-find-entire-word-checkbox-label = Cuvinte întregi
 pdfjs-find-reached-top = Am ajuns la începutul documentului, continuă de la sfârșit
@@ -291,7 +246,6 @@ pdfjs-find-match-count-limit =
         [few] Mai mult de { $limit } rezultate
        *[other] Mai mult de { $limit } de rezultate
     }
->>>>>>> upstream/master
 pdfjs-find-not-found = Nu s-a găsit textul
 
 ## Predefined zoom values
@@ -306,13 +260,10 @@ pdfjs-page-scale-percent = { $scale }%
 
 ## PDF page
 
-<<<<<<< HEAD
-=======
 # Variables:
 #   $page (Number) - the page number
 pdfjs-page-landmark =
     .aria-label = Pagina { $page }
->>>>>>> upstream/master
 
 ## Loading indicator messages
 
@@ -324,13 +275,6 @@ pdfjs-rendering-error = A intervenit o eroare la randarea paginii.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -338,32 +282,20 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Adnotare { $type }]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
 pdfjs-password-label = Introdu parola pentru a deschide acest fișier PDF.
 pdfjs-password-invalid = Parolă nevalidă. Te rugăm să încerci din nou.
 pdfjs-password-ok-button = OK
-<<<<<<< HEAD
-pdfjs-password-cancel-button = Renunță
-=======
 pdfjs-password-cancel-button = Anulează
->>>>>>> upstream/master
 pdfjs-web-fonts-disabled = Fonturile web sunt dezactivate: nu se pot folosi fonturile PDF încorporate.
 
 ## Editing
 
-<<<<<<< HEAD
-
-## Alt-text dialog
-
-=======
 pdfjs-editor-free-text-button =
     .title = Text
 pdfjs-editor-color-picker-free-text-input =
@@ -381,16 +313,16 @@ pdfjs-editor-highlight-button =
     .title = Evidențiere
 pdfjs-editor-highlight-button-label = Evidențiere
 pdfjs-highlight-floating-button1 =
-    .title = Evidențiază
     .aria-label = Evidențiere
+    .title = Evidențiază
 pdfjs-highlight-floating-button-label = Evidențiază
 pdfjs-comment-floating-button =
-    .title = Comentează
     .aria-label = Comentariu
+    .title = Comentează
 pdfjs-comment-floating-button-label = Comentează
 pdfjs-editor-comment-button =
-    .title = Comentariu
     .aria-label = Comentează
+    .title = Comentariu
 pdfjs-editor-comment-button-label = Comentariu
 pdfjs-editor-signature-button =
     .title = Adaugă semnătură
@@ -459,12 +391,13 @@ pdfjs-free-text2 =
 #   $count (Number) - the number of comments.
 pdfjs-editor-comments-sidebar-title =
     { $count ->
-        [one] Comentariu
-       *[other] Comentarii
+        [one] comentariu
+        [few] comentarii
+       *[other] de comentarii
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Închide bara laterală
     .aria-label = Închide bara laterală
+    .title = Închide bara laterală
 pdfjs-editor-comments-sidebar-close-button-label = Închide bara laterală
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Vezi ceva care merită comentat? Evidențiază-l și lasă un comentariu.
@@ -490,13 +423,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Text alternativ
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Colțul din stânga sus — redimensionează
 pdfjs-editor-resizer-top-middle =
@@ -562,8 +492,8 @@ pdfjs-editor-new-alt-text-error-close-button = Închide
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Se descarcă modelul IA de text alternativ ({ $downloadedSize } de { $totalSize } MB)
-    .aria-valuetext = Se descarcă modelul IA de text alternativ ({ $downloadedSize } de { $totalSize } MB)
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Se descarcă modelul AI de text alternativ ({ $downloadedSize } de { $totalSize } MB)
+    .aria-valuetext = Se descarcă modelul AI de text alternativ ({ $downloadedSize } de { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
 pdfjs-editor-new-alt-text-added-button =
     .aria-label = Text alternativ adăugat
@@ -590,13 +520,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Setări text alternativ imagini
 pdfjs-editor-alt-text-settings-automatic-title = Text alternativ automat
 pdfjs-editor-alt-text-settings-create-model-button-label = Creează automat texte alternative
 pdfjs-editor-alt-text-settings-create-model-description = Sugerează descrieri ca să îi ajuți pe cei care nu pot vedea imaginea sau pentru când nu se încarcă imaginea.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Model IA de text alternativ ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Rulează local pe dispozitiv, deci datele tale rămân private. Necesar pentru text alternativ automat.
-pdfjs-editor-alt-text-settings-delete-model-button = Șterge
-pdfjs-editor-alt-text-settings-download-model-button = Descarcă
-pdfjs-editor-alt-text-settings-downloading-model-button = Se descarcă…
 pdfjs-editor-alt-text-settings-editor-title = Editor de text alternativ
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Afișează editorul de text alternativ imediat când adaugi o imagine
 pdfjs-editor-alt-text-settings-show-dialog-description = Te ajută să te asiguri că toate imaginile au text alternativ.
@@ -617,6 +540,7 @@ pdfjs-editor-undo-bar-message-freetext = Text eliminat
 pdfjs-editor-undo-bar-message-ink = Desen eliminat
 pdfjs-editor-undo-bar-message-stamp = Imagine eliminată
 pdfjs-editor-undo-bar-message-signature = Semnătură eliminată
+pdfjs-editor-undo-bar-message-comment = Comentariu eliminat
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -717,6 +641,172 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Anulează
 pdfjs-editor-add-comment-button =
     .title = Adaugă un comentariu
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Comută bara laterală (documentul conține miniaturi/schițe/atașamente/straturi)
+pdfjs-toggle-views-manager-button1-label = Gestionează paginile
+pdfjs-views-manager-sidebar =
+    .aria-label = Bară laterală
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Redimensionare bară laterală
+pdfjs-views-manager-view-selector-button =
+    .title = Vizualizări
+pdfjs-views-manager-view-selector-button-label = Vizualizări
+pdfjs-views-manager-pages-title = Pagini
+pdfjs-views-manager-outlines-title1 = Structura documentului
+    .title = Structura documentului (dă dublu clic pentru extinderea/restrângerea elementelor)
+pdfjs-views-manager-attachments-title = Atașamente
+pdfjs-views-manager-layers-title1 = Straturi
+    .title = Straturi (dă dublu clic ca să resetezi toate straturile la starea implicită)
+pdfjs-views-manager-pages-option-label = Pagini
+pdfjs-views-manager-outlines-option-label = Schiță document
+pdfjs-views-manager-attachments-option-label = Atașamente
+pdfjs-views-manager-layers-option-label = Straturi
+pdfjs-views-manager-add-file-button =
+    .title = Adaugă un fișier
+pdfjs-views-manager-add-file-button-label = Adaugă un fișier
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } selectată
+        [few] { $count } selectate
+       *[other] { $count } selectate
+    }
+pdfjs-views-manager-pages-status-none-action-label = Selectează pagini
+pdfjs-views-manager-pages-status-action-button-label = Gestionează
+pdfjs-views-manager-pages-status-copy-button-label = Copiază
+pdfjs-views-manager-pages-status-cut-button-label = Taie
+pdfjs-views-manager-pages-status-delete-button-label = Șterge
+pdfjs-views-manager-pages-status-export-selected-button-label = Exportă selecția…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 pagină tăiată
+        [few] { $count } pagini tăiate
+       *[other] { $count } de pagini tăiate
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 pagină copiată
+        [few] { $count } pagini copiate
+       *[other] { $count } de pagini copiate
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 pagină ștearsă
+        [few] { $count } pagini șterse
+       *[other] { $count } de pagini șterse
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Se pregătește fișierul…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Se încarcă fișierul…
+pdfjs-views-manager-status-warning-cut-label = Nu s-a putut tăia. Reîmprospătează pagina și încearcă din nou.
+pdfjs-views-manager-status-warning-copy-label = Nu s-a putut copia. Reîmprospătează pagina și încearcă din nou.
+pdfjs-views-manager-status-warning-delete-label = Nu s-a putut șterge. Reîmprospătează pagina și încearcă din nou.
+pdfjs-views-manager-status-warning-save-label = Nu s-a putut salva. Reîmprospătează pagina și încearcă din nou.
+pdfjs-views-manager-status-undo-button-label = Anulează
+pdfjs-views-manager-status-done-button-label = Terminat
+pdfjs-views-manager-status-close-button =
+    .title = Închide
+pdfjs-views-manager-status-close-button-label = Închide
+pdfjs-views-manager-paste-button-label = Lipește
+pdfjs-views-manager-paste-button-before =
+    .title = Inserează înainte de prima pagină
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Inserează după pagina { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NOU
+pdfjs-views-manager-waiting-for-file = Se încarcă fișierul…
+pdfjs-toggle-views-manager-button1 =
+    .title = Gestionează paginile
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Proprietățile semnăturii digitale
+    .title = Proprietățile semnăturii digitale
+pdfjs-digital-signature-properties-button-label = Proprietățile semnăturii digitale
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Documentul a fost semnat cu o semnătură digitală validă
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Document semnat, dar { $count } semnătură digitală nu au putut fi verificată
+        [few] Document semnat, dar { $count } semnături digitale nu au putut fi verificate
+       *[other] Document semnat, dar { $count } de semnături digitale nu au putut fi verificate
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Document semnat cu { $count } certificat care nu este de încredere
+        [few] Document semnat cu { $count } certificate care nu sunt de încredere
+       *[other] Document semnat cu { $count } de certificate care nu sunt de încredere
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Document semnat cu { $count } certificat expirat
+        [few] Document semnat cu { $count } certificate expirate
+       *[other] Document semnat cu { $count } de certificate expirate
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Documentul are { $count } semnătură digitală nevalidă
+        [few] Documentul are { $count } semnături digitale nevalide
+       *[other] Documentul are { $count } de semnături digitale nevalide
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Document semnat cu { $count } certificat revocat
+        [few] Document semnat cu { $count } certificate revocate
+       *[other] Document semnat cu { $count } de certificate revocate
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Stare: Semnătură verificată
+pdfjs-digital-signature-properties-status-invalid = Stare: Semnătură nevalidă
+pdfjs-digital-signature-properties-status-unknown = Stare: Nu se poate verifica (neacceptat)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Certificat: De încredere ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Certificat: Indisponibil
+pdfjs-digital-signature-properties-certificate-untrusted = Certificat: De neîncredere
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Certificat: Emitent necunoscut ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Certificat: Autosemnat ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Certificat: Emitent de neîncredere ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Certificat: Expirat
+pdfjs-digital-signature-properties-certificate-expired-with-date = Certificat: Expirat ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Certificat: Revocat
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -730,4 +820,3 @@ pdfjs-editor-add-signature-edit-button-label = Editează descrierea
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Editează descrierea
->>>>>>> upstream/master

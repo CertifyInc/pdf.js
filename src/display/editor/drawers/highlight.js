@@ -13,11 +13,58 @@
  * limitations under the License.
  */
 
+import { BBOX_INIT, Util } from "../../../shared/util.js";
 import { FreeDrawOutline, FreeDrawOutliner } from "./freedraw.js";
 import { Outline } from "./outline.js";
 
+/**
+ * @param {Outline} outline
+ * @returns {object}
+ */
+function getHighlightSVGProperties(outline) {
+  return {
+    bbox: outline.box,
+    root: {
+      viewBox: "0 0 1 1",
+    },
+    rootClass: {
+      highlight: true,
+      free: outline.isFree,
+    },
+    path: {
+      d: outline.toSVGPath(),
+    },
+  };
+}
+
+/**
+ * @param {Outline} outline
+ * @param {number} rotation
+ * @returns {object}
+ */
+function getHighlightFocusSVGProperties(outline, rotation) {
+  const { focusOutline } = outline;
+  return {
+    bbox: Outline._rotateBox(focusOutline.box, rotation),
+    root: {
+      "data-main-rotation": rotation,
+    },
+    rootClass: {
+      highlightOutline: true,
+      free: outline.isFree,
+    },
+    path: {
+      d: focusOutline.toSVGPath(),
+    },
+  };
+}
+
 class HighlightOutliner {
   #box;
+
+  #firstPoint;
+
+  #lastPoint;
 
   #verticalEdges = [];
 
@@ -25,7 +72,7 @@ class HighlightOutliner {
 
   /**
    * Construct an outliner.
-   * @param {Array<Object>} boxes - An array of axis-aligned rectangles.
+   * @param {Array<object>} boxes - An array of axis-aligned rectangles.
    * @param {number} borderWidth - The width of the border of the boxes, it
    *   allows to make the boxes bigger (or smaller).
    * @param {number} innerMargin - The margin between the boxes and the
@@ -36,10 +83,7 @@ class HighlightOutliner {
    *   the last point of the boxes.
    */
   constructor(boxes, borderWidth = 0, innerMargin = 0, isLTR = true) {
-    let minX = Infinity;
-    let maxX = -Infinity;
-    let minY = Infinity;
-    let maxY = -Infinity;
+    const minMax = BBOX_INIT.slice();
 
     // We round the coordinates to slightly reduce the number of edges in the
     // final outlines.
@@ -56,34 +100,50 @@ class HighlightOutliner {
       const right = [x2, y1, y2, false];
       this.#verticalEdges.push(left, right);
 
-      minX = Math.min(minX, x1);
-      maxX = Math.max(maxX, x2);
-      minY = Math.min(minY, y1);
-      maxY = Math.max(maxY, y2);
+      Util.rectBoundingBox(x1, y1, x2, y2, minMax);
     }
 
-    const bboxWidth = maxX - minX + 2 * innerMargin;
-    const bboxHeight = maxY - minY + 2 * innerMargin;
-    const shiftedMinX = minX - innerMargin;
-    const shiftedMinY = minY - innerMargin;
+    const bboxWidth = minMax[2] - minMax[0] + 2 * innerMargin;
+    const bboxHeight = minMax[3] - minMax[1] + 2 * innerMargin;
+    const shiftedMinX = minMax[0] - innerMargin;
+    const shiftedMinY = minMax[1] - innerMargin;
+    let firstPointX = isLTR ? -Infinity : Infinity;
+    let firstPointY = Infinity;
     const lastEdge = this.#verticalEdges.at(isLTR ? -1 : -2);
     const lastPoint = [lastEdge[0], lastEdge[2]];
 
     // Convert the coordinates of the edges into box coordinates.
     for (const edge of this.#verticalEdges) {
-      const [x, y1, y2] = edge;
+      const [x, y1, y2, left] = edge;
+      if (!left && isLTR) {
+        if (y1 < firstPointY) {
+          firstPointY = y1;
+          firstPointX = x;
+        } else if (y1 === firstPointY) {
+          firstPointX = Math.max(firstPointX, x);
+        }
+      } else if (left && !isLTR) {
+        if (y1 < firstPointY) {
+          firstPointY = y1;
+          firstPointX = x;
+        } else if (y1 === firstPointY) {
+          firstPointX = Math.min(firstPointX, x);
+        }
+      }
+
       edge[0] = (x - shiftedMinX) / bboxWidth;
       edge[1] = (y1 - shiftedMinY) / bboxHeight;
       edge[2] = (y2 - shiftedMinY) / bboxHeight;
     }
 
-    this.#box = {
-      x: shiftedMinX,
-      y: shiftedMinY,
-      width: bboxWidth,
-      height: bboxHeight,
-      lastPoint,
-    };
+    this.#box = new Float32Array([
+      shiftedMinX,
+      shiftedMinY,
+      bboxWidth,
+      bboxHeight,
+    ]);
+    this.#firstPoint = [firstPointX, firstPointY];
+    this.#lastPoint = lastPoint;
   }
 
   getOutlines() {
@@ -140,7 +200,6 @@ class HighlightOutliner {
       allEdges.add(edge2);
     }
     const outlines = [];
-    let outline;
 
     while (allEdges.size > 0) {
       const edge = allEdges.values().next().value;
@@ -149,7 +208,7 @@ class HighlightOutliner {
       let lastPointX = x;
       let lastPointY = y1;
 
-      outline = [x, y2];
+      const outline = [x, y2];
       outlines.push(outline);
 
       while (true) {
@@ -173,7 +232,12 @@ class HighlightOutliner {
       }
       outline.push(lastPointX, lastPointY);
     }
-    return new HighlightOutline(outlines, this.#box);
+    return new HighlightOutline(
+      outlines,
+      this.#box,
+      this.#firstPoint,
+      this.#lastPoint
+    );
   }
 
   #binarySearch(y) {
@@ -265,12 +329,79 @@ class HighlightOutliner {
 class HighlightOutline extends Outline {
   #box;
 
+  #boxes = null;
+
   #outlines;
 
-  constructor(outlines, box) {
+  constructor(outlines, box, firstPoint, lastPoint) {
     super();
     this.#outlines = outlines;
     this.#box = box;
+    this.firstPoint = firstPoint;
+    this.lastPoint = lastPoint;
+  }
+
+  /**
+   * Build a text selection and its hover/selection outline.
+   * @param {Array<object>} boxes - the boxes of the selected text.
+   * @param {boolean} isLTR
+   * @returns {HighlightOutline}
+   */
+  static build(boxes, isLTR) {
+    // The boxes come from the text layer, hence two contiguous ones can be
+    // separated by a tiny gap: expanding them makes them overlap and the
+    // sweep line merges them into a single gapless outline.
+    const outline = new HighlightOutliner(
+      boxes,
+      /* borderWidth = */ 0.001
+    ).getOutlines();
+    outline.#boxes = boxes;
+    // Expand the focus outline and leave room for its stroke.
+    outline.focusOutline = new HighlightOutliner(
+      boxes,
+      /* borderWidth = */ 0.0025,
+      /* innerMargin = */ 0.001,
+      isLTR
+    ).getOutlines();
+
+    return outline;
+  }
+
+  get isFree() {
+    return false;
+  }
+
+  /** @inheritdoc */
+  get defaultSVGProperties() {
+    return getHighlightSVGProperties(this);
+  }
+
+  /** @inheritdoc */
+  getFocusSVGProperties(rotation) {
+    return getHighlightFocusSVGProperties(this, rotation);
+  }
+
+  /** @inheritdoc */
+  updateRotation(rotation) {
+    return { root: { "data-main-rotation": rotation } };
+  }
+
+  /** @inheritdoc */
+  serializeQuadPoints([pageX, pageY], [pageWidth, pageHeight]) {
+    const boxes = this.#boxes;
+    const quadPoints = new Float32Array(boxes.length * 8);
+    let i = 0;
+    for (const { x, y, width, height } of boxes) {
+      const sx = x * pageWidth + pageX;
+      const sy = (1 - y) * pageHeight + pageY;
+      // QuadPoints order: top-left, top-right, bottom-left, bottom-right.
+      quadPoints[i] = quadPoints[i + 4] = sx;
+      quadPoints[i + 1] = quadPoints[i + 3] = sy;
+      quadPoints[i + 2] = quadPoints[i + 6] = sx + width * pageWidth;
+      quadPoints[i + 5] = quadPoints[i + 7] = sy - height * pageHeight;
+      i += 8;
+    }
+    return quadPoints;
   }
 
   toSVGPath() {
@@ -318,14 +449,6 @@ class HighlightOutline extends Outline {
   get box() {
     return this.#box;
   }
-
-  get classNamesForDrawing() {
-    return ["highlight"];
-  }
-
-  get classNamesForOutlining() {
-    return ["highlightOutline"];
-  }
 }
 
 class FreeHighlightOutliner extends FreeDrawOutliner {
@@ -339,24 +462,93 @@ class FreeHighlightOutliner extends FreeDrawOutliner {
       isLTR
     );
   }
+}
 
-  get classNamesForDrawing() {
-    return ["highlight", "free"];
+class FreeHighlightDrawer {
+  #outliner;
+
+  #thickness;
+
+  constructor(x, y, box, scaleFactor, thickness, isLTR, innerMargin) {
+    this.#outliner = new FreeHighlightOutliner(
+      x,
+      y,
+      box,
+      scaleFactor,
+      thickness,
+      isLTR,
+      innerMargin
+    );
+    this.#thickness = thickness;
+  }
+
+  add(x, y) {
+    return this.#outliner.add(x, y)
+      ? { path: { d: this.#outliner.toSVGPath() } }
+      : null;
+  }
+
+  addPoints(points) {
+    let hasChanged = false;
+    for (let i = 0, ii = points.length; i < ii; i += 2) {
+      hasChanged = this.#outliner.add(points[i], points[i + 1]) || hasChanged;
+    }
+    return hasChanged ? { path: { d: this.#outliner.toSVGPath() } } : null;
+  }
+
+  end(x, y) {
+    return x === undefined ? null : this.add(x, y);
+  }
+
+  isEmpty() {
+    return this.#outliner.isEmpty();
+  }
+
+  isCancellable() {
+    return this.#outliner.isCancellable();
+  }
+
+  removeLastElement() {
+    return this.#outliner.removeLastElement();
+  }
+
+  updateProperty(_name, _value) {
+    // Drawing options update the SVG, but this stroke's geometry stays fixed.
+    return null;
+  }
+
+  getOutlines() {
+    const outlines = this.#outliner.getOutlines();
+    outlines.buildFocusOutline(2 * this.#thickness);
+
+    return outlines;
+  }
+
+  get defaultSVGProperties() {
+    return {
+      bbox: [0, 0, 1, 1],
+      root: {
+        viewBox: "0 0 1 1",
+      },
+      rootClass: {
+        highlight: true,
+        free: true,
+      },
+      path: {
+        d: this.#outliner.toSVGPath(),
+      },
+    };
   }
 }
 
 class FreeHighlightOutline extends FreeDrawOutline {
-  get classNamesForDrawing() {
-    return ["highlight", "free"];
-  }
+  // Extra radius around the highlight.
+  static #EXTRA_THICKNESS = 1.5;
 
-  get classNamesForOutlining() {
-    return ["highlightOutline", "free"];
-  }
-
-  newOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
+  newOutliner(x, y, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
     return new FreeHighlightOutliner(
-      point,
+      x,
+      y,
       box,
       scaleFactor,
       thickness,
@@ -364,6 +556,61 @@ class FreeHighlightOutline extends FreeDrawOutline {
       innerMargin
     );
   }
+
+  get isFree() {
+    return true;
+  }
+
+  /** @param {number} thickness */
+  buildFocusOutline(thickness) {
+    this.focusOutline = this.getNewOutline(
+      thickness / 2 + FreeHighlightOutline.#EXTRA_THICKNESS,
+      /* innerMargin = */ 0.0025
+    );
+  }
+
+  /** @inheritdoc */
+  get defaultSVGProperties() {
+    return getHighlightSVGProperties(this);
+  }
+
+  /** @inheritdoc */
+  getFocusSVGProperties(rotation) {
+    return getHighlightFocusSVGProperties(this, rotation);
+  }
+
+  /** @inheritdoc */
+  get focusMustRemoveSelfIntersections() {
+    // Mask out the part of the stroke inside the shape.
+    return true;
+  }
+
+  /** @inheritdoc */
+  updateRotation(rotation) {
+    return { root: { "data-main-rotation": rotation } };
+  }
+
+  /** @inheritdoc */
+  updateProperty(name, value) {
+    if (name !== "thickness") {
+      return null;
+    }
+    const bbox = this.updateThickness(value / 2);
+    this.buildFocusOutline(value);
+
+    return bbox;
+  }
+
+  /** @inheritdoc */
+  getPathResizedSVGProperties() {
+    // Thickness changes rebuild the path.
+    return { path: { d: this.toSVGPath() } };
+  }
 }
 
-export { FreeHighlightOutliner, HighlightOutliner };
+export {
+  FreeHighlightDrawer,
+  FreeHighlightOutliner,
+  HighlightOutline,
+  HighlightOutliner,
+};

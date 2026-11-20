@@ -13,16 +13,30 @@
  * limitations under the License.
  */
 
-/** @typedef {import("./interfaces").IL10n} IL10n */
-
+import { FeatureTest, fetchData } from "pdfjs-lib";
 import { FluentBundle, FluentResource } from "fluent-bundle";
 import { DOMLocalization } from "fluent-dom";
-import { fetchData } from "pdfjs-lib";
 import { L10n } from "./l10n.js";
+
+function PLATFORM() {
+  const { isAndroid, isLinux, isMac, isWindows } = FeatureTest.platform;
+  if (isLinux) {
+    return "linux";
+  }
+  if (isWindows) {
+    return "windows";
+  }
+  if (isMac) {
+    return "macos";
+  }
+  return isAndroid ? "android" : "other";
+}
 
 function createBundle(lang, text) {
   const resource = new FluentResource(text);
-  const bundle = new FluentBundle(lang);
+  const bundle = new FluentBundle(lang, {
+    functions: { PLATFORM },
+  });
   const errors = bundle.addResource(resource);
   if (errors.length) {
     console.error("L10n errors", errors);
@@ -30,9 +44,6 @@ function createBundle(lang, text) {
   return bundle;
 }
 
-/**
- * @implements {IL10n}
- */
 class GenericL10n extends L10n {
   constructor(lang) {
     super({ lang });
@@ -52,9 +63,9 @@ class GenericL10n extends L10n {
 
   /**
    * Generate the bundles for Fluent.
-   * @param {String} defaultLang - The fallback language to use for
+   * @param {string} defaultLang - The fallback language to use for
    *   translations.
-   * @param {String} baseLang - The base language to use for translations.
+   * @param {string} baseLang - The base language to use for translations.
    */
   static async *#generateBundles(defaultLang, baseLang) {
     const { baseURL, paths } = await this.#getPaths();
@@ -70,8 +81,14 @@ class GenericL10n extends L10n {
       }
       langs.push(defaultLang);
     }
-    for (const lang of langs) {
-      const bundle = await this.#createBundle(lang, baseURL, paths);
+    // Trigger fetching of bundles in parallel, to reduce overall load time.
+    const bundles = langs.map(lang => [
+      lang,
+      this.#createBundle(lang, baseURL, paths),
+    ]);
+
+    for (const [lang, bundlePromise] of bundles) {
+      const bundle = await bundlePromise;
       if (bundle) {
         yield bundle;
       } else if (lang === "en-us") {
@@ -96,7 +113,10 @@ class GenericL10n extends L10n {
       const { href } = document.querySelector(`link[type="application/l10n"]`);
       const paths = await fetchData(href, /* type = */ "json");
 
-      return { baseURL: href.replace(/[^/]*$/, "") || "./", paths };
+      return {
+        baseURL: href.substring(0, href.lastIndexOf("/") + 1) || "./",
+        paths,
+      };
     } catch {}
     return { baseURL: "./", paths: Object.create(null) };
   }

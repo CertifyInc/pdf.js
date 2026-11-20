@@ -14,102 +14,60 @@
  */
 
 .dialog {
-  --dialog-bg-color: white;
-  --dialog-border-color: white;
-  --dialog-shadow: 0 2px 14px 0 rgb(58 57 68 / 0.2);
-  --text-primary-color: #15141a;
-  --text-secondary-color: #5b5b66;
-  --hover-filter: brightness(0.9);
-  --focus-ring-color: #0060df;
-  --focus-ring-outline: 2px solid var(--focus-ring-color);
-  --link-fg-color: #0060df;
-  --link-hover-fg-color: #0250bb;
-  --separator-color: #f0f0f4;
+  --dialog-bg-color: var(--background-color-canvas, light-dark(white, #1c1b22));
+  --dialog-border-color: var(
+    --background-color-canvas,
+    light-dark(white, #1c1b22)
+  );
+  --dialog-shadow: 0 2px 14px 0 light-dark(rgb(58 57 68 / 0.2), #15141a);
+  --text-secondary-color: light-dark(#5b5b66, #cfcfd8);
+  --separator-color: light-dark(#f0f0f4, #52525e);
 
-  --textarea-border-color: #8f8f9d;
-  --textarea-bg-color: white;
+  /* A textarea is an interactive control, so it takes the interactive border
+     token (whose light value is the shipped literal) and not --border-color,
+     which is the low-contrast decorative one. */
+  --textarea-border-color: var(--border-color-interactive, #8f8f9d);
+  --textarea-bg-color: light-dark(white, #42414d);
   --textarea-fg-color: var(--text-secondary-color);
 
-  --radio-bg-color: #f0f0f4;
-  --radio-checked-bg-color: #fbfbfe;
-  --radio-border-color: #8f8f9d;
-  --radio-checked-border-color: #0060df;
+  /* .primaryButton / .secondaryButton button tokens are defined once, at :root
+     in buttons.css (the shared primitive), and inherit into dialogs. */
 
-  --button-secondary-bg-color: #f0f0f4;
-  --button-secondary-fg-color: var(--text-primary-color);
-  --button-secondary-border-color: var(--button-secondary-bg-color);
-  --button-secondary-hover-bg-color: var(--button-secondary-bg-color);
-  --button-secondary-hover-fg-color: var(--button-secondary-fg-color);
-  --button-secondary-hover-border-color: var(--button-secondary-hover-bg-color);
+  --input-text-bg-color: light-dark(white, #42414d);
+  --input-text-fg-color: var(--text-primary-color);
 
-  --button-primary-bg-color: #0060df;
-  --button-primary-fg-color: #fbfbfe;
-  --button-primary-border-color: var(--button-primary-bg-color);
-  --button-primary-hover-bg-color: var(--button-primary-bg-color);
-  --button-primary-hover-fg-color: var(--button-primary-fg-color);
-  --button-primary-hover-border-color: var(--button-primary-hover-bg-color);
-
-  @media (prefers-color-scheme: dark) {
-    --dialog-bg-color: #1c1b22;
-    --dialog-border-color: #1c1b22;
-    --dialog-shadow: 0 2px 14px 0 #15141a;
-    --text-primary-color: #fbfbfe;
-    --text-secondary-color: #cfcfd8;
-    --focus-ring-color: #0df;
-    --hover-filter: brightness(1.4);
-    --link-fg-color: #0df;
-    --link-hover-fg-color: #80ebff;
-    --separator-color: #52525e;
-
-    --textarea-bg-color: #42414d;
-
-    --radio-bg-color: #2b2a33;
-    --radio-checked-bg-color: #15141a;
-    --radio-checked-border-color: #0df;
-
-    --button-secondary-bg-color: #2b2a33;
-    --button-primary-bg-color: #0df;
-    --button-primary-fg-color: #15141a;
+  /* Match Nova popup borders, separators, and shadows. */
+  /*#if MOZCENTRAL && !GECKOVIEW*/
+  @media -moz-pref("pdfjs.enableNova") and -moz-pref("browser.nova.enabled") {
+    --dialog-border-color: var(--border-color-deemphasized);
+    --dialog-shadow: var(--box-shadow-level-3);
+    --separator-color: var(--border-color-deemphasized);
   }
+  /*#endif*/
 
   @media screen and (forced-colors: active) {
-    --dialog-bg-color: Canvas;
-    --dialog-border-color: CanvasText;
+    --dialog-bg-color: var(--background-color-canvas, Canvas);
+    /* border-only: --background-color-canvas would resolve to Canvas in FF HCM
+       (= the dialog bg) and the shadow is none here, leaving no boundary; route
+       through --border-color (CanvasText in HCM) to keep a visible border. */
+    --dialog-border-color: var(--border-color, CanvasText);
     --dialog-shadow: none;
-    --text-primary-color: CanvasText;
     --text-secondary-color: CanvasText;
-    --hover-filter: none;
-    --focus-ring-color: ButtonBorder;
-    --link-fg-color: LinkText;
-    --link-hover-fg-color: LinkText;
     --separator-color: CanvasText;
 
     --textarea-border-color: ButtonBorder;
     --textarea-bg-color: Field;
     --textarea-fg-color: ButtonText;
 
-    --radio-bg-color: ButtonFace;
-    --radio-checked-bg-color: ButtonFace;
-    --radio-border-color: ButtonText;
-    --radio-checked-border-color: ButtonText;
-
-    --button-secondary-bg-color: ButtonFace;
-    --button-secondary-fg-color: ButtonText;
-    --button-secondary-border-color: ButtonText;
-    --button-secondary-hover-bg-color: AccentColor;
-    --button-secondary-hover-fg-color: AccentColorText;
-
-    --button-primary-bg-color: ButtonText;
-    --button-primary-fg-color: ButtonFace;
-    --button-primary-hover-bg-color: AccentColor;
-    --button-primary-hover-fg-color: AccentColorText;
+    --input-text-bg-color: Field;
+    --input-text-fg-color: FieldText;
   }
 
   font: message-box;
   font-size: 13px;
   font-weight: 400;
   line-height: 150%;
-  border-radius: 4px;
+  border-radius: var(--border-radius-medium, 4px);
   padding: 12px 16px;
   border: 1px solid var(--dialog-border-color);
   background: var(--dialog-bg-color);
@@ -152,6 +110,15 @@
       align-self: flex-end;
     }
 
+    /* Native checkbox/radio tinted with the accent at Firefox's control size,
+       matching Firefox's default form controls (the custom appearance is
+       Nova-only in Firefox, so the default look is native + accent-color). */
+    input:is([type="checkbox"], [type="radio"]) {
+      accent-color: var(--color-accent-primary, light-dark(#0060df, #0df));
+      width: var(--checkbox-size, 16px);
+      height: var(--checkbox-size, 16px);
+    }
+
     .radio {
       display: flex;
       flex-direction: column;
@@ -163,25 +130,6 @@
         gap: 8px;
         align-self: stretch;
         align-items: center;
-
-        input {
-          appearance: none;
-          box-sizing: border-box;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background-color: var(--radio-bg-color);
-          border: 1px solid var(--radio-border-color);
-
-          &:hover {
-            filter: var(--hover-filter);
-          }
-
-          &:checked {
-            background-color: var(--radio-checked-bg-color);
-            border: 4px solid var(--radio-checked-border-color);
-          }
-        }
       }
 
       > .radioLabel {
@@ -199,43 +147,32 @@
       }
     }
 
-    button:not(:is(.toggle-button, .closeButton)) {
-      border-radius: 4px;
-      border: 1px solid;
+    button:not(:is(.toggle-button, .closeButton, .clearInputButton)) {
+      border-radius: var(--button-border-radius, 4px);
+      border-width: 1px;
+      border-style: solid;
       font: menu;
-      font-weight: 600;
-      padding: 4px 16px;
+      font-weight: var(--button-font-weight, 590);
+      font-size: var(--button-font-size, 13px);
+      padding: var(--button-padding, 4px 16px);
       width: auto;
-      height: 32px;
+      min-height: var(--button-min-height, 32px);
 
       &:hover {
         cursor: pointer;
         filter: var(--hover-filter);
       }
 
-      &.secondaryButton {
-        color: var(--button-secondary-fg-color);
-        background-color: var(--button-secondary-bg-color);
-        border-color: var(--button-secondary-border-color);
-
-        &:hover {
-          color: var(--button-secondary-hover-fg-color);
-          background-color: var(--button-secondary-hover-bg-color);
-          border-color: var(--button-secondary-hover-border-color);
-        }
+      > span {
+        color: inherit;
+        font: inherit;
       }
 
-      &.primaryButton {
-        color: var(--button-primary-fg-color);
-        background-color: var(--button-primary-bg-color);
-        border-color: var(--button-primary-border-color);
-        opacity: 1;
-
-        &:hover {
-          color: var(--button-primary-hover-fg-color);
-          background-color: var(--button-primary-hover-bg-color);
-          border-color: var(--button-primary-hover-border-color);
-        }
+      /* .primaryButton / .secondaryButton colours and states come from the
+         shared buttons.css primitive; only the dialog-specific base geometry
+         (above) lives here, so it also covers unclassed dialog buttons. */
+      &:disabled {
+        pointer-events: none;
       }
     }
 
@@ -253,7 +190,7 @@
       resize: none;
       margin: 0;
       box-sizing: border-box;
-      border-radius: 4px;
+      border-radius: var(--border-radius-small, 4px);
       border: 1px solid var(--textarea-border-color);
       background: var(--textarea-bg-color);
       color: var(--textarea-fg-color);
@@ -269,74 +206,34 @@
       }
     }
 
+    input[type="text"] {
+      background-color: var(--input-text-bg-color);
+      color: var(--input-text-fg-color);
+    }
+
     .messageBar {
-      --message-bar-warning-icon: url(images/messageBar_warning.svg);
-      --closing-button-icon: url(images/messageBar_closingButton.svg);
-
-      --message-bar-bg-color: #ffebcd;
-      --message-bar-fg-color: #15141a;
-      --message-bar-border-color: rgb(0 0 0 / 0.08);
-      --message-bar-icon-color: #cd411e;
-      --message-bar-close-button-border-radius: 4px;
-      --message-bar-close-button-border: none;
-      --message-bar-close-button-color: var(--text-primary-color);
-      --message-bar-close-button-hover-bg-color: rgb(21 20 26 / 0.14);
-      --message-bar-close-button-active-bg-color: rgb(21 20 26 / 0.21);
-      --message-bar-close-button-focus-bg-color: rgb(21 20 26 / 0.07);
-      --message-bar-close-button-color-hover: var(--text-primary-color);
-
-      @media (prefers-color-scheme: dark) {
-        --message-bar-bg-color: #5a3100;
-        --message-bar-fg-color: #fbfbfe;
-        --message-bar-border-color: rgb(255 255 255 / 0.08);
-        --message-bar-icon-color: #e49c49;
-        --message-bar-close-button-hover-bg-color: rgb(251 251 254 / 0.14);
-        --message-bar-close-button-active-bg-color: rgb(251 251 254 / 0.21);
-        --message-bar-close-button-focus-bg-color: rgb(251 251 254 / 0.07);
-      }
+      --message-bar-bg-color: light-dark(#ffebcd, #5a3100);
+      --message-bar-fg-color: light-dark(#15141a, #fbfbfe);
+      --message-bar-border-color: light-dark(
+        rgb(0 0 0 / 0.08),
+        rgb(255 255 255 / 0.08)
+      );
+      --message-bar-icon: url(images/messageBar_warning.svg);
+      --message-bar-icon-color: light-dark(#cd411e, #e49c49);
 
       @media screen and (forced-colors: active) {
         --message-bar-bg-color: HighlightText;
         --message-bar-fg-color: CanvasText;
         --message-bar-border-color: CanvasText;
         --message-bar-icon-color: CanvasText;
-        --message-bar-close-button-color: ButtonText;
-        --message-bar-close-button-border: 1px solid ButtonText;
-        --message-bar-close-button-hover-bg-color: ButtonText;
-        --message-bar-close-button-active-bg-color: ButtonText;
-        --message-bar-close-button-focus-bg-color: ButtonText;
-        --message-bar-close-button-color-hover: HighlightText;
       }
 
-      display: flex;
-      position: relative;
-      padding: 12px 8px 12px 0;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 8px;
       align-self: stretch;
 
-      border-radius: 4px;
-      border: 1px solid var(--message-bar-border-color);
-      background: var(--message-bar-bg-color);
-      color: var(--message-bar-fg-color);
-
       > div {
-        display: flex;
-        padding-inline-start: 16px;
-        align-items: flex-start;
-        gap: 8px;
-        align-self: stretch;
-
-        &::before {
-          content: "";
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          mask-image: var(--message-bar-warning-icon);
-          mask-size: cover;
-          background-color: var(--message-bar-icon-color);
+        &::before,
+        > div {
+          margin-block: 4px;
         }
 
         > div {
@@ -354,50 +251,6 @@
           .description {
             font-size: 13px;
           }
-        }
-      }
-
-      .closeButton {
-        position: absolute;
-        width: 32px;
-        height: 32px;
-        inset-inline-end: 8px;
-        inset-block-start: 8px;
-        background: none;
-        border-radius: var(--message-bar-close-button-border-radius);
-        border: var(--message-bar-close-button-border);
-
-        &::before {
-          content: "";
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          mask-image: var(--closing-button-icon);
-          mask-size: cover;
-          background-color: var(--message-bar-close-button-color);
-        }
-
-        &:is(:hover, :active, :focus)::before {
-          background-color: var(--message-bar-close-button-color-hover);
-        }
-
-        &:hover {
-          background-color: var(--message-bar-close-button-hover-bg-color);
-        }
-
-        &:active {
-          background-color: var(--message-bar-close-button-active-bg-color);
-        }
-
-        &:focus {
-          background-color: var(--message-bar-close-button-focus-bg-color);
-        }
-
-        > span {
-          display: inline-block;
-          width: 0;
-          height: 0;
-          overflow: hidden;
         }
       }
     }

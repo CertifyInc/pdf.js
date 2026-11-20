@@ -15,26 +15,18 @@
 
 const INITIAL_DATA = Symbol("INITIAL_DATA");
 
+const dataObj = () => ({
+  ...Promise.withResolvers(),
+  data: INITIAL_DATA,
+});
+
 /**
  * A PDF document and page is built of many objects. E.g. there are objects for
  * fonts, images, rendering code, etc. These objects may get processed inside of
  * a worker. This class implements some basic methods to manage these objects.
  */
 class PDFObjects {
-  #objs = Object.create(null);
-
-  /**
-   * Ensures there is an object defined for `objId`.
-   *
-   * @param {string} objId
-   * @returns {Object}
-   */
-  #ensureObj(objId) {
-    return (this.#objs[objId] ||= {
-      ...Promise.withResolvers(),
-      data: INITIAL_DATA,
-    });
-  }
+  #objs = new Map();
 
   /**
    * If called *without* callback, this returns the data of `objId` but the
@@ -43,22 +35,24 @@ class PDFObjects {
    * If called *with* a callback, the callback is called with the data of the
    * object once the object is resolved. That means, if you call this method
    * and the object is already resolved, the callback gets called right away.
-   *
    * @param {string} objId
-   * @param {function} [callback]
+   * @param {Function} [callback]
+   * @param {Function} [errorCallback] - Called with the rejection reason if the
+   *   object fails to resolve (e.g. it could never be delivered). Only used
+   *   together with `callback`.
    * @returns {any}
    */
-  get(objId, callback = null) {
+  get(objId, callback = null, errorCallback = null) {
     // If there is a callback, then the get can be async and the object is
     // not required to be resolved right now.
     if (callback) {
-      const obj = this.#ensureObj(objId);
-      obj.promise.then(() => callback(obj.data));
+      const obj = this.#objs.getOrInsertComputed(objId, dataObj);
+      obj.promise.then(() => callback(obj.data), errorCallback);
       return null;
     }
     // If there isn't a callback, the user expects to get the resolved data
     // directly.
-    const obj = this.#objs[objId];
+    const obj = this.#objs.get(objId);
     // If there isn't an object yet or the object isn't resolved, then the
     // data isn't ready yet!
     if (!obj || obj.data === INITIAL_DATA) {
@@ -72,7 +66,7 @@ class PDFObjects {
    * @returns {boolean}
    */
   has(objId) {
-    const obj = this.#objs[objId];
+    const obj = this.#objs.get(objId);
     return !!obj && obj.data !== INITIAL_DATA;
   }
 
@@ -81,43 +75,57 @@ class PDFObjects {
    * @returns {boolean}
    */
   delete(objId) {
-    const obj = this.#objs[objId];
+    const obj = this.#objs.get(objId);
     if (!obj || obj.data === INITIAL_DATA) {
       // Only allow removing the object *after* it's been resolved.
       return false;
     }
-    delete this.#objs[objId];
+    this.#objs.delete(objId);
     return true;
   }
 
   /**
    * Resolves the object `objId` with optional `data`.
-   *
    * @param {string} objId
    * @param {any} [data]
    */
   resolve(objId, data = null) {
-    const obj = this.#ensureObj(objId);
+    const obj = this.#objs.getOrInsertComputed(objId, dataObj);
+    if (obj.data !== INITIAL_DATA) {
+      throw new Error(`Object already resolved ${objId}.`);
+    }
     obj.data = data;
     obj.resolve();
   }
 
+  /**
+   * Rejects the object `objId`, signalling that it will never be resolved.
+   * @param {string} objId
+   * @param {Error} reason
+   */
+  reject(objId, reason) {
+    const obj = this.#objs.getOrInsertComputed(objId, dataObj);
+    if (obj.data !== INITIAL_DATA) {
+      return;
+    }
+    // Make sure a rejection that lands before a consumer calls
+    // `get` doesn't surface as an unhandled rejection
+    obj.promise.catch(() => {});
+    obj.reject(reason);
+  }
+
   clear() {
-    for (const objId in this.#objs) {
-      const { data } = this.#objs[objId];
+    for (const { data } of this.#objs.values()) {
       data?.bitmap?.close(); // Release any `ImageBitmap` data.
     }
-    this.#objs = Object.create(null);
+    this.#objs.clear();
   }
 
   *[Symbol.iterator]() {
-    for (const objId in this.#objs) {
-      const { data } = this.#objs[objId];
-
-      if (data === INITIAL_DATA) {
-        continue;
+    for (const [objId, { data }] of this.#objs) {
+      if (data !== INITIAL_DATA) {
+        yield [objId, data];
       }
-      yield [objId, data];
     }
   }
 }

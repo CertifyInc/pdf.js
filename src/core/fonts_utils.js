@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
+import { DrawOPS, info, OPS } from "../shared/util.js";
 import { getEncoding, StandardEncoding } from "./encodings.js";
 import { getGlyphsUnicode } from "./glyphlist.js";
 import { getLookupTableFactory } from "./core_utils.js";
 import { getUnicodeForGlyph } from "./unicode.js";
-import { info } from "../shared/util.js";
 
 // Accented characters have issues on Windows and Linux. When this flag is
 // enabled glyphs that use seac and seac style endchar operators are truncated
@@ -98,68 +98,67 @@ function recoverGlyphName(name, glyphsUnicodeMap) {
   return name;
 }
 
+function buildMapping(baseEncoding, glyphNames) {
+  const map = new Map();
+  const { length } = baseEncoding;
+  for (let charCode = 0; charCode < length; charCode++) {
+    const glyphId = glyphNames.indexOf(baseEncoding[charCode]);
+    map.set(charCode, glyphId >= 0 ? glyphId : /* notdef = */ 0);
+  }
+  return map;
+}
+
 /**
  * Shared logic for building a char code to glyph id mapping for Type1 and
  * simple CFF fonts. See section 9.6.6.2 of the spec.
- * @param {Object} properties Font properties object.
- * @param {Object} builtInEncoding The encoding contained within the actual font
+ * @param {object} properties Font properties object.
+ * @param {object} builtInEncoding The encoding contained within the actual font
  *   data.
  * @param {Array} glyphNames Array of glyph names where the index is the
  *   glyph ID.
- * @returns {Object} A char code to glyph ID map.
+ * @returns {Map} A char code to glyph ID map.
  */
 function type1FontGlyphMapping(properties, builtInEncoding, glyphNames) {
-  const charCodeToGlyphId = Object.create(null);
-  let glyphId, charCode, baseEncoding;
-  const isSymbolicFont = !!(properties.flags & FontFlags.Symbolic);
+  let charCodeToGlyphId, glyphsUnicodeMap;
 
   if (properties.isInternalFont) {
-    baseEncoding = builtInEncoding;
-    for (charCode = 0; charCode < baseEncoding.length; charCode++) {
-      glyphId = glyphNames.indexOf(baseEncoding[charCode]);
-      charCodeToGlyphId[charCode] = glyphId >= 0 ? glyphId : /* notdef = */ 0;
-    }
+    charCodeToGlyphId = buildMapping(builtInEncoding, glyphNames);
   } else if (properties.baseEncodingName) {
     // If a valid base encoding name was used, the mapping is initialized with
     // that.
-    baseEncoding = getEncoding(properties.baseEncodingName);
-    for (charCode = 0; charCode < baseEncoding.length; charCode++) {
-      glyphId = glyphNames.indexOf(baseEncoding[charCode]);
-      charCodeToGlyphId[charCode] = glyphId >= 0 ? glyphId : /* notdef = */ 0;
-    }
-  } else if (isSymbolicFont) {
+    charCodeToGlyphId = buildMapping(
+      getEncoding(properties.baseEncodingName),
+      glyphNames
+    );
+  } else if (properties.flags & FontFlags.Symbolic) {
     // For a symbolic font the encoding should be the fonts built-in encoding.
-    for (charCode in builtInEncoding) {
-      charCodeToGlyphId[charCode] = builtInEncoding[charCode];
+    charCodeToGlyphId = new Map();
+    for (const charCode in builtInEncoding) {
+      charCodeToGlyphId.set(+charCode, builtInEncoding[charCode]);
     }
   } else {
     // For non-symbolic fonts that don't have a base encoding the standard
     // encoding should be used.
-    baseEncoding = StandardEncoding;
-    for (charCode = 0; charCode < baseEncoding.length; charCode++) {
-      glyphId = glyphNames.indexOf(baseEncoding[charCode]);
-      charCodeToGlyphId[charCode] = glyphId >= 0 ? glyphId : /* notdef = */ 0;
-    }
+    charCodeToGlyphId = buildMapping(StandardEncoding, glyphNames);
   }
 
   // Lastly, merge in the differences.
-  const differences = properties.differences;
-  let glyphsUnicodeMap;
-  if (differences) {
-    for (charCode in differences) {
-      const glyphName = differences[charCode];
-      glyphId = glyphNames.indexOf(glyphName);
+  if (properties.differences) {
+    for (const [charCode, glyphName] of properties.differences) {
+      let glyphId = glyphNames.indexOf(glyphName);
 
       if (glyphId === -1) {
-        if (!glyphsUnicodeMap) {
-          glyphsUnicodeMap = getGlyphsUnicode();
-        }
+        glyphsUnicodeMap ??= getGlyphsUnicode();
+
         const standardGlyphName = recoverGlyphName(glyphName, glyphsUnicodeMap);
         if (standardGlyphName !== glyphName) {
           glyphId = glyphNames.indexOf(standardGlyphName);
         }
       }
-      charCodeToGlyphId[charCode] = glyphId >= 0 ? glyphId : /* notdef = */ 0;
+      charCodeToGlyphId.set(
+        charCode,
+        glyphId >= 0 ? glyphId : /* notdef = */ 0
+      );
     }
   }
   return charCodeToGlyphId;
@@ -207,7 +206,195 @@ const getVerticalPresentationForm = getLookupTableFactory(t => {
   t[0xff5d] = 0xfe38; // FULLWIDTH RIGHT CURLY BRACKET
 });
 
+// Rotation fallbacks for characters without encoded vertical forms.
+// Exclude U+FFE3: its vertical stroke is on the right in UAX #50, Table 3.
+const VERTICAL_ROTATED_CHARS = new Set([
+  0x2010, // HYPHEN
+  0x2015, // HORIZONTAL BAR
+  0x2016, // DOUBLE VERTICAL LINE
+  0x3018, // LEFT WHITE TORTOISE SHELL BRACKET
+  0x3019, // RIGHT WHITE TORTOISE SHELL BRACKET
+  0x301c, // WAVE DASH
+  0x30a0, // KATAKANA-HIRAGANA DOUBLE HYPHEN
+  0x30fc, // KATAKANA-HIRAGANA PROLONGED SOUND MARK
+  0xff1d, // FULLWIDTH EQUALS SIGN
+  0xff5c, // FULLWIDTH VERTICAL LINE
+  0xff5e, // FULLWIDTH TILDE
+  0xff5f, // FULLWIDTH LEFT WHITE PARENTHESIS
+  0xff60, // FULLWIDTH RIGHT WHITE PARENTHESIS
+]);
+
+// To disable Type3 compilation, set the value to `-1`.
+const MAX_SIZE_TO_COMPILE = 1000;
+
+function compileType3Glyph({ data: img, width, height }) {
+  if (width > MAX_SIZE_TO_COMPILE || height > MAX_SIZE_TO_COMPILE) {
+    return null;
+  }
+
+  const POINT_TO_PROCESS_LIMIT = 1000;
+  const POINT_TYPES = new Uint8Array([
+    0, 2, 4, 0, 1, 0, 5, 4, 8, 10, 0, 8, 0, 2, 1, 0,
+  ]);
+
+  const width1 = width + 1;
+  const points = new Uint8Array(width1 * (height + 1));
+  let i, j, j0;
+
+  // decodes bit-packed mask data
+  const lineSize = (width + 7) & ~7;
+  const data = new Uint8Array(lineSize * height);
+  let pos = 0;
+  for (const elem of img) {
+    let mask = 128;
+    while (mask > 0) {
+      data[pos++] = elem & mask ? 0 : 255;
+      mask >>= 1;
+    }
+  }
+
+  // finding interesting points: every point is located between mask pixels,
+  // so there will be points of the (width + 1)x(height + 1) grid. Every point
+  // will have flags assigned based on neighboring mask pixels:
+  //   4 | 8
+  //   --P--
+  //   2 | 1
+  // We are interested only in points with the flags:
+  //   - outside corners: 1, 2, 4, 8;
+  //   - inside corners: 7, 11, 13, 14;
+  //   - and, intersections: 5, 10.
+  let count = 0;
+  pos = 0;
+  if (data[pos] !== 0) {
+    points[0] = 1;
+    ++count;
+  }
+  for (j = 1; j < width; j++) {
+    if (data[pos] !== data[pos + 1]) {
+      points[j] = data[pos] ? 2 : 1;
+      ++count;
+    }
+    pos++;
+  }
+  if (data[pos] !== 0) {
+    points[j] = 2;
+    ++count;
+  }
+  for (i = 1; i < height; i++) {
+    pos = i * lineSize;
+    j0 = i * width1;
+    if (data[pos - lineSize] !== data[pos]) {
+      points[j0] = data[pos] ? 1 : 8;
+      ++count;
+    }
+    // 'sum' is the position of the current pixel configuration in the 'TYPES'
+    // array (in order 8-1-2-4, so we can use '>>2' to shift the column).
+    let sum = (data[pos] ? 4 : 0) + (data[pos - lineSize] ? 8 : 0);
+    for (j = 1; j < width; j++) {
+      sum =
+        (sum >> 2) +
+        (data[pos + 1] ? 4 : 0) +
+        (data[pos - lineSize + 1] ? 8 : 0);
+      if (POINT_TYPES[sum]) {
+        points[j0 + j] = POINT_TYPES[sum];
+        ++count;
+      }
+      pos++;
+    }
+    if (data[pos - lineSize] !== data[pos]) {
+      points[j0 + j] = data[pos] ? 2 : 4;
+      ++count;
+    }
+
+    if (count > POINT_TO_PROCESS_LIMIT) {
+      return null;
+    }
+  }
+
+  pos = lineSize * (height - 1);
+  j0 = i * width1;
+  if (data[pos] !== 0) {
+    points[j0] = 8;
+    ++count;
+  }
+  for (j = 1; j < width; j++) {
+    if (data[pos] !== data[pos + 1]) {
+      points[j0 + j] = data[pos] ? 4 : 8;
+      ++count;
+    }
+    pos++;
+  }
+  if (data[pos] !== 0) {
+    points[j0 + j] = 4;
+    ++count;
+  }
+  if (count > POINT_TO_PROCESS_LIMIT) {
+    return null;
+  }
+
+  // building outlines
+  const steps = new Int32Array([0, width1, -1, 0, -width1, 0, 0, 0, 1]);
+  const pathBuf = [];
+
+  // the path shall be painted in [0..1]x[0..1] space
+  const { a, b, c, d, e, f } = new DOMMatrix()
+    .scaleSelf(1 / width, -1 / height)
+    .translateSelf(0, -height);
+
+  for (i = 0; count && i <= height; i++) {
+    let p = i * width1;
+    const end = p + width;
+    while (p < end && !points[p]) {
+      p++;
+    }
+    if (p === end) {
+      continue;
+    }
+    let x = p % width1;
+    let y = i;
+    pathBuf.push(DrawOPS.moveTo, a * x + c * y + e, b * x + d * y + f);
+
+    const p0 = p;
+    let type = points[p];
+    do {
+      const step = steps[type];
+      do {
+        p += step;
+      } while (!points[p]);
+
+      const pp = points[p];
+      if (pp !== 5 && pp !== 10) {
+        // set new direction
+        type = pp;
+        // delete mark
+        points[p] = 0;
+      } else {
+        // type is 5 or 10, ie, a crossing
+        // set new direction
+        type = pp & ((0x33 * type) >> 4);
+        // set new type for "future hit"
+        points[p] &= (type >> 2) | (type << 2);
+      }
+      x = p % width1;
+      y = (p / width1) | 0;
+      pathBuf.push(DrawOPS.lineTo, a * x + c * y + e, b * x + d * y + f);
+
+      if (!points[p]) {
+        --count;
+      }
+    } while (p0 !== p);
+    --i;
+  }
+
+  return [
+    OPS.rawFillPath,
+    [new Float32Array(pathBuf)],
+    new Float32Array([0, 0, width, height]),
+  ];
+}
+
 export {
+  compileType3Glyph,
   FontFlags,
   getVerticalPresentationForm,
   MacStandardGlyphOrdering,
@@ -215,4 +402,5 @@ export {
   recoverGlyphName,
   SEAC_ANALYSIS_ENABLED,
   type1FontGlyphMapping,
+  VERTICAL_ROTATED_CHARS,
 };

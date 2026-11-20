@@ -20,32 +20,43 @@
 /** @typedef {import("./display/api").PDFDocumentProxy} PDFDocumentProxy */
 /** @typedef {import("./display/api").PDFPageProxy} PDFPageProxy */
 /** @typedef {import("./display/api").RenderTask} RenderTask */
-/** @typedef {import("./display/display_utils").PageViewport} PageViewport */
+/** @typedef {import("./display/page_viewport").PageViewport} PageViewport */
 
 import {
   AbortException,
   AnnotationEditorParamsType,
   AnnotationEditorType,
   AnnotationMode,
+  AnnotationType,
   createValidAbsoluteUrl,
   FeatureTest,
+  getUuid,
   ImageKind,
   InvalidPDFException,
-  MissingPDFException,
+  makeArr,
+  makeMap,
+  makeObj,
+  makeSet,
   normalizeUnicode,
   OPS,
+  PasswordException,
   PasswordResponses,
   PermissionFlag,
+  ResponseException,
   shadow,
-  UnexpectedResponseException,
+  updateUrlHash,
   Util,
   VerbosityLevel,
 } from "./shared/util.js";
 import {
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
-  getViewerSrc,
-} from "./webapp_utility.js";
+  applyOpacity,
+  findContrastColor,
+  getRGB,
+  getRGBA,
+  OutputScale,
+  PixelsPerInch,
+  RenderingCancelledException,
+} from "./display/display_utils.js";
 import {
   build,
   getDocument,
@@ -54,19 +65,19 @@ import {
   version,
 } from "./display/api.js";
 import {
+  CSSConstants,
   fetchData,
   getFilenameFromUrl,
   getPdfFilenameFromUrl,
-  getXfaPageViewport,
   isDataScheme,
   isPdfFile,
   noContextMenu,
-  OutputScale,
   PDFDateString,
-  PixelsPerInch,
-  RenderingCancelledException,
+  renderRichText,
   setLayerDimensions,
-} from "./display/display_utils.js";
+  stopEvent,
+  SupportedImageMimeTypes,
+} from "./display/dom_utils.js";
 import { AnnotationEditorLayer } from "./display/editor/annotation_editor_layer.js";
 import { AnnotationEditorUIManager } from "./display/editor/tools.js";
 import { AnnotationLayer } from "./display/annotation_layer.js";
@@ -75,21 +86,84 @@ import { DOMSVGFactory } from "./display/svg_factory.js";
 import { DrawLayer } from "./display/draw_layer.js";
 import { GlobalWorkerOptions } from "./display/worker_options.js";
 import { HighlightOutliner } from "./display/editor/drawers/highlight.js";
+import { isValidExplicitDest } from "./display/api_utils.js";
+import { MathClamp } from "./shared/math_clamp.js";
+import { SignatureExtractor } from "./display/editor/drawers/signaturedraw.js";
 import { TextLayer } from "./display/text_layer.js";
+import { TextLayerImages } from "./display/text_layer_images.js";
+import { TouchManager } from "./display/touch_manager.js";
 import { XfaLayer } from "./display/xfa_layer.js";
 
-/* eslint-disable-next-line no-unused-vars */
-const pdfjsVersion =
-  typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_VERSION") : void 0;
-/* eslint-disable-next-line no-unused-vars */
-const pdfjsBuild =
-  typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_BUILD") : void 0;
-
 if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("TESTING || GENERIC")) {
-  globalThis.pdfjsTestingUtils = {
+  globalThis._pdfjsTestingUtils = {
     HighlightOutliner,
   };
 }
+
+globalThis.pdfjsLib = {
+  AbortException,
+  AnnotationEditorLayer,
+  AnnotationEditorParamsType,
+  AnnotationEditorType,
+  AnnotationEditorUIManager,
+  AnnotationLayer,
+  AnnotationMode,
+  AnnotationType,
+  applyOpacity,
+  build,
+  ColorPicker,
+  createValidAbsoluteUrl,
+  CSSConstants,
+  DOMSVGFactory,
+  DrawLayer,
+  FeatureTest,
+  fetchData,
+  findContrastColor,
+  getDocument,
+  getFilenameFromUrl,
+  getPdfFilenameFromUrl,
+  getRGB,
+  getRGBA,
+  getUuid,
+  GlobalWorkerOptions,
+  ImageKind,
+  InvalidPDFException,
+  isDataScheme,
+  isPdfFile,
+  isValidExplicitDest,
+  makeArr,
+  makeMap,
+  makeObj,
+  makeSet,
+  MathClamp,
+  noContextMenu,
+  normalizeUnicode,
+  OPS,
+  OutputScale,
+  PasswordException,
+  PasswordResponses,
+  PDFDataRangeTransport,
+  PDFDateString,
+  PDFWorker,
+  PermissionFlag,
+  PixelsPerInch,
+  RenderingCancelledException,
+  renderRichText,
+  ResponseException,
+  setLayerDimensions,
+  shadow,
+  SignatureExtractor,
+  stopEvent,
+  SupportedImageMimeTypes,
+  TextLayer,
+  TextLayerImages,
+  TouchManager,
+  updateUrlHash,
+  Util,
+  VerbosityLevel,
+  version,
+  XfaLayer,
+};
 
 export {
   AbortException,
@@ -99,27 +173,39 @@ export {
   AnnotationEditorUIManager,
   AnnotationLayer,
   AnnotationMode,
+  AnnotationType,
+  applyOpacity,
   build,
   ColorPicker,
   createValidAbsoluteUrl,
+  CSSConstants,
   DOMSVGFactory,
   DrawLayer,
   FeatureTest,
   fetchData,
+  findContrastColor,
   getDocument,
   getFilenameFromUrl,
   getPdfFilenameFromUrl,
-  getXfaPageViewport,
+  getRGB,
+  getRGBA,
+  getUuid,
   GlobalWorkerOptions,
   ImageKind,
   InvalidPDFException,
   isDataScheme,
   isPdfFile,
-  MissingPDFException,
+  isValidExplicitDest,
+  makeArr,
+  makeMap,
+  makeObj,
+  makeSet,
+  MathClamp,
   noContextMenu,
   normalizeUnicode,
   OPS,
   OutputScale,
+  PasswordException,
   PasswordResponses,
   PDFDataRangeTransport,
   PDFDateString,
@@ -127,16 +213,19 @@ export {
   PermissionFlag,
   PixelsPerInch,
   RenderingCancelledException,
+  renderRichText,
+  ResponseException,
   setLayerDimensions,
   shadow,
+  SignatureExtractor,
+  stopEvent,
+  SupportedImageMimeTypes,
   TextLayer,
-  UnexpectedResponseException,
+  TextLayerImages,
+  TouchManager,
+  updateUrlHash,
   Util,
   VerbosityLevel,
   version,
   XfaLayer,
-  // From "./webapp_utility.js":
-  asyncAppendPreviewImage,
-  asyncGetPDFPreviewImageURL,
-  getViewerSrc,
 };

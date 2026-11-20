@@ -34,23 +34,14 @@ pdfjs-presentation-mode-button =
     .title = Անցնել Ներկայացման եղանակին
 pdfjs-presentation-mode-button-label = Ներկայացման եղանակ
 pdfjs-open-file-button =
-<<<<<<< HEAD
-    .title = Բացել նիշք
-=======
     .title = Բացել ֆայլ
->>>>>>> upstream/master
 pdfjs-open-file-button-label = Բացել
 pdfjs-print-button =
     .title = Տպել
 pdfjs-print-button-label = Տպել
-<<<<<<< HEAD
-# Used in Firefox for Android as a label for the download button (“download” is a verb).
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-download-button-label = Ներբեռնել
-=======
 pdfjs-save-button =
-    .title = Պահպանել
-pdfjs-save-button-label = Պահպանել
+    .title = Պահել
+pdfjs-save-button-label = Պահել
 # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
 pdfjs-download-button =
     .title = Ներբեռնել
@@ -59,7 +50,6 @@ pdfjs-download-button =
 pdfjs-download-button-label = Ներբեռնել
 pdfjs-bookmark-button =
     .title = Ընթացիկ էջ (Դիտել URL-ը ընթացիկ էջից)
->>>>>>> upstream/master
 pdfjs-bookmark-button-label = Ընթացիկ էջ
 
 ##  Secondary toolbar and context menu
@@ -85,12 +75,9 @@ pdfjs-cursor-text-select-tool-button-label = Գրույթը ընտրելու գ�
 pdfjs-cursor-hand-tool-button =
     .title = Միացնել Ձեռքի գործիքը
 pdfjs-cursor-hand-tool-button-label = Ձեռքի գործիք
-<<<<<<< HEAD
-=======
 pdfjs-scroll-page-button =
     .title = Օգտագործեք էջի գլորումը
 pdfjs-scroll-page-button-label = Էջի գլորում
->>>>>>> upstream/master
 pdfjs-scroll-vertical-button =
     .title = Օգտագործել ուղղահայաց ոլորում
 pdfjs-scroll-vertical-button-label = Ուղղահայաց ոլորում
@@ -115,18 +102,6 @@ pdfjs-spread-even-button-label = Զույգ վերածածկեր
 pdfjs-document-properties-button =
     .title = Փաստաթղթի հատկությունները…
 pdfjs-document-properties-button-label = Փաստաթղթի հատկությունները…
-<<<<<<< HEAD
-pdfjs-document-properties-file-name = Նիշքի անունը.
-pdfjs-document-properties-file-size = Նիշք չափը.
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } ԿԲ ({ $size_b } բայթ)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } ՄԲ ({ $size_b } բայթ)
-=======
 pdfjs-document-properties-file-name = Ֆայլի անունը.
 pdfjs-document-properties-file-size = Ֆայլի չափը.
 # Variables:
@@ -137,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } ՄԲ ({ $b } բայթ)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Վերնագիր.
 pdfjs-document-properties-author = Հեղինակ․
 pdfjs-document-properties-subject = Վերնագիր.
@@ -145,14 +119,8 @@ pdfjs-document-properties-keywords = Հիմնաբառ.
 pdfjs-document-properties-creation-date = Ստեղծելու ամսաթիվը.
 pdfjs-document-properties-modification-date = Փոփոխելու ամսաթիվը.
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Ստեղծող.
 pdfjs-document-properties-producer = PDF-ի հեղինակը.
 pdfjs-document-properties-version = PDF-ի տարբերակը.
@@ -185,6 +153,15 @@ pdfjs-document-properties-linearized = Արագ վեբ դիտում․
 pdfjs-document-properties-linearized-yes = Այո
 pdfjs-document-properties-linearized-no = Ոչ
 pdfjs-document-properties-close-button = Փակել
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Պատճառը՝ { $reason }
 
 ## Print
 
@@ -198,36 +175,6 @@ pdfjs-printing-not-ready = Զգուշացում. PDF-ը ամբողջությամ
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-<<<<<<< HEAD
-    .title = Բացել/Փակել Կողային վահանակը
-pdfjs-toggle-sidebar-button-label = Բացել/Փակել Կողային վահանակը
-=======
-    .title = Բացել/Փակել կողագոտին
-pdfjs-toggle-sidebar-notification-button =
-    .title = Փոխարկել Կողագոտին (փաստաթուղթը պարունակում է ուրվագիծ/կցորդներ)
-pdfjs-toggle-sidebar-button-label = Բացել/Փակել կողագոտին
->>>>>>> upstream/master
-pdfjs-document-outline-button =
-    .title = Ցուցադրել փաստաթղթի ուրվագիծը (կրկնակի սեղմեք՝ միավորները ընդարձակելու/կոծկելու համար)
-pdfjs-document-outline-button-label = Փաստաթղթի բովանդակությունը
-pdfjs-attachments-button =
-    .title = Ցուցադրել կցորդները
-pdfjs-attachments-button-label = Կցորդներ
-<<<<<<< HEAD
-pdfjs-thumbs-button =
-    .title = Ցուցադրել Մանրապատկերը
-pdfjs-thumbs-button-label = Մանրապատկերը
-pdfjs-findbar-button =
-    .title = Գտնել փաստաթղթում
-pdfjs-findbar-button-label = Որոնում
-=======
-pdfjs-layers-button =
-    .title = Ցուցադրել շերտերը (կրկնակի սեղմեք բոլոր շերտերը սկզբնական վիճակին վերականգնելու համար)
-pdfjs-layers-button-label = Շերտեր
-pdfjs-thumbs-button =
-    .title = Ցուցադրել մանրապատկերը
-pdfjs-thumbs-button-label = Մանրապատկերը
 pdfjs-current-outline-item-button =
     .title = Գտեք ընթացիկ ուրվագծային տարրը
 pdfjs-current-outline-item-button-label = Ընթացիկ ուրվագծային տարր
@@ -235,14 +182,9 @@ pdfjs-findbar-button =
     .title = Գտնել փաստաթղթում
 pdfjs-findbar-button-label = Որոնում
 pdfjs-additional-layers = Լրացուցիչ շերտեր
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
-# Variables:
-#   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Էջը { $page }
 # Variables:
 #   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
@@ -251,8 +193,8 @@ pdfjs-thumb-page-canvas =
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Որոնում
     .placeholder = Գտնել փաստաթղթում...
+    .title = Որոնում
 pdfjs-find-previous-button =
     .title = Գտնել անրահայտության նախորդ հանդիպումը
 pdfjs-find-previous-button-label = Նախորդը
@@ -260,13 +202,8 @@ pdfjs-find-next-button =
     .title = Գտիր արտահայտության հաջորդ հանդիպումը
 pdfjs-find-next-button-label = Հաջորդը
 pdfjs-find-highlight-checkbox = Գունանշել բոլորը
-pdfjs-find-match-case-checkbox-label = Մեծ(փոքր)ատառ հաշվի առնել
-<<<<<<< HEAD
-pdfjs-find-entire-word-checkbox-label = Ամբողջ բառերը
-pdfjs-find-reached-top = Հասել եք փաստաթղթի վերևին, կշարունակվի ներքևից
-pdfjs-find-reached-bottom = Հասել եք փաստաթղթի վերջին, կշարունակվի վերևից
-=======
-pdfjs-find-match-diacritics-checkbox-label = Համապատասխանեցնել տարբերիչները
+pdfjs-find-match-case-checkbox-label = Հաշվի առնել մեծ/փոքրատառը
+pdfjs-find-match-diacritics-checkbox-label = Համընկել հնչյունատարբերիչ նշանները
 pdfjs-find-entire-word-checkbox-label = Ամբողջ բառերը
 pdfjs-find-reached-top = Հասել եք փաստաթղթի վերևին, կշարունակվի ներքևից
 pdfjs-find-reached-bottom = Հասել եք փաստաթղթի վերջին, կշարունակվի վերևից
@@ -285,7 +222,6 @@ pdfjs-find-match-count-limit =
         [one] Ավելի քան { $limit } համընկնում
        *[other] Ավելի քան { $limit } համընկնումներ
     }
->>>>>>> upstream/master
 pdfjs-find-not-found = Արտահայտությունը չգտնվեց
 
 ## Predefined zoom values
@@ -300,13 +236,10 @@ pdfjs-page-scale-percent = { $scale }%
 
 ## PDF page
 
-<<<<<<< HEAD
-=======
 # Variables:
 #   $page (Number) - the page number
 pdfjs-page-landmark =
     .aria-label = Էջ { $page }
->>>>>>> upstream/master
 
 ## Loading indicator messages
 
@@ -318,13 +251,6 @@ pdfjs-rendering-error = Սխալ՝ էջը ստեղծելիս:
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -332,12 +258,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } Ծանոթություն]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -349,18 +272,6 @@ pdfjs-web-fonts-disabled = Վեբ-տառատեսակները անջատված ե
 
 ## Editing
 
-<<<<<<< HEAD
-
-## Remove button for the various kind of editor.
-
-
-##
-
-pdfjs-free-text-default-content = Սկսել մուտքագրումը…
-
-## Alt-text dialog
-
-=======
 pdfjs-editor-free-text-button =
     .title = Գրվածք
 pdfjs-editor-color-picker-free-text-input =
@@ -378,12 +289,12 @@ pdfjs-editor-highlight-button =
     .title = Գունանշում
 pdfjs-editor-highlight-button-label = Գունանշում
 pdfjs-highlight-floating-button1 =
-    .title = Գունանշում
     .aria-label = Գունանշում
+    .title = Գունանշում
 pdfjs-highlight-floating-button-label = Գունանշում
 pdfjs-comment-floating-button =
-    .title = Մեկնաբանություն
     .aria-label = Մեկնաբանություն
+    .title = Մեկնաբանություն
 pdfjs-comment-floating-button-label = Մեկնաբանություն
 pdfjs-editor-signature-button =
     .title = Ավելացնել ստորագրություն
@@ -432,9 +343,9 @@ pdfjs-editor-stamp-add-image-button-label = Հավելել պատկեր
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Հաստություն
 pdfjs-editor-free-highlight-thickness-title =
-    .title = Փոխել հաստությունը տեքստից բացի այլ տարրեր նշելիս
+    .title = Փոխել հաստությունը՝ տեքստից բացի այլ տարրեր գունանշելիս
 pdfjs-editor-add-signature-container =
-    .aria-label = Ստորագրության կառավարման տարրեր և պահպանված ստորագրություններ
+    .aria-label = Ստորագրության կառավարման տարրեր և պահված ստորագրություններ
 pdfjs-editor-signature-add-signature-button =
     .title = Ավելացնել նոր ստորագրություն
 pdfjs-editor-signature-add-signature-button-label = Ավելացնել նոր ստորագրություն
@@ -442,11 +353,22 @@ pdfjs-editor-signature-add-signature-button-label = Ավելացնել նոր ս
 # Variables:
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
-    .title = Պահպանված ստորագրություն՝ { $description }
+    .title = Պահված ստորագրություն՝ { $description }
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Գրվածքի խմբագիր
     .default-content = Սկսեք մուտքագրել...
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] Մեկնաբանություն
+       *[other] Մեկնաբանություններ
+    }
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = Տեսնո՞ւմ եք ինչ-որ ուշագրավ բան։ Գունանշեք այն և թողեք մեկնաբանություն։
+pdfjs-editor-comments-sidebar-no-comments-link = Իմանալ ավելին
 
 ## Alt-text dialog
 
@@ -460,7 +382,7 @@ pdfjs-editor-alt-text-add-description-description = Ձգտեք գրել 1-2 նա
 pdfjs-editor-alt-text-mark-decorative-label = Նշել որպես դեկորատիվ
 pdfjs-editor-alt-text-mark-decorative-description = Սա օգտագործվում է դեկորատիվ պատկերների համար, ինչպիսիք են եզրագծերը կամ ջրանիշերը։
 pdfjs-editor-alt-text-cancel-button = Չեղարկել
-pdfjs-editor-alt-text-save-button = Պահպանել
+pdfjs-editor-alt-text-save-button = Պահել
 pdfjs-editor-alt-text-decorative-tooltip = Նշել որպես դեկորատիվ
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
@@ -468,16 +390,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Այլընտրանքային գրվածք
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-
-## Color picker
-
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Վերին ձախ անկյուն՝ չափափոխել
 pdfjs-editor-resizer-top-middle =
@@ -513,7 +429,6 @@ pdfjs-editor-colorpicker-pink =
     .title = Վարդագույն
 pdfjs-editor-colorpicker-red =
     .title = Կարմիր
->>>>>>> upstream/master
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
@@ -521,8 +436,6 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Ցուցադրել բոլորը
 pdfjs-editor-highlight-show-all-button =
     .title = Ցուցադրել բոլորը
-<<<<<<< HEAD
-=======
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
@@ -574,13 +487,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Պատկերի այլընտրան�
 pdfjs-editor-alt-text-settings-automatic-title = Ինքնաշխատ այլընտրանքային գրվածք
 pdfjs-editor-alt-text-settings-create-model-button-label = Ինքնաշխատ ստեղծել այլընտրանքային գրվածք
 pdfjs-editor-alt-text-settings-create-model-description = Կարճ նկարագրություն նրանց համար, ովքեր չեն կարող տեսնել պատկերը կամ երբ պատկերը չի բեռնվում։
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Այլընտրանքային գրվածքի արհեստական բանականության մոդել ({ $totalSize } ՄԲ)
-pdfjs-editor-alt-text-settings-ai-model-description = Աշխատում է տեղայնորեն ձեր սարքի վրա, որպեսզի ձեր տվյալները մնան գաղտնի: Պահանջվում է ինքնաշխատ այլընտրանքային գրվածքի համար:
-pdfjs-editor-alt-text-settings-delete-model-button = Ջնջել
-pdfjs-editor-alt-text-settings-download-model-button = Ներբեռնել
-pdfjs-editor-alt-text-settings-downloading-model-button = Ներբեռնվում է…
 pdfjs-editor-alt-text-settings-editor-title = Այլընտրանքային գրվածքի խմբագիր
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Պատկեր ավելացնելիս անմիջապես ցուցադրել այլընտրանքային գրվածքի խմբագիրը
 pdfjs-editor-alt-text-settings-show-dialog-description = Օգնում է  համոզվել, որ ձեր բոլոր պատկերներն ունեն այլընտրանքային գրվածք։
@@ -617,7 +523,7 @@ pdfjs-editor-undo-bar-close-button-label = Փակել
 
 ## Add a signature dialog
 
-pdfjs-editor-add-signature-dialog-label = Այս յուրահատկությունը հնարավորություն է տալիս օգտվողին ստեղծել ստորագրություն՝ PDF փաստաթղթում ավելացնելու համար: Օգտվողը կարող է խմբագրել անունը (որը նաև ծառայում է որպես alt տեքստ) և լրացուցիչ պահպանել այն՝ հետագա օգտագործման համար:
+pdfjs-editor-add-signature-dialog-label = Այս յուրահատկությունը հնարավորություն է տալիս օգտվողին ստեղծել ստորագրություն՝ PDF փաստաթղթում ավելացնելու համար: Օգտվողը կարող է խմբագրել անունը (որը նաև ծառայում է որպես alt տեքստ) և լրացուցիչ պահել այն՝ հետագա օգտագործման համար:
 pdfjs-editor-add-signature-dialog-title = Ավելացնել ստորագրություն
 
 ## Tab names
@@ -634,14 +540,14 @@ pdfjs-editor-add-signature-image-button = Պատկեր
 ## Tab panels
 
 pdfjs-editor-add-signature-type-input =
-    .aria-label = Մուտքագրեք ձեր ստորագրությունը
-    .placeholder = Մուտքագրեք ձեր ստորագրությունը
+    .aria-label = Մուտքագրել ստորագրություն
+    .placeholder = Մուտքագրել ստորագրություն
 pdfjs-editor-add-signature-draw-placeholder = Նկարեք ձեր ստորագրությունը
 pdfjs-editor-add-signature-draw-thickness-range-label = Հաստություն
 # Variables:
 #   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
 pdfjs-editor-add-signature-draw-thickness-range =
-    .title = Նկաելու հաստությունը՝ { $thickness }
+    .title = Նկարելու հաստությունը՝ { $thickness }
 pdfjs-editor-add-signature-image-placeholder = Քաշեք ֆայլը այստեղ՝ վերբեռնելու համար
 pdfjs-editor-add-signature-image-browse-link =
     { PLATFORM() ->
@@ -658,8 +564,8 @@ pdfjs-editor-add-signature-description-default-when-drawing = Ստորագրու
 pdfjs-editor-add-signature-clear-button-label = Մաքրել ստորագրությունը
 pdfjs-editor-add-signature-clear-button =
     .title = Մաքրել ստորագրությունը
-pdfjs-editor-add-signature-save-checkbox = Պահպանել ստորագրությունը
-pdfjs-editor-add-signature-save-warning-message = Դուք հասել եք պահպանված ստորագրությունների 5 սահմանաչափին։ Հեռացրեք մեկը՝ ավելին պահպանելու համար։
+pdfjs-editor-add-signature-save-checkbox = Պահել ստորագրությունը
+pdfjs-editor-add-signature-save-warning-message = Դուք հասել եք պահպանված ստորագրությունների 5 սահմանաչափին։ Հեռացրեք մեկը՝ ավելին պահելու համար։
 pdfjs-editor-add-signature-image-upload-error-title = Չհաջողվեց վերբեռնել պատկերը
 pdfjs-editor-add-signature-image-upload-error-description = Ստուգեք ձեր ցանցային կապակցումը կամ փորձեք մեկ այլ պատկեր։
 pdfjs-editor-add-signature-image-no-data-error-title = Այս պատկերը հնարավոր չէ վերածել ստորագրության
@@ -672,11 +578,36 @@ pdfjs-editor-add-signature-cancel-button = Չեղարկել
 pdfjs-editor-add-signature-add-button = Ավելացնել
 pdfjs-editor-edit-signature-update-button = Թարմացնել
 
+##  Edit a comment dialog
+
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Ավելացնել մեկնաբանություն
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = Ավելացնել
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Մուտքագրեք այստեղ…
+pdfjs-editor-edit-comment-dialog-cancel-button = Չեղարկել
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = Ավելացնել մեկնաբանություն
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-views-manager-add-file-button =
+    .title = Ավելացնել ֆայլ
+pdfjs-views-manager-add-file-button-label = Ավելացնել ֆայլ
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
-    .title = Հեռացնել պահպանված ստորագրությունը
-pdfjs-editor-delete-signature-button-label1 = Հեռացնել պահպանված ստորագրությունը
+    .title = Հեռացնել պահված ստորագրությունը
+pdfjs-editor-delete-signature-button-label1 = Հեռացնել պահված ստորագրությունը
 
 ## Editor toolbar
 
@@ -685,4 +616,3 @@ pdfjs-editor-add-signature-edit-button-label = Խմբագրել նկարագրո
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Խմբագրել նկարագրությունը
->>>>>>> upstream/master

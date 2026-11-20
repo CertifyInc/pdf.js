@@ -15,21 +15,32 @@
 
 /** @typedef {import("../src/display/api").PDFPageProxy} PDFPageProxy */
 // eslint-disable-next-line max-len
-/** @typedef {import("../src/display/display_utils").PageViewport} PageViewport */
+/** @typedef {import("../src/display/page_viewport").PageViewport} PageViewport */
+// eslint-disable-next-line max-len
+/** @typedef {import("../src/display/text_layer_images.js").TextLayerImages} TextLayerImages */
 /** @typedef {import("./text_highlighter").TextHighlighter} TextHighlighter */
 // eslint-disable-next-line max-len
 /** @typedef {import("./text_accessibility.js").TextAccessibilityManager} TextAccessibilityManager */
 
-import { normalizeUnicode, TextLayer } from "pdfjs-lib";
+import { normalizeUnicode, stopEvent, TextLayer } from "pdfjs-lib";
 import { removeNullCharacters } from "./ui_utils.js";
 
 /**
- * @typedef {Object} TextLayerBuilderOptions
+ * @typedef {object} TextLayerBuilderOptions
  * @property {PDFPageProxy} pdfPage
  * @property {TextHighlighter} [highlighter] - Optional object that will handle
  *   highlighting text from the find controller.
  * @property {TextAccessibilityManager} [accessibilityManager]
- * @property {function} [onAppend]
+ * @property {boolean} [enablePermissions]
+ * @property {Function} [onAppend]
+ * @property {AbortSignal} [abortSignal]
+ */
+
+/**
+ * @typedef {object} TextLayerBuilderRenderOptions
+ * @property {PageViewport} viewport
+ * @property {TextLayerImages} images
+ * @property {object} [textContentParams]
  */
 
 /**
@@ -38,6 +49,8 @@ import { removeNullCharacters } from "./ui_utils.js";
  * contain text that matches the PDF text they are overlaying.
  */
 class TextLayerBuilder {
+  #abortSignal = null;
+
   #enablePermissions = false;
 
   #onAppend = null;
@@ -48,20 +61,25 @@ class TextLayerBuilder {
 
   static #textLayers = new Map();
 
-  static #selectionChangeAbortController = null;
+  static #selectionChangeAC = null;
 
+  /**
+   * @param {TextLayerBuilderOptions} options
+   */
   constructor({
     pdfPage,
     highlighter = null,
     accessibilityManager = null,
     enablePermissions = false,
     onAppend = null,
+    abortSignal = null,
   }) {
     this.pdfPage = pdfPage;
     this.highlighter = highlighter;
     this.accessibilityManager = accessibilityManager;
     this.#enablePermissions = enablePermissions === true;
     this.#onAppend = onAppend;
+    this.#abortSignal = abortSignal;
 
     this.div = document.createElement("div");
     this.div.tabIndex = 0;
@@ -70,14 +88,13 @@ class TextLayerBuilder {
 
   /**
    * Renders the text layer.
-   * @param {PageViewport} viewport
-   * @param {Object} [textContentParams]
+   * @param {TextLayerBuilderRenderOptions} options
+   * @returns {Promise<void>}
    */
-  async render(viewport, textContentParams = null) {
+  async render({ viewport, images, textContentParams = null }) {
     if (this.#renderingDone && this.#textLayer) {
       this.#textLayer.update({
         viewport,
-        onBefore: this.hide.bind(this),
       });
       this.show();
       return;
@@ -91,6 +108,7 @@ class TextLayerBuilder {
           disableNormalization: true,
         }
       ),
+      images,
       container: this.div,
       viewport,
     });
@@ -136,6 +154,8 @@ class TextLayerBuilder {
   cancel() {
     this.#textLayer?.cancel();
     this.#textLayer = null;
+    this.#renderingDone = false;
+    this.div.replaceChildren();
 
     this.highlighter?.disable();
     this.accessibilityManager?.disable();
@@ -149,43 +169,54 @@ class TextLayerBuilder {
    */
   #bindMouse(end) {
     const { div } = this;
+    const abortSignal = this.#abortSignal;
+    const opts = abortSignal ? { signal: abortSignal } : null;
 
-    div.addEventListener("mousedown", () => {
-      div.classList.add("selecting");
-    });
+    div.addEventListener(
+      "mousedown",
+      () => {
+        div.classList.add("selecting");
+      },
+      opts
+    );
 
-    div.addEventListener("copy", event => {
-      if (!this.#enablePermissions) {
-        const selection = document.getSelection();
-        event.clipboardData.setData(
-          "text/plain",
-          removeNullCharacters(normalizeUnicode(selection.toString()))
-        );
-      }
-      event.preventDefault();
-      event.stopPropagation();
-    });
+    div.addEventListener(
+      "copy",
+      event => {
+        if (!this.#enablePermissions) {
+          const selection = document.getSelection();
+          event.clipboardData.setData(
+            "text/plain",
+            removeNullCharacters(normalizeUnicode(selection.toString()))
+          );
+        }
+        stopEvent(event);
+      },
+      opts
+    );
 
     TextLayerBuilder.#textLayers.set(div, end);
-    TextLayerBuilder.#enableGlobalSelectionListener();
+    TextLayerBuilder.#enableGlobalSelectionListener(abortSignal);
   }
 
   static #removeGlobalSelectionListener(textLayerDiv) {
     this.#textLayers.delete(textLayerDiv);
 
     if (this.#textLayers.size === 0) {
-      this.#selectionChangeAbortController?.abort();
-      this.#selectionChangeAbortController = null;
+      this.#selectionChangeAC?.abort();
+      this.#selectionChangeAC = null;
     }
   }
 
-  static #enableGlobalSelectionListener() {
-    if (this.#selectionChangeAbortController) {
+  static #enableGlobalSelectionListener(globalAbortSignal) {
+    if (this.#selectionChangeAC) {
       // document-level event listeners already installed
       return;
     }
-    this.#selectionChangeAbortController = new AbortController();
-    const { signal } = this.#selectionChangeAbortController;
+    this.#selectionChangeAC = new AbortController();
+    const signal = globalAbortSignal
+      ? AbortSignal.any([this.#selectionChangeAC.signal, globalAbortSignal])
+      : this.#selectionChangeAC.signal;
 
     const reset = (end, textLayer) => {
       if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("MOZCENTRAL")) {
@@ -232,7 +263,7 @@ class TextLayerBuilder {
 
     if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("MOZCENTRAL")) {
       // eslint-disable-next-line no-var
-      var isFirefox, prevRange;
+      var isFirefoxOrModernChromium, prevRange;
     }
 
     document.addEventListener(
@@ -251,6 +282,13 @@ class TextLayerBuilder {
         const activeTextLayers = new Set();
         for (let i = 0; i < selection.rangeCount; i++) {
           const range = selection.getRangeAt(i);
+          if (range.collapsed && !isPointerDown) {
+            // A click's selectionchange can arrive after pointerup and restore
+            // the selecting class. Ignore its collapsed range.
+            // Keep non-collapsed ranges: Firefox selection caret drags can
+            // change them without dispatching pointerdown.
+            continue;
+          }
           for (const textLayerDiv of this.#textLayers.keys()) {
             if (
               !activeTextLayers.has(textLayerDiv) &&
@@ -272,22 +310,38 @@ class TextLayerBuilder {
         if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
           return;
         }
-        if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("CHROME")) {
-          isFirefox ??=
-            getComputedStyle(
-              this.#textLayers.values().next().value
-            ).getPropertyValue("-moz-user-select") === "none";
+        if (isFirefoxOrModernChromium === undefined) {
+          if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("CHROME")) {
+            isFirefoxOrModernChromium =
+              getComputedStyle(
+                this.#textLayers.values().next().value
+              ).getPropertyValue("-moz-user-select") === "none";
+          }
+          if (
+            (typeof PDFJSDev !== "undefined" && PDFJSDev.test("CHROME")) ||
+            !isFirefoxOrModernChromium
+          ) {
+            // navigator.userAgentData is only available in secure contexts
+            const chromiumVersion = navigator.userAgentData
+              ? navigator.userAgentData.brands.find(
+                  ({ brand }) => brand === "Chromium"
+                )?.version
+              : /\bChrome\/(\d+)\b/.exec(navigator.userAgent)?.[1];
 
-          if (isFirefox) {
-            return;
+            isFirefoxOrModernChromium =
+              !!chromiumVersion && parseInt(chromiumVersion, 10) >= 148;
           }
         }
-        // In non-Firefox browsers, when hovering over an empty space (thus,
-        // on .endOfContent), the selection will expand to cover all the
-        // text between the current selection and .endOfContent. By moving
-        // .endOfContent to right after (or before, depending on which side
-        // of the selection the user is moving), we limit the selection jump
-        // to at most cover the enteirety of the <span> where the selection
+        if (isFirefoxOrModernChromium) {
+          return;
+        }
+
+        // In browsers other than Firefox or Chromium 148+, when hovering over
+        // an empty space (thus, on .endOfContent), the selection will expand to
+        // cover all the text between the current selection and .endOfContent.
+        // By moving .endOfContent to right after (or before, depending on which
+        // side of the selection the user is moving), we limit the selection
+        // jump to at most cover the entirety of the <span> where the selection
         // is being modified.
         const range = selection.getRangeAt(0);
         const modifyStart =
@@ -298,12 +352,24 @@ class TextLayerBuilder {
         if (anchor.nodeType === Node.TEXT_NODE) {
           anchor = anchor.parentNode;
         }
+        if (anchor.classList?.contains("highlight")) {
+          anchor = anchor.parentNode;
+        }
+        if (!modifyStart && range.endOffset === 0) {
+          do {
+            while (!anchor.previousSibling) {
+              anchor = anchor.parentNode;
+            }
+            anchor = anchor.previousSibling;
+          } while (!anchor.childNodes.length);
+        }
 
         const parentTextLayer = anchor.parentElement?.closest(".textLayer");
         const endDiv = this.#textLayers.get(parentTextLayer);
         if (endDiv) {
           endDiv.style.width = parentTextLayer.style.width;
           endDiv.style.height = parentTextLayer.style.height;
+          endDiv.style.userSelect = "text";
           anchor.parentElement.insertBefore(
             endDiv,
             modifyStart ? anchor : anchor.nextSibling

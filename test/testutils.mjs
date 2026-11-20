@@ -1,5 +1,4 @@
-/*
- * Copyright 2014 Mozilla Foundation
+/* Copyright 2014 Mozilla Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +21,7 @@ function copySubtreeSync(src, dest) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest);
   }
-  files.forEach(function (filename) {
+  files.forEach(filename => {
     const srcFile = path.join(src, filename);
     const file = path.join(dest, filename);
     const stats = fs.statSync(srcFile);

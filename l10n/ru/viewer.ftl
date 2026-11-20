@@ -44,17 +44,10 @@ pdfjs-save-button =
 pdfjs-save-button-label = Сохранить
 # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
 pdfjs-download-button =
-<<<<<<< HEAD
-    .title = Загрузить
-# Used in Firefox for Android as a label for the download button (“download” is a verb).
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-download-button-label = Загрузить
-=======
     .title = Скачать
 # Used in Firefox for Android as a label for the download button (“download” is a verb).
 # Length of the translation matters since we are in a mobile context, with limited screen estate.
 pdfjs-download-button-label = Скачать
->>>>>>> upstream/master
 pdfjs-bookmark-button =
     .title = Текущая страница (просмотр URL-адреса с текущей страницы)
 pdfjs-bookmark-button-label = Текущая страница
@@ -77,17 +70,10 @@ pdfjs-page-rotate-ccw-button =
     .title = Повернуть против часовой стрелки
 pdfjs-page-rotate-ccw-button-label = Повернуть против часовой стрелки
 pdfjs-cursor-text-select-tool-button =
-<<<<<<< HEAD
-    .title = Включить Инструмент «Выделение текста»
-pdfjs-cursor-text-select-tool-button-label = Инструмент «Выделение текста»
-pdfjs-cursor-hand-tool-button =
-    .title = Включить Инструмент «Рука»
-=======
     .title = Включить инструмент «Выделение текста»
 pdfjs-cursor-text-select-tool-button-label = Инструмент «Выделение текста»
 pdfjs-cursor-hand-tool-button =
     .title = Включить инструмент «Рука»
->>>>>>> upstream/master
 pdfjs-cursor-hand-tool-button-label = Инструмент «Рука»
 pdfjs-scroll-page-button =
     .title = Использовать прокрутку страниц
@@ -126,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байт)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байт)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Заголовок:
 pdfjs-document-properties-author = Автор:
 pdfjs-document-properties-subject = Тема:
@@ -146,13 +121,6 @@ pdfjs-document-properties-modification-date = Дата изменения:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Приложение:
 pdfjs-document-properties-producer = Производитель PDF:
 pdfjs-document-properties-version = Версия PDF:
@@ -185,6 +153,28 @@ pdfjs-document-properties-linearized = Быстрый просмотр в Web:
 pdfjs-document-properties-linearized-yes = Да
 pdfjs-document-properties-linearized-no = Нет
 pdfjs-document-properties-close-button = Закрыть
+pdfjs-digital-signature-properties-view-certificate = Просмотреть сертификат
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Причина: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Метка времени: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Дополнительная подпись ({ $count })
+        [few] Дополнительные подписи ({ $count })
+       *[many] Дополнительные подписи ({ $count })
+    }
 
 ## Print
 
@@ -198,23 +188,6 @@ pdfjs-printing-not-ready = Предупреждение: PDF не полност
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Показать/скрыть боковую панель
-pdfjs-toggle-sidebar-notification-button =
-    .title = Показать/скрыть боковую панель (документ имеет содержание/вложения/слои)
-pdfjs-toggle-sidebar-button-label = Показать/скрыть боковую панель
-pdfjs-document-outline-button =
-    .title = Показать содержание документа (двойной щелчок, чтобы развернуть/свернуть все элементы)
-pdfjs-document-outline-button-label = Содержание документа
-pdfjs-attachments-button =
-    .title = Показать вложения
-pdfjs-attachments-button-label = Вложения
-pdfjs-layers-button =
-    .title = Показать слои (дважды щёлкните, чтобы сбросить все слои к состоянию по умолчанию)
-pdfjs-layers-button-label = Слои
-pdfjs-thumbs-button =
-    .title = Показать миниатюры
-pdfjs-thumbs-button-label = Миниатюры
 pdfjs-current-outline-item-button =
     .title = Найти текущий элемент структуры
 pdfjs-current-outline-item-button-label = Текущий элемент структуры
@@ -227,18 +200,23 @@ pdfjs-additional-layers = Дополнительные слои
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Страница { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Миниатюра страницы { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Выбрать страницу { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Страница { $page } из { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Найти
     .placeholder = Найти в документе…
+    .title = Найти
 pdfjs-find-previous-button =
     .title = Найти предыдущее вхождение фразы в текст
 pdfjs-find-previous-button-label = Назад
@@ -297,13 +275,6 @@ pdfjs-rendering-error = При создании страницы произош�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -327,11 +298,6 @@ pdfjs-web-fonts-disabled = Веб-шрифты отключены: не удал
 
 pdfjs-editor-free-text-button =
     .title = Текст
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Текст
-pdfjs-editor-ink-button =
-    .title = Рисовать
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Изменить цвет текста
 pdfjs-editor-free-text-button-label = Текст
@@ -339,7 +305,6 @@ pdfjs-editor-ink-button =
     .title = Рисовать
 pdfjs-editor-color-picker-ink-input =
     .title = Изменить цвет прорисовки
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Рисовать
 pdfjs-editor-stamp-button =
     .title = Добавить или изменить изображения
@@ -348,18 +313,16 @@ pdfjs-editor-highlight-button =
     .title = Выделение
 pdfjs-editor-highlight-button-label = Выделение
 pdfjs-highlight-floating-button1 =
-    .title = Выделение
     .aria-label = Выделение
+    .title = Выделение
 pdfjs-highlight-floating-button-label = Выделение
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Комментировать
     .aria-label = Комментировать
+    .title = Комментировать
 pdfjs-comment-floating-button-label = Комментировать
 pdfjs-editor-comment-button =
-    .title = Комментарий
     .aria-label = Комментарий
+    .title = Комментарий
 pdfjs-editor-comment-button-label = Комментарий
 pdfjs-editor-signature-button =
     .title = Добавить подпись
@@ -380,7 +343,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Редактор подписи: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Редактор изображений
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -392,11 +354,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Удалить изображение
 pdfjs-editor-remove-highlight-button =
     .title = Удалить выделение
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Удалить подпись
->>>>>>> upstream/master
 
 ##
 
@@ -413,8 +372,6 @@ pdfjs-editor-stamp-add-image-button-label = Добавить изображен�
 pdfjs-editor-free-highlight-thickness-input = Толщина
 pdfjs-editor-free-highlight-thickness-title =
     .title = Изменить толщину при выделении элементов, кроме текста
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Управление подписями и сохранённые подписи
 pdfjs-editor-signature-add-signature-button =
@@ -425,20 +382,10 @@ pdfjs-editor-signature-add-signature-button-label = Добавить новую 
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Сохранённая подпись: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Текстовый редактор
     .default-content = Начните ввод...
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Текстовый редактор
-pdfjs-free-text-default-content = Начните вводить…
-pdfjs-ink =
-    .aria-label = Редактор рисования
-pdfjs-ink-canvas =
-    .aria-label = Созданное пользователем изображение
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -449,23 +396,18 @@ pdfjs-editor-comments-sidebar-title =
        *[many] Комментарии
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Закрыть боковую панель
     .aria-label = Закрыть боковую панель
+    .title = Закрыть боковую панель
 pdfjs-editor-comments-sidebar-close-button-label = Закрыть боковую панель
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Увидели что-то интересное? Выделите и оставьте комментарий.
 pdfjs-editor-comments-sidebar-no-comments-link = Подробнее
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Альтернативный текст
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Изменить альтернативный текст
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Изменить альтернативный текст
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Выберите вариант
 pdfjs-editor-alt-text-dialog-description = Альтернативный текст помогает, когда люди не видят изображение или оно не загружается.
 pdfjs-editor-alt-text-add-description-label = Добавить описание
@@ -485,17 +427,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Левый верхний угол — изменить размер
-pdfjs-editor-resizer-label-top-middle = Вверху посередине — изменить размер
-pdfjs-editor-resizer-label-top-right = Верхний правый угол — изменить размер
-pdfjs-editor-resizer-label-middle-right = В центре справа — изменить размер
-pdfjs-editor-resizer-label-bottom-right = Нижний правый угол — изменить размер
-pdfjs-editor-resizer-label-bottom-middle = Внизу посередине — изменить размер
-pdfjs-editor-resizer-label-bottom-left = Нижний левый угол — изменить размер
-pdfjs-editor-resizer-label-middle-left = В центре слева — изменить размер
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Левый верхний угол — изменить размер
 pdfjs-editor-resizer-top-middle =
@@ -561,10 +492,6 @@ pdfjs-editor-new-alt-text-error-close-button = Закрыть
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Загрузка модели ИИ для альтернативного текста ({ $downloadedSize } из { $totalSize } МБ)
     .aria-valuetext = Загрузка модели ИИ для альтернативного текста ({ $downloadedSize } из { $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -593,23 +520,10 @@ pdfjs-editor-alt-text-settings-dialog-label = Настройки альтерн�
 pdfjs-editor-alt-text-settings-automatic-title = Автоматический альтернативный текст
 pdfjs-editor-alt-text-settings-create-model-button-label = Автоматически создавать альтернативный текст
 pdfjs-editor-alt-text-settings-create-model-description = Предлагает описания, чтобы помочь людям, которые не видят изображение, или если изображение не загружается.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = ИИ-модель альтернативного текста ({ $totalSize } МБ)
-pdfjs-editor-alt-text-settings-ai-model-description = Запускается локально на вашем устройстве, поэтому ваши данные остаются конфиденциальными. Требуется для автоматического альтернативного текста.
-pdfjs-editor-alt-text-settings-delete-model-button = Удалить
-<<<<<<< HEAD
-pdfjs-editor-alt-text-settings-download-model-button = Загрузить
-=======
-pdfjs-editor-alt-text-settings-download-model-button = Скачать
->>>>>>> upstream/master
-pdfjs-editor-alt-text-settings-downloading-model-button = Загрузка…
 pdfjs-editor-alt-text-settings-editor-title = Редактор альтернативного текста
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Сразу показывать редактор альтернативного текста при добавлении изображения
 pdfjs-editor-alt-text-settings-show-dialog-description = Помогает вам убедиться, что все ваши изображения имеют альтернативный текст.
 pdfjs-editor-alt-text-settings-close-button = Закрыть
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -626,6 +540,7 @@ pdfjs-editor-undo-bar-message-freetext = Текст удалён
 pdfjs-editor-undo-bar-message-ink = Рисунок удалён
 pdfjs-editor-undo-bar-message-stamp = Изображение удалено
 pdfjs-editor-undo-bar-message-signature = Подпись удалена
+pdfjs-editor-undo-bar-message-comment = Комментарий удалён
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -726,6 +641,172 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Отмена
 pdfjs-editor-add-comment-button =
     .title = Добавить комментарий
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Показать/скрыть боковую панель (документ содержит миниатюры/структуру/вложения/слои)
+pdfjs-toggle-views-manager-button1-label = Управление страницами
+pdfjs-views-manager-sidebar =
+    .aria-label = Боковая панель
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Изменение размера боковой панели
+pdfjs-views-manager-view-selector-button =
+    .title = Вид
+pdfjs-views-manager-view-selector-button-label = Вид
+pdfjs-views-manager-pages-title = Страницы
+pdfjs-views-manager-outlines-title1 = Структура документа
+    .title = Структура документа (щёлкните дважды, чтобы раскрыть/свернуть все элементы)
+pdfjs-views-manager-attachments-title = Вложения
+pdfjs-views-manager-layers-title1 = Слои
+    .title = Слои (щёлкните дважды, чтобы сбросить все слои в положение по умолчанию)
+pdfjs-views-manager-pages-option-label = Страницы
+pdfjs-views-manager-outlines-option-label = Структура документа
+pdfjs-views-manager-attachments-option-label = Вложения
+pdfjs-views-manager-layers-option-label = Слои
+pdfjs-views-manager-add-file-button =
+    .title = Добавить файл
+pdfjs-views-manager-add-file-button-label = Добавить файл
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] Выбрана { $count }
+        [few] Выбраны { $count }
+       *[many] Выбрано { $count }
+    }
+pdfjs-views-manager-pages-status-none-action-label = Выбрать страницы
+pdfjs-views-manager-pages-status-action-button-label = Управление
+pdfjs-views-manager-pages-status-copy-button-label = Копировать
+pdfjs-views-manager-pages-status-cut-button-label = Вырезать
+pdfjs-views-manager-pages-status-delete-button-label = Удалить
+pdfjs-views-manager-pages-status-export-selected-button-label = Экспортировать выбранное…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] Вырезана 1 страница
+        [few] Вырезаны { $count } страницы
+       *[many] Вырезано { $count } страниц
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] Скопирована 1 страница
+        [few] Скопированы { $count } страницы
+       *[many] Скопировано { $count } страниц
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] Удалена 1 страница
+        [few] Удалены { $count } страницы
+       *[many] Удалено { $count } страниц
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Идёт подготовка файла…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Выгрузка файла…
+pdfjs-views-manager-status-warning-cut-label = Не удалось вырезать. Обновить страницу и попробовать ещё раз.
+pdfjs-views-manager-status-warning-copy-label = Не удалось скопировать. Обновить страницу и попробовать ещё раз.
+pdfjs-views-manager-status-warning-delete-label = Не удалось удалить. Обновить страницу и попробовать ещё раз.
+pdfjs-views-manager-status-warning-save-label = Не удалось сохранить. Обновить страницу и попробовать ещё раз.
+pdfjs-views-manager-status-undo-button-label = Отменить
+pdfjs-views-manager-status-done-button-label = Готово
+pdfjs-views-manager-status-close-button =
+    .title = Закрыть
+pdfjs-views-manager-status-close-button-label = Закрыть
+pdfjs-views-manager-paste-button-label = Вставить
+pdfjs-views-manager-paste-button-before =
+    .title = Вставить перед первой страницей
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Вставить после страницы { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = НОВОЕ
+pdfjs-views-manager-waiting-for-file = Загрузка файла…
+pdfjs-toggle-views-manager-button1 =
+    .title = Управление страницами
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Свойства цифровой подписи
+    .title = Свойства цифровой подписи
+pdfjs-digital-signature-properties-button-label = Свойства цифровой подписи
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Документ был подписан действительной цифровой подписью
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Документ подписан, но { $count } цифровая подпись не может быть проверены
+        [few] Документ подписан, но { $count } цифровых подписи не могут быть проверены
+       *[many] Документ подписан, но { $count } цифровых подписей не могут быть проверены
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Документ, подписанный { $count } недоверенным сертификатом
+        [few] Документ, подписанный { $count } недоверенными сертификатами
+       *[many] Документ, подписанный { $count } недоверенных сертификатов
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Документ, подписанный { $count } истёкшим сертификатом
+        [few] Документ, подписанный { $count } истёкшими сертификатами
+       *[many] Документ, подписанный { $count } истёкших сертификатов
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Документ имеет { $count } неверную цифровую подпись
+        [few] Документ имеет { $count } неверных цифровых подписей
+       *[many] Документ имеет { $count } неверных цифровых подписей
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Документ, подписанный { $count } отозванным сертификатом
+        [few] Документ, подписанный { $count } отозванными сертификатами
+       *[many] Документ, подписанный { $count } отозванных сертификатов
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Статус: Подпись проверена
+pdfjs-digital-signature-properties-status-invalid = Статус: Подпись недействительна
+pdfjs-digital-signature-properties-status-unknown = Статус: Не удалось проверить (не поддерживается)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Сертификат: Доверенный ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Сертификат: Недоступен
+pdfjs-digital-signature-properties-certificate-untrusted = Сертификат: Недоверенный
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Сертификат: Неизвестный издатель ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Сертификат: Самоподписанный ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Сертификат: Недоверенный издатель ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Сертификат: Истёк срок действия
+pdfjs-digital-signature-properties-certificate-expired-with-date = Сертификат: Истёк срок действия ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Сертификат: Отозван
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -739,4 +820,3 @@ pdfjs-editor-add-signature-edit-button-label = Изменить описание
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Изменить описание
->>>>>>> upstream/master

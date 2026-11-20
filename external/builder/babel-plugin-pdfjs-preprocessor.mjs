@@ -47,6 +47,25 @@ function handlePreprocessorAction(ctx, actionName, args, path) {
 }
 
 function babelPluginPDFJSPreprocessor(babel, ctx) {
+  function removeUnusedFunctions(path) {
+    let removed;
+    do {
+      removed = false;
+      path.scope.crawl();
+      for (const name in path.scope.bindings) {
+        const binding = path.scope.bindings[name];
+        if (!binding.referenced) {
+          const { path: bindingPath } = binding;
+          if (bindingPath.isFunctionDeclaration()) {
+            bindingPath.remove();
+            removed = true;
+          }
+        }
+      }
+      // If we removed some functions, there might be new unused ones
+    } while (removed);
+  }
+
   return {
     name: "babel-plugin-pdfjs-preprocessor",
     manipulateOptions({ parserOpts }) {
@@ -153,17 +172,34 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
           path.replaceWith(t.inherits(t.valueToNode(result), path.node));
         }
 
-        if (t.isIdentifier(node.callee, { name: "__non_webpack_import__" })) {
+        if (t.isIdentifier(node.callee, { name: "__raw_import__" })) {
           if (node.arguments.length !== 1) {
-            throw new Error("Invalid `__non_webpack_import__` usage.");
+            throw new Error("Invalid `__raw_import__` usage.");
           }
-          // Replace it with a standard `import`-call and
-          // ensure that Webpack will leave it alone.
+          // Replace it with a standard `import`-call and attempt to ensure that
+          // various bundlers will leave it alone; this *must* include Webpack.
           const source = node.arguments[0];
           source.leadingComments = [
             {
               type: "CommentBlock",
               value: "webpackIgnore: true",
+            },
+            {
+              type: "CommentBlock",
+              value: "@vite-ignore",
+            },
+          ];
+          path.replaceWith(t.importExpression(source));
+        } else if (t.isIdentifier(node.callee, { name: "__eager_import__" })) {
+          if (node.arguments.length !== 1) {
+            throw new Error("Invalid `__eager_import__` usage.");
+          }
+          // Replace it with a standard `import`-call and inline the module.
+          const source = node.arguments[0];
+          source.leadingComments = [
+            {
+              type: "CommentBlock",
+              value: "webpackMode: 'eager'",
             },
           ];
           path.replaceWith(t.importExpression(source));
@@ -221,6 +257,8 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
             // Function body ends with return without arg -- removing it.
             body.pop();
           }
+
+          removeUnusedFunctions(path);
         },
       },
       ClassMethod: {
@@ -243,6 +281,80 @@ function babelPluginPDFJSPreprocessor(babel, ctx) {
           }
         },
       },
+      Program: {
+        exit(path) {
+          if (path.node.sourceType === "module") {
+            removeUnusedFunctions(path);
+          }
+        },
+      },
+      MemberExpression(path) {
+        // WasmImage provides Module.instantiateWasm, so remove Emscripten's
+        // fallback when guarded by this property.
+        if (!path.matchesPattern("Module.instantiateWasm")) {
+          return;
+        }
+        const { parentPath } = path;
+        if (parentPath.isIfStatement({ test: path.node })) {
+          path.replaceWith(t.booleanLiteral(true));
+          return;
+        }
+        let initPath = path;
+        while (
+          initPath.parentPath.isSequenceExpression() &&
+          initPath.parentPath.node.expressions.at(-1) === initPath.node
+        ) {
+          initPath = initPath.parentPath;
+        }
+        const declarationPath = initPath.parentPath;
+        if (
+          declarationPath.isVariableDeclarator({ init: initPath.node }) &&
+          t.isIdentifier(declarationPath.node.id)
+        ) {
+          // Emscripten may guard an alias instead.
+          const binding = path.scope.getBinding(declarationPath.node.id.name);
+          if (
+            !binding?.constant ||
+            binding.path.node !== declarationPath.node ||
+            !Number.isInteger(declarationPath.node.end)
+          ) {
+            return;
+          }
+          for (const refPath of binding?.referencePaths ?? []) {
+            if (
+              Number.isInteger(refPath.node.start) &&
+              refPath.node.start >= declarationPath.node.end &&
+              refPath.parentPath.isIfStatement({ test: refPath.node })
+            ) {
+              refPath.replaceWith(t.booleanLiteral(true));
+            }
+          }
+        }
+      },
+    },
+  };
+}
+
+function babelPluginStripSrcPath() {
+  return {
+    name: "babel-plugin-strip-src-path",
+    visitor: {
+      "ImportDeclaration|ExportNamedDeclaration|ExportAllDeclaration":
+        function ({ node }) {
+          if (node.source?.value.includes("/src/")) {
+            node.source.value = node.source.value.replace("/src/", "/");
+          }
+        },
+    },
+  };
+}
+
+function babelPluginAddHeaderComment(babel, { header }) {
+  return {
+    visitor: {
+      Program(path) {
+        path.addComment("leading", header);
+      },
     },
   };
 }
@@ -254,4 +366,9 @@ function preprocessPDFJSCode(ctx, content) {
   }).code;
 }
 
-export { babelPluginPDFJSPreprocessor, preprocessPDFJSCode };
+export {
+  babelPluginAddHeaderComment,
+  babelPluginPDFJSPreprocessor,
+  babelPluginStripSrcPath,
+  preprocessPDFJSCode,
+};

@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } yibiten)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KAṬ ({ $size_b } ibiten)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MAṬ ({ $size_b } iṭamḍanen)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Azwel:
 pdfjs-document-properties-author = Ameskar:
 pdfjs-document-properties-subject = Amgay:
@@ -132,18 +121,11 @@ pdfjs-document-properties-modification-date = Azemz n usnifel:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Yerna-t:
 pdfjs-document-properties-producer = Afecku n uselket PDF:
 pdfjs-document-properties-version = Lqem PDF:
 pdfjs-document-properties-page-count = Amḍan n yisebtar:
-pdfjs-document-properties-page-size = Tuγzi n usebter:
+pdfjs-document-properties-page-size = Teɣzi n usebter:
 pdfjs-document-properties-page-size-unit-inches = deg
 pdfjs-document-properties-page-size-unit-millimeters = mm
 pdfjs-document-properties-page-size-orientation-portrait = s teɣzi
@@ -184,23 +166,6 @@ pdfjs-printing-not-ready = Ɣuṛ-k: Afaylu PDF ur d-yuli ara imeṛṛa akken a
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Sken/Fer agalis adisan
-pdfjs-toggle-sidebar-notification-button =
-    .title = Ffer/Sekn agalis adisan (isemli yegber aɣawas/ticeqqufin yeddan/tissiwin)
-pdfjs-toggle-sidebar-button-label = Sken/Fer agalis adisan
-pdfjs-document-outline-button =
-    .title = Sken isemli (Senned snat tikal i wesemɣer/Afneẓ n iferdisen meṛṛa)
-pdfjs-document-outline-button-label = Isɣalen n isebtar
-pdfjs-attachments-button =
-    .title = Sken ticeqqufin yeddan
-pdfjs-attachments-button-label = Ticeqqufin yeddan
-pdfjs-layers-button =
-    .title = Skeen tissiwin (sit sin yiberdan i uwennez n meṛṛa tissiwin ɣer waddad amezwer)
-pdfjs-layers-button-label = Tissiwin
-pdfjs-thumbs-button =
-    .title = Sken tanfult.
-pdfjs-thumbs-button-label = Tinfulin
 pdfjs-current-outline-item-button =
     .title = Af-d aferdis n uɣawas amiran
 pdfjs-current-outline-item-button-label = Aferdis n uɣawas amiran
@@ -213,18 +178,14 @@ pdfjs-additional-layers = Tissiwin-nniḍen
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Asebter { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Tanfult n usebter { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Nadi
     .placeholder = Nadi deg isemli…
+    .title = Nadi
 pdfjs-find-previous-button =
     .title = Aff-d tamseḍriwt n twinest n deffir
 pdfjs-find-previous-button-label = Azewwar
@@ -281,13 +242,6 @@ pdfjs-rendering-error = Teḍra-d tuccḍa deg uskan n usebter.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +265,6 @@ pdfjs-web-fonts-disabled = Tisefsiyin web ttwassensent; D awezɣi useqdec n tsef
 
 pdfjs-editor-free-text-button =
     .title = Aḍris
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Aḍris
-pdfjs-editor-ink-button =
-    .title = Suneɣ
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Senfel ini n uḍris
 pdfjs-editor-free-text-button-label = Aḍris
@@ -323,7 +272,6 @@ pdfjs-editor-ink-button =
     .title = Suneɣ
 pdfjs-editor-color-picker-ink-input =
     .title = Senfel ini n usuneɣ
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Suneɣ
 pdfjs-editor-stamp-button =
     .title = Rnu neɣ ẓreg tugniwin
@@ -332,18 +280,16 @@ pdfjs-editor-highlight-button =
     .title = Derrer
 pdfjs-editor-highlight-button-label = Derrer
 pdfjs-highlight-floating-button1 =
-    .title = Derrer
     .aria-label = Derrer
+    .title = Derrer
 pdfjs-highlight-floating-button-label = Derrer
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Wennet
     .aria-label = Wennet
+    .title = Wennet
 pdfjs-comment-floating-button-label = Awennit
 pdfjs-editor-comment-button =
-    .title = Wennet
     .aria-label = Wennet
+    .title = Wennet
 pdfjs-editor-comment-button-label = Awennit
 pdfjs-editor-signature-button =
     .title = Rnu azmul
@@ -364,7 +310,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = usuneɣ n uzmul: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Amaẓrag n tugna
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +321,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Kkes tugna
 pdfjs-editor-remove-highlight-button =
     .title = Kkes aderrer
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Kkes azmul
->>>>>>> upstream/master
 
 ##
 
@@ -397,27 +339,6 @@ pdfjs-editor-stamp-add-image-button-label = Rnu tawlaft
 pdfjs-editor-free-highlight-thickness-input = Tuzert
 pdfjs-editor-free-highlight-thickness-title =
     .title = Beddel tuzert mi ara d-tesbeggneḍ iferdisen niḍen ur nelli d aḍris
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Amaẓrag n uḍris
-pdfjs-free-text-default-content = Bdu tira...
-pdfjs-ink =
-    .aria-label = Amaẓrag n usuneɣ
-pdfjs-ink-canvas =
-    .aria-label = Tugna yettwarnan sɣur useqdac
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Aḍris amaskal
-pdfjs-editor-alt-text-edit-button-label = Ẓreg aḍris amaskal
-pdfjs-editor-alt-text-dialog-label = Fren taxtirt
-pdfjs-editor-alt-text-add-description-label = Rnu aglam
-pdfjs-editor-alt-text-mark-decorative-label = Creḍ d adlag
-pdfjs-editor-alt-text-cancel-button = Sefsex
-pdfjs-editor-alt-text-save-button = Sekles
-pdfjs-editor-alt-text-decorative-tooltip = Yettwacreḍ d adlag
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Isenqaden n uzmul d yizmulen yettwaskelsen
 pdfjs-editor-signature-add-signature-button =
@@ -441,8 +362,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Iwenniten
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Mdel agalis adisan
     .aria-label = Mdel agalis adisan
+    .title = Mdel agalis adisan
 pdfjs-editor-comments-sidebar-close-button-label = Mdel agalis adisan
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Twalaḍ ayen i ak⋅akem-iɛeǧben? Sebrureq-it, ternuḍ eǧǧ awennit.
@@ -468,22 +389,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Aḍris amaskal
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Tiɣmert n ufella n zelmeḍ — semsawi teɣzi
-pdfjs-editor-resizer-label-top-middle = Talemmat n ufella — semsawi teɣzi
-pdfjs-editor-resizer-label-top-right = Tiɣmert n ufella n yeffus — semsawi teɣzi
-pdfjs-editor-resizer-label-middle-right = Talemmast tayeffust — semsawi teɣzi
-pdfjs-editor-resizer-label-bottom-right = Tiɣmert n wadda n yeffus — semsawi teɣzi
-pdfjs-editor-resizer-label-bottom-middle = Talemmat n wadda — semsawi teɣzi
-pdfjs-editor-resizer-label-bottom-left = Tiɣmert n wadda n zelmeḍ — semsawi teɣzi
-pdfjs-editor-resizer-label-middle-left = Talemmast tazelmdaḍt — semsawi teɣzi
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Tiɣmert n ufella n zelmeḍ — semsawi teɣzi
 pdfjs-editor-resizer-top-middle =
@@ -530,11 +439,8 @@ pdfjs-editor-highlight-show-all-button =
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = Ẓreg aḍris niḍen (aglam n tugna)
->>>>>>> upstream/master
 # Modal header positioned above a text box where users can add the alt text.
 pdfjs-editor-new-alt-text-dialog-add-label = Rnu aḍris niḍen (aglam n tugna)
 pdfjs-editor-new-alt-text-textarea =
@@ -543,16 +449,6 @@ pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Issin ugar
 pdfjs-editor-new-alt-text-create-automatically-button-label = Rnu aḍris niḍen s wudem awurman
 pdfjs-editor-new-alt-text-not-now-button = Mačči tura
 pdfjs-editor-new-alt-text-error-title = D awezɣi timerna n uḍris niḍen s wudem awurman
-<<<<<<< HEAD
-pdfjs-editor-new-alt-text-error-close-button = Mdel
-
-## Image alt-text settings
-
-pdfjs-editor-alt-text-settings-delete-model-button = Kkes
-pdfjs-editor-alt-text-settings-download-model-button = Sader
-pdfjs-editor-alt-text-settings-downloading-model-button = Asader…
-pdfjs-editor-alt-text-settings-close-button = Mdel
-=======
 pdfjs-editor-new-alt-text-error-description = Ttxil-k⋅m aru aḍris-ik⋅im niḍen neɣ ɛreḍ tikkelt niḍen.
 pdfjs-editor-new-alt-text-error-close-button = Mdel
 # Variables:
@@ -585,12 +481,6 @@ pdfjs-image-alt-text-settings-button-label = Iɣewwaṛen n weḍris amlellay n 
 pdfjs-editor-alt-text-settings-dialog-label = Iɣewwaṛen n weḍris amlellay n tugna
 pdfjs-editor-alt-text-settings-automatic-title = Aḍris amlellay awurman
 pdfjs-editor-alt-text-settings-create-model-button-label = Rnu aḍris niḍen s wudem awurman
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Tamudemt n IA n uḍris amlellay ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-delete-model-button = Kkes
-pdfjs-editor-alt-text-settings-download-model-button = Sader
-pdfjs-editor-alt-text-settings-downloading-model-button = Asader…
 pdfjs-editor-alt-text-settings-editor-title = Amaẓrag n weḍris amlellay
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Sken amaẓrag n uḍris amlellay akken kan ara ternuḍ tugna
 pdfjs-editor-alt-text-settings-show-dialog-description = Yettall ad tḍemneḍ tugniwin sɛant aḍris amlellay.
@@ -681,6 +571,8 @@ pdfjs-editor-edit-comment-popup-button =
 pdfjs-editor-delete-comment-popup-button-label = Kkes awennit
 pdfjs-editor-delete-comment-popup-button =
     .title = Kkes awennit
+pdfjs-show-comment-button =
+    .title = Sken awennit
 
 ##  Edit a comment dialog
 
@@ -705,4 +597,3 @@ pdfjs-editor-add-signature-edit-button-label = Ẓreg aglam
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Ẓreg aglam
->>>>>>> upstream/master

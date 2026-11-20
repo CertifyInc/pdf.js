@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { objectFromMap, shadow, unreachable } from "../shared/util.js";
+import { makeMap, shadow, unreachable } from "../shared/util.js";
 import { AnnotationEditor } from "./editor/editor.js";
 import { MurmurHash3_64 } from "../shared/murmurhash3.js";
 
@@ -31,37 +31,50 @@ class AnnotationStorage {
 
   #modifiedIds = null;
 
+  #editorsMap = null;
+
   #storage = new Map();
 
+  // Callbacks to signal when the modification state is set or reset.
+  // This is used by the viewer to only bind on `beforeunload` if forms
+  // are actually edited to prevent doing so unconditionally since that
+  // can have undesirable effects.
+  onSetModified = null;
+
+  onResetModified = null;
+
+  onAnnotationEditor = null;
+
   constructor() {
-    // Callbacks to signal when the modification state is set or reset.
-    // This is used by the viewer to only bind on `beforeunload` if forms
-    // are actually edited to prevent doing so unconditionally since that
-    // can have undesirable effects.
-    this.onSetModified = null;
-    this.onResetModified = null;
-    this.onAnnotationEditor = null;
+    if (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) {
+      // For testing purposes.
+      Object.defineProperty(this, "_setValues", {
+        value: obj => {
+          for (const [key, val] of Object.entries(obj)) {
+            this.setValue(key, val);
+          }
+        },
+      });
+    }
   }
 
   /**
    * Get the value for a given key if it exists, or return the default value.
    * @param {string} key
-   * @param {Object} defaultValue
-   * @returns {Object}
+   * @param {object} defaultValue
+   * @returns {object}
    */
   getValue(key, defaultValue) {
     const value = this.#storage.get(key);
-    if (value === undefined) {
-      return defaultValue;
-    }
-
-    return Object.assign(defaultValue, value);
+    return value === undefined
+      ? defaultValue
+      : Object.assign(defaultValue, value);
   }
 
   /**
    * Get the value for a given key.
    * @param {string} key
-   * @returns {Object}
+   * @returns {object}
    */
   getRawValue(key) {
     return this.#storage.get(key);
@@ -72,26 +85,29 @@ class AnnotationStorage {
    * @param {string} key
    */
   remove(key) {
+    const storedValue = this.#storage.get(key);
+    if (storedValue === undefined) {
+      return;
+    }
+    if (storedValue instanceof AnnotationEditor) {
+      this.#editorsMap.delete(storedValue.annotationElementId);
+    }
     this.#storage.delete(key);
 
     if (this.#storage.size === 0) {
       this.resetModified();
     }
 
-    if (typeof this.onAnnotationEditor === "function") {
-      for (const value of this.#storage.values()) {
-        if (value instanceof AnnotationEditor) {
-          return;
-        }
-      }
-      this.onAnnotationEditor(null);
+    if (this.#storage.values().some(v => v instanceof AnnotationEditor)) {
+      return;
     }
+    this.onAnnotationEditor?.(null);
   }
 
   /**
    * Set the value for a given key
    * @param {string} key
-   * @param {Object} value
+   * @param {object} value
    */
   setValue(key, value) {
     const obj = this.#storage.get(key);
@@ -111,11 +127,9 @@ class AnnotationStorage {
       this.#setModified();
     }
 
-    if (
-      value instanceof AnnotationEditor &&
-      typeof this.onAnnotationEditor === "function"
-    ) {
-      this.onAnnotationEditor(value.constructor._type);
+    if (value instanceof AnnotationEditor) {
+      (this.#editorsMap ||= new Map()).set(value.annotationElementId, value);
+      this.onAnnotationEditor?.(value.constructor._type);
     }
   }
 
@@ -128,22 +142,6 @@ class AnnotationStorage {
     return this.#storage.has(key);
   }
 
-  /**
-   * @returns {Object | null}
-   */
-  getAll() {
-    return this.#storage.size > 0 ? objectFromMap(this.#storage) : null;
-  }
-
-  /**
-   * @param {Object} obj
-   */
-  setAll(obj) {
-    for (const [key, val] of Object.entries(obj)) {
-      this.setValue(key, val);
-    }
-  }
-
   get size() {
     return this.#storage.size;
   }
@@ -151,18 +149,14 @@ class AnnotationStorage {
   #setModified() {
     if (!this.#modified) {
       this.#modified = true;
-      if (typeof this.onSetModified === "function") {
-        this.onSetModified();
-      }
+      this.onSetModified?.();
     }
   }
 
   resetModified() {
     if (this.#modified) {
       this.#modified = false;
-      if (typeof this.onResetModified === "function") {
-        this.onResetModified();
-      }
+      this.onResetModified?.();
     }
   }
 
@@ -192,6 +186,10 @@ class AnnotationStorage {
         val instanceof AnnotationEditor
           ? val.serialize(/* isForCopying = */ false, context)
           : val;
+      if (val.page) {
+        val.pageIndex = val.page._pageIndex;
+        delete val.page;
+      }
       if (serialized) {
         map.set(key, serialized);
 
@@ -218,32 +216,52 @@ class AnnotationStorage {
   get editorStats() {
     let stats = null;
     const typeToEditor = new Map();
+    let numberOfEditedComments = 0;
+    let numberOfDeletedComments = 0;
     for (const value of this.#storage.values()) {
       if (!(value instanceof AnnotationEditor)) {
+        if (value.popup) {
+          if (value.popup.deleted) {
+            numberOfDeletedComments += 1;
+          } else {
+            numberOfEditedComments += 1;
+          }
+        }
         continue;
+      }
+      if (value.isCommentDeleted) {
+        numberOfDeletedComments += 1;
+      } else if (value.hasEditedComment) {
+        numberOfEditedComments += 1;
       }
       const editorStats = value.telemetryFinalData;
       if (!editorStats) {
         continue;
       }
       const { type } = editorStats;
-      if (!typeToEditor.has(type)) {
-        typeToEditor.set(type, Object.getPrototypeOf(value).constructor);
-      }
+      typeToEditor.getOrInsertComputed(
+        type,
+        () => Object.getPrototypeOf(value).constructor
+      );
       stats ||= Object.create(null);
       const map = (stats[type] ||= new Map());
       for (const [key, val] of Object.entries(editorStats)) {
         if (key === "type") {
           continue;
         }
-        let counters = map.get(key);
-        if (!counters) {
-          counters = new Map();
-          map.set(key, counters);
-        }
-        const count = counters.get(val) ?? 0;
-        counters.set(val, count + 1);
+        const counters = map.getOrInsertComputed(key, makeMap);
+        counters.set(val, (counters.get(val) ?? 0) + 1);
       }
+    }
+    if (numberOfDeletedComments > 0 || numberOfEditedComments > 0) {
+      stats ||= Object.create(null);
+      stats.comments = {
+        deleted: numberOfDeletedComments,
+        edited: numberOfEditedComments,
+      };
+    }
+    if (!stats) {
+      return null;
     }
     for (const [type, editor] of typeToEditor) {
       stats[type] = editor.computeTelemetryFinalData(stats[type]);
@@ -255,6 +273,19 @@ class AnnotationStorage {
     this.#modifiedIds = null;
   }
 
+  updateEditor(annotationId, data) {
+    const value = this.#editorsMap?.get(annotationId);
+    if (value) {
+      value.updateFromAnnotationLayer(data);
+      return true;
+    }
+    return false;
+  }
+
+  getEditor(annotationId) {
+    return this.#editorsMap?.get(annotationId) || null;
+  }
+
   /**
    * @returns {{ids: Set<string>, hash: string}}
    */
@@ -263,20 +294,28 @@ class AnnotationStorage {
       return this.#modifiedIds;
     }
     const ids = [];
-    for (const value of this.#storage.values()) {
-      if (
-        !(value instanceof AnnotationEditor) ||
-        !value.annotationElementId ||
-        !value.serialize()
-      ) {
-        continue;
+    if (this.#editorsMap) {
+      for (const value of this.#editorsMap.values()) {
+        if (!value.serialize()) {
+          continue;
+        }
+        ids.push(value.annotationElementId);
       }
-      ids.push(value.annotationElementId);
+    }
+    let hash = "";
+    if (ids.length) {
+      const h = new MurmurHash3_64();
+      h.update(ids.join(","));
+      hash = h.hexdigest();
     }
     return (this.#modifiedIds = {
       ids: new Set(ids),
-      hash: ids.join(","),
+      hash,
     });
+  }
+
+  [Symbol.iterator]() {
+    return this.#storage.entries();
   }
 }
 
@@ -286,19 +325,26 @@ class AnnotationStorage {
  * contents. (Necessary since printing is triggered synchronously in browsers.)
  */
 class PrintAnnotationStorage extends AnnotationStorage {
-  #serializable;
+  #serializable = SerializableEmpty;
 
   constructor(parent) {
     super();
-    const { map, hash, transfer } = parent.serializable;
+
+    const { serializable } = parent;
+    if (serializable === SerializableEmpty) {
+      return;
+    }
+    const { map, hash, transfer } = serializable;
     // Create a *copy* of the data, since Objects are passed by reference in JS.
     const clone = structuredClone(map, transfer ? { transfer } : null);
-
-    this.#serializable = { map: clone, hash, transfer };
+    // The `PrintAnnotationStorage` instance is re-used for all pages,
+    // hence we cannot transfer the data since that breaks printing.
+    this.#serializable = { map: clone, hash, transfer: [] };
   }
 
   /**
-   * @returns {PrintAnnotationStorage}
+   * @type {PrintAnnotationStorage}
+   * @throws {Error} Always, since a `PrintAnnotationStorage` cannot be nested.
    */
   // eslint-disable-next-line getter-return
   get print() {

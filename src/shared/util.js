@@ -25,16 +25,23 @@ const isNodeJS =
   !process.versions.nw &&
   !(process.versions.electron && process.type && process.type !== "browser");
 
-const IDENTITY_MATRIX = [1, 0, 0, 1, 0, 0];
+const BBOX_INIT = [Infinity, Infinity, -Infinity, -Infinity];
+const F32_BBOX_INIT = new Float32Array(BBOX_INIT);
+
 const FONT_IDENTITY_MATRIX = [0.001, 0, 0, 0.001, 0, 0];
 
-const MAX_IMAGE_SIZE_TO_CACHE = 10e6; // Ten megabytes.
+// Default CIDFont /DW2: [vertical origin y, vertical displacement y].
+// PDF 1.7, Table 5.14 specifies [880 -1000].
+const DEFAULT_VERTICAL_ORIGIN_Y = 880;
+const DEFAULT_VERTICAL_ADVANCE = 1000;
 
 // Represent the percentage of the height of a single-line field over
 // the font size. Acrobat seems to use this value.
 const LINE_FACTOR = 1.35;
 const LINE_DESCENT_FACTOR = 0.35;
 const BASELINE_FACTOR = LINE_DESCENT_FACTOR / LINE_FACTOR;
+
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 /**
  * Refer to the `WorkerTransport.getRenderingIntent`-method in the API, to see
@@ -69,6 +76,7 @@ const AnnotationMode = {
   ENABLE_STORAGE: 3,
 };
 
+const AnnotationPrefix = "pdfjs_internal_id_";
 const AnnotationEditorPrefix = "pdfjs_internal_editor_";
 
 const AnnotationEditorType = {
@@ -78,6 +86,9 @@ const AnnotationEditorType = {
   HIGHLIGHT: 9,
   STAMP: 13,
   INK: 15,
+  POPUP: 16,
+  SIGNATURE: 101,
+  COMMENT: 102,
 };
 
 const AnnotationEditorParamsType = {
@@ -89,11 +100,12 @@ const AnnotationEditorParamsType = {
   INK_COLOR: 21,
   INK_THICKNESS: 22,
   INK_OPACITY: 23,
+  INK_COLOR_AND_OPACITY: 24,
   HIGHLIGHT_COLOR: 31,
-  HIGHLIGHT_DEFAULT_COLOR: 32,
-  HIGHLIGHT_THICKNESS: 33,
-  HIGHLIGHT_FREE: 34,
-  HIGHLIGHT_SHOW_ALL: 35,
+  HIGHLIGHT_THICKNESS: 32,
+  HIGHLIGHT_FREE: 33,
+  HIGHLIGHT_SHOW_ALL: 34,
+  DRAW_STEP: 41,
 };
 
 // Permission flags from Table 22, Section 7.6.3.2 of the PDF specification.
@@ -106,6 +118,12 @@ const PermissionFlag = {
   COPY_FOR_ACCESSIBILITY: 0x200,
   ASSEMBLE: 0x400,
   PRINT_HIGH_QUALITY: 0x800,
+};
+
+const MeshFigureType = {
+  TRIANGLES: 1,
+  LATTICE: 2,
+  PATCH: 3,
 };
 
 const TextRenderingMode = {
@@ -154,11 +172,22 @@ const AnnotationType = {
   WATERMARK: 24,
   THREED: 25,
   REDACT: 26,
+  RICHMEDIA: 27,
 };
 
 const AnnotationReplyType = {
   GROUP: "Group",
   REPLY: "R",
+};
+
+// Rendition action operations from Table 214, Section 12.6.4.13 of the PDF
+// specification (ISO 32000-1).
+const AnnotationRenditionOperation = {
+  PLAY_OR_RESUME: 0,
+  STOP: 1,
+  PAUSE: 2,
+  RESUME: 3,
+  PLAY: 4,
 };
 
 const AnnotationFlag = {
@@ -339,6 +368,17 @@ const OPS = {
   constructPath: 91,
   setStrokeTransparent: 92,
   setFillTransparent: 93,
+  rawFillPath: 94,
+};
+
+// In order to have a switch statement that is fast (i.e. which use a jump
+// table), we need to have the OPS in a contiguous range.
+const DrawOPS = {
+  moveTo: 0,
+  lineTo: 1,
+  curveTo: 2,
+  quadraticCurveTo: 3,
+  closePath: 4,
 };
 
 const PasswordResponses = {
@@ -364,7 +404,7 @@ function getVerbosityLevel() {
 function info(msg) {
   if (verbosity >= VerbosityLevel.INFOS) {
     // eslint-disable-next-line no-console
-    console.log(`Info: ${msg}`);
+    console.info(`Info: ${msg}`);
   }
 }
 
@@ -372,10 +412,14 @@ function info(msg) {
 function warn(msg) {
   if (verbosity >= VerbosityLevel.WARNINGS) {
     // eslint-disable-next-line no-console
-    console.log(`Warning: ${msg}`);
+    console.warn(`Warning: ${msg}`);
   }
 }
 
+/**
+ * @param {string} msg
+ * @returns {never}
+ */
 function unreachable(msg) {
   throw new Error(msg);
 }
@@ -402,45 +446,63 @@ function _isValidProtocol(url) {
 
 /**
  * Attempts to create a valid absolute URL.
- *
  * @param {URL|string} url - An absolute, or relative, URL.
  * @param {URL|string} [baseUrl] - An absolute URL.
- * @param {Object} [options]
- * @returns Either a valid {URL}, or `null` otherwise.
+ * @param {object} [options]
+ * @returns {URL | null} Either a valid {@link URL}, or `null` otherwise.
  */
 function createValidAbsoluteUrl(url, baseUrl = null, options = null) {
   if (!url) {
     return null;
   }
-  try {
-    if (options && typeof url === "string") {
-      // Let URLs beginning with "www." default to using the "http://" protocol.
-      if (options.addDefaultProtocol && url.startsWith("www.")) {
-        const dots = url.match(/\./g);
-        // Avoid accidentally matching a *relative* URL pointing to a file named
-        // e.g. "www.pdf" or similar.
-        if (dots?.length >= 2) {
-          url = `http://${url}`;
-        }
-      }
-
-      // According to ISO 32000-1:2008, section 12.6.4.7, URIs should be encoded
-      // in 7-bit ASCII. Some bad PDFs use UTF-8 encoding; see bug 1122280.
-      if (options.tryConvertEncoding) {
-        try {
-          url = stringToUTF8String(url);
-        } catch {}
+  if (options && typeof url === "string") {
+    // Let URLs beginning with "www." default to using the "http://" protocol.
+    if (options.addDefaultProtocol && url.startsWith("www.")) {
+      const dots = url.match(/\./g);
+      // Avoid accidentally matching a *relative* URL pointing to a file named
+      // e.g. "www.pdf" or similar.
+      if (dots?.length >= 2) {
+        url = `http://${url}`;
       }
     }
 
-    const absoluteUrl = baseUrl ? new URL(url, baseUrl) : new URL(url);
-    if (_isValidProtocol(absoluteUrl)) {
-      return absoluteUrl;
+    // According to ISO 32000-1:2008, section 12.6.4.7, URIs should be encoded
+    // in 7-bit ASCII. Some bad PDFs use UTF-8 encoding; see bug 1122280.
+    if (options.tryConvertEncoding) {
+      try {
+        url = stringToUTF8String(url);
+      } catch {}
     }
-  } catch {
-    /* `new URL()` will throw on incorrect data. */
   }
-  return null;
+
+  const absoluteUrl = baseUrl ? URL.parse(url, baseUrl) : URL.parse(url);
+  return _isValidProtocol(absoluteUrl) ? absoluteUrl : null;
+}
+
+/**
+ * Remove, or replace, the hash property of the URL.
+ * @param {URL|string} url - The absolute, or relative, URL.
+ * @param {string} hash - The hash property (use an empty string to remove it).
+ * @param {boolean} [allowRel] - Allow relative URLs.
+ * @returns {string} The resulting URL string.
+ */
+function updateUrlHash(url, hash, allowRel = false) {
+  const res = URL.parse(url);
+  if (res) {
+    res.hash = hash;
+    return res.href;
+  }
+  // Support well-formed relative URLs, necessary for `web/app.js` in GENERIC
+  // builds, by optionally falling back to string parsing.
+  if (allowRel && createValidAbsoluteUrl(url, "http://example.com")) {
+    return url.split("#", 1)[0] + `${hash ? `#${hash}` : ""}`;
+  }
+  return "";
+}
+
+// Extract the final component from a path string.
+function stripPath(str) {
+  return str.substring(str.lastIndexOf("/") + 1);
 }
 
 function shadow(obj, prop, value, nonSerializable = false) {
@@ -500,16 +562,11 @@ class InvalidPDFException extends BaseException {
   }
 }
 
-class MissingPDFException extends BaseException {
-  constructor(msg) {
-    super(msg, "MissingPDFException");
-  }
-}
-
-class UnexpectedResponseException extends BaseException {
-  constructor(msg, status) {
-    super(msg, "UnexpectedResponseException");
+class ResponseException extends BaseException {
+  constructor(msg, status, missing) {
+    super(msg, "ResponseException");
     this.status = status;
+    this.missing = missing;
   }
 }
 
@@ -561,60 +618,13 @@ function stringToBytes(str) {
   return bytes;
 }
 
-function string32(value) {
-  if (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) {
-    assert(
-      typeof value === "number" && Math.abs(value) < 2 ** 32,
-      `string32: Unexpected input "${value}".`
-    );
-  }
-  return String.fromCharCode(
-    (value >> 24) & 0xff,
-    (value >> 16) & 0xff,
-    (value >> 8) & 0xff,
-    value & 0xff
-  );
-}
-
-function objectSize(obj) {
-  return Object.keys(obj).length;
-}
-
-// Ensure that the returned Object has a `null` prototype; hence why
-// `Object.fromEntries(...)` is not used.
-function objectFromMap(map) {
-  const obj = Object.create(null);
-  for (const [key, value] of map) {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-// Checks the endianness of the platform.
-function isLittleEndian() {
-  const buffer8 = new Uint8Array(4);
-  buffer8[0] = 1;
-  const view32 = new Uint32Array(buffer8.buffer, 0, 1);
-  return view32[0] === 1;
-}
-
-// Checks if it's possible to eval JS expressions.
-function isEvalSupported() {
-  try {
-    new Function(""); // eslint-disable-line no-new, no-new-func
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 class FeatureTest {
   static get isLittleEndian() {
-    return shadow(this, "isLittleEndian", isLittleEndian());
-  }
+    const buffer8 = new Uint8Array(4);
+    buffer8[0] = 1;
+    const view32 = new Uint32Array(buffer8.buffer, 0, 1);
 
-  static get isEvalSupported() {
-    return shadow(this, "isEvalSupported", isEvalSupported());
+    return shadow(this, "isLittleEndian", view32[0] === 1);
   }
 
   static get isOffscreenCanvasSupported() {
@@ -633,95 +643,110 @@ class FeatureTest {
     );
   }
 
+  static get isVideoFrameSupported() {
+    return shadow(
+      this,
+      "isVideoFrameSupported",
+      typeof VideoFrame !== "undefined"
+    );
+  }
+
+  static get isFloat16ArraySupported() {
+    return shadow(
+      this,
+      "isFloat16ArraySupported",
+      typeof Float16Array !== "undefined"
+    );
+  }
+
+  static get isSanitizerSupported() {
+    return shadow(
+      this,
+      "isSanitizerSupported",
+      typeof Sanitizer !== "undefined"
+    );
+  }
+
   static get platform() {
-    if (
-      (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
-      (typeof navigator !== "undefined" &&
-        typeof navigator?.platform === "string")
-    ) {
-      return shadow(this, "platform", {
-        isMac: navigator.platform.includes("Mac"),
-        isWindows: navigator.platform.includes("Win"),
-        isFirefox:
-          (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
-          (typeof navigator?.userAgent === "string" &&
-            navigator.userAgent.includes("Firefox")),
-      });
-    }
+    const { platform, userAgent } = navigator;
+
     return shadow(this, "platform", {
-      isMac: false,
-      isWindows: false,
-      isFirefox: false,
+      isAndroid: userAgent.includes("Android"),
+      isLinux: platform.includes("Linux"),
+      isMac: platform.includes("Mac"),
+      isWindows: platform.includes("Win"),
+      isFirefox:
+        (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
+        userAgent.includes("Firefox"),
     });
   }
 
-  static get isCSSRoundSupported() {
+  static get isCanvasFilterSupported() {
+    let ctx;
+    if (this.isOffscreenCanvasSupported) {
+      ctx = new OffscreenCanvas(1, 1).getContext("2d");
+    } else if (
+      (typeof PDFJSDev === "undefined" || !PDFJSDev.test("WORKER_THREAD")) &&
+      typeof document !== "undefined"
+    ) {
+      ctx = document.createElement("canvas").getContext("2d");
+    }
+    // Spec-compliant Canvas2D defaults `ctx.filter` to "none". On
+    // browsers without filter support (Safari) the property is absent
+    // until you assign to it, after which it behaves like an ordinary
+    // JS property and stores whatever string you set without applying
+    // it. Probing the default lets us detect the difference reliably.
+    return shadow(this, "isCanvasFilterSupported", ctx?.filter !== undefined);
+  }
+
+  static get isAlphaColorInputSupported() {
+    if (
+      (typeof PDFJSDev !== "undefined" && PDFJSDev.test("WORKER_THREAD")) ||
+      typeof document === "undefined"
+    ) {
+      return shadow(this, "isAlphaColorInputSupported", false);
+    }
+    const input = document.createElement("input");
+    input.type = "color";
+    input.setAttribute("alpha", "");
+    input.value = "#ff000080";
+    // If alpha is supported the color picker retains the alpha channel, so
+    // the value won't be a plain opaque color (7-char #rrggbb).
     return shadow(
       this,
-      "isCSSRoundSupported",
-      globalThis.CSS?.supports?.("width: round(1.5px, 1px)")
+      "isAlphaColorInputSupported",
+      input.value !== "#ff0000"
+    );
+  }
+
+  static get isBackdropFilterSupported() {
+    return shadow(
+      this,
+      "isBackdropFilterSupported",
+      typeof CSS !== "undefined" && CSS.supports("backdrop-filter", "blur(1px)")
     );
   }
 }
 
-const hexNumbers = Array.from(Array(256).keys(), n =>
-  n.toString(16).padStart(2, "0")
-);
-
 class Util {
-  static makeHexColor(r, g, b) {
-    return `#${hexNumbers[r]}${hexNumbers[g]}${hexNumbers[b]}`;
+  static get hexNums() {
+    return shadow(
+      this,
+      "hexNums",
+      Array.from({ length: 256 }, (_, n) => n.toString(16).padStart(2, "0"))
+    );
   }
 
-  // Apply a scaling matrix to some min/max values.
-  // If a scaling factor is negative then min and max must be
-  // swapped.
-  static scaleMinMax(transform, minMax) {
-    let temp;
-    if (transform[0]) {
-      if (transform[0] < 0) {
-        temp = minMax[0];
-        minMax[0] = minMax[2];
-        minMax[2] = temp;
-      }
-      minMax[0] *= transform[0];
-      minMax[2] *= transform[0];
+  static makeHexColor(r, g, b) {
+    return `#${this.hexNums[r]}${this.hexNums[g]}${this.hexNums[b]}`;
+  }
 
-      if (transform[3] < 0) {
-        temp = minMax[1];
-        minMax[1] = minMax[3];
-        minMax[3] = temp;
-      }
-      minMax[1] *= transform[3];
-      minMax[3] *= transform[3];
-    } else {
-      temp = minMax[0];
-      minMax[0] = minMax[1];
-      minMax[1] = temp;
-      temp = minMax[2];
-      minMax[2] = minMax[3];
-      minMax[3] = temp;
-
-      if (transform[1] < 0) {
-        temp = minMax[1];
-        minMax[1] = minMax[3];
-        minMax[3] = temp;
-      }
-      minMax[1] *= transform[1];
-      minMax[3] *= transform[1];
-
-      if (transform[2] < 0) {
-        temp = minMax[0];
-        minMax[0] = minMax[2];
-        minMax[2] = temp;
-      }
-      minMax[0] *= transform[2];
-      minMax[2] *= transform[2];
-    }
-    minMax[0] += transform[4];
-    minMax[1] += transform[5];
-    minMax[2] += transform[4];
-    minMax[3] += transform[5];
+  static get identity0to256Map() {
+    return shadow(
+      this,
+      "identity0to256Map",
+      Uint8Array.from({ length: 256 }, (_, i) => i)
+    );
   }
 
   // Concatenates two transformation matrices together and returns the result.
@@ -736,33 +761,92 @@ class Util {
     ];
   }
 
+  // Multiplies m (an array-based transform) by md (a DOMMatrix transform).
+  static multiplyByDOMMatrix(m, md) {
+    return [
+      m[0] * md.a + m[2] * md.b,
+      m[1] * md.a + m[3] * md.b,
+      m[0] * md.c + m[2] * md.d,
+      m[1] * md.c + m[3] * md.d,
+      m[0] * md.e + m[2] * md.f + m[4],
+      m[1] * md.e + m[3] * md.f + m[5],
+    ];
+  }
+
   // For 2d affine transforms
-  static applyTransform(p, m) {
-    const xt = p[0] * m[0] + p[1] * m[2] + m[4];
-    const yt = p[0] * m[1] + p[1] * m[3] + m[5];
-    return [xt, yt];
+  static applyTransform(p, m, pos = 0) {
+    const p0 = p[pos];
+    const p1 = p[pos + 1];
+    p[pos] = p0 * m[0] + p1 * m[2] + m[4];
+    p[pos + 1] = p0 * m[1] + p1 * m[3] + m[5];
+  }
+
+  static applyTransformToBezier(p, transform, pos = 0) {
+    const m0 = transform[0];
+    const m1 = transform[1];
+    const m2 = transform[2];
+    const m3 = transform[3];
+    const m4 = transform[4];
+    const m5 = transform[5];
+    for (let i = 0; i < 6; i += 2) {
+      const pI = p[pos + i];
+      const pI1 = p[pos + i + 1];
+      p[pos + i] = pI * m0 + pI1 * m2 + m4;
+      p[pos + i + 1] = pI * m1 + pI1 * m3 + m5;
+    }
   }
 
   static applyInverseTransform(p, m) {
+    const p0 = p[0];
+    const p1 = p[1];
     const d = m[0] * m[3] - m[1] * m[2];
-    const xt = (p[0] * m[3] - p[1] * m[2] + m[2] * m[5] - m[4] * m[3]) / d;
-    const yt = (-p[0] * m[1] + p[1] * m[0] + m[4] * m[1] - m[5] * m[0]) / d;
-    return [xt, yt];
+    p[0] = (p0 * m[3] - p1 * m[2] + m[2] * m[5] - m[4] * m[3]) / d;
+    p[1] = (-p0 * m[1] + p1 * m[0] + m[4] * m[1] - m[5] * m[0]) / d;
   }
 
   // Applies the transform to the rectangle and finds the minimum axially
   // aligned bounding box.
-  static getAxialAlignedBoundingBox(r, m) {
-    const p1 = this.applyTransform(r, m);
-    const p2 = this.applyTransform(r.slice(2, 4), m);
-    const p3 = this.applyTransform([r[0], r[3]], m);
-    const p4 = this.applyTransform([r[2], r[1]], m);
-    return [
-      Math.min(p1[0], p2[0], p3[0], p4[0]),
-      Math.min(p1[1], p2[1], p3[1], p4[1]),
-      Math.max(p1[0], p2[0], p3[0], p4[0]),
-      Math.max(p1[1], p2[1], p3[1], p4[1]),
-    ];
+  static axialAlignedBoundingBox(rect, transform, output) {
+    const m0 = transform[0];
+    const m1 = transform[1];
+    const m2 = transform[2];
+    const m3 = transform[3];
+    const m4 = transform[4];
+    const m5 = transform[5];
+    const r0 = rect[0];
+    const r1 = rect[1];
+    const r2 = rect[2];
+    const r3 = rect[3];
+
+    let a0 = m0 * r0 + m4;
+    let a2 = a0;
+    let a1 = m0 * r2 + m4;
+    let a3 = a1;
+    let b0 = m3 * r1 + m5;
+    let b2 = b0;
+    let b1 = m3 * r3 + m5;
+    let b3 = b1;
+
+    if (m1 !== 0 || m2 !== 0) {
+      // Non-scaling matrix: shouldn't be frequent.
+      const m1r0 = m1 * r0;
+      const m1r2 = m1 * r2;
+      const m2r1 = m2 * r1;
+      const m2r3 = m2 * r3;
+      a0 += m2r1;
+      a3 += m2r1;
+      a1 += m2r3;
+      a2 += m2r3;
+      b0 += m1r0;
+      b3 += m1r0;
+      b1 += m1r2;
+      b2 += m1r2;
+    }
+
+    output[0] = Math.min(output[0], a0, a1, Math.min(a2, a3));
+    output[1] = Math.min(output[1], b0, b1, Math.min(b2, b3));
+    output[2] = Math.max(output[2], a0, a1, Math.max(a2, a3));
+    output[3] = Math.max(output[3], b0, b1, Math.max(b2, b3));
   }
 
   static inverseTransform(m) {
@@ -780,23 +864,21 @@ class Util {
   // This calculation uses Singular Value Decomposition.
   // The SVD can be represented with formula A = USV. We are interested in the
   // matrix S here because it represents the scale values.
-  static singularValueDecompose2dScale(m) {
-    const transpose = [m[0], m[2], m[1], m[3]];
-
+  static singularValueDecompose2dScale(matrix, output) {
+    const m0 = matrix[0];
+    const m1 = matrix[1];
+    const m2 = matrix[2];
+    const m3 = matrix[3];
     // Multiply matrix m with its transpose.
-    const a = m[0] * transpose[0] + m[1] * transpose[2];
-    const b = m[0] * transpose[1] + m[1] * transpose[3];
-    const c = m[2] * transpose[0] + m[3] * transpose[2];
-    const d = m[2] * transpose[1] + m[3] * transpose[3];
+    const a = m0 ** 2 + m1 ** 2;
+    const b = m0 * m2 + m1 * m3;
+    const c = m2 ** 2 + m3 ** 2;
 
     // Solve the second degree polynomial to get roots.
-    const first = (a + d) / 2;
-    const second = Math.sqrt((a + d) ** 2 - 4 * (a * d - c * b)) / 2;
-    const sx = first + second || 1;
-    const sy = first - second || 1;
-
-    // Scale values are the square roots of the eigenvalues.
-    return [Math.sqrt(sx), Math.sqrt(sy)];
+    const first = (a + c) / 2;
+    const second = Math.sqrt(first ** 2 - (a * c - b ** 2));
+    output[0] = Math.sqrt(first + second || 1);
+    output[1] = Math.sqrt(first - second || 1);
   }
 
   // Normalize rectangle rect=[x1, y1, x2, y2] so that (x1,y1) < (x2,y2)
@@ -839,11 +921,21 @@ class Util {
       Math.max(rect1[1], rect1[3]),
       Math.max(rect2[1], rect2[3])
     );
-    if (yLow > yHigh) {
-      return null;
-    }
+    return yLow > yHigh ? null : [xLow, yLow, xHigh, yHigh];
+  }
 
-    return [xLow, yLow, xHigh, yHigh];
+  static pointBoundingBox(x, y, minMax) {
+    minMax[0] = Math.min(minMax[0], x);
+    minMax[1] = Math.min(minMax[1], y);
+    minMax[2] = Math.max(minMax[2], x);
+    minMax[3] = Math.max(minMax[3], y);
+  }
+
+  static rectBoundingBox(x0, y0, x1, y1, minMax) {
+    minMax[0] = Math.min(minMax[0], x0, x1);
+    minMax[1] = Math.min(minMax[1], y0, y1);
+    minMax[2] = Math.max(minMax[2], x0, x1);
+    minMax[3] = Math.max(minMax[3], y0, y1);
   }
 
   static #getExtremumOnCurve(x0, x1, x2, x3, y0, y1, y2, y3, t, minMax) {
@@ -914,19 +1006,11 @@ class Util {
 
   // From https://github.com/adobe-webplatform/Snap.svg/blob/b365287722a72526000ac4bfcf0ce4cac2faa015/src/path.js#L852
   static bezierBoundingBox(x0, y0, x1, y1, x2, y2, x3, y3, minMax) {
-    if (minMax) {
-      minMax[0] = Math.min(minMax[0], x0, x3);
-      minMax[1] = Math.min(minMax[1], y0, y3);
-      minMax[2] = Math.max(minMax[2], x0, x3);
-      minMax[3] = Math.max(minMax[3], y0, y3);
-    } else {
-      minMax = [
-        Math.min(x0, x3),
-        Math.min(y0, y3),
-        Math.max(x0, x3),
-        Math.max(y0, y3),
-      ];
-    }
+    minMax[0] = Math.min(minMax[0], x0, x3);
+    minMax[1] = Math.min(minMax[1], y0, y3);
+    minMax[2] = Math.max(minMax[2], x0, x3);
+    minMax[3] = Math.max(minMax[3], y0, y3);
+
     this.#getExtremum(
       x0,
       x1,
@@ -955,69 +1039,7 @@ class Util {
       3 * (y1 - y0),
       minMax
     );
-    return minMax;
   }
-}
-
-const PDFStringTranslateTable = [
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x2d8,
-  0x2c7, 0x2c6, 0x2d9, 0x2dd, 0x2db, 0x2da, 0x2dc, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0x2022, 0x2020, 0x2021, 0x2026, 0x2014, 0x2013, 0x192,
-  0x2044, 0x2039, 0x203a, 0x2212, 0x2030, 0x201e, 0x201c, 0x201d, 0x2018,
-  0x2019, 0x201a, 0x2122, 0xfb01, 0xfb02, 0x141, 0x152, 0x160, 0x178, 0x17d,
-  0x131, 0x142, 0x153, 0x161, 0x17e, 0, 0x20ac,
-];
-
-function stringToPDFString(str) {
-  // See section 7.9.2.2 Text String Type.
-  // The string can contain some language codes bracketed with 0x0b,
-  // so we must remove them.
-  if (str[0] >= "\xEF") {
-    let encoding;
-    if (str[0] === "\xFE" && str[1] === "\xFF") {
-      encoding = "utf-16be";
-      if (str.length % 2 === 1) {
-        str = str.slice(0, -1);
-      }
-    } else if (str[0] === "\xFF" && str[1] === "\xFE") {
-      encoding = "utf-16le";
-      if (str.length % 2 === 1) {
-        str = str.slice(0, -1);
-      }
-    } else if (str[0] === "\xEF" && str[1] === "\xBB" && str[2] === "\xBF") {
-      encoding = "utf-8";
-    }
-
-    if (encoding) {
-      try {
-        const decoder = new TextDecoder(encoding, { fatal: true });
-        const buffer = stringToBytes(str);
-        const decoded = decoder.decode(buffer);
-        if (!decoded.includes("\x1b")) {
-          return decoded;
-        }
-        return decoded.replaceAll(/\x1b[^\x1b]*(?:\x1b|$)/g, "");
-      } catch (ex) {
-        warn(`stringToPDFString: "${ex}".`);
-      }
-    }
-  }
-  // ISO Latin 1
-  const strBuf = [];
-  for (let i = 0, ii = str.length; i < ii; i++) {
-    const charCode = str.charCodeAt(i);
-    if (charCode === 0x1b) {
-      // eslint-disable-next-line no-empty
-      while (++i < ii && str.charCodeAt(i) !== 0x1b) {}
-      continue;
-    }
-    const code = PDFStringTranslateTable[charCode];
-    strBuf.push(code ? String.fromCharCode(code) : str.charAt(i));
-  }
-  return strBuf.join("");
 }
 
 function stringToUTF8String(str) {
@@ -1040,19 +1062,6 @@ function isArrayEqual(arr1, arr2) {
   return true;
 }
 
-function getModificationDate(date = new Date()) {
-  const buffer = [
-    date.getUTCFullYear().toString(),
-    (date.getUTCMonth() + 1).toString().padStart(2, "0"),
-    date.getUTCDate().toString().padStart(2, "0"),
-    date.getUTCHours().toString().padStart(2, "0"),
-    date.getUTCMinutes().toString().padStart(2, "0"),
-    date.getUTCSeconds().toString().padStart(2, "0"),
-  ];
-
-  return buffer.join("");
-}
-
 let NormalizeRegex = null;
 let NormalizationMap = null;
 function normalizeUnicode(str) {
@@ -1064,7 +1073,7 @@ function normalizeUnicode(str) {
     //    required.
     // It appears that most the chars here contain some ligatures.
     NormalizeRegex =
-      /([\u00a0\u00b5\u037e\u0eb3\u2000-\u200a\u202f\u2126\ufb00-\ufb04\ufb06\ufb20-\ufb36\ufb38-\ufb3c\ufb3e\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufba1\ufba4-\ufba9\ufbae-\ufbb1\ufbd3-\ufbdc\ufbde-\ufbe7\ufbea-\ufbf8\ufbfc-\ufbfd\ufc00-\ufc5d\ufc64-\ufcf1\ufcf5-\ufd3d\ufd88\ufdf4\ufdfa-\ufdfb\ufe71\ufe77\ufe79\ufe7b\ufe7d]+)|(\ufb05+)/gu;
+      /([\u00a0\u00b5\u037e\u0eb3\u2000-\u200a\u202f\u2126\ufb00-\ufb04\ufb06\ufb20-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufba1\ufba4-\ufba9\ufbae-\ufbb1\ufbd3-\ufbdc\ufbde-\ufbe7\ufbea-\ufbf8\ufbfc\ufbfd\ufc00-\ufc5d\ufc64-\ufcf1\ufcf5-\ufd3d\ufd88\ufdf4\ufdfa\ufdfb\ufe71\ufe77\ufe79\ufe7b\ufe7d]+)|(\ufb05+)/gu;
     NormalizationMap = new Map([["ﬅ", "ſt"]]);
   }
   return str.replaceAll(NormalizeRegex, (_, p1, p2) =>
@@ -1073,66 +1082,101 @@ function normalizeUnicode(str) {
 }
 
 function getUuid() {
-  if (
-    (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
-    (typeof crypto !== "undefined" && typeof crypto?.randomUUID === "function")
-  ) {
+  if (typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   }
   const buf = new Uint8Array(32);
-  if (
-    typeof crypto !== "undefined" &&
-    typeof crypto?.getRandomValues === "function"
-  ) {
-    crypto.getRandomValues(buf);
-  } else {
-    for (let i = 0; i < 32; i++) {
-      buf[i] = Math.floor(Math.random() * 255);
-    }
-  }
+  crypto.getRandomValues(buf);
   return bytesToString(buf);
 }
 
-const AnnotationPrefix = "pdfjs_internal_id_";
-
-const FontRenderOps = {
-  BEZIER_CURVE_TO: 0,
-  MOVE_TO: 1,
-  LINE_TO: 2,
-  QUADRATIC_CURVE_TO: 3,
-  RESTORE: 4,
-  SAVE: 5,
-  SCALE: 6,
-  TRANSFORM: 7,
-  TRANSLATE: 8,
-};
-
-// TODO: Remove this once `Uint8Array.prototype.toHex` is generally available.
-function toHexUtil(arr) {
-  if (Uint8Array.prototype.toHex) {
-    return arr.toHex();
+function _isValidExplicitDest(validRef, validName, dest) {
+  if (!Array.isArray(dest) || dest.length < 2) {
+    return false;
   }
-  return Array.from(arr, num => hexNumbers[num]).join("");
+  const [page, zoom, ...args] = dest;
+  if (!validRef(page) && !Number.isInteger(page)) {
+    return false;
+  }
+  if (!validName(zoom)) {
+    return false;
+  }
+  const argsLen = args.length;
+  let allowNull = true;
+  switch (zoom.name) {
+    case "XYZ":
+      if (argsLen < 2 || argsLen > 3) {
+        return false;
+      }
+      break;
+    case "Fit":
+    case "FitB":
+      return argsLen === 0;
+    case "FitH":
+    case "FitBH":
+    case "FitV":
+    case "FitBV":
+      if (argsLen > 1) {
+        return false;
+      }
+      break;
+    case "FitR":
+      if (argsLen !== 4) {
+        return false;
+      }
+      allowNull = false;
+      break;
+    default:
+      return false;
+  }
+  for (const arg of args) {
+    if (typeof arg === "number" || (allowNull && arg === null)) {
+      continue;
+    }
+    return false;
+  }
+  return true;
 }
 
-// TODO: Remove this once `Uint8Array.prototype.toBase64` is generally
-//       available.
-function toBase64Util(arr) {
-  if (Uint8Array.prototype.toBase64) {
-    return arr.toBase64();
-  }
-  return btoa(bytesToString(arr));
+// Helpers for simple `Map.prototype.getOrInsertComputed()` invocations,
+// to avoid duplicate function creation.
+const makeArr = () => [];
+const makeMap = () => new Map();
+const makeObj = () => Object.create(null);
+const makeSet = () => new Set();
+
+// See https://developer.mozilla.org/en-US/docs/Web/API/Blob/bytes#browser_compatibility
+if (
+  typeof PDFJSDev !== "undefined" &&
+  !PDFJSDev.test("SKIP_BABEL") &&
+  typeof Blob.prototype.bytes !== "function"
+) {
+  Blob.prototype.bytes = async function () {
+    return new Uint8Array(await this.arrayBuffer());
+  };
 }
 
-// TODO: Remove this once `Uint8Array.fromBase64` is generally available.
-function fromBase64Util(str) {
-  if (Uint8Array.fromBase64) {
-    return Uint8Array.fromBase64(str);
-  }
-  return stringToBytes(atob(str));
+// See https://developer.mozilla.org/en-US/docs/Web/API/Response/bytes#browser_compatibility
+if (
+  typeof PDFJSDev !== "undefined" &&
+  !PDFJSDev.test("SKIP_BABEL") &&
+  typeof Response.prototype.bytes !== "function"
+) {
+  Response.prototype.bytes = async function () {
+    return new Uint8Array(await this.arrayBuffer());
+  };
+}
+
+// TODO: Remove this once `Iterator.prototype.join` is generally available.
+if (typeof Iterator.prototype.join !== "function") {
+  // eslint-disable-next-line no-extend-native
+  Iterator.prototype.join = function (separator) {
+    return [...this].join(separator);
+  };
 }
 
 export {
+  _isValidExplicitDest,
   AbortException,
   AnnotationActionEventType,
   AnnotationBorderStyleType,
@@ -1143,24 +1187,25 @@ export {
   AnnotationFlag,
   AnnotationMode,
   AnnotationPrefix,
+  AnnotationRenditionOperation,
   AnnotationReplyType,
   AnnotationType,
   assert,
   BaseException,
   BASELINE_FACTOR,
+  BBOX_INIT,
   bytesToString,
   createValidAbsoluteUrl,
+  DEFAULT_VERTICAL_ADVANCE,
+  DEFAULT_VERTICAL_ORIGIN_Y,
   DocumentActionEventType,
+  DrawOPS,
+  F32_BBOX_INIT,
   FeatureTest,
   FONT_IDENTITY_MATRIX,
-  FontRenderOps,
   FormatError,
-  fromBase64Util,
-  getModificationDate,
   getUuid,
   getVerbosityLevel,
-  hexNumbers,
-  IDENTITY_MATRIX,
   ImageKind,
   info,
   InvalidPDFException,
@@ -1168,29 +1213,29 @@ export {
   isNodeJS,
   LINE_DESCENT_FACTOR,
   LINE_FACTOR,
-  MAX_IMAGE_SIZE_TO_CACHE,
-  MissingPDFException,
+  makeArr,
+  makeMap,
+  makeObj,
+  makeSet,
+  MeshFigureType,
   normalizeUnicode,
-  objectFromMap,
-  objectSize,
   OPS,
   PageActionEventType,
   PasswordException,
   PasswordResponses,
   PermissionFlag,
   RenderingIntentFlag,
+  ResponseException,
   setVerbosityLevel,
   shadow,
-  string32,
   stringToBytes,
-  stringToPDFString,
   stringToUTF8String,
+  stripPath,
+  SVG_NS,
   TextRenderingMode,
-  toBase64Util,
-  toHexUtil,
-  UnexpectedResponseException,
   UnknownErrorException,
   unreachable,
+  updateUrlHash,
   utf8StringToString,
   Util,
   VerbosityLevel,

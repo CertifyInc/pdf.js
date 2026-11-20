@@ -1,22 +1,17 @@
-import { fileURLToPath } from "url";
 import fs from "fs";
 import path from "path";
 import { preprocessPDFJSCode } from "./babel-plugin-pdfjs-preprocessor.mjs";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 let errors = 0;
 
 const baseDir = path.join(__dirname, "fixtures_babel");
 const files = fs
   .readdirSync(baseDir)
-  .filter(function (name) {
-    return /-expected\./.test(name);
-  })
-  .map(function (name) {
-    return path.join(baseDir, name);
-  });
-files.forEach(function (expectationFilename) {
+  .filter(name => /-expected\./.test(name))
+  .map(name => path.join(baseDir, name));
+files.forEach(expectationFilename => {
   const inFilename = expectationFilename.replace("-expected", "");
   const expectation = fs
     .readFileSync(expectationFilename)

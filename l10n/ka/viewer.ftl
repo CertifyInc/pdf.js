@@ -31,13 +31,8 @@ pdfjs-zoom-in-button-label = მოახლოება
 pdfjs-zoom-select =
     .title = ზომა
 pdfjs-presentation-mode-button =
-<<<<<<< HEAD
-    .title = ჩვენების რეჟიმზე გადართვა
-pdfjs-presentation-mode-button-label = ჩვენების რეჟიმი
-=======
     .title = წარდგენის რეჟიმზე გადართვა
 pdfjs-presentation-mode-button-label = წარდგენის რეჟიმი
->>>>>>> upstream/master
 pdfjs-open-file-button =
     .title = ფაილის გახსნა
 pdfjs-open-file-button-label = გახსნა
@@ -110,15 +105,6 @@ pdfjs-document-properties-button-label = დოკუმენტის შე�
 pdfjs-document-properties-file-name = ფაილის სახელი:
 pdfjs-document-properties-file-size = ფაილის მოცულობა:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } კბ ({ $size_b } ბაიტი)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } მბ ({ $size_b } ბაიტი)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } კბაიტი ({ $b } ბაიტი)
@@ -126,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } მბაიტი ({ $b } ბაიტი)
->>>>>>> upstream/master
 pdfjs-document-properties-title = სათაური:
 pdfjs-document-properties-author = შემქმნელი:
 pdfjs-document-properties-subject = თემა:
@@ -134,14 +119,8 @@ pdfjs-document-properties-keywords = საკვანძო სიტყვე
 pdfjs-document-properties-creation-date = შექმნის დრო:
 pdfjs-document-properties-modification-date = ჩასწორების დრო:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = შემდგენელი:
 pdfjs-document-properties-producer = PDF-შემდგენელი:
 pdfjs-document-properties-version = PDF-ვერსია:
@@ -174,6 +153,27 @@ pdfjs-document-properties-linearized = მსუბუქი ვებჩვე�
 pdfjs-document-properties-linearized-yes = დიახ
 pdfjs-document-properties-linearized-no = არა
 pdfjs-document-properties-close-button = დახურვა
+pdfjs-digital-signature-properties-view-certificate = სერტიფიკატის ნახვა
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = მიზეზი: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = დროის ნიშნული: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] ქვეხელმოწერები ({ $count })
+       *[other] ქვეხელმოწერები ({ $count })
+    }
 
 ## Print
 
@@ -187,72 +187,40 @@ pdfjs-printing-not-ready = გაფრთხილება: PDF სრულ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = გვერდითა ზოლის გამოჩენა/დამალვა
-pdfjs-toggle-sidebar-notification-button =
-<<<<<<< HEAD
-    .title = გვერდითი ზოლის გამოჩენა (შეიცავს სარჩევს/დანართს/ფენებს)
-=======
-    .title = გვერდითი ზოლის გამოჩენა (შეიცავს სარჩევს/დანართს/შრეებს)
->>>>>>> upstream/master
-pdfjs-toggle-sidebar-button-label = გვერდითა ზოლის გამოჩენა/დამალვა
-pdfjs-document-outline-button =
-    .title = დოკუმენტის სარჩევის ჩვენება (ორმაგი წკაპით თითოეულის ჩამოშლა/აკეცვა)
-pdfjs-document-outline-button-label = დოკუმენტის სარჩევი
-pdfjs-attachments-button =
-    .title = დანართების ჩვენება
-pdfjs-attachments-button-label = დანართები
-pdfjs-layers-button =
-<<<<<<< HEAD
-    .title = ფენების გამოჩენა (ორმაგი წკაპით ყველა ფენის ნაგულისხმევზე დაბრუნება)
-pdfjs-layers-button-label = ფენები
-=======
-    .title = შრეების გამოჩენა (ორმაგი წკაპით ყველა შრის ნაგულისხმევზე დაბრუნება)
-pdfjs-layers-button-label = შრეები
->>>>>>> upstream/master
-pdfjs-thumbs-button =
-    .title = შეთვალიერება
-pdfjs-thumbs-button-label = ესკიზები
 pdfjs-current-outline-item-button =
     .title = მიმდინარე გვერდის მონახვა სარჩევში
 pdfjs-current-outline-item-button-label = მიმდინარე გვერდი სარჩევში
 pdfjs-findbar-button =
     .title = პოვნა დოკუმენტში
 pdfjs-findbar-button-label = ძიება
-<<<<<<< HEAD
-pdfjs-additional-layers = დამატებითი ფენები
-=======
 pdfjs-additional-layers = დამატებითი შრეები
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = გვერდი { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = გვერდის შეთვალიერება { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = მონიშნეთ { $page } გვერდი
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = გვერდი { $page }, სულ { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ძიება
     .placeholder = პოვნა დოკუმენტში…
+    .title = ძიება
 pdfjs-find-previous-button =
-<<<<<<< HEAD
-    .title = ფრაზის წინა კონტექსტის პოვნა
-pdfjs-find-previous-button-label = წინა
-pdfjs-find-next-button =
-    .title = ფრაზის შემდეგი კონტექსტის პოვნა
-=======
     .title = წინა დამთხვევის პოვნა
 pdfjs-find-previous-button-label = წინა
 pdfjs-find-next-button =
     .title = მომდევნო დამთხვევის პოვნა
->>>>>>> upstream/master
 pdfjs-find-next-button-label = შემდეგი
 pdfjs-find-highlight-checkbox = ყველაფრის მონიშვნა
 pdfjs-find-match-case-checkbox-label = მთავრულით
@@ -304,13 +272,6 @@ pdfjs-rendering-error = შეცდომა, გვერდის ჩვე�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -318,12 +279,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } შენიშვნა]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -337,12 +295,6 @@ pdfjs-web-fonts-disabled = ვებშრიფტები გამორთ�
 
 pdfjs-editor-free-text-button =
     .title = წარწერა
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = ტექსტი
-pdfjs-editor-ink-button =
-    .title = ხაზვა
-pdfjs-editor-ink-button-label = ხაზვა
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = წარწერის ფერის შეცვლა
 pdfjs-editor-free-text-button-label = წარწერა
@@ -351,26 +303,23 @@ pdfjs-editor-ink-button =
 pdfjs-editor-color-picker-ink-input =
     .title = მოხაზულის ფერის შეცვლა
 pdfjs-editor-ink-button-label = მოხაზვა
->>>>>>> upstream/master
 pdfjs-editor-stamp-button =
     .title = სურათების დართვა ან ჩასწორება
 pdfjs-editor-stamp-button-label = სურათების დართვა ან ჩასწორება
 pdfjs-editor-highlight-button =
     .title = მონიშვნა
 pdfjs-editor-highlight-button-label = მონიშვნა
-<<<<<<< HEAD
-=======
 pdfjs-highlight-floating-button1 =
-    .title = მონიშვნა
     .aria-label = მონიშვნა
+    .title = მონიშვნა
 pdfjs-highlight-floating-button-label = მონიშვნა
 pdfjs-comment-floating-button =
-    .title = შენიშვნა
     .aria-label = შენიშვნა
+    .title = შენიშვნა
 pdfjs-comment-floating-button-label = შენიშვნა
 pdfjs-editor-comment-button =
-    .title = შენიშვნა
     .aria-label = შენიშვნა
+    .title = შენიშვნა
 pdfjs-editor-comment-button-label = შენიშვნა
 pdfjs-editor-signature-button =
     .title = ხელმოწერის დამატება
@@ -391,27 +340,19 @@ pdfjs-editor-signature-editor1 =
     .aria-description = ხელმოწერის ჩასწორება: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = სურათის ჩასწორება
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
 pdfjs-editor-remove-ink-button =
-<<<<<<< HEAD
-    .title = დახაზულის მოცილება
-=======
     .title = მოხაზულის მოცილება
->>>>>>> upstream/master
 pdfjs-editor-remove-freetext-button =
     .title = წარწერის მოცილება
 pdfjs-editor-remove-stamp-button =
     .title = სურათის მოცილება
 pdfjs-editor-remove-highlight-button =
     .title = მონიშვნის მოცილება
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = ხელმოწერის მოცილება
->>>>>>> upstream/master
 
 ##
 
@@ -424,21 +365,6 @@ pdfjs-editor-ink-opacity-input = გაუმჭვირვალობა
 pdfjs-editor-stamp-add-image-button =
     .title = სურათის დამატება
 pdfjs-editor-stamp-add-image-button-label = სურათის დამატება
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = ნაწერის ჩასწორება
-pdfjs-free-text-default-content = აკრიფეთ…
-pdfjs-ink =
-    .aria-label = დახაზულის შესწორება
-pdfjs-ink-canvas =
-    .aria-label = მომხმარებლის შექმნილი სურათი
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = თანდართული წარწერა
-pdfjs-editor-alt-text-edit-button-label = თანდართული წარწერის ჩასწორება
-=======
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = სისქე
 pdfjs-editor-free-highlight-thickness-title =
@@ -466,8 +392,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] შენიშვნა
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = გვერდითი ზოლის დახურვა
     .aria-label = გვერდითი ზოლის დახურვა
+    .title = გვერდითი ზოლის დახურვა
 pdfjs-editor-comments-sidebar-close-button-label = გვერდითი ზოლის დახურვა
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = რამე საყურადღებოს წააწყდით? გააფერადეთ და დაურთეთ შენიშვნა.
@@ -478,7 +404,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = ვრცლად
 pdfjs-editor-alt-text-button-label = თანდართული წარწერა
 pdfjs-editor-alt-text-edit-button =
     .aria-label = დართული წარწერის ჩასწორება
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = არჩევა
 pdfjs-editor-alt-text-dialog-description = თანდართული (შემნაცვლებელი) წარწერა გამოსადეგია მათთვის, ვინც ვერ ხედავს სურათებს ან გამოისახება მაშინ, როცა სურათი ვერ ჩაიტვირთება.
 pdfjs-editor-alt-text-add-description-label = აღწერილობის მითითება
@@ -491,27 +416,13 @@ pdfjs-editor-alt-text-decorative-tooltip = მოინიშნოს მორ
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = მაგალითად, „ახალგაზრდა მამაკაცი მაგიდასთან ზის და სადილობს“
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = დართული წარწერა
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = ზევით მარცხნივ — ზომაცვლა
-pdfjs-editor-resizer-label-top-middle = ზევით შუაში — ზომაცვლა
-pdfjs-editor-resizer-label-top-right = ზევით მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-middle-right = შუაში მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-right = ქვევით მარჯვნივ — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-middle = ქვევით შუაში — ზომაცვლა
-pdfjs-editor-resizer-label-bottom-left = ზვევით მარცხნივ — ზომაცვლა
-pdfjs-editor-resizer-label-middle-left = შუაში მარცხნივ — ზომაცვლა
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = ზევით მარცხნივ — ზომაცვლა
 pdfjs-editor-resizer-top-middle =
@@ -551,21 +462,13 @@ pdfjs-editor-colorpicker-red =
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-highlight-show-all-button-label = ყველას ჩვენება
 pdfjs-editor-highlight-show-all-button =
     .title = ყველას ჩვენება
->>>>>>> upstream/master
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-<<<<<<< HEAD
-
-## Image alt-text settings
-
-=======
 # Modal header positioned above a text box where users can edit the alt text.
 pdfjs-editor-new-alt-text-dialog-edit-label = დართული წარწერის ჩასწორება (სურათის აღწერის)
 # Modal header positioned above a text box where users can add the alt text.
@@ -613,13 +516,6 @@ pdfjs-editor-alt-text-settings-dialog-label = სურათის დართ
 pdfjs-editor-alt-text-settings-automatic-title = ავტომატურად დართული წარწერა
 pdfjs-editor-alt-text-settings-create-model-button-label = დართული წარწერის თვითშედგენა
 pdfjs-editor-alt-text-settings-create-model-description = აღწერს სურათს მათთვის, ვინც ვერ ხედავს ან ვისთანაც ვერ ჩაიტვირთება.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = დართული წარწერის შესადგენი AI-მოდელი ({ $totalSize } მბაიტი)
-pdfjs-editor-alt-text-settings-ai-model-description = ეშვება ადგილობრივად თქვენს მოწყობილობაზე, ასე რომ მონაცემები დარჩება პირადი. საჭიროა დართული წარწერების თვითშედგენისთვის.
-pdfjs-editor-alt-text-settings-delete-model-button = წაშლა
-pdfjs-editor-alt-text-settings-download-model-button = ჩამოტვირთვა
-pdfjs-editor-alt-text-settings-downloading-model-button = ჩამოიტვრითება...
 pdfjs-editor-alt-text-settings-editor-title = დართული წარწერის ჩამსწორებელი
 pdfjs-editor-alt-text-settings-show-dialog-button-label = გამოჩნდეს დართული წარწერის ჩამსწორებელი სურათის დამატებისთანავე
 pdfjs-editor-alt-text-settings-show-dialog-description = უზრუნველყოფს, რომ თქვენს ყველა სურათს ახლდეს დართული წარწერა.
@@ -640,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = წარწერა მოცილ�
 pdfjs-editor-undo-bar-message-ink = მოხაზულის მოცილებულია
 pdfjs-editor-undo-bar-message-stamp = სურათი მოცილებულია
 pdfjs-editor-undo-bar-message-signature = ხელმოწერა მოცილებულია
+pdfjs-editor-undo-bar-message-comment = შენიშვნა მოცილებულია
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -739,6 +636,163 @@ pdfjs-editor-edit-comment-dialog-cancel-button = გაუქმება
 pdfjs-editor-add-comment-button =
     .title = შენიშვნის დამატება
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = გვერდითი ზოლის გამოჩენა (შეიცავს შესათვალიერებელს/სარჩევს/დანართს)
+pdfjs-toggle-views-manager-button1-label = გვერდების მართვა
+pdfjs-views-manager-sidebar =
+    .aria-label = გვერდითი ზოლი
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = გვერდითი ზოლის ზომაცვლა
+pdfjs-views-manager-view-selector-button =
+    .title = ხედები
+pdfjs-views-manager-view-selector-button-label = ხედები
+pdfjs-views-manager-pages-title = გვერდები
+pdfjs-views-manager-outlines-title1 = დოკუმენტის სარჩევი
+    .title = დოკუმენტის სარჩევი (ორმაგი წკაპით ყველა ჩანაწერის ჩამოშლა/აკეცვა)
+pdfjs-views-manager-attachments-title = დანართები
+pdfjs-views-manager-layers-title1 = შრეები
+    .title = შრეები (ორმაგი წკაპით ყველა შრის ნაგულისხმევზე დაბრუნება)
+pdfjs-views-manager-pages-option-label = გვერდები
+pdfjs-views-manager-outlines-option-label = დოკუმენტის სარჩევი
+pdfjs-views-manager-attachments-option-label = დანართები
+pdfjs-views-manager-layers-option-label = შრეები
+pdfjs-views-manager-add-file-button =
+    .title = ფაილის დამატება
+pdfjs-views-manager-add-file-button-label = ფაილის დამატება
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } შერჩეული
+       *[other] { $count } შერჩეული
+    }
+pdfjs-views-manager-pages-status-none-action-label = გვერდების შერჩევა
+pdfjs-views-manager-pages-status-action-button-label = მართვა
+pdfjs-views-manager-pages-status-copy-button-label = ასლი
+pdfjs-views-manager-pages-status-cut-button-label = ამოჭრა
+pdfjs-views-manager-pages-status-delete-button-label = წაშლა
+pdfjs-views-manager-pages-status-export-selected-button-label = შერჩეულის გატანა…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 გვერდი ამოიჭრა
+       *[other] { $count } გვერდი ამოიჭრა
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 გვერდის ასლი აღებულია
+       *[other] { $count } გვერდის ასლი აღებულია
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 გვერდი წაიშალა
+       *[other] { $count } გვერდი წაიშალა
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = მზადდება თქვენი ფაილი…
+pdfjs-views-manager-pages-status-waiting-uploading-label = ფაილი აიტვირთება…
+pdfjs-views-manager-status-warning-cut-label = ვერ ამოიჭრა. განაახლეთ გვერდი და კვლავ სცადეთ.
+pdfjs-views-manager-status-warning-copy-label = ასლი ვერ აიღო. განაახლეთ გვერდი და კვლავ სცადეთ.
+pdfjs-views-manager-status-warning-delete-label = ვერ წაიშალა. განაახლეთ გვერდი და კვლავ სცადეთ.
+pdfjs-views-manager-status-warning-save-label = ვერ შეინახა. განაახლეთ გვერდი და კვლავ სცადეთ.
+pdfjs-views-manager-status-undo-button-label = დაბრუნება
+pdfjs-views-manager-status-done-button-label = მზადაა
+pdfjs-views-manager-status-close-button =
+    .title = დახურვა
+pdfjs-views-manager-status-close-button-label = დახურვა
+pdfjs-views-manager-paste-button-label = ჩასმა
+pdfjs-views-manager-paste-button-before =
+    .title = ჩასმა პირველი გვერდის წინ
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = ჩასმა { $page } გვერდის შემდეგ
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = ᲡᲘᲐᲮᲚᲔ
+pdfjs-views-manager-waiting-for-file = ფაილი აიტვირთება…
+pdfjs-toggle-views-manager-button1 =
+    .title = გვერდების მართვა
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = ციფრული ხელმოწერის პარამეტრები
+    .title = ციფრული ხელმოწერის პარამეტრები
+pdfjs-digital-signature-properties-button-label = ციფრული ხელმოწერის პარამეტრები
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = დოკუმენტი ხელმოწერილია მართებული ციფრული ხელმოწერით
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] დოკუმენტი ხელმოწერილია, მაგრამ { $count } ციფრული ხელმოწერა ვერ დამოწმდა
+       *[other] დოკუმენტი ხელმოწერილია, მაგრამ { $count } ციფრული ხელმოწერა ვერ დამოწმდა
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] დოკუმენტი ხელმოწერილია { $count } არასანდო სერტიფიკატით
+       *[other] დოკუმენტი ხელმოწერილია { $count } არასანდო სერტიფიკატით
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] დოკუმენტი ხელმოწერილია { $count } ვადაგასული სერტიფიკატით
+       *[other] დოკუმენტი ხელმოწერილია { $count } ვადაგასული სერტიფიკატით
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] დოკუმენტი ხელმოწერილია { $count } უმართებულო ციფრული სერტიფიკატით
+       *[other] დოკუმენტი ხელმოწერილია { $count } უმართებულო ციფრული სერტიფიკატით
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] დოკუმენტი ხელმოწერილია { $count } ძალადაკარგული სერტიფიკატით
+       *[other] დოკუმენტი ხელმოწერილია { $count } ძალადაკარგული სერტიფიკატით
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = მდგომარეობა: ხელმოწერა დამოწმებულია
+pdfjs-digital-signature-properties-status-invalid = მდგომარეობა: ხელმოწერა უმართებულოა
+pdfjs-digital-signature-properties-status-unknown = მდგომარეობა: ვერ მოწმდება (მხარდაუჭერელია)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = სერტიფიკატი: სანდოა ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = სერტიფიკატი: მიუწვდომელია
+pdfjs-digital-signature-properties-certificate-untrusted = სერტიფიკატი: არასანდოა
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = სერტიფიკატი: უცნობი გამცემი ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = სერტიფიკატი: თვითხელმოწერით ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = სერტიფიკატი: არასანდო გამცემი ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = სერტიფიკატი: ვადაგასული
+pdfjs-digital-signature-properties-certificate-expired-with-date = სერტიფიკატი: ვადაგასული ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = სერტიფიკატი: ძალადაკარგულია
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -752,4 +806,3 @@ pdfjs-editor-add-signature-edit-button-label = აღწერილობის
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = აღწერილობის ჩასწორება
->>>>>>> upstream/master

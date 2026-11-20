@@ -42,15 +42,12 @@ pdfjs-print-button-label = Cetak
 pdfjs-save-button =
     .title = Simpan
 pdfjs-save-button-label = Simpan
-<<<<<<< HEAD
-=======
 # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
 pdfjs-download-button =
     .title = Unduh
 # Used in Firefox for Android as a label for the download button (“download” is a verb).
 # Length of the translation matters since we are in a mobile context, with limited screen estate.
 pdfjs-download-button-label = Unduh
->>>>>>> upstream/master
 pdfjs-bookmark-button =
     .title = Laman Saat Ini (Lihat URL dari Laman Sekarang)
 pdfjs-bookmark-button-label = Laman Saat Ini
@@ -108,15 +105,6 @@ pdfjs-document-properties-button-label = Properti Dokumen…
 pdfjs-document-properties-file-name = Nama berkas:
 pdfjs-document-properties-file-size = Ukuran berkas:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } byte)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } byte)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } byte)
@@ -124,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Judul:
 pdfjs-document-properties-author = Penyusun:
 pdfjs-document-properties-subject = Subjek:
@@ -132,14 +119,8 @@ pdfjs-document-properties-keywords = Kata Kunci:
 pdfjs-document-properties-creation-date = Tanggal Dibuat:
 pdfjs-document-properties-modification-date = Tanggal Dimodifikasi:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Pembuat:
 pdfjs-document-properties-producer = Pemroduksi PDF:
 pdfjs-document-properties-version = Versi PDF:
@@ -185,23 +166,6 @@ pdfjs-printing-not-ready = Peringatan: Berkas PDF masih belum dimuat secara leng
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Aktif/Nonaktifkan Bilah Samping
-pdfjs-toggle-sidebar-notification-button =
-    .title = Aktif/Nonaktifkan Bilah Samping (dokumen berisi kerangka/lampiran/lapisan)
-pdfjs-toggle-sidebar-button-label = Aktif/Nonaktifkan Bilah Samping
-pdfjs-document-outline-button =
-    .title = Tampilkan Kerangka Dokumen (klik ganda untuk membentangkan/menciutkan semua item)
-pdfjs-document-outline-button-label = Kerangka Dokumen
-pdfjs-attachments-button =
-    .title = Tampilkan Lampiran
-pdfjs-attachments-button-label = Lampiran
-pdfjs-layers-button =
-    .title = Tampilkan Lapisan (klik ganda untuk mengatur ulang semua lapisan ke keadaan baku)
-pdfjs-layers-button-label = Lapisan
-pdfjs-thumbs-button =
-    .title = Tampilkan Miniatur
-pdfjs-thumbs-button-label = Miniatur
 pdfjs-current-outline-item-button =
     .title = Cari Butir Ikhtisar Saat Ini
 pdfjs-current-outline-item-button-label = Butir Ikhtisar Saat Ini
@@ -214,18 +178,14 @@ pdfjs-additional-layers = Lapisan Tambahan
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Laman { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatur Laman { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Temukan
     .placeholder = Temukan di dokumen…
+    .title = Temukan
 pdfjs-find-previous-button =
     .title = Temukan kata sebelumnya
 pdfjs-find-previous-button-label = Sebelumnya
@@ -238,8 +198,6 @@ pdfjs-find-match-diacritics-checkbox-label = Pencocokan Diakritik
 pdfjs-find-entire-word-checkbox-label = Seluruh teks
 pdfjs-find-reached-top = Sampai di awal dokumen, dilanjutkan dari bawah
 pdfjs-find-reached-bottom = Sampai di akhir dokumen, dilanjutkan dari atas
-<<<<<<< HEAD
-=======
 # Variables:
 #   $current (Number) - the index of the currently active find result
 #   $total (Number) - the total number of matches in the document
@@ -247,7 +205,6 @@ pdfjs-find-match-count = { $current } dari { $total } yang cocok
 # Variables:
 #   $limit (Number) - the maximum number of matches
 pdfjs-find-match-count-limit = Lebih dari { $limit } kecocokan
->>>>>>> upstream/master
 pdfjs-find-not-found = Frasa tidak ditemukan
 
 ## Predefined zoom values
@@ -277,13 +234,6 @@ pdfjs-rendering-error = Galat terjadi saat merender laman.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -291,12 +241,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Anotasi { $type }]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -310,12 +257,6 @@ pdfjs-web-fonts-disabled = Font web dinonaktifkan: tidak dapat menggunakan font 
 
 pdfjs-editor-free-text-button =
     .title = Teks
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Teks
-pdfjs-editor-ink-button =
-    .title = Gambar
-pdfjs-editor-ink-button-label = Gambar
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Ubah warna teks
 pdfjs-editor-free-text-button-label = Teks
@@ -331,12 +272,12 @@ pdfjs-editor-highlight-button =
     .title = Sorot
 pdfjs-editor-highlight-button-label = Sorot
 pdfjs-highlight-floating-button1 =
-    .title = Sorot
     .aria-label = Sorot
+    .title = Sorot
 pdfjs-highlight-floating-button-label = Sorot
 pdfjs-comment-floating-button =
-    .title = Komentar
     .aria-label = Komentar
+    .title = Komentar
 pdfjs-comment-floating-button-label = Komentar
 pdfjs-editor-signature-button =
     .title = Tambahkan tanda tangan
@@ -373,25 +314,12 @@ pdfjs-editor-remove-signature-button =
 
 ##
 
->>>>>>> upstream/master
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Warna
 pdfjs-editor-free-text-size-input = Ukuran
 pdfjs-editor-ink-color-input = Warna
 pdfjs-editor-ink-thickness-input = Ketebalan
 pdfjs-editor-ink-opacity-input = Opasitas
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Editor Teks
-pdfjs-free-text-default-content = Mulai mengetik…
-pdfjs-ink =
-    .aria-label = Editor Gambar
-pdfjs-ink-canvas =
-    .aria-label = Gambar yang dibuat pengguna
-
-## Alt-text dialog
-
-=======
 pdfjs-editor-stamp-add-image-button =
     .title = Tambahkan gambar
 pdfjs-editor-stamp-add-image-button-label = Tambahkan gambar
@@ -434,13 +362,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Teks alternatif
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Pojok kiri atas — ubah ukuran
 pdfjs-editor-resizer-top-middle =
@@ -534,13 +459,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Pengaturan teks alternatif gambar
 pdfjs-editor-alt-text-settings-automatic-title = Teks alternatif otomatis
 pdfjs-editor-alt-text-settings-create-model-button-label = Buat teks alternatif secara otomatis
 pdfjs-editor-alt-text-settings-create-model-description = Menyarankan deskripsi untuk membantu orang yang tidak dapat melihat gambar atau ketika gambar tidak termuat.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Model AI teks alternatif ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Berjalan secara lokal di perangkat Anda sehingga data Anda tetap pribadi. Diperlukan untuk teks alternatif otomatis.
-pdfjs-editor-alt-text-settings-delete-model-button = Hapus
-pdfjs-editor-alt-text-settings-download-model-button = Unduh
-pdfjs-editor-alt-text-settings-downloading-model-button = Mengunduh…
 pdfjs-editor-alt-text-settings-editor-title = Editor teks alternatif
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Tampilkan editor teks alternatif segera saat menambahkan gambar
 pdfjs-editor-alt-text-settings-show-dialog-description = Membantu Anda memastikan semua gambar Anda memiliki teks alternatif.
@@ -641,4 +559,3 @@ pdfjs-editor-add-signature-edit-button-label = Edit deskripsi
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Edit deskripsi
->>>>>>> upstream/master

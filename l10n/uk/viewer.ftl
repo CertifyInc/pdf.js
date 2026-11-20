@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байтів)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } кБ ({ $size_b } байтів)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } байтів)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Заголовок:
 pdfjs-document-properties-author = Автор:
 pdfjs-document-properties-subject = Тема:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Дата зміни:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Створено:
 pdfjs-document-properties-producer = Виробник PDF:
 pdfjs-document-properties-version = Версія PDF:
@@ -184,23 +166,6 @@ pdfjs-printing-not-ready = Попередження: PDF не повністю �
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Бічна панель
-pdfjs-toggle-sidebar-notification-button =
-    .title = Перемкнути бічну панель (документ містить ескіз/вкладення/шари)
-pdfjs-toggle-sidebar-button-label = Перемкнути бічну панель
-pdfjs-document-outline-button =
-    .title = Показати схему документу (подвійний клік для розгортання/згортання елементів)
-pdfjs-document-outline-button-label = Схема документа
-pdfjs-attachments-button =
-    .title = Показати вкладення
-pdfjs-attachments-button-label = Вкладення
-pdfjs-layers-button =
-    .title = Показати шари (двічі клацніть, щоб скинути всі шари до типового стану)
-pdfjs-layers-button-label = Шари
-pdfjs-thumbs-button =
-    .title = Показати мініатюри
-pdfjs-thumbs-button-label = Мініатюри
 pdfjs-current-outline-item-button =
     .title = Знайти поточний елемент змісту
 pdfjs-current-outline-item-button-label = Поточний елемент змісту
@@ -213,18 +178,14 @@ pdfjs-additional-layers = Додаткові шари
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Сторінка { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Ескіз сторінки { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Знайти
     .placeholder = Знайти в документі…
+    .title = Знайти
 pdfjs-find-previous-button =
     .title = Знайти попереднє входження фрази
 pdfjs-find-previous-button-label = Попереднє
@@ -283,13 +244,6 @@ pdfjs-rendering-error = Під час виведення сторінки ста
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -307,19 +261,19 @@ pdfjs-password-label = Введіть пароль для відкриття ц�
 pdfjs-password-invalid = Неправильний пароль. Спробуйте ще раз.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Скасувати
-<<<<<<< HEAD
-pdfjs-web-fonts-disabled = Веб-шрифти вимкнено: неможливо використати вбудовані у PDF шрифти.
-=======
 pdfjs-web-fonts-disabled = Вебшрифти вимкнено: неможливо використати вбудовані у PDF шрифти.
->>>>>>> upstream/master
 
 ## Editing
 
 pdfjs-editor-free-text-button =
     .title = Текст
+pdfjs-editor-color-picker-free-text-input =
+    .title = Змінити колір тексту
 pdfjs-editor-free-text-button-label = Текст
 pdfjs-editor-ink-button =
     .title = Малювати
+pdfjs-editor-color-picker-ink-input =
+    .title = Змінити колір малюнка
 pdfjs-editor-ink-button-label = Малювати
 pdfjs-editor-stamp-button =
     .title = Додати чи редагувати зображення
@@ -328,11 +282,17 @@ pdfjs-editor-highlight-button =
     .title = Підсвітити
 pdfjs-editor-highlight-button-label = Підсвітити
 pdfjs-highlight-floating-button1 =
-    .title = Підсвітити
     .aria-label = Підсвітити
+    .title = Підсвітити
 pdfjs-highlight-floating-button-label = Підсвітити
-<<<<<<< HEAD
-=======
+pdfjs-comment-floating-button =
+    .aria-label = Коментувати
+    .title = Коментувати
+pdfjs-comment-floating-button-label = Коментувати
+pdfjs-editor-comment-button =
+    .aria-label = Коментар
+    .title = Коментар
+pdfjs-editor-comment-button-label = Коментар
 pdfjs-editor-signature-button =
     .title = Додати підпис
 pdfjs-editor-signature-button-label = Додати підпис
@@ -352,7 +312,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Редактор підпису: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Редактор зображень
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -363,13 +322,9 @@ pdfjs-editor-remove-freetext-button =
 pdfjs-editor-remove-stamp-button =
     .title = Вилучити зображення
 pdfjs-editor-remove-highlight-button =
-<<<<<<< HEAD
-    .title = Вилучити підсвічування
-=======
     .title = Вилучити підсвічення
 pdfjs-editor-remove-signature-button =
     .title = Вилучити підпис
->>>>>>> upstream/master
 
 ##
 
@@ -385,9 +340,6 @@ pdfjs-editor-stamp-add-image-button-label = Додати зображення
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Товщина
 pdfjs-editor-free-highlight-thickness-title =
-<<<<<<< HEAD
-    .title = Змінюйте товщину під час підсвічування елементів, крім тексту
-=======
     .title = Змінюйте товщину під час підсвічення елементів, крім тексту
 pdfjs-editor-add-signature-container =
     .aria-label = Елементи керування підписами та збережені підписи
@@ -399,33 +351,32 @@ pdfjs-editor-signature-add-signature-button-label = Додати новий пі
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Збережений підпис: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Текстовий редактор
     .default-content = Напишіть щось…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Текстовий редактор
-pdfjs-free-text-default-content = Почніть вводити…
-pdfjs-ink =
-    .aria-label = Графічний редактор
-pdfjs-ink-canvas =
-    .aria-label = Зображення, створене користувачем
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Альтернативний текст
-pdfjs-editor-alt-text-edit-button-label = Змінити альтернативний текст
-=======
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] Коментар
+        [few] Коментарі
+       *[many] Коментарі
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .aria-label = Закрити бічну панель
+    .title = Закрити бічну панель
+pdfjs-editor-comments-sidebar-close-button-label = Закрити бічну панель
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = Бачите щось варте уваги? Підсвітіть і додайте коментар.
+pdfjs-editor-comments-sidebar-no-comments-link = Докладніше
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Альтернативний текст
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Редагувати альтернативний текст
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Вибрати варіант
 pdfjs-editor-alt-text-dialog-description = Альтернативний текст допомагає, коли зображення не видно або коли воно не завантажується.
 pdfjs-editor-alt-text-add-description-label = Додати опис
@@ -438,27 +389,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Позначено декоратив
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Наприклад, “Молодий чоловік сідає за стіл їсти”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Альтернативний текст
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Верхній лівий кут – зміна розміру
-pdfjs-editor-resizer-label-top-middle = Вгорі посередині – зміна розміру
-pdfjs-editor-resizer-label-top-right = Верхній правий кут – зміна розміру
-pdfjs-editor-resizer-label-middle-right = Праворуч посередині – зміна розміру
-pdfjs-editor-resizer-label-bottom-right = Нижній правий кут – зміна розміру
-pdfjs-editor-resizer-label-bottom-middle = Внизу посередині – зміна розміру
-pdfjs-editor-resizer-label-bottom-left = Нижній лівий кут – зміна розміру
-pdfjs-editor-resizer-label-middle-left = Ліворуч посередині – зміна розміру
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Верхній лівий кут – зміна розміру
 pdfjs-editor-resizer-top-middle =
@@ -479,11 +416,7 @@ pdfjs-editor-resizer-middle-left =
 ## Color picker
 
 # This means "Color used to highlight text"
-<<<<<<< HEAD
-pdfjs-editor-highlight-colorpicker-label = Колір підсвічування
-=======
 pdfjs-editor-highlight-colorpicker-label = Колір підсвічення
->>>>>>> upstream/master
 pdfjs-editor-colorpicker-button =
     .title = Змінити колір
 pdfjs-editor-colorpicker-dropdown =
@@ -528,16 +461,6 @@ pdfjs-editor-new-alt-text-error-close-button = Закрити
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
-    .aria-valuetext = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = Альтернативний текст додано
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = Відсутній альтернативний текст
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
     .aria-valuetext = Завантаження моделі ШІ для альтернативного тексту ({ $downloadedSize } з { $totalSize } МБ)
 # This is a button that users can click to edit the alt text they have already added.
@@ -551,7 +474,6 @@ pdfjs-editor-new-alt-text-missing-button-label = Відсутній альтер
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = Переглянути альтернативний текст
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Переглянути альтернативний текст
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -567,19 +489,18 @@ pdfjs-editor-alt-text-settings-dialog-label = Налаштування альт�
 pdfjs-editor-alt-text-settings-automatic-title = Автоматичний альтернативний текст
 pdfjs-editor-alt-text-settings-create-model-button-label = Автоматично створювати альтернативний текст
 pdfjs-editor-alt-text-settings-create-model-description = Пропонує описи, щоб допомогти людям, які не бачать зображення, або якщо зображення не завантажується.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Модель ШІ для альтернативного тексту ({ $totalSize } МБ)
-pdfjs-editor-alt-text-settings-ai-model-description = Працює локально на вашому пристрої, тому приватність ваших даних захищена. Призначена для автоматичного створення альтернативного тексту.
-pdfjs-editor-alt-text-settings-delete-model-button = Видалити
-pdfjs-editor-alt-text-settings-download-model-button = Завантажити
-pdfjs-editor-alt-text-settings-downloading-model-button = Завантаження…
 pdfjs-editor-alt-text-settings-editor-title = Редактор альтернативного тексту
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Показувати редактор альтернативного тексту під час додавання зображення
 pdfjs-editor-alt-text-settings-show-dialog-description = Допомагає переконатися, що всі ваші зображення мають альтернативний текст.
 pdfjs-editor-alt-text-settings-close-button = Закрити
-<<<<<<< HEAD
-=======
+
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = Підсвічення додано
+pdfjs-editor-freetext-added-alert = Текст додано
+pdfjs-editor-ink-added-alert = Малюнок додано
+pdfjs-editor-stamp-added-alert = Зображення додано
+pdfjs-editor-signature-added-alert = Підпис додано
 
 ## "Annotations removed" bar
 
@@ -588,6 +509,7 @@ pdfjs-editor-undo-bar-message-freetext = Текст вилучено
 pdfjs-editor-undo-bar-message-ink = Малюнок вилучено
 pdfjs-editor-undo-bar-message-stamp = Зображення вилучено
 pdfjs-editor-undo-bar-message-signature = Підпис вилучено
+pdfjs-editor-undo-bar-message-comment = Коментар вилучено
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -650,6 +572,8 @@ pdfjs-editor-add-signature-save-checkbox = Зберегти підпис
 pdfjs-editor-add-signature-save-warning-message = Ви досягли ліміту в 5 збережених підписів. Вилучіть один, щоб зберегти інший.
 pdfjs-editor-add-signature-image-upload-error-title = Не вдалося вивантажити зображення
 pdfjs-editor-add-signature-image-upload-error-description = Перевірте мережеве з'єднання або спробуйте інше зображення.
+pdfjs-editor-add-signature-image-no-data-error-title = Не вдається конвертувати це зображення в підпис
+pdfjs-editor-add-signature-image-no-data-error-description = Спробуйте вивантажити інше зображення.
 pdfjs-editor-add-signature-error-close-button = Закрити
 
 ## Dialog buttons
@@ -657,6 +581,108 @@ pdfjs-editor-add-signature-error-close-button = Закрити
 pdfjs-editor-add-signature-cancel-button = Скасувати
 pdfjs-editor-add-signature-add-button = Додати
 pdfjs-editor-edit-signature-update-button = Оновити
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = Редагувати коментар
+pdfjs-editor-edit-comment-popup-button =
+    .title = Редагувати коментар
+pdfjs-editor-delete-comment-popup-button-label = Вилучити коментар
+pdfjs-editor-delete-comment-popup-button =
+    .title = Вилучити коментар
+pdfjs-show-comment-button =
+    .title = Показати коментар
+
+##  Edit a comment dialog
+
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = Редагувати коментар
+pdfjs-editor-edit-comment-dialog-save-button-when-editing = Оновити
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Додати коментар
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = Додати
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Почніть вводити…
+pdfjs-editor-edit-comment-dialog-cancel-button = Скасувати
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = Додати коментар
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Перемкнути бічну панель (документ містить мініатюри/ескіз/вкладення/шари)
+pdfjs-views-manager-sidebar =
+    .aria-label = Бічна панель
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Зміна розміру бічної панелі
+pdfjs-views-manager-view-selector-button =
+    .title = Вигляд
+pdfjs-views-manager-view-selector-button-label = Вигляд
+pdfjs-views-manager-pages-title = Сторінки
+pdfjs-views-manager-attachments-title = Вкладення
+pdfjs-views-manager-pages-option-label = Сторінки
+pdfjs-views-manager-outlines-option-label = Схема документа
+pdfjs-views-manager-attachments-option-label = Вкладення
+pdfjs-views-manager-layers-option-label = Шари
+pdfjs-views-manager-add-file-button =
+    .title = Додати файл
+pdfjs-views-manager-add-file-button-label = Додати файл
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] Вибрано { $count }
+        [few] Вибрано { $count }
+       *[many] Вибрано { $count }
+    }
+pdfjs-views-manager-pages-status-none-action-label = Вибрати сторінки
+pdfjs-views-manager-pages-status-action-button-label = Керувати
+pdfjs-views-manager-pages-status-copy-button-label = Копіювати
+pdfjs-views-manager-pages-status-cut-button-label = Вирізати
+pdfjs-views-manager-pages-status-delete-button-label = Видалити
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 сторінку вирізано
+        [few] { $count } сторінки вирізано
+       *[many] { $count } сторінок вирізано
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 сторінку скопійовано
+        [few] { $count } сторінки скопійовано
+       *[many] { $count } сторінок скопійовано
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 сторінку видалено
+        [few] { $count } сторінки видалено
+       *[many] { $count } сторінок видалено
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Підготовка файлу…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Вивантаження файлу…
+pdfjs-views-manager-status-warning-cut-label = Не вдалося вирізати. Оновіть сторінку та спробуйте ще раз.
+pdfjs-views-manager-status-warning-copy-label = Не вдалося скопіювати. Оновіть сторінку та спробуйте ще раз.
+pdfjs-views-manager-status-warning-delete-label = Не вдалося видалити. Оновіть сторінку та спробуйте ще раз.
+pdfjs-views-manager-status-warning-save-label = Не вдалося зберегти. Оновіть сторінку та спробуйте ще раз.
+pdfjs-views-manager-status-undo-button-label = Повернути
+pdfjs-views-manager-status-close-button =
+    .title = Закрити
+pdfjs-views-manager-status-close-button-label = Закрити
+pdfjs-views-manager-paste-button-label = Вставити
 
 ## Main menu for adding/removing signatures
 
@@ -671,4 +697,3 @@ pdfjs-editor-add-signature-edit-button-label = Редагувати опис
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Редагувати опис
->>>>>>> upstream/master

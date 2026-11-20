@@ -38,19 +38,11 @@ describe("accessibility", () => {
   describe("structure tree", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("structure_simple.pdf", ".structTree");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("structure_simple.pdf", ".structTree");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -63,13 +55,13 @@ describe("accessibility", () => {
 
           // Check the headings match up.
           const head1 = await page.$eval(
-            ".structTree [role='heading'][aria-level='1'] span",
+            ".structTree [role='heading'][aria-level='1'] [aria-owns]",
             el =>
               document.getElementById(el.getAttribute("aria-owns")).textContent
           );
           expect(head1).withContext(`In ${browserName}`).toEqual("Heading 1");
           const head2 = await page.$eval(
-            ".structTree [role='heading'][aria-level='2'] span",
+            ".structTree [role='heading'][aria-level='2'] [aria-owns]",
             el =>
               document.getElementById(el.getAttribute("aria-owns")).textContent
           );
@@ -115,22 +107,14 @@ describe("accessibility", () => {
   describe("Annotation", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-=======
     beforeEach(async () => {
->>>>>>> upstream/master
       pages = await loadAndWait(
         "tracemonkey_a11y.pdf",
         ".textLayer .endOfContent"
       );
     });
 
-<<<<<<< HEAD
-    afterAll(async () => {
-=======
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -163,19 +147,11 @@ describe("accessibility", () => {
   describe("Annotations order", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("fields_order.pdf", ".annotationLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("fields_order.pdf", ".annotationLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -204,13 +180,6 @@ describe("accessibility", () => {
   describe("Stamp annotation accessibility", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tagged_stamp.pdf", ".annotationLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait(
         "tagged_stamp.pdf",
@@ -219,7 +188,6 @@ describe("accessibility", () => {
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -262,16 +230,12 @@ describe("accessibility", () => {
         pages.map(async ([browserName, page]) => {
           await page.waitForSelector(".structTree");
 
-          const isLinkedToStampAnnotation = await page.$eval(
-            ".structTree [role='figure']",
-            el =>
-              document
-                .getElementById(el.getAttribute("aria-owns"))
-                .classList.contains("stampAnnotation")
+          const owners = await page.$$eval(
+            `[aria-owns~="pdfjs_internal_id_20R"]`,
+            elements =>
+              elements.map(element => element.closest(".structTree") !== null)
           );
-          expect(isLinkedToStampAnnotation)
-            .withContext(`In ${browserName}`)
-            .toEqual(true);
+          expect(owners).withContext(`In ${browserName}`).toEqual([true]);
         })
       );
     });
@@ -280,19 +244,11 @@ describe("accessibility", () => {
   describe("Figure in the content stream", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("bug1708040.pdf", ".textLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
-      pages = await loadAndWait("bug1708040.pdf", ".textLayer");
+      pages = await loadAndWait("bug1708040.pdf", ".structTree");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -324,8 +280,6 @@ describe("accessibility", () => {
       );
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("No undefined id", () => {
     let pages;
@@ -352,7 +306,7 @@ describe("accessibility", () => {
     let pages;
 
     beforeEach(async () => {
-      pages = await loadAndWait("bug1937438_af_from_latex.pdf", ".textLayer");
+      pages = await loadAndWait("bug1937438_af_from_latex.pdf", ".structTree");
     });
 
     afterEach(async () => {
@@ -362,37 +316,22 @@ describe("accessibility", () => {
     it("must check that the MathML is correctly inserted", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
-          if (isSanitizerSupported) {
-            const mathML = await page.$eval(
-              "span.structTree span[aria-owns='p58R_mc13'] > math",
-              el => el?.innerHTML ?? ""
+          const mathML = await page.$eval(
+            "span.structTree span[aria-owns='p58R_mc13'] > math",
+            el => el?.innerHTML ?? ""
+          );
+          expect(mathML)
+            .withContext(`In ${browserName}`)
+            .toEqual(
+              ` <msqrt><msup><mi>x</mi><mn>2</mn></msup></msqrt> <mo>=</mo> <mrow intent="absolute-value($x)"><mo>|</mo><mi arg="x">x</mi><mo>|</mo></mrow> `
             );
-            expect(mathML)
-              .withContext(`In ${browserName}`)
-              .toEqual(
-                ` <msqrt><msup><mi>x</mi><mn>2</mn></msup></msqrt> <mo>=</mo> <mrow intent="absolute-value($x)"><mo>|</mo><mi arg="x">x</mi><mo>|</mo></mrow> `
-              );
 
-            // Check that the math corresponding element is hidden in the text
-            // layer.
-            const ariaHidden = await page.$eval("span#p58R_mc13", el =>
-              el.getAttribute("aria-hidden")
-            );
-            expect(ariaHidden).withContext(`In ${browserName}`).toEqual("true");
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Pending in Chrome: Sanitizer API (in ${browserName}) is not supported`
-            );
-          }
+          // Check that the math corresponding element is hidden in the text
+          // layer.
+          const ariaHidden = await page.$eval("span#p58R_mc13", el =>
+            el.getAttribute("aria-hidden")
+          );
+          expect(ariaHidden).withContext(`In ${browserName}`).toEqual("true");
         })
       );
     });
@@ -402,7 +341,10 @@ describe("accessibility", () => {
     let pages;
 
     beforeEach(async () => {
-      pages = await loadAndWait("bug1997343.pdf", ".textLayer");
+      pages = await loadAndWait(
+        "bug1997343.pdf",
+        ".page[data-page-number='1'] .structTree"
+      );
     });
 
     afterEach(async () => {
@@ -412,30 +354,15 @@ describe("accessibility", () => {
     it("must check that the MathML is correctly inserted", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
-          if (isSanitizerSupported) {
-            const mathML = await page.$eval(
-              "span.structTree span[aria-owns='p21R_mc64']",
-              el => el?.innerHTML ?? ""
+          const mathML = await page.$eval(
+            "span.structTree span[aria-owns='p21R_mc64']",
+            el => el?.innerHTML ?? ""
+          );
+          expect(mathML)
+            .withContext(`In ${browserName}`)
+            .toEqual(
+              '<math display="block"> <msup> <mi>𝑛</mi> <mi>𝑝</mi> </msup> <mo lspace="0.278em" rspace="0.278em">=</mo> <mi>𝑛</mi> <mspace width="1.000em"></mspace> <mi> mod </mi> <mspace width="0.167em"></mspace> <mspace width="0.167em"></mspace> <mi>𝑝</mi> </math>'
             );
-            expect(mathML)
-              .withContext(`In ${browserName}`)
-              .toEqual(
-                '<math display="block"> <msup> <mi>𝑛</mi> <mi>𝑝</mi> </msup> <mo lspace="0.278em" rspace="0.278em">=</mo> <mi>𝑛</mi> <mspace width="1.000em"></mspace> <mi> mod </mi> <mspace width="0.167em"></mspace> <mspace width="0.167em"></mspace> <mi>𝑝</mi> </math>'
-              );
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Pending in Chrome: Sanitizer API (in ${browserName}) is not supported`
-            );
-          }
         })
       );
     });
@@ -445,7 +372,7 @@ describe("accessibility", () => {
     let pages;
 
     beforeEach(async () => {
-      pages = await loadAndWait("bug1937438_mml_from_latex.pdf", ".textLayer");
+      pages = await loadAndWait("bug1937438_mml_from_latex.pdf", ".structTree");
     });
 
     afterEach(async () => {
@@ -507,7 +434,7 @@ describe("accessibility", () => {
     let pages;
 
     beforeEach(async () => {
-      pages = await loadAndWait("bug2004951.pdf", ".textLayer");
+      pages = await loadAndWait("bug2004951.pdf", ".structTree");
     });
 
     afterEach(async () => {
@@ -517,25 +444,11 @@ describe("accessibility", () => {
     it("must check that there's no alt-text on the MathML node", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
           const ariaLabel = await page.$eval(
             "span[aria-owns='p3R_mc2']",
             el => el.getAttribute("aria-label") || ""
           );
-          if (isSanitizerSupported) {
-            expect(ariaLabel).withContext(`In ${browserName}`).toEqual("");
-          } else {
-            expect(ariaLabel)
-              .withContext(`In ${browserName}`)
-              .toEqual("cube root of , x plus y end cube root ");
-          }
+          expect(ariaLabel).withContext(`In ${browserName}`).toEqual("");
         })
       );
     });
@@ -545,7 +458,7 @@ describe("accessibility", () => {
     let pages;
 
     beforeEach(async () => {
-      pages = await loadAndWait("bug2009627.pdf", ".textLayer");
+      pages = await loadAndWait("bug2009627.pdf", ".structTree");
     });
 
     afterEach(async () => {
@@ -555,36 +468,146 @@ describe("accessibility", () => {
     it("must check that the text in text layer is aria-hidden", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-          const isSanitizerSupported = await page.evaluate(() => {
-            try {
-              // eslint-disable-next-line no-undef
-              return typeof Sanitizer !== "undefined";
-            } catch {
-              return false;
-            }
-          });
           const ariaHidden = await page.evaluate(() =>
             Array.from(
-              document.querySelectorAll(".structTree :has(> math)")
-            ).map(el =>
-              document
-                .getElementById(el.getAttribute("aria-owns"))
-                .getAttribute("aria-hidden")
+              document.querySelectorAll(".structTree :has(> math)"),
+              el =>
+                document
+                  .getElementById(el.getAttribute("aria-owns"))
+                  .getAttribute("aria-hidden")
             )
           );
-          if (isSanitizerSupported) {
-            expect(ariaHidden)
-              .withContext(`In ${browserName}`)
-              .toEqual(["true", "true", "true"]);
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Pending in Chrome: Sanitizer API (in ${browserName}) is not supported`
-            );
-          }
+          expect(ariaHidden)
+            .withContext(`In ${browserName}`)
+            .toEqual(["true", "true", "true"]);
         })
       );
     });
   });
->>>>>>> upstream/master
+
+  describe("MathML in AF entry with struct tree children must not be duplicated", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("bug2025674.pdf", ".structTree");
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that the MathML is not duplicated in the struct tree", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          // The Formula node has both AF MathML and struct tree children.
+          // When AF MathML is present, children must not be walked to avoid
+          // rendering the math content twice in the accessibility tree.
+          const mathCount = await page.evaluate(
+            () => document.querySelectorAll(".structTree math").length
+          );
+          expect(mathCount).withContext(`In ${browserName}`).toBe(1);
+
+          // All text layer elements referenced by the formula subtree must
+          // be aria-hidden so screen readers don't read both the MathML and
+          // the underlying text content.
+          const allHidden = await page.evaluate(() => {
+            const ids = [];
+            for (const el of document.querySelectorAll(
+              ".structTree [aria-owns]"
+            )) {
+              if (el.closest("math")) {
+                ids.push(el.getAttribute("aria-owns"));
+              }
+            }
+            // Also collect ids from the formula span itself.
+            for (const el of document.querySelectorAll(
+              ".structTree span:has(> math)"
+            )) {
+              const owned = el.getAttribute("aria-owns");
+              if (owned) {
+                ids.push(owned);
+              }
+            }
+            return ids.every(
+              id =>
+                document.getElementById(id)?.getAttribute("aria-hidden") ===
+                "true"
+            );
+          });
+          expect(allHidden).withContext(`In ${browserName}`).toBeTrue();
+        })
+      );
+    });
+  });
+
+  describe("A TH in a TR itself in a TBody is rowheader", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("bug2014080.pdf", ".structTree");
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that the table has the right structure", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          let elementRole = await page.evaluate(() =>
+            Array.from(
+              document.querySelector(".structTree [role='table']").children,
+              child => child.getAttribute("role")
+            )
+          );
+
+          // THeader and TBody must be rowgroup.
+          expect(elementRole)
+            .withContext(`In ${browserName}`)
+            .toEqual(["rowgroup", "rowgroup"]);
+
+          elementRole = await page.evaluate(() =>
+            Array.from(
+              document.querySelector(
+                ".structTree [role='table'] > [role='rowgroup'] > [role='row']"
+              ).children,
+              child => child.getAttribute("role")
+            )
+          );
+
+          // THeader has 3 columnheader.
+          expect(elementRole)
+            .withContext(`In ${browserName}`)
+            .toEqual(["columnheader", "columnheader", "columnheader"]);
+
+          elementRole = await page.evaluate(() =>
+            Array.from(
+              document.querySelector(
+                ".structTree [role='table'] > [role='rowgroup']:nth-child(2)"
+              ).children,
+              child => child.getAttribute("role")
+            )
+          );
+
+          // TBody has 5 rows.
+          expect(elementRole)
+            .withContext(`In ${browserName}`)
+            .toEqual(["row", "row", "row", "row", "row"]);
+
+          elementRole = await page.evaluate(() =>
+            Array.from(
+              document.querySelector(
+                ".structTree [role='table'] > [role='rowgroup']:nth-child(2) > [role='row']:first-child"
+              ).children,
+              child => child.getAttribute("role")
+            )
+          );
+          // First row has a rowheader and 2 cells.
+          expect(elementRole)
+            .withContext(`In ${browserName}`)
+            .toEqual(["rowheader", "cell", "cell"]);
+        })
+      );
+    });
+  });
 });
