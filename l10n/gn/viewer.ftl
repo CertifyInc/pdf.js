@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Teratee:
 pdfjs-document-properties-author = Apohára:
 pdfjs-document-properties-subject = Mba’egua:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Iñambue hague arange:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Apo’ypyha:
 pdfjs-document-properties-producer = PDF mbosako’iha:
 pdfjs-document-properties-version = PDF mbojuehegua:
@@ -171,6 +153,27 @@ pdfjs-document-properties-linearized = Ñanduti jahecha pya’e:
 pdfjs-document-properties-linearized-yes = Añete
 pdfjs-document-properties-linearized-no = Ahániri
 pdfjs-document-properties-close-button = Mboty
+pdfjs-digital-signature-properties-view-certificate = Mboajapyre jehecha
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Mba’ére: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Ára: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Mboheraguapy’i ({ $count })
+       *[other] Mboheraguapy’ieta ({ $count })
+    }
 
 ## Print
 
@@ -184,23 +187,6 @@ pdfjs-printing-not-ready = Kyhyjerã: Ko PDF nahenyhẽmbái oñembokuatia hag̃
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Tenda yke moambue
-pdfjs-toggle-sidebar-notification-button =
-    .title = Embojopyru tenda ykegua (kuatia oguereko kuaakaha/moirũha/ñuãha)
-pdfjs-toggle-sidebar-button-label = Tenda yke moambue
-pdfjs-document-outline-button =
-    .title = Ehechauka kuatia rape (eikutu mokõi jey embotuicha/emomichĩ hag̃ua opavavete mba’eporu)
-pdfjs-document-outline-button-label = Kuatia apopyre
-pdfjs-attachments-button =
-    .title = Moirũha jehechauka
-pdfjs-attachments-button-label = Moirũha
-pdfjs-layers-button =
-    .title = Ehechauka ñuãha (eikutu jo’a emomba’apo hag̃ua opaite ñuãha tekoypýpe)
-pdfjs-layers-button-label = Ñuãha
-pdfjs-thumbs-button =
-    .title = Mba’emirĩ jehechauka
-pdfjs-thumbs-button-label = Mba’emirĩ
 pdfjs-current-outline-item-button =
     .title = Eheka mba’eporu ag̃aguaitéva
 pdfjs-current-outline-item-button-label = Mba’eporu ag̃aguaitéva
@@ -213,18 +199,23 @@ pdfjs-additional-layers = Ñuãha moirũguáva
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Kuatiarogue { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Kuatiarogue mba’emirĩ { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Eiporavo kuatiarogue { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Kuatiarogue { $page } { $total } mba’e
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Juhu
     .placeholder = Kuatiápe jejuhu…
+    .title = Juhu
 pdfjs-find-previous-button =
     .title = Ejuhu ñe’ẽrysýi osẽ’ypy hague
 pdfjs-find-previous-button-label = Mboyvegua
@@ -281,13 +272,6 @@ pdfjs-rendering-error = Oiko jejavy ehechaukasévo kuatiarogue.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +295,6 @@ pdfjs-web-fonts-disabled = Ñanduti taity oñemongéma: ndaikatumo’ãi eiporu 
 
 pdfjs-editor-free-text-button =
     .title = Moñe’ẽrã
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Moñe’ẽrã
-pdfjs-editor-ink-button =
-    .title = Moha’ãnga
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Emoambue moñe’ẽrã sa’y
 pdfjs-editor-free-text-button-label = Moñe’ẽrã
@@ -323,7 +302,6 @@ pdfjs-editor-ink-button =
     .title = Moha’ãnga
 pdfjs-editor-color-picker-ink-input =
     .title = Emoambue ta’ãnga sa’y
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Moha’ãnga
 pdfjs-editor-stamp-button =
     .title = Embojuaju térã embosako’i ta’ãnga
@@ -332,18 +310,16 @@ pdfjs-editor-highlight-button =
     .title = Mbosa’y
 pdfjs-editor-highlight-button-label = Mbosa’y
 pdfjs-highlight-floating-button1 =
-    .title = Mbosa’y
     .aria-label = Mbosa’y
+    .title = Mbosa’y
 pdfjs-highlight-floating-button-label = Mbosa’y
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Je’erei
     .aria-label = Je’erei
+    .title = Je’erei
 pdfjs-comment-floating-button-label = Je’erei
 pdfjs-editor-comment-button =
-    .title = Je’erei
     .aria-label = Je’erei
+    .title = Je’erei
 pdfjs-editor-comment-button-label = Je’erei
 pdfjs-editor-signature-button =
     .title = Embojuaju teraguapy
@@ -364,7 +340,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Teraguapy mbosako’iha: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Ta’ãnga mbosako’iha
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +351,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Emboguete ta’ãnga
 pdfjs-editor-remove-highlight-button =
     .title = Eipe’a jehechaveha
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Embogue teraguapy
->>>>>>> upstream/master
 
 ##
 
@@ -397,8 +369,6 @@ pdfjs-editor-stamp-add-image-button-label = Embojuaju ta’ãnga
 pdfjs-editor-free-highlight-thickness-input = Anambusu
 pdfjs-editor-free-highlight-thickness-title =
     .title = Emoambue anambusukue embosa’ývo mba’eporu ha’e’ỹva moñe’ẽrã
-<<<<<<< HEAD
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Teraguapy ñemaña ha teraguapy ñongatupyre
 pdfjs-editor-signature-add-signature-button =
@@ -409,20 +379,10 @@ pdfjs-editor-signature-add-signature-button-label = Embojuaju teraguapy pyahu
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = Teraguapy ñongatupyre: { $description }
->>>>>>> upstream/master
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Moñe’ẽrã moheñoiha
     .default-content = Eñepyrũ ehai…
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Moñe’ẽrã moheñoiha
-pdfjs-free-text-default-content = Ehai ñepyrũ…
-pdfjs-ink =
-    .aria-label = Ta’ãnga moheñoiha
-pdfjs-ink-canvas =
-    .aria-label = Ta’ãnga omoheñóiva poruhára
-=======
 # Used to show how many comments are present in the pdf file.
 # Variables:
 #   $count (Number) - the number of comments.
@@ -432,23 +392,18 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Je’ereieta
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Emboty ta'ãngarupa yke
     .aria-label = Emboty ta'ãngarupa yke
+    .title = Emboty ta'ãngarupa yke
 pdfjs-editor-comments-sidebar-close-button-label = Emboty ta'ãngarupa yke
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = ¿Ehechápa peteĩ mbaʼe iporãva? Emomba’e ha eheja jehaipy.
 pdfjs-editor-comments-sidebar-no-comments-link = Kuaave
->>>>>>> upstream/master
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Moñe’ẽrã mokõiháva
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Embojuruja moñe’ẽrã mokõiháva
-<<<<<<< HEAD
-pdfjs-editor-alt-text-edit-button-label = Embojuruja moñe’ẽrã mokõiháva
-=======
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Eiporavo poravorã
 pdfjs-editor-alt-text-dialog-description = Moñe’ẽrã ykepegua (moñe’ẽrã ykepegua) nepytyvõ nderehecháiramo ta’ãnga térã nahenyhẽiramo.
 pdfjs-editor-alt-text-add-description-label = Embojuaju ñemoha’ãnga
@@ -468,17 +423,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Yvate asu gotyo — emoambue tuichakue
-pdfjs-editor-resizer-label-top-middle = Yvate mbytépe — emoambue tuichakue
-pdfjs-editor-resizer-label-top-right = Yvate akatúape — emoambue tuichakue
-pdfjs-editor-resizer-label-middle-right = Mbyte akatúape — emoambue tuichakue
-pdfjs-editor-resizer-label-bottom-right = Yvy gotyo akatúape — emoambue tuichakue
-pdfjs-editor-resizer-label-bottom-middle = Yvy gotyo mbytépe — emoambue tuichakue
-pdfjs-editor-resizer-label-bottom-left = Iguýpe asu gotyo — emoambue tuichakue
-pdfjs-editor-resizer-label-middle-left = Mbyte asu gotyo — emoambue tuichakue
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Yvate asu gotyo — emoambue tuichakue
 pdfjs-editor-resizer-top-middle =
@@ -544,10 +488,6 @@ pdfjs-editor-new-alt-text-error-close-button = Mboty
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-=======
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Emboguejyhína IA moñe’ẽrã mokõiháva ({ $downloadedSize } { $totalSize } MB) mba’e
     .aria-valuetext = Emboguejyhína IA moñe’ẽrã mokõiháva ({ $downloadedSize } { $totalSize } MB) mba’e
 # This is a button that users can click to edit the alt text they have already added.
@@ -576,19 +516,10 @@ pdfjs-editor-alt-text-settings-dialog-label = Ta’ãnga moñe’ẽrã mokõiha
 pdfjs-editor-alt-text-settings-automatic-title = Moñe’ẽrã mokõiha ijeheguíva
 pdfjs-editor-alt-text-settings-create-model-button-label = Emoheñói moñe’ẽrã mokõiha ijeheguíva
 pdfjs-editor-alt-text-settings-create-model-description = Ñemyesakã mbykymi opavave tapicha ohecha’ỹva upe ta’ãnga térã pe ta’ãnga nahenyhẽiramo.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Peteĩva IA moñe’ẽrã mokõiha ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Oku’e mba’e’okaitépe umi mba’ekuaarã hekoñemi hag̃ua. Tekotevẽva moñe’ẽrã ykegua ijeheguívape.
-pdfjs-editor-alt-text-settings-delete-model-button = Mboguete
-pdfjs-editor-alt-text-settings-download-model-button = Mboguejy
-pdfjs-editor-alt-text-settings-downloading-model-button = Emboguejyhína…
 pdfjs-editor-alt-text-settings-editor-title = Moñe’ẽrã mokõiha mbosako’iha
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Ehechauka moñe’ẽrã mokõiha mbosako’iha embojuajúvo ta’ãnga
 pdfjs-editor-alt-text-settings-show-dialog-description = Nepytyvõta ta’ãngakuéra orekotaha moñe’ẽrã mokõiha.
 pdfjs-editor-alt-text-settings-close-button = Mboty
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -605,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = Moñe’ẽrã mboguepyre
 pdfjs-editor-undo-bar-message-ink = Ta’ãnga mboguepyre
 pdfjs-editor-undo-bar-message-stamp = Ta’ãnga mboguepyre
 pdfjs-editor-undo-bar-message-signature = Teraguapy mboguepyre
+pdfjs-editor-undo-bar-message-comment = Je’epy mboguepyre
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -621,6 +553,7 @@ pdfjs-editor-undo-bar-close-button-label = Mboty
 
 ## Add a signature dialog
 
+pdfjs-editor-add-signature-dialog-label = Ko modal omoneĩ poruhárape omoheñóivo mboheraguapy ombojuaju hag̃ua PDF rehe. Upe poruhára ombosako’ikuaa téra (oikóva avei moñe’ẽrã mokõihávarõ) ha, ejaposérõ, eñongatu mboheraguapy eiporujey hag̃ua.
 pdfjs-editor-add-signature-dialog-title = Embojuaju teraguapy
 
 ## Tab names
@@ -703,6 +636,143 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Eheja
 pdfjs-editor-add-comment-button =
     .title = Je’erei mbojuaju
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Embojopyru tenda ykegua (kuatia oguereko mba’e’i, kuaakaha/moirũha/ñuãha)
+pdfjs-toggle-views-manager-button1-label = Eñangareko kuotiarogue
+pdfjs-views-manager-sidebar =
+    .aria-label = Ta’ãngarupa yke
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Tuichakue mongu’eha tenda yképe
+pdfjs-views-manager-view-selector-button =
+    .title = Hechaha
+pdfjs-views-manager-view-selector-button-label = Hechaha
+pdfjs-views-manager-pages-title = Kuatiarogue
+pdfjs-views-manager-outlines-title1 = Kuatiaite jejapopy
+    .title = Kuatiaite jejapopy (eikutu jo’a emyasãi hag̃ua/emomichĩmbaite mba’eporuita)
+pdfjs-views-manager-attachments-title = Moirũha
+pdfjs-views-manager-layers-title1 = Ñuãhaita
+    .title = Ñuãhaita (eikutu jo’a erupaite jey hag̃ua ñuãhaita oĩ haguepevoi)
+pdfjs-views-manager-pages-option-label = Kuatiarogueita
+pdfjs-views-manager-outlines-option-label = Kuatiaite jejapopy
+pdfjs-views-manager-attachments-option-label = Moirũhaita
+pdfjs-views-manager-layers-option-label = Ñuãhaita
+pdfjs-views-manager-add-file-button =
+    .title = Embojuaju marandurenda
+pdfjs-views-manager-add-file-button-label = Embojuaju marandurenda
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } poravopyre
+       *[other] { $count } poravopyre
+    }
+pdfjs-views-manager-pages-status-none-action-label = Eiporavo kuatiarogue
+pdfjs-views-manager-pages-status-action-button-label = Ñangareko
+pdfjs-views-manager-pages-status-copy-button-label = Monguatia
+pdfjs-views-manager-pages-status-cut-button-label = Kytĩ
+pdfjs-views-manager-pages-status-delete-button-label = Mboguete
+pdfjs-views-manager-pages-status-export-selected-button-label = Eguerahauka poravopyre…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 kuatiarogue kytĩmbyre
+       *[other] { $count } kuatiarogue kytĩmbyre
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 kuatiarogue monguatiapyre
+       *[other] { $count } kuatiarogue monguatiapyre
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 kuatiarogue mboguepyre
+       *[other] { $count } kuatiarogue mboguepyre
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Embosako’ihína ne marandurenda…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Ehupihína marandurenda…
+pdfjs-views-manager-status-warning-cut-label = Ndaikatúi oñekytĩ. Embopyahu kuatiarogue ha eha’ã jey.
+pdfjs-views-manager-status-warning-copy-label = Ndaikatúi oñembokuatia. Embopyahu kuatiarogue ha eha’ã jey.
+pdfjs-views-manager-status-warning-delete-label = Ndaikatúi embogue. Embopyahu kuatiarogue ha eha’ã jey.
+pdfjs-views-manager-status-warning-save-label = Ndaikatúi eñongatu. Embopyahu kuatiarogue ha eha’ã jey.
+pdfjs-views-manager-status-undo-button-label = Mboguevi
+pdfjs-views-manager-status-done-button-label = Oĩma
+pdfjs-views-manager-status-close-button =
+    .title = Mboty
+pdfjs-views-manager-status-close-button-label = Mboty
+pdfjs-views-manager-paste-button-label = Mboja
+pdfjs-views-manager-paste-button-before =
+    .title = Emboja togue peteĩha mboyve
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Emboja kuatiarogue { $page } rire
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = PYAHU
+pdfjs-views-manager-waiting-for-file = Ehupihína marandurenda…
+pdfjs-toggle-views-manager-button1 =
+    .title = Eñangareko kuotiarogue
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Firma digital oguerekóva
+    .title = Firma digital oguerekóva
+pdfjs-digital-signature-properties-button-label = Firma digital oguerekóva
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Pe kuatia oñemboheraguapy firma digital oikóvape
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Kuatia mboheraguapypyre { $count } mboajepyre oikove’ỹva ndive
+       *[other] Kuatia mboheraguapypyre { $count } mboajepyreita oikove’ỹva ndive
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Heko: Mboheraguapy hechajeypyre
+pdfjs-digital-signature-properties-status-invalid = Heko: Mboheraguapy oiko’ỹva
+pdfjs-digital-signature-properties-status-unknown = Heko: Ndojehechajeykuaái (ndojokupytýi)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Mboajapyre: Jeroviaha ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Mboajapyre: Oĩ’ỹva
+pdfjs-digital-signature-properties-certificate-untrusted = Mboajapyre: Jerovia’ỹha
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Mboajapyre: Guenohẽha jekuaa’ỹva ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Mboajapyre: Heraguapejeheguíva { $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Mboajapyre: Guenohẽha jerovia’ỹha ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Mboajapyre: Oikove’ỹmava
+pdfjs-digital-signature-properties-certificate-expired-with-date = Mboajapyre: Oikove’ỹmava ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Mboajapyre: Mbojevypyre
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -716,4 +786,3 @@ pdfjs-editor-add-signature-edit-button-label = Embosako’i moha’ãnga
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Embosako’i moha’ãnga
->>>>>>> upstream/master

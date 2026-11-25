@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } Mo ({ $b } oktetoj)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KO ({ $size_b } oktetoj)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MO ({ $size_b } oktetoj)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = Titolo:
 pdfjs-document-properties-author = Aŭtoro:
 pdfjs-document-properties-subject = Temo:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = Dato de modifo:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Kreinto:
 pdfjs-document-properties-producer = Produktinto de PDF:
 pdfjs-document-properties-version = Versio de PDF:
@@ -171,6 +153,27 @@ pdfjs-document-properties-linearized = Rapida tekstaĵa vido:
 pdfjs-document-properties-linearized-yes = Jes
 pdfjs-document-properties-linearized-no = Ne
 pdfjs-document-properties-close-button = Fermi
+pdfjs-digital-signature-properties-view-certificate = Vidi atestilon
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Kialo: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Tempindiko: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Duaranga subskribo ({ $count })
+       *[other] Duarangaj subskriboj ({ $count })
+    }
 
 ## Print
 
@@ -184,23 +187,6 @@ pdfjs-printing-not-ready = Averto: la PDF dosiero ne estas plene ŝargita por pr
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Montri/kaŝi flankan strion
-pdfjs-toggle-sidebar-notification-button =
-    .title = Montri/kaŝi flankan strion (la dokumento enhavas konturon/kunsendaĵojn/tavolojn)
-pdfjs-toggle-sidebar-button-label = Montri/kaŝi flankan strion
-pdfjs-document-outline-button =
-    .title = Montri la konturon de dokumento (alklaku duoble por faldi/malfaldi ĉiujn elementojn)
-pdfjs-document-outline-button-label = Konturo de dokumento
-pdfjs-attachments-button =
-    .title = Montri kunsendaĵojn
-pdfjs-attachments-button-label = Kunsendaĵojn
-pdfjs-layers-button =
-    .title = Montri tavolojn (duoble alklaku por remeti ĉiujn tavolojn en la norman staton)
-pdfjs-layers-button-label = Tavoloj
-pdfjs-thumbs-button =
-    .title = Montri miniaturojn
-pdfjs-thumbs-button-label = Miniaturoj
 pdfjs-current-outline-item-button =
     .title = Trovi nunan konturan elementon
 pdfjs-current-outline-item-button-label = Nuna kontura elemento
@@ -213,18 +199,23 @@ pdfjs-additional-layers = Aldonaj tavoloj
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Paĝo { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniaturo de paĝo { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Elekti paĝon { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Paĝo { $page } el { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Serĉi
     .placeholder = Serĉi en dokumento…
+    .title = Serĉi
 pdfjs-find-previous-button =
     .title = Serĉi la antaŭan aperon de la frazo
 pdfjs-find-previous-button-label = Malantaŭen
@@ -232,7 +223,7 @@ pdfjs-find-next-button =
     .title = Serĉi la venontan aperon de la frazo
 pdfjs-find-next-button-label = Antaŭen
 pdfjs-find-highlight-checkbox = Elstarigi ĉiujn
-pdfjs-find-match-case-checkbox-label = Distingi inter majuskloj kaj minuskloj
+pdfjs-find-match-case-checkbox-label = Distingi usklecon
 pdfjs-find-match-diacritics-checkbox-label = Respekti supersignojn
 pdfjs-find-entire-word-checkbox-label = Tutaj vortoj
 pdfjs-find-reached-top = Komenco de la dokumento atingita, daŭrigado ekde la fino
@@ -281,13 +272,6 @@ pdfjs-rendering-error = Okazis eraro dum la montro de la paĝo.
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -311,11 +295,6 @@ pdfjs-web-fonts-disabled = Neaktivaj teksaĵaj tiparoj: ne elbas uzi enmetitajn 
 
 pdfjs-editor-free-text-button =
     .title = Teksto
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = Teksto
-pdfjs-editor-ink-button =
-    .title = Desegni
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = Ŝanĝi koloron de teksto
 pdfjs-editor-free-text-button-label = Teksto
@@ -323,7 +302,6 @@ pdfjs-editor-ink-button =
     .title = Desegni
 pdfjs-editor-color-picker-ink-input =
     .title = Ŝanĝi desegnan koloron
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = Desegni
 pdfjs-editor-stamp-button =
     .title = Aldoni aŭ modifi bildojn
@@ -332,18 +310,16 @@ pdfjs-editor-highlight-button =
     .title = Elstarigi
 pdfjs-editor-highlight-button-label = Elstarigi
 pdfjs-highlight-floating-button1 =
-    .title = Elstarigi
     .aria-label = Elstarigi
+    .title = Elstarigi
 pdfjs-highlight-floating-button-label = Elstarigi
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = Komenti
     .aria-label = Komenti
+    .title = Komenti
 pdfjs-comment-floating-button-label = Komenti
 pdfjs-editor-comment-button =
-    .title = Komenti
     .aria-label = Komenti
+    .title = Komenti
 pdfjs-editor-comment-button-label = Komenti
 pdfjs-editor-signature-button =
     .title = Aldoni subskribon
@@ -364,7 +340,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = Redaktilo de subskribo: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = Redaktilo de bildo
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -376,11 +351,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Forigi bildon
 pdfjs-editor-remove-highlight-button =
     .title = Forigi elstaraĵon
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = Forigi subskribon
->>>>>>> upstream/master
 
 ##
 
@@ -397,21 +369,6 @@ pdfjs-editor-stamp-add-image-button-label = Aldoni bildon
 pdfjs-editor-free-highlight-thickness-input = Dikeco
 pdfjs-editor-free-highlight-thickness-title =
     .title = Ŝanĝi dikecon dum elstarigo de netekstaj elementoj
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = Tekstan redaktilon
-pdfjs-free-text-default-content = Ektajpi…
-pdfjs-ink =
-    .aria-label = Desegnan redaktilon
-pdfjs-ink-canvas =
-    .aria-label = Bildo kreita de uzanto
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = Alternativa teksto
-pdfjs-editor-alt-text-edit-button-label = Redakti alternativan tekston
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = Kontrolado de subskriboj kaj konservitaj subskriboj
 pdfjs-editor-signature-add-signature-button =
@@ -435,8 +392,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Komentoj
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Fermi la flankan strion
     .aria-label = Fermi la flankan strion
+    .title = Fermi la flankan strion
 pdfjs-editor-comments-sidebar-close-button-label = Fermi la flankan strion
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Ĉu vi rimarkas ion interesan? Elstarigu tion kaj aldonu komenton.
@@ -447,7 +404,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = Pli da informo
 pdfjs-editor-alt-text-button-label = Alternativa teksto
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Redakti alternativan tekston
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = Elektu eblon
 pdfjs-editor-alt-text-dialog-description = Alternativa teksto helpas personojn, en la okazoj kiam ili ne povas vidi aŭ ŝargi la bildon.
 pdfjs-editor-alt-text-add-description-label = Aldoni priskribon
@@ -460,27 +416,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Markita kiel ornama
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Ekzemple: “Juna persono sidiĝas ĉetable por ekmanĝi”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Alternativa teksto
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = Supra maldekstra angulo — ŝangi grandon
-pdfjs-editor-resizer-label-top-middle = Supra mezo — ŝanĝi grandon
-pdfjs-editor-resizer-label-top-right = Supran dekstran angulon — ŝanĝi grandon
-pdfjs-editor-resizer-label-middle-right = Dekstra mezo — ŝanĝi grandon
-pdfjs-editor-resizer-label-bottom-right = Malsupra deksta angulo — ŝanĝi grandon
-pdfjs-editor-resizer-label-bottom-middle = Malsupra mezo — ŝanĝi grandon
-pdfjs-editor-resizer-label-bottom-left = Malsupra maldekstra angulo — ŝanĝi grandon
-pdfjs-editor-resizer-label-middle-left = Maldekstra mezo — ŝanĝi grandon
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = Supra maldekstra angulo — ŝangi grandon
 pdfjs-editor-resizer-top-middle =
@@ -546,16 +488,6 @@ pdfjs-editor-new-alt-text-error-close-button = Fermi
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = Elŝuto de modelo de artefarita intelekto por alternativa teksto ({ $downloadedSize } el { $totalSize } MO)
-    .aria-valuetext = Elŝuto de modelo de artefarita intelekto por alternativa teksto ({ $downloadedSize } el { $totalSize } MO)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = Alternativa teksto aldonita
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = Mankas alternativa teksto
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Elŝuto de modelo de artefarita intelekto por alternativa teksto ({ $downloadedSize } el { $totalSize } MO)
     .aria-valuetext = Elŝuto de modelo de artefarita intelekto por alternativa teksto ({ $downloadedSize } el { $totalSize } MO)
 # This is a button that users can click to edit the alt text they have already added.
@@ -569,7 +501,6 @@ pdfjs-editor-new-alt-text-missing-button-label = Mankas alternativa teksto
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = Kontroli alternativan tekston
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = Kontroli alternativan tekston
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -585,19 +516,10 @@ pdfjs-editor-alt-text-settings-dialog-label = Agordoj por alternativa teksto de 
 pdfjs-editor-alt-text-settings-automatic-title = Aŭtomata alternativa teksto
 pdfjs-editor-alt-text-settings-create-model-button-label = Aŭtomate krei alternativan tekston
 pdfjs-editor-alt-text-settings-create-model-description = Tio ĉi sugestas priskribojn por helpi personojn kiuj ne povas vidi aŭ ŝargi la bildon.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modelo de artefarita intelekto por alternativa teksto ({ $totalSize } MO)
-pdfjs-editor-alt-text-settings-ai-model-description = Ĝi funkcias en via aparato, do viaj datumoj restas privataj. Ĝi estas postulata por aŭtomata kreado de alternativa teksto.
-pdfjs-editor-alt-text-settings-delete-model-button = Forigi
-pdfjs-editor-alt-text-settings-download-model-button = Elŝuti
-pdfjs-editor-alt-text-settings-downloading-model-button = Elŝuto…
 pdfjs-editor-alt-text-settings-editor-title = Redaktilo de alternativa teksto
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Montri redaktilon de alternativa teksto tuj post aldono de bildo
 pdfjs-editor-alt-text-settings-show-dialog-description = Tio ĉi helpas vin kontroli ĉu ĉiuj bildoj havas alternativan tekston.
 pdfjs-editor-alt-text-settings-close-button = Fermi
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -614,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = Teksto forigita
 pdfjs-editor-undo-bar-message-ink = Desegno forigita
 pdfjs-editor-undo-bar-message-stamp = Bildo forigita
 pdfjs-editor-undo-bar-message-signature = Subskribo forigita
+pdfjs-editor-undo-bar-message-comment = Komento forigita
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -713,6 +636,163 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Nuligi
 pdfjs-editor-add-comment-button =
     .title = Aldoni komenton
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Montri/kaŝi flankan strion (la dokumento enhavas miniaturojn/konturon/kunsendaĵojn/tavolojn)
+pdfjs-toggle-views-manager-button1-label = Administri paĝojn
+pdfjs-views-manager-sidebar =
+    .aria-label = Flanka strio
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Dimensiigilo por la flanka strio
+pdfjs-views-manager-view-selector-button =
+    .title = Vidoj
+pdfjs-views-manager-view-selector-button-label = Vidoj
+pdfjs-views-manager-pages-title = Paĝoj
+pdfjs-views-manager-outlines-title1 = Konturo de dokumento
+    .title = Konturo de dokumento (alklaku duoble por faldi/malfaldi ĉiujn elementojn)
+pdfjs-views-manager-attachments-title = Kunsendaĵoj
+pdfjs-views-manager-layers-title1 = Tavoloj
+    .title = Tavoloj (alklaku duoble por ke ĉiuj tavoloj reiru al la norma stato)
+pdfjs-views-manager-pages-option-label = Paĝoj
+pdfjs-views-manager-outlines-option-label = Konturo de dokumento
+pdfjs-views-manager-attachments-option-label = Kunsendaĵoj
+pdfjs-views-manager-layers-option-label = Tavoloj
+pdfjs-views-manager-add-file-button =
+    .title = Aldoni dosieron
+pdfjs-views-manager-add-file-button-label = Aldoni dosieron
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } elektita
+       *[other] { $count } elektitaj
+    }
+pdfjs-views-manager-pages-status-none-action-label = Elekti paĝojn
+pdfjs-views-manager-pages-status-action-button-label = Administri
+pdfjs-views-manager-pages-status-copy-button-label = Kopii
+pdfjs-views-manager-pages-status-cut-button-label = Eltondi
+pdfjs-views-manager-pages-status-delete-button-label = Forigi
+pdfjs-views-manager-pages-status-export-selected-button-label = Eksporti elektitajn…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 paĝo eltondita
+       *[other] { $count } paĝoj eltonditaj
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 paĝo kopiita
+       *[other] { $count } paĝoj kopiitaj
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 paĝo forigita
+       *[other] { $count } paĝoj forigitaj
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Pretigo de via dosiero…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Dosiero alŝutata…
+pdfjs-views-manager-status-warning-cut-label = Ne eblis eltondi. Refreŝigu la paĝon kaj provu denove.
+pdfjs-views-manager-status-warning-copy-label = Ne eblis kopii. Refreŝigu la paĝon kaj provu denove.
+pdfjs-views-manager-status-warning-delete-label = Ne eblis forigi. Refreŝigu la paĝon kaj provu denove.
+pdfjs-views-manager-status-warning-save-label = Ne eblis konservi. Refreŝigu la paĝon kaj provu denove.
+pdfjs-views-manager-status-undo-button-label = Malfari
+pdfjs-views-manager-status-done-button-label = Farita
+pdfjs-views-manager-status-close-button =
+    .title = Fermi
+pdfjs-views-manager-status-close-button-label = Fermi
+pdfjs-views-manager-paste-button-label = Alglui
+pdfjs-views-manager-paste-button-before =
+    .title = Alglui antaŭ la unua paĝo
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Alglui post la paĝo { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NOVA
+pdfjs-views-manager-waiting-for-file = Dosiero alŝutata…
+pdfjs-toggle-views-manager-button1 =
+    .title = Administri paĝojn
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Atributoj de cifereca subskribo
+    .title = Atributoj de cifereca subskribo
+pdfjs-digital-signature-properties-button-label = Atributoj de cifereca subskribo
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = La dokumento estis subskribita de valida cifereca subskribo
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Dokumento subskribita, tamen { $count } cifereca subskribo ne povis esti kontrolita
+       *[other] Dokumento subskribita, tamen { $count } ciferecaj subskriboj ne povis esti kontrolita
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Dokumento subskribita de { $count } nefidata atestilo
+       *[other] Dokumento subskribita de { $count } nefidataj atestiloj
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Dokumento subskribita de { $count } senvalidiĝinta atestilo
+       *[other] Dokumento subskribita de { $count } senvalidiĝintaj atestiloj
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] La dokumento havas { $count } nevalidan ciferecan subskribon
+       *[other] La dokumento havas { $count } nevalidajn ciferecajn subskribojn
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Dokumento subskribita de { $count } senvalidigita atestilo
+       *[other] Dokumento subskribita de { $count } senvalidigitaj atestiloj
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Stato: Subskribo kontrolita
+pdfjs-digital-signature-properties-status-invalid = Stato: Subskribo nevalida
+pdfjs-digital-signature-properties-status-unknown = Stato: Ne eblas kontroli (nesubtenata)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Atestilo: Fidata ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Atestilo: Nedisponebla
+pdfjs-digital-signature-properties-certificate-untrusted = Atestilo: Ne fidata
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Atestilo: Nekonata eldoninto ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Atestilo: Memsubskribita ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Atestilo: Nefidata eldoninto ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Atestilo: Senvalidiĝinta
+pdfjs-digital-signature-properties-certificate-expired-with-date = Atestilo: Senvalidiĝinta ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Atestilo: Senvalidigita
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -726,4 +806,3 @@ pdfjs-editor-add-signature-edit-button-label = Modifi priskribon
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Modifi priskribon
->>>>>>> upstream/master

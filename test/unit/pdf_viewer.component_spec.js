@@ -22,7 +22,6 @@ import {
 import {
   parseQueryString,
   ProgressBar,
-  RenderingStates,
   ScrollMode,
   SpreadMode,
 } from "../../web/ui_utils.js";
@@ -35,12 +34,11 @@ import { PDFPageView } from "../../web/pdf_page_view.js";
 import { PDFScriptingManager } from "../../web/pdf_scripting_manager.component.js";
 import { PDFSinglePageViewer } from "../../web/pdf_single_page_viewer.js";
 import { PDFViewer } from "../../web/pdf_viewer.js";
+import { RenderingStates } from "../../web/renderable_view.js";
 import { StructTreeLayerBuilder } from "../../web/struct_tree_layer_builder.js";
 import { TextLayerBuilder } from "../../web/text_layer_builder.js";
 import { XfaLayerBuilder } from "../../web/xfa_layer_builder.js";
 
-<<<<<<< HEAD
-=======
 const expectedAPI = Object.freeze({
   AnnotationLayerBuilder,
   DownloadManager,
@@ -66,44 +64,16 @@ const expectedAPI = Object.freeze({
   XfaLayerBuilder,
 });
 
->>>>>>> upstream/master
 describe("pdfviewer_api", function () {
   it("checks that the *official* PDF.js-viewer API exposes the expected functionality", async function () {
     const pdfviewerAPI = await import("../../web/pdf_viewer.component.js");
 
     // The imported Object contains an (automatically) inserted Symbol,
     // hence we copy the data to allow using a simple comparison below.
-<<<<<<< HEAD
-    expect({ ...pdfviewerAPI }).toEqual({
-      AnnotationLayerBuilder,
-      DownloadManager,
-      EventBus,
-      FindState,
-      GenericL10n,
-      LinkTarget,
-      parseQueryString,
-      PDFFindController,
-      PDFHistory,
-      PDFLinkService,
-      PDFPageView,
-      PDFScriptingManager,
-      PDFSinglePageViewer,
-      PDFViewer,
-      ProgressBar,
-      RenderingStates,
-      ScrollMode,
-      SimpleLinkService,
-      SpreadMode,
-      StructTreeLayerBuilder,
-      TextLayerBuilder,
-      XfaLayerBuilder,
-    });
-=======
     expect({ ...pdfviewerAPI }).toEqual(expectedAPI);
 
     expect(Object.keys(globalThis.pdfjsViewer).sort()).toEqual(
       Object.keys(expectedAPI).sort()
     );
->>>>>>> upstream/master
   });
 });

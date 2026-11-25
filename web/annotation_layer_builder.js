@@ -15,42 +15,68 @@
 
 /** @typedef {import("../src/display/api").PDFPageProxy} PDFPageProxy */
 // eslint-disable-next-line max-len
-/** @typedef {import("../src/display/display_utils").PageViewport} PageViewport */
+/** @typedef {import("../src/display/page_viewport").PageViewport} PageViewport */
 // eslint-disable-next-line max-len
 /** @typedef {import("../src/display/annotation_storage").AnnotationStorage} AnnotationStorage */
-/** @typedef {import("./interfaces").IDownloadManager} IDownloadManager */
-/** @typedef {import("./interfaces").IPDFLinkService} IPDFLinkService */
+// eslint-disable-next-line max-len
+/** @typedef {import("./struct_tree_layer_builder.js").StructTreeLayerBuilder} StructTreeLayerBuilder */
 // eslint-disable-next-line max-len
 /** @typedef {import("./text_accessibility.js").TextAccessibilityManager} TextAccessibilityManager */
 // eslint-disable-next-line max-len
 /** @typedef {import("../src/display/editor/tools.js").AnnotationEditorUIManager} AnnotationEditorUIManager */
+/** @typedef {import("./comment_manager.js").CommentManager} CommentManager */
+/** @typedef {import("./pdf_link_service.js").PDFLinkService} PDFLinkService */
+// eslint-disable-next-line max-len
+/** @typedef {import("./base_download_manager.js").BaseDownloadManager} BaseDownloadManager */
 
-import { AnnotationLayer } from "pdfjs-lib";
+import {
+  AnnotationLayer,
+  AnnotationType,
+  setLayerDimensions,
+  Util,
+} from "pdfjs-lib";
+import { internalOpt } from "./internal_evt.js";
 import { PresentationModeState } from "./ui_utils.js";
 
 /**
- * @typedef {Object} AnnotationLayerBuilderOptions
+ * @typedef {object} AnnotationLayerBuilderOptions
  * @property {PDFPageProxy} pdfPage
  * @property {AnnotationStorage} [annotationStorage]
  * @property {string} [imageResourcesPath] - Path for image resources, mainly
  *   for annotation icons. Include trailing slash.
  * @property {boolean} renderForms
- * @property {IPDFLinkService} linkService
- * @property {IDownloadManager} [downloadManager]
+ * @property {PDFLinkService} linkService
+ * @property {BaseDownloadManager} [downloadManager]
+ * @property {boolean} [enableComment]
  * @property {boolean} [enableScripting]
  * @property {Promise<boolean>} [hasJSActionsPromise]
- * @property {Promise<Object<string, Array<Object>> | null>}
+ * @property {Promise<Record<string, Array<object>> | null>}
  *   [fieldObjectsPromise]
  * @property {Map<string, HTMLCanvasElement>} [annotationCanvasMap]
  * @property {TextAccessibilityManager} [accessibilityManager]
  * @property {AnnotationEditorUIManager} [annotationEditorUIManager]
- * @property {function} [onAppend]
+ * @property {Function} [onAppend]
+ * @property {CommentManager} [commentManager]
+ */
+
+/**
+ * @typedef {object} AnnotationLayerBuilderRenderOptions
+ * @property {PageViewport} viewport
+ * @property {string} [intent] - The default value is "display".
+ * @property {StructTreeLayerBuilder} [structTreeLayer]
+ * @property {Promise} [optionalContentConfigPromise]
  */
 
 class AnnotationLayerBuilder {
+  #annotations = null;
+
+  #commentManager = null;
+
   #onAppend = null;
 
-  #eventAbortController = null;
+  #eventAC = null;
+
+  #linksInjected = false;
 
   /**
    * @param {AnnotationLayerBuilderOptions} options
@@ -62,6 +88,8 @@ class AnnotationLayerBuilder {
     annotationStorage = null,
     imageResourcesPath = "",
     renderForms = true,
+    enableComment = false,
+    commentManager = null,
     enableScripting = false,
     hasJSActionsPromise = null,
     fieldObjectsPromise = null,
@@ -76,6 +104,8 @@ class AnnotationLayerBuilder {
     this.imageResourcesPath = imageResourcesPath;
     this.renderForms = renderForms;
     this.annotationStorage = annotationStorage;
+    this.enableComment = enableComment;
+    this.#commentManager = commentManager;
     this.enableScripting = enableScripting;
     this._hasJSActionsPromise = hasJSActionsPromise || Promise.resolve(false);
     this._fieldObjectsPromise = fieldObjectsPromise || Promise.resolve(null);
@@ -91,14 +121,19 @@ class AnnotationLayerBuilder {
   }
 
   /**
-   * @param {PageViewport} viewport
-   * @param {Object} options
-   * @param {string} intent (default value is 'display')
+   * @param {AnnotationLayerBuilderRenderOptions} options
    * @returns {Promise<void>} A promise that is resolved when rendering of the
    *   annotations is complete.
    */
-  async render(viewport, options, intent = "display") {
+  async render({
+    viewport,
+    intent = "display",
+    structTreeLayer = null,
+    optionalContentConfigPromise = null,
+  }) {
     if (this.div) {
+      const optionalContentConfig = await optionalContentConfigPromise;
+
       if (this._cancelled || !this.annotationLayer) {
         return;
       }
@@ -106,15 +141,18 @@ class AnnotationLayerBuilder {
       // transformation matrices.
       this.annotationLayer.update({
         viewport: viewport.clone({ dontFlip: true }),
+        optionalContentConfig,
       });
       return;
     }
 
-    const [annotations, hasJSActions, fieldObjects] = await Promise.all([
-      this.pdfPage.getAnnotations({ intent }),
-      this._hasJSActionsPromise,
-      this._fieldObjectsPromise,
-    ]);
+    const [annotations, hasJSActions, fieldObjects, optionalContentConfig] =
+      await Promise.all([
+        this.pdfPage.getAnnotations({ intent }),
+        this._hasJSActionsPromise,
+        this._fieldObjectsPromise,
+        optionalContentConfigPromise,
+      ]);
     if (this._cancelled) {
       return;
     }
@@ -125,47 +163,58 @@ class AnnotationLayerBuilder {
     div.className = "annotationLayer";
     this.#onAppend?.(div);
 
-    if (annotations.length === 0) {
-      this.hide();
-      return;
-    }
-
     this.annotationLayer = new AnnotationLayer({
       div,
       accessibilityManager: this._accessibilityManager,
       annotationCanvasMap: this._annotationCanvasMap,
       annotationEditorUIManager: this._annotationEditorUIManager,
+      annotationStorage: this.annotationStorage,
       page: this.pdfPage,
       viewport: viewport.clone({ dontFlip: true }),
-      structTreeLayer: options?.structTreeLayer || null,
+      structTreeLayer,
+      commentManager: this.#commentManager,
+      linkService: this.linkService,
     });
+
+    if (annotations.length === 0) {
+      this.#annotations = annotations;
+      setLayerDimensions(this.div, viewport);
+      return;
+    }
 
     await this.annotationLayer.render({
       annotations,
       imageResourcesPath: this.imageResourcesPath,
       renderForms: this.renderForms,
-      linkService: this.linkService,
       downloadManager: this.downloadManager,
-      annotationStorage: this.annotationStorage,
+      enableComment: this.enableComment,
+      // Disable editor conversion for existing annotations in GeckoView.
+      enableAnnotationEditing:
+        typeof PDFJSDev === "undefined"
+          ? !window.isGECKOVIEW
+          : !PDFJSDev.test("GECKOVIEW"),
       enableScripting: this.enableScripting,
       hasJSActions,
       fieldObjects,
+      optionalContentConfig,
     });
+
+    this.#annotations = annotations;
 
     // Ensure that interactive form elements in the annotationLayer are
     // disabled while PresentationMode is active (see issue 12232).
     if (this.linkService.isInPresentationMode) {
       this.#updatePresentationModeState(PresentationModeState.FULLSCREEN);
     }
-    if (!this.#eventAbortController) {
-      this.#eventAbortController = new AbortController();
+    if (!this.#eventAC) {
+      this.#eventAC = new AbortController();
 
-      this._eventBus?._on(
+      this._eventBus?.on(
         "presentationmodechanged",
         evt => {
           this.#updatePresentationModeState(evt.state);
         },
-        { signal: this.#eventAbortController.signal }
+        { signal: this.#eventAC.signal, ...internalOpt }
       );
     }
   }
@@ -173,8 +222,13 @@ class AnnotationLayerBuilder {
   cancel() {
     this._cancelled = true;
 
-    this.#eventAbortController?.abort();
-    this.#eventAbortController = null;
+    this.#eventAC?.abort();
+    this.#eventAC = null;
+    this.annotationLayer?.destroy();
+  }
+
+  refreshCanvases() {
+    this.annotationLayer?.refreshCanvases();
   }
 
   hide() {
@@ -186,6 +240,43 @@ class AnnotationLayerBuilder {
 
   hasEditableAnnotations() {
     return !!this.annotationLayer?.hasEditableAnnotations();
+  }
+
+  /**
+   * @param {Array<object>} inferredLinks
+   * @returns {Promise<void>} A promise that is resolved when the inferred links
+   *   are added to the annotation layer.
+   */
+  async injectLinkAnnotations(inferredLinks) {
+    if (this.#annotations === null) {
+      throw new Error(
+        "`render` method must be called before `injectLinkAnnotations`."
+      );
+    }
+    if (this._cancelled || this.#linksInjected) {
+      return;
+    }
+    this.#linksInjected = true;
+
+    if (!inferredLinks.length) {
+      return;
+    }
+    let newLinks;
+
+    if (this.#annotations.length) {
+      newLinks = this.#checkInferredLinks(inferredLinks);
+
+      if (!newLinks.length) {
+        return; // All inferred links overlap existing annotations.
+      }
+    } else {
+      newLinks = inferredLinks;
+    }
+    await this.annotationLayer.addLinkAnnotations(newLinks);
+  }
+
+  get linksInjected() {
+    return this.#linksInjected;
   }
 
   #updatePresentationModeState(state) {
@@ -204,11 +295,80 @@ class AnnotationLayerBuilder {
         return;
     }
     for (const section of this.div.childNodes) {
-      if (section.hasAttribute("data-internal-link")) {
+      if (
+        section.hasAttribute("data-internal-link") ||
+        section.classList.contains("mediaAnnotation")
+      ) {
         continue;
       }
       section.inert = disableFormElements;
     }
+  }
+
+  #checkInferredLinks(inferredLinks) {
+    function annotationRects(annot) {
+      if (!annot.quadPoints) {
+        return [annot.rect];
+      }
+      const rects = [];
+      for (let i = 2, ii = annot.quadPoints.length; i < ii; i += 8) {
+        const trX = annot.quadPoints[i];
+        const trY = annot.quadPoints[i + 1];
+        const blX = annot.quadPoints[i + 2];
+        const blY = annot.quadPoints[i + 3];
+        rects.push([blX, blY, trX, trY]);
+      }
+      return rects;
+    }
+
+    function intersectAnnotations(annot1, annot2) {
+      const intersections = [];
+      const annot1Rects = annotationRects(annot1);
+      const annot2Rects = annotationRects(annot2);
+      for (const rect1 of annot1Rects) {
+        for (const rect2 of annot2Rects) {
+          const intersection = Util.intersect(rect1, rect2);
+          if (intersection) {
+            intersections.push(intersection);
+          }
+        }
+      }
+      return intersections;
+    }
+
+    function areaRects(rects) {
+      let totalArea = 0;
+      for (const rect of rects) {
+        totalArea += Math.abs((rect[2] - rect[0]) * (rect[3] - rect[1]));
+      }
+      return totalArea;
+    }
+
+    return inferredLinks.filter(link => {
+      let linkAreaRects;
+
+      for (const annotation of this.#annotations) {
+        if (annotation.annotationType !== AnnotationType.LINK) {
+          continue;
+        }
+        // TODO: Add a test case to verify that we can find the intersection
+        //       between two annotations with quadPoints properly.
+        const intersections = intersectAnnotations(annotation, link);
+
+        if (intersections.length === 0) {
+          continue;
+        }
+        linkAreaRects ??= areaRects(annotationRects(link));
+
+        if (
+          areaRects(intersections) / linkAreaRects >
+          0.5 /* If the overlap is more than 50%. */
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
   }
 }
 

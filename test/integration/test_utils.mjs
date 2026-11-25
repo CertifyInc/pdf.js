@@ -13,38 +13,43 @@
  * limitations under the License.
  */
 
+import { createCanvas, loadImage } from "@napi-rs/canvas";
+import { mergeCoverageIntoGlobal } from "../coverage_utils.js";
 import os from "os";
 
 const isMac = os.platform() === "darwin";
 
-<<<<<<< HEAD
-function loadAndWait(filename, selector, zoom, setups, options) {
-=======
+/**
+ * Decode PNG data into RGBA pixels.
+ * @param {Uint8Array} data
+ * @returns {Promise<{width: number, height: number, data: Uint8ClampedArray}>}
+ */
+async function decodePNG(data) {
+  const image = await loadImage(data);
+  const { width, height } = image;
+  const ctx = createCanvas(width, height).getContext("2d");
+  ctx.drawImage(image, 0, 0);
+  return { width, height, data: ctx.getImageData(0, 0, width, height).data };
+}
+
 function loadAndWait(filename, selector, zoom, setups, options, viewport) {
->>>>>>> upstream/master
   return Promise.all(
     global.integrationSessions.map(async session => {
       const page = await session.browser.newPage();
+      settleEditorBeforeInput(page);
 
-<<<<<<< HEAD
-=======
       if (viewport) {
         await page.setViewport(viewport);
       }
 
->>>>>>> upstream/master
       // In order to avoid errors because of checks which depend on
       // a locale.
       await page.evaluateOnNewDocument(() => {
         Object.defineProperty(navigator, "language", {
-          get() {
-            return "en-US";
-          },
+          get: () => "en-US",
         });
         Object.defineProperty(navigator, "languages", {
-          get() {
-            return ["en-US", "en"];
-          },
+          get: () => ["en-US", "en"],
         });
       });
 
@@ -56,15 +61,6 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
             : options;
 
         // Options must be handled in app.js::_parseHashParams.
-<<<<<<< HEAD
-        for (const [key, value] of Object.entries(optionsObject)) {
-          app_options += `&${key}=${encodeURIComponent(value)}`;
-        }
-      }
-      const url = `${
-        global.integrationBaseUrl
-      }?file=/test/pdfs/${filename}#zoom=${zoom ?? "page-fit"}${app_options}`;
-=======
         for (const [key, value] of Object.entries(optionsObject || {})) {
           app_options += `&${key}=${encodeURIComponent(value)}`;
         }
@@ -74,7 +70,6 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
         ? filename
         : `/test/pdfs/${filename}`;
       const url = `${global.integrationBaseUrl}?file=${fileParam}#zoom=${zoom ?? "page-fit"}${app_options}`;
->>>>>>> upstream/master
 
       if (setups) {
         // page.evaluateOnNewDocument allows us to run code before the
@@ -95,9 +90,7 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
               let app;
               let eventBus;
               Object.defineProperty(window, "PDFViewerApplication", {
-                get() {
-                  return app;
-                },
+                get: () => app,
                 set(newValue) {
                   app = newValue;
                   if (aSetup) {
@@ -105,9 +98,7 @@ function loadAndWait(filename, selector, zoom, setups, options, viewport) {
                     eval(`(${aSetup})`)(app);
                   }
                   Object.defineProperty(app, "eventBus", {
-                    get() {
-                      return eventBus;
-                    },
+                    get: () => eventBus,
                     set(newV) {
                       eventBus = newV;
                       if (evSetup) {
@@ -148,6 +139,15 @@ function createPromise(page, callback) {
   );
 }
 
+function createPromiseWithArgs(page, callback, args) {
+  return page.evaluateHandle(
+    // eslint-disable-next-line no-eval, no-shadow
+    (cb, args) => [new Promise(eval(`(${cb})`))],
+    callback.toString(),
+    args
+  );
+}
+
 function awaitPromise(promise) {
   return promise.evaluate(([p]) => p);
 }
@@ -156,22 +156,28 @@ function closePages(pages) {
   return Promise.all(pages.map(([_, page]) => closeSinglePage(page)));
 }
 
-<<<<<<< HEAD
-function isVisible(page, selector) {
-  return page.evaluate(
-    sel => document.querySelector(sel)?.checkVisibility(),
-    selector
-  );
-}
-
-=======
->>>>>>> upstream/master
 async function closeSinglePage(page) {
-  // Avoid to keep something from a previous test.
-  await page.evaluate(async () => {
+  const coverage = await page.evaluate(async () => {
+    // Close the viewer gracefully, and clear local storage to avoid state
+    // leaking from one test to another.
     await window.PDFViewerApplication.testingClose();
     window.localStorage.clear();
+
+    // Serialize the coverage data to a JSON string because that is a lot
+    // faster/cheaper to transfer from the browser to Node.js over the WebDriver
+    // BiDi protocol, otherwise Puppeteer's (significantly slower) serialization
+    // logic kicks in (see https://github.com/puppeteer/puppeteer/issues/2427).
+    return {
+      page: window.__coverage__ ? JSON.stringify(window.__coverage__) : null,
+      workers: window.__worker_coverage__?.map(c => JSON.stringify(c)) ?? null,
+    };
   });
+
+  if (coverage.page) {
+    mergeCoverageIntoGlobal(JSON.parse(coverage.page));
+  }
+  coverage.workers?.map(c => mergeCoverageIntoGlobal(JSON.parse(c)));
+
   await page.close({ runBeforeUnload: false });
 }
 
@@ -185,8 +191,6 @@ async function waitForSandboxTrip(page) {
   await awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-=======
 async function waitForDOMMutation(page, callback) {
   return page.evaluateHandle(
     cb => [
@@ -205,7 +209,6 @@ async function waitForDOMMutation(page, callback) {
   );
 }
 
->>>>>>> upstream/master
 function waitForTimeout(milliseconds) {
   /**
    * Wait for the given number of milliseconds.
@@ -246,27 +249,19 @@ async function waitAndClick(page, selector, clickOptions = {}) {
   await page.click(selector, clickOptions);
 }
 
-<<<<<<< HEAD
-=======
 function waitForPointerUp(page) {
   return createPromise(page, resolve => {
     window.addEventListener("pointerup", resolve, { once: true });
   });
 }
 
->>>>>>> upstream/master
 function getSelector(id) {
   return `[data-element-id="${id}"]`;
 }
 
 async function getRect(page, selector) {
-  // In Chrome something is wrong when serializing a `DomRect`,
-  // so we extract the values and return them ourselves.
   await page.waitForSelector(selector, { visible: true });
-  return page.$eval(selector, el => {
-    const { x, y, width, height } = el.getBoundingClientRect();
-    return { x, y, width, height };
-  });
+  return (await page.$(selector)).boundingBox();
 }
 
 function getQuerySelector(id) {
@@ -285,21 +280,8 @@ function getAnnotationSelector(id) {
   return `[data-annotation-id="${id}"]`;
 }
 
-<<<<<<< HEAD
-function getSelectedEditors(page) {
-  return page.evaluate(() => {
-    const elements = document.querySelectorAll(".selectedEditor");
-    const results = [];
-    for (const { id } of elements) {
-      results.push(parseInt(id.split("_").at(-1)));
-    }
-    results.sort();
-    return results;
-  });
-=======
 function getThumbnailSelector(pageNumber) {
-  return `.thumbnailImage[data-l10n-args='{"page":${pageNumber}}']`;
->>>>>>> upstream/master
+  return `.thumbnailImageContainer[data-l10n-args^='{"page":${pageNumber}']`;
 }
 
 async function getSpanRectFromText(page, pageNumber, text) {
@@ -378,15 +360,12 @@ async function waitForEvent({
   }
 }
 
-<<<<<<< HEAD
-=======
 async function countStorageEntries(page) {
   return page.evaluate(
     () => window.PDFViewerApplication.pdfDocument.annotationStorage.size
   );
 }
 
->>>>>>> upstream/master
 async function waitForStorageEntries(page, nEntries) {
   return page.waitForFunction(
     n => window.PDFViewerApplication.pdfDocument.annotationStorage.size === n,
@@ -395,8 +374,6 @@ async function waitForStorageEntries(page, nEntries) {
   );
 }
 
-<<<<<<< HEAD
-=======
 async function countSerialized(page) {
   return page.evaluate(
     () =>
@@ -405,7 +382,6 @@ async function countSerialized(page) {
   );
 }
 
->>>>>>> upstream/master
 async function waitForSerialized(page, nEntries) {
   return page.waitForFunction(
     n => {
@@ -440,8 +416,6 @@ async function applyFunctionToEditor(page, editorId, func) {
   );
 }
 
-<<<<<<< HEAD
-=======
 async function selectEditor(page, selector, count = 1) {
   const editorRect = await getRect(page, selector);
   await page.mouse.click(
@@ -452,19 +426,15 @@ async function selectEditor(page, selector, count = 1) {
   await waitForSelectedEditor(page, selector);
 }
 
->>>>>>> upstream/master
 async function waitForSelectedEditor(page, selector) {
   return page.waitForSelector(`${selector}.selectedEditor`);
 }
 
-<<<<<<< HEAD
-=======
 async function unselectEditor(page, selector) {
   await page.keyboard.press("Escape");
   await waitForUnselectedEditor(page, selector);
 }
 
->>>>>>> upstream/master
 async function waitForUnselectedEditor(page, selector) {
   return page.waitForSelector(`${selector}:not(.selectedEditor)`);
 }
@@ -555,13 +525,8 @@ async function getFirstSerialized(page, filter = undefined) {
 function getAnnotationStorage(page) {
   return page.evaluate(() =>
     Object.fromEntries(
-<<<<<<< HEAD
-      window.PDFViewerApplication.pdfDocument.annotationStorage.serializable.map?.entries() ||
-        []
-=======
       window.PDFViewerApplication.pdfDocument.annotationStorage.serializable
         .map || []
->>>>>>> upstream/master
     )
   );
 }
@@ -586,39 +551,23 @@ function getEditors(page, kind) {
     const elements = document.querySelectorAll(`.${aKind}Editor`);
     const results = [];
     for (const { id } of elements) {
-<<<<<<< HEAD
-      results.push(id);
-    }
-=======
-      results.push(parseInt(id.split("_").at(-1)));
+      results.push(parseInt(id.split("_").at(-1), 10));
     }
     results.sort();
->>>>>>> upstream/master
     return results;
   }, kind);
 }
 
-<<<<<<< HEAD
-function getEditorDimensions(page, id) {
-  return page.evaluate(n => {
-    const element = document.getElementById(`pdfjs_internal_editor_${n}`);
-    const { style } = element;
-=======
 function getEditorDimensions(page, selector) {
   return page.evaluate(sel => {
     const { style } = document.querySelector(sel);
->>>>>>> upstream/master
     return {
       left: style.left,
       top: style.top,
       width: style.width,
       height: style.height,
     };
-<<<<<<< HEAD
-  }, id);
-=======
   }, selector);
->>>>>>> upstream/master
 }
 
 async function serializeBitmapDimensions(page) {
@@ -645,12 +594,6 @@ async function serializeBitmapDimensions(page) {
   });
 }
 
-<<<<<<< HEAD
-async function dragAndDropAnnotation(page, startX, startY, tX, tY) {
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-  await page.mouse.move(startX + tX, startY + tY);
-=======
 async function dragAndDrop(page, selector, translations, steps = 1) {
   const rect = await getRect(page, selector);
   const startX = rect.x + rect.width / 2;
@@ -660,13 +603,81 @@ async function dragAndDrop(page, selector, translations, steps = 1) {
   for (const [tX, tY] of translations) {
     await page.mouse.move(startX + tX, startY + tY, { steps });
   }
->>>>>>> upstream/master
   await page.mouse.up();
   await page.waitForSelector("#viewer:not(.noUserSelect)");
 }
 
-<<<<<<< HEAD
-=======
+// Move two fingers, horizontally centered on (centerX, centerY), from startGap
+// to endGap: it's a pinch out when endGap is larger than startGap.
+// Keep in mind that `TouchManager` starts to pinch only once the distance
+// between the two fingers changed by more than `MIN_TOUCH_DISTANCE_TO_PINCH`
+// (35 CSS pixels), hence the first moves are swallowed and the resulting zoom
+// factor is smaller than endGap / startGap.
+// Explicit start/end points can be used for tests which need an asymmetric
+// gesture, or hooks around each touch lifetime.
+async function pinch(
+  page,
+  {
+    afterEnd = null,
+    afterFirstEnd = null,
+    afterFirstStart = null,
+    afterStart = null,
+    beforeEnd = null,
+    centerX = 0,
+    centerY = 0,
+    centerDeltaX = 0,
+    centerDeltaY = 0,
+    startGap = 0,
+    endGap = startGap,
+    endPoints = null,
+    startPoints = null,
+    steps = 12,
+  }
+) {
+  const normalizePoint = point =>
+    Array.isArray(point) ? { x: point[0], y: point[1] } : point;
+  const start = (
+    startPoints || [
+      { x: centerX - startGap, y: centerY },
+      { x: centerX + startGap, y: centerY },
+    ]
+  ).map(normalizePoint);
+  let end;
+  if (endPoints) {
+    end = endPoints.map(normalizePoint);
+  } else if (startPoints) {
+    end = start;
+  } else {
+    end = [
+      { x: centerX + centerDeltaX - endGap, y: centerY + centerDeltaY },
+      { x: centerX + centerDeltaX + endGap, y: centerY + centerDeltaY },
+    ];
+  }
+
+  const finger0 = await page.touchscreen.touchStart(start[0].x, start[0].y);
+  await afterFirstStart?.(finger0);
+  const finger1 = await page.touchscreen.touchStart(start[1].x, start[1].y);
+  await afterStart?.([finger0, finger1]);
+
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    await finger0.move(
+      start[0].x + (end[0].x - start[0].x) * t,
+      start[0].y + (end[0].y - start[0].y) * t
+    );
+    await finger1.move(
+      start[1].x + (end[1].x - start[1].x) * t,
+      start[1].y + (end[1].y - start[1].y) * t
+    );
+  }
+
+  await beforeEnd?.([finger0, finger1]);
+  await finger0.end();
+  await afterFirstEnd?.([finger0, finger1]);
+  await finger1.end();
+  await afterEnd?.([finger0, finger1]);
+}
+
 function waitForPageChanging(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on("pagechanging", resolve, {
@@ -675,7 +686,6 @@ function waitForPageChanging(page) {
   });
 }
 
->>>>>>> upstream/master
 function waitForAnnotationEditorLayer(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on(
@@ -696,11 +706,6 @@ function waitForAnnotationModeChanged(page) {
   });
 }
 
-<<<<<<< HEAD
-function waitForPageRendered(page) {
-  return createPromise(page, resolve => {
-    window.PDFViewerApplication.eventBus.on("pagerendered", resolve, {
-=======
 function waitForPageRendered(page, pageNumber) {
   return page.evaluateHandle(
     number => [
@@ -724,24 +729,92 @@ function waitForPageRendered(page, pageNumber) {
 function waitForEditorMovedInDOM(page) {
   return createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on("editormovedindom", resolve, {
->>>>>>> upstream/master
       once: true,
     });
   });
 }
 
+/**
+ * Wait two timer turns for deferred editor DOM and focus updates.
+ */
+function waitForEditorFocusSettled(page) {
+  return page.evaluate(
+    () =>
+      new Promise(resolve => {
+        setTimeout(() => setTimeout(resolve, 0), 0);
+      })
+  );
+}
+
+/**
+ * Wait for deferred editor updates before input or focus.
+ */
+function settleEditorBeforeInput(page) {
+  for (const [target, names] of [
+    [page.keyboard, ["down", "up", "press", "type", "sendCharacter"]],
+    [page.mouse, ["down", "click"]],
+    [page, ["focus"]],
+  ]) {
+    for (const name of names) {
+      const method = target[name].bind(target);
+      target[name] = async (...args) => {
+        await waitForEditorFocusSettled(page);
+        return method(...args);
+      };
+    }
+  }
+}
+
 async function scrollIntoView(page, selector) {
+  await page.waitForSelector(selector, { visible: true });
   const handle = await page.evaluateHandle(
     sel => [
       new Promise(resolve => {
         const container = document.getElementById("viewerContainer");
-        if (container.scrollHeight <= container.clientHeight) {
+        const element = document.querySelector(sel);
+        if (!container || !element) {
           resolve();
           return;
         }
-        container.addEventListener("scrollend", resolve, { once: true });
-        const element = document.querySelector(sel);
+        if (
+          container.scrollHeight <= container.clientHeight &&
+          container.scrollWidth <= container.clientWidth
+        ) {
+          resolve();
+          return;
+        }
+
+        const beforeTop = container.scrollTop;
+        const beforeLeft = container.scrollLeft;
+        let settled = false;
+        let timeoutId = null;
+
+        const finish = () => {
+          if (settled) {
+            return;
+          }
+          settled = true;
+          if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+          }
+          container.removeEventListener("scrollend", finish);
+          resolve();
+        };
+
+        container.addEventListener("scrollend", finish, { once: true });
         element.scrollIntoView({ behavior: "instant", block: "start" });
+
+        if (
+          container.scrollTop === beforeTop &&
+          container.scrollLeft === beforeLeft
+        ) {
+          finish();
+          return;
+        }
+
+        // Some browsers occasionally miss `scrollend`, so keep a short
+        // fallback to avoid hanging.
+        timeoutId = setTimeout(finish, 250);
       }),
     ],
     selector
@@ -764,15 +837,11 @@ async function firstPageOnTop(page) {
   return awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-async function hover(page, selector) {
-  const rect = await getRect(page, selector);
-  await page.mouse.move(rect.x + rect.width / 2, rect.y + rect.height / 2);
-}
-
-=======
->>>>>>> upstream/master
 async function setCaretAt(page, pageNumber, text, position) {
+  // Wait for the text layer to finish rendering before trying to find the span.
+  await page.waitForSelector(
+    `.page[data-page-number="${pageNumber}"] .textLayer .endOfContent`
+  );
   await page.evaluate(
     (pageN, string, pos) => {
       for (const el of document.querySelectorAll(
@@ -795,6 +864,14 @@ async function kbCopy(page) {
   await page.keyboard.down(modifier);
   await page.keyboard.press("c", { commands: ["Copy"] });
   await page.keyboard.up(modifier);
+}
+async function kbCut(page) {
+  await page.keyboard.down(modifier);
+  await page.keyboard.press("x", { commands: ["Cut"] });
+  await page.keyboard.up(modifier);
+}
+async function kbDelete(page) {
+  await page.keyboard.press("Delete");
 }
 async function kbPaste(page) {
   await page.keyboard.down(modifier);
@@ -913,12 +990,37 @@ async function kbDeleteLastWord(page) {
   }
 }
 
-async function kbFocusNext(page) {
-  const handle = await createPromise(page, resolve => {
-    window.addEventListener("focusin", resolve, { once: true });
-  });
-  await page.keyboard.press("Tab");
-  await awaitPromise(handle);
+async function kbFocusNext(page, selector = null) {
+  if (selector) {
+    await page.waitForSelector(selector, { visible: true });
+  }
+  while (true) {
+    const handle = await page.evaluateHandle(
+      sel => [
+        new Promise(resolve => {
+          const cb = e => {
+            if (!sel || document.querySelector(sel)?.contains(e.target)) {
+              window.removeEventListener("focusin", cb);
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          };
+          window.addEventListener("focusin", cb);
+        }),
+      ],
+      selector
+    );
+
+    await page.keyboard.press("Tab");
+    const result = await awaitPromise(handle);
+    if (result) {
+      break;
+    }
+  }
+  if (selector) {
+    await page.waitForSelector(`${selector}:focus-within`, { visible: true });
+  }
 }
 
 async function kbFocusPrevious(page) {
@@ -931,15 +1033,12 @@ async function kbFocusPrevious(page) {
   await awaitPromise(handle);
 }
 
-<<<<<<< HEAD
-=======
 async function kbSave(page) {
   await page.keyboard.down(modifier);
   await page.keyboard.press("s");
   await page.keyboard.up(modifier);
 }
 
->>>>>>> upstream/master
 async function switchToEditor(name, page, disable = false) {
   const modeChangedHandle = await createPromise(page, resolve => {
     window.PDFViewerApplication.eventBus.on(
@@ -957,11 +1056,6 @@ async function switchToEditor(name, page, disable = false) {
   await awaitPromise(modeChangedHandle);
 }
 
-<<<<<<< HEAD
-export {
-  applyFunctionToEditor,
-  awaitPromise,
-=======
 async function selectEditors(name, page) {
   await kbSelectAll(page);
   await page.waitForFunction(
@@ -983,6 +1077,24 @@ function waitForNoElement(page, selector) {
   );
 }
 
+function waitForTextToBe(page, selector, text) {
+  return page.waitForFunction(
+    (sel, str) => document.querySelector(sel)?.textContent.trim() === str,
+    {},
+    selector,
+    text
+  );
+}
+
+function waitForTooltipToBe(page, selector, text) {
+  return page.waitForFunction(
+    (sel, str) => document.querySelector(sel)?.title === str,
+    {},
+    selector,
+    text
+  );
+}
+
 function isCanvasMonochrome(page, pageNumber, rectangle, color) {
   return page.evaluate(
     (rect, pageN, col) => {
@@ -992,11 +1104,13 @@ function isCanvasMonochrome(page, pageNumber, rectangle, color) {
       const canvasRect = canvas.getBoundingClientRect();
       const ctx = canvas.getContext("2d");
       rect ||= canvasRect;
+      // The canvas is scaled by the devicePixelRatio: convert from CSS pixels.
+      const scale = canvas.width / canvasRect.width;
       const { data } = ctx.getImageData(
-        rect.x - canvasRect.x,
-        rect.y - canvasRect.y,
-        rect.width,
-        rect.height
+        Math.round((rect.x - canvasRect.x) * scale),
+        Math.round((rect.y - canvasRect.y) * scale),
+        Math.round(rect.width * scale),
+        Math.round(rect.height * scale)
       );
       return new Uint32Array(data.buffer).every(x => x === col);
     },
@@ -1058,6 +1172,52 @@ async function highlightSpan(
   await page.waitForSelector(getEditorSelector(nextId));
 }
 
+async function showViewsManager(page) {
+  // Opening dispatches this event synchronously when animations are disabled,
+  // so install the listener before clicking the toggle button. With animations,
+  // it's dispatched once the transition has ended and the moving class has
+  // been removed.
+  const openedHandle = await createPromise(page, resolve => {
+    const { eventBus, viewsManager } = window.PDFViewerApplication;
+    const onResize = ({ source }) => {
+      if (source !== viewsManager) {
+        return;
+      }
+      eventBus.off("resize", onResize);
+      resolve();
+    };
+    eventBus.on("resize", onResize);
+  });
+  await page.click("#viewsManagerToggleButton");
+  await awaitPromise(openedHandle);
+  await page.waitForSelector("#viewsManager", { visible: true });
+  await page.waitForSelector(
+    "#outerContainer:not(.viewsManagerMoving).viewsManagerOpen",
+    { visible: true }
+  );
+  await page.waitForSelector("#viewsManagerStatusActionButton:not(:disabled)", {
+    visible: true,
+  });
+}
+
+async function waitForBrowserTrip(page) {
+  const handle = await page.evaluateHandle(() => [
+    new Promise(resolve => {
+      window.requestAnimationFrame(resolve);
+    }),
+  ]);
+  await awaitPromise(handle);
+}
+
+function waitForSelectionChange(page, selection) {
+  return page.waitForFunction(
+    // We need to replace EOL on Windows to make the test pass.
+    sel => document.getSelection().toString().replaceAll("\r\n", "\n") === sel,
+    {},
+    selection
+  );
+}
+
 // Unicode bidi isolation characters, Fluent adds these markers to the text.
 const FSI = "\u2068";
 const PDI = "\u2069";
@@ -1066,24 +1226,19 @@ export {
   applyFunctionToEditor,
   awaitPromise,
   clearEditors,
->>>>>>> upstream/master
   clearInput,
   closePages,
   closeSinglePage,
   copy,
   copyToClipboard,
-<<<<<<< HEAD
-  createPromise,
-  dragAndDropAnnotation,
-  firstPageOnTop,
-=======
   countSerialized,
   countStorageEntries,
   createPromise,
+  createPromiseWithArgs,
+  decodePNG,
   dragAndDrop,
   firstPageOnTop,
   FSI,
->>>>>>> upstream/master
   getAnnotationSelector,
   getAnnotationStorage,
   getComputedStyleSelector,
@@ -1091,16 +1246,6 @@ export {
   getEditors,
   getEditorSelector,
   getFirstSerialized,
-<<<<<<< HEAD
-  getQuerySelector,
-  getRect,
-  getSelectedEditors,
-  getSelector,
-  getSerialized,
-  getSpanRectFromText,
-  hover,
-  isVisible,
-=======
   getNextEditorId,
   getQuerySelector,
   getRect,
@@ -1111,11 +1256,13 @@ export {
   getXY,
   highlightSpan,
   isCanvasMonochrome,
->>>>>>> upstream/master
   kbBigMoveDown,
   kbBigMoveLeft,
   kbBigMoveRight,
   kbBigMoveUp,
+  kbCopy,
+  kbCut,
+  kbDelete,
   kbDeleteLastWord,
   kbFocusNext,
   kbFocusPrevious,
@@ -1124,42 +1271,28 @@ export {
   kbModifierDown,
   kbModifierUp,
   kbRedo,
-<<<<<<< HEAD
-=======
   kbSave,
->>>>>>> upstream/master
   kbSelectAll,
   kbUndo,
   loadAndWait,
   mockClipboard,
-<<<<<<< HEAD
-  paste,
-  pasteFromClipboard,
-  scrollIntoView,
-  serializeBitmapDimensions,
-  setCaretAt,
-  switchToEditor,
-  waitAndClick,
-  waitForAnnotationEditorLayer,
-  waitForAnnotationModeChanged,
-  waitForEntryInStorage,
-  waitForEvent,
-  waitForPageRendered,
-=======
   moveEditor,
   paste,
   pasteFromClipboard,
   PDI,
+  pinch,
   scrollIntoView,
   selectEditor,
   selectEditors,
   serializeBitmapDimensions,
   setCaretAt,
+  showViewsManager,
   switchToEditor,
   unselectEditor,
   waitAndClick,
   waitForAnnotationEditorLayer,
   waitForAnnotationModeChanged,
+  waitForBrowserTrip,
   waitForDOMMutation,
   waitForEntryInStorage,
   waitForEvent,
@@ -1167,11 +1300,13 @@ export {
   waitForPageChanging,
   waitForPageRendered,
   waitForPointerUp,
->>>>>>> upstream/master
   waitForSandboxTrip,
   waitForSelectedEditor,
+  waitForSelectionChange,
   waitForSerialized,
   waitForStorageEntries,
+  waitForTextToBe,
   waitForTimeout,
+  waitForTooltipToBe,
   waitForUnselectedEditor,
 };

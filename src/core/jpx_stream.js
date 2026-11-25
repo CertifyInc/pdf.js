@@ -22,13 +22,12 @@ import { shadow } from "../shared/util.js";
  * the stream behaves like all the other DecodeStreams.
  */
 class JpxStream extends DecodeStream {
-  constructor(stream, maybeLength, params) {
+  constructor(stream, maybeLength) {
     super(maybeLength);
 
     this.stream = stream;
     this.dict = stream.dict;
     this.maybeLength = maybeLength;
-    this.params = params;
   }
 
   get bytes() {
@@ -41,16 +40,16 @@ class JpxStream extends DecodeStream {
     // directly insert all of its data into `this.buffer`.
   }
 
-  readBlock(decoderOptions) {
-    this.decodeImage(null, decoderOptions);
+  get isAsyncDecoder() {
+    return true;
   }
 
-  decodeImage(bytes, decoderOptions) {
+  async decodeImage(bytes, _length, decoderOptions) {
     if (this.eof) {
       return this.buffer;
     }
     bytes ||= this.bytes;
-    this.buffer = JpxImage.decode(bytes, decoderOptions);
+    this.buffer = await JpxImage.instance.decode(bytes, decoderOptions);
     this.bufferLength = this.buffer.length;
     this.eof = true;
 
@@ -59,6 +58,10 @@ class JpxStream extends DecodeStream {
 
   get canAsyncDecodeImageFromBuffer() {
     return this.stream.isAsync;
+  }
+
+  get isImageStream() {
+    return true;
   }
 }
 

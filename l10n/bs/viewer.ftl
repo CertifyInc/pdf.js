@@ -39,8 +39,6 @@ pdfjs-open-file-button-label = Otvori
 pdfjs-print-button =
     .title = Štampaj
 pdfjs-print-button-label = Štampaj
-<<<<<<< HEAD
-=======
 pdfjs-save-button =
     .title = Sačuvaj
 pdfjs-save-button-label = Sačuvaj
@@ -53,7 +51,6 @@ pdfjs-download-button-label = Preuzmi
 pdfjs-bookmark-button =
     .title = Trenutna stranica (Prikaži URL sa trenutne stranice)
 pdfjs-bookmark-button-label = Trenutna stranica
->>>>>>> upstream/master
 
 ##  Secondary toolbar and context menu
 
@@ -78,8 +75,6 @@ pdfjs-cursor-text-select-tool-button-label = Alat za označavanje teksta
 pdfjs-cursor-hand-tool-button =
     .title = Omogući ručni alat
 pdfjs-cursor-hand-tool-button-label = Ručni alat
-<<<<<<< HEAD
-=======
 pdfjs-scroll-page-button =
     .title = Koristite pomicanje stranice
 pdfjs-scroll-page-button-label = Pomicanje stranice
@@ -101,7 +96,6 @@ pdfjs-spread-odd-button-label = Neparne duplerice
 pdfjs-spread-even-button =
     .title = Izradi duplerice koje počinju s parnim stranicama
 pdfjs-spread-even-button-label = Parne duplerice
->>>>>>> upstream/master
 
 ## Document properties dialog
 
@@ -111,15 +105,6 @@ pdfjs-document-properties-button-label = Svojstva dokumenta...
 pdfjs-document-properties-file-name = Naziv fajla:
 pdfjs-document-properties-file-size = Veličina fajla:
 # Variables:
-<<<<<<< HEAD
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bajta)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bajta)
-=======
 #   $kb (Number) - the PDF file size in kilobytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bajtova)
@@ -127,7 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bajtova)
->>>>>>> upstream/master
 pdfjs-document-properties-title = Naslov:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Predmet:
@@ -135,14 +119,8 @@ pdfjs-document-properties-keywords = Ključne riječi:
 pdfjs-document-properties-creation-date = Datum kreiranja:
 pdfjs-document-properties-modification-date = Datum promjene:
 # Variables:
-<<<<<<< HEAD
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 pdfjs-document-properties-creator = Kreator:
 pdfjs-document-properties-producer = PDF stvaratelj:
 pdfjs-document-properties-version = PDF verzija:
@@ -169,14 +147,11 @@ pdfjs-document-properties-page-size-dimension-name-string = { $width } × { $hei
 
 ##
 
-<<<<<<< HEAD
-=======
 # The linearization status of the document; usually called "Fast Web View" in
 # English locales of Adobe software.
 pdfjs-document-properties-linearized = Brzi web pregled:
 pdfjs-document-properties-linearized-yes = Da
 pdfjs-document-properties-linearized-no = Ne
->>>>>>> upstream/master
 pdfjs-document-properties-close-button = Zatvori
 
 ## Print
@@ -191,34 +166,6 @@ pdfjs-printing-not-ready = Upozorenje: PDF nije u potpunosti učitan za štampan
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Uključi/isključi bočnu traku
-<<<<<<< HEAD
-=======
-pdfjs-toggle-sidebar-notification-button =
-    .title = Uključi/isključi bočnu traku (dokument sadrži obris/priloge/slojeve)
->>>>>>> upstream/master
-pdfjs-toggle-sidebar-button-label = Uključi/isključi bočnu traku
-pdfjs-document-outline-button =
-    .title = Prikaži outline dokumenta (dvoklik za skupljanje/širenje svih stavki)
-pdfjs-document-outline-button-label = Konture dokumenta
-pdfjs-attachments-button =
-    .title = Prikaži priloge
-pdfjs-attachments-button-label = Prilozi
-<<<<<<< HEAD
-pdfjs-thumbs-button =
-    .title = Prikaži thumbnailove
-pdfjs-thumbs-button-label = Thumbnailovi
-pdfjs-findbar-button =
-    .title = Pronađi u dokumentu
-pdfjs-findbar-button-label = Pronađi
-=======
-pdfjs-layers-button =
-    .title = Prikaži slojeve (dvostruki klik da biste vratili sve slojeve na zadano stanje)
-pdfjs-layers-button-label = Slojevi
-pdfjs-thumbs-button =
-    .title = Prikaži thumbnailove
-pdfjs-thumbs-button-label = Thumbnailovi
 pdfjs-current-outline-item-button =
     .title = Pronađi trenutnu stavku strukture
 pdfjs-current-outline-item-button-label = Trenutna stavka strukture
@@ -226,14 +173,9 @@ pdfjs-findbar-button =
     .title = Pronađi u dokumentu
 pdfjs-findbar-button-label = Pronađi
 pdfjs-additional-layers = Dodatni slojevi
->>>>>>> upstream/master
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
-# Variables:
-#   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Strana { $page }
 # Variables:
 #   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
@@ -242,8 +184,8 @@ pdfjs-thumb-page-canvas =
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Pronađi
     .placeholder = Pronađi u dokumentu…
+    .title = Pronađi
 pdfjs-find-previous-button =
     .title = Pronađi prethodno pojavljivanje fraze
 pdfjs-find-previous-button-label = Prethodno
@@ -252,10 +194,6 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = Sljedeće
 pdfjs-find-highlight-checkbox = Označi sve
 pdfjs-find-match-case-checkbox-label = Osjetljivost na karaktere
-<<<<<<< HEAD
-pdfjs-find-reached-top = Dostigao sam vrh dokumenta, nastavljam sa dna
-pdfjs-find-reached-bottom = Dostigao sam kraj dokumenta, nastavljam sa vrha
-=======
 pdfjs-find-match-diacritics-checkbox-label = Podudaranje dijakritika
 pdfjs-find-entire-word-checkbox-label = Cijele riječi
 pdfjs-find-reached-top = Dostigao sam vrh dokumenta, nastavljam sa dna
@@ -277,7 +215,6 @@ pdfjs-find-match-count-limit =
         [few] Više od { $limit } podudaranja
        *[other] Više od { $limit } podudaranja
     }
->>>>>>> upstream/master
 pdfjs-find-not-found = Fraza nije pronađena
 
 ## Predefined zoom values
@@ -292,13 +229,10 @@ pdfjs-page-scale-percent = { $scale }%
 
 ## PDF page
 
-<<<<<<< HEAD
-=======
 # Variables:
 #   $page (Number) - the page number
 pdfjs-page-landmark =
     .aria-label = Stranica { $page }
->>>>>>> upstream/master
 
 ## Loading indicator messages
 
@@ -317,12 +251,9 @@ pdfjs-rendering-error = Došlo je do greške prilikom renderiranja strane.
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } pribilješka]
-<<<<<<< HEAD
-=======
 # Variables:
 #   $dateObj (Date) - the modification date and time of the annotation
 pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
->>>>>>> upstream/master
 
 ## Password
 
@@ -334,11 +265,6 @@ pdfjs-web-fonts-disabled = Web fontovi su onemogućeni: nemoguće koristiti uba�
 
 ## Editing
 
-<<<<<<< HEAD
-
-## Alt-text dialog
-
-=======
 pdfjs-editor-free-text-button =
     .title = Tekst
 pdfjs-editor-free-text-button-label = Tekst
@@ -352,8 +278,8 @@ pdfjs-editor-highlight-button =
     .title = Istaknite
 pdfjs-editor-highlight-button-label = Istaknite
 pdfjs-highlight-floating-button1 =
-    .title = Istaknite
     .aria-label = Istaknite
+    .title = Istaknite
 pdfjs-highlight-floating-button-label = Istaknite
 pdfjs-editor-signature-button =
     .title = Dodaj potpis
@@ -438,13 +364,10 @@ pdfjs-editor-alt-text-textarea =
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = Alternativni tekst
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-=======
 pdfjs-editor-resizer-top-left =
     .aria-label = Gornji lijevi ugao — promjena veličine
 pdfjs-editor-resizer-top-middle =
@@ -538,13 +461,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Postavke alternativnog teksta slik
 pdfjs-editor-alt-text-settings-automatic-title = Automatski alternativni tekst
 pdfjs-editor-alt-text-settings-create-model-button-label = Automatski kreiraj alternativni tekst
 pdfjs-editor-alt-text-settings-create-model-description = Predlaže opise kako bi pomogao ljudima koji ne vide sliku ili kada se slika ne učitava.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Alternativni tekst AI model ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Radi lokalno na vašem uređaju tako da vaši podaci ostaju privatni. Potrebno za automatski alternativni tekst.
-pdfjs-editor-alt-text-settings-delete-model-button = Izbriši
-pdfjs-editor-alt-text-settings-download-model-button = Preuzmi
-pdfjs-editor-alt-text-settings-downloading-model-button = Preuzimam…
 pdfjs-editor-alt-text-settings-editor-title = Uređivač alternativnog teksta
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Odmah prikaži uređivač alternativnog teksta prilikom dodavanja slike
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomaže vam da osigurate da sve vaše slike imaju alternativni tekst.
@@ -642,4 +558,3 @@ pdfjs-editor-add-signature-edit-button-label = Uredi opis
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = Uredi opis
->>>>>>> upstream/master

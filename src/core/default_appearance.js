@@ -18,7 +18,6 @@ import {
   escapePDFName,
   getRotationMatrix,
   numberToString,
-  stringToUTF16HexString,
 } from "./core_utils.js";
 import { Dict, Name } from "./primitives.js";
 import {
@@ -26,13 +25,15 @@ import {
   LINE_FACTOR,
   OPS,
   shadow,
+  Util,
   warn,
 } from "../shared/util.js";
-import { ColorSpace } from "./colorspace.js";
+import { ColorSpaceUtils } from "./colorspace_utils.js";
 import { EvaluatorPreprocessor } from "./evaluator.js";
 import { LocalColorSpaceCache } from "./image_utils.js";
 import { PDFFunctionFactory } from "./function.js";
 import { StringStream } from "./stream.js";
+import { stringToUTF16HexString } from "./string_utils.js";
 
 class DefaultAppearanceEvaluator extends EvaluatorPreprocessor {
   constructor(str) {
@@ -73,13 +74,13 @@ class DefaultAppearanceEvaluator extends EvaluatorPreprocessor {
             }
             break;
           case OPS.setFillRGBColor:
-            ColorSpace.singletons.rgb.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.rgb.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillGray:
-            ColorSpace.singletons.gray.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.gray.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillCMYKColor:
-            ColorSpace.singletons.cmyk.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.cmyk.getRgbItem(args, 0, result.fontColor, 0);
             break;
         }
       }
@@ -97,11 +98,11 @@ function parseDefaultAppearance(str) {
 }
 
 class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
-  constructor(stream, evaluatorOptions, xref) {
+  constructor(stream, xref, globalColorSpaceCache) {
     super(stream);
     this.stream = stream;
-    this.evaluatorOptions = evaluatorOptions;
     this.xref = xref;
+    this.globalColorSpaceCache = globalColorSpaceCache;
 
     this.resources = stream.dict?.get("Resources");
   }
@@ -116,7 +117,7 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
       fontSize: 0,
       fontName: "",
       fontColor: /* black = */ new Uint8ClampedArray(3),
-      fillColorSpace: ColorSpace.singletons.gray,
+      fillColorSpace: ColorSpaceUtils.gray,
     };
     let breakLoop = false;
     const stack = [];
@@ -144,7 +145,8 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
             result = stack.pop() || result;
             break;
           case OPS.setTextMatrix:
-            result.scaleFactor *= Math.hypot(args[0], args[1]);
+            const tm = Util.transform(this.stateManager.state.ctm, args);
+            result.scaleFactor *= Math.hypot(tm[0], tm[1]);
             break;
           case OPS.setFont:
             const [fontName, fontSize] = args;
@@ -152,15 +154,16 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
               result.fontName = fontName.name;
             }
             if (typeof fontSize === "number" && fontSize > 0) {
-              result.fontSize = fontSize * result.scaleFactor;
+              result.fontSize = fontSize;
             }
             break;
           case OPS.setFillColorSpace:
-            result.fillColorSpace = ColorSpace.parse({
+            result.fillColorSpace = ColorSpaceUtils.parse({
               cs: args[0],
               xref: this.xref,
               resources: this.resources,
               pdfFunctionFactory: this._pdfFunctionFactory,
+              globalColorSpaceCache: this.globalColorSpaceCache,
               localColorSpaceCache: this._localColorSpaceCache,
             });
             break;
@@ -169,18 +172,22 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
             cs.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillRGBColor:
-            ColorSpace.singletons.rgb.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.rgb.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillGray:
-            ColorSpace.singletons.gray.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.gray.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillCMYKColor:
-            ColorSpace.singletons.cmyk.getRgbItem(args, 0, result.fontColor, 0);
+            ColorSpaceUtils.cmyk.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.showText:
           case OPS.showSpacedText:
           case OPS.nextLineShowText:
           case OPS.nextLineSetSpacingShowText:
+            // The font (Tf) and the text matrix (Tm) can be set in any order,
+            // so the scale factor is applied here, when text is actually shown
+            // and both are known to be in effect.
+            result.fontSize *= result.scaleFactor;
             breakLoop = true;
             break;
         }
@@ -200,18 +207,22 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
   }
 
   get _pdfFunctionFactory() {
-    const pdfFunctionFactory = new PDFFunctionFactory({
-      xref: this.xref,
-      isEvalSupported: this.evaluatorOptions.isEvalSupported,
-    });
-    return shadow(this, "_pdfFunctionFactory", pdfFunctionFactory);
+    return shadow(
+      this,
+      "_pdfFunctionFactory",
+      new PDFFunctionFactory({ xref: this.xref })
+    );
   }
 }
 
 // Parse appearance stream to extract font and color information.
 // It returns the font properties used to render the first text object.
-function parseAppearanceStream(stream, evaluatorOptions, xref) {
-  return new AppearanceStreamEvaluator(stream, evaluatorOptions, xref).parse();
+function parseAppearanceStream(stream, xref, globalColorSpaceCache) {
+  return new AppearanceStreamEvaluator(
+    stream,
+    xref,
+    globalColorSpaceCache
+  ).parse();
 }
 
 function getPdfColor(color, isFill) {
@@ -234,6 +245,8 @@ function createDefaultAppearance({ fontSize, fontName, fontColor }) {
 }
 
 class FakeUnicodeFont {
+  static #fontNameId = 1;
+
   constructor(xref, fontFamily) {
     this.xref = xref;
     this.widths = null;
@@ -244,22 +257,19 @@ class FakeUnicodeFont {
     const canvas = new OffscreenCanvas(1, 1);
     this.ctxMeasure = canvas.getContext("2d", { willReadFrequently: true });
 
-    if (!FakeUnicodeFont._fontNameId) {
-      FakeUnicodeFont._fontNameId = 1;
-    }
     this.fontName = Name.get(
-      `InvalidPDFjsFont_${fontFamily}_${FakeUnicodeFont._fontNameId++}`
+      `InvalidPDFjsFont_${fontFamily}_${FakeUnicodeFont.#fontNameId++}`
     );
   }
 
   get fontDescriptorRef() {
     if (!FakeUnicodeFont._fontDescriptorRef) {
       const fontDescriptor = new Dict(this.xref);
-      fontDescriptor.set("Type", Name.get("FontDescriptor"));
+      fontDescriptor.setIfName("Type", "FontDescriptor");
       fontDescriptor.set("FontName", this.fontName);
       fontDescriptor.set("FontFamily", "MyriadPro Regular");
       fontDescriptor.set("FontBBox", [0, 0, 0, 0]);
-      fontDescriptor.set("FontStretch", Name.get("Normal"));
+      fontDescriptor.setIfName("FontStretch", "Normal");
       fontDescriptor.set("FontWeight", 400);
       fontDescriptor.set("ItalicAngle", 0);
 
@@ -273,16 +283,16 @@ class FakeUnicodeFont {
   get descendantFontRef() {
     const descendantFont = new Dict(this.xref);
     descendantFont.set("BaseFont", this.fontName);
-    descendantFont.set("Type", Name.get("Font"));
-    descendantFont.set("Subtype", Name.get("CIDFontType0"));
-    descendantFont.set("CIDToGIDMap", Name.get("Identity"));
+    descendantFont.setIfName("Type", "Font");
+    descendantFont.setIfName("Subtype", "CIDFontType0");
+    descendantFont.setIfName("CIDToGIDMap", "Identity");
     descendantFont.set("FirstChar", this.firstChar);
     descendantFont.set("LastChar", this.lastChar);
     descendantFont.set("FontDescriptor", this.fontDescriptorRef);
     descendantFont.set("DW", 1000);
 
     const widths = [];
-    const chars = [...this.widths.entries()].sort();
+    const chars = [...this.widths].sort();
     let currentChar = null;
     let currentWidths = null;
     for (const [char, width] of chars) {
@@ -318,11 +328,11 @@ class FakeUnicodeFont {
   get baseFontRef() {
     const baseFont = new Dict(this.xref);
     baseFont.set("BaseFont", this.fontName);
-    baseFont.set("Type", Name.get("Font"));
-    baseFont.set("Subtype", Name.get("Type0"));
-    baseFont.set("Encoding", Name.get("Identity-H"));
+    baseFont.setIfName("Type", "Font");
+    baseFont.setIfName("Subtype", "Type0");
+    baseFont.setIfName("Encoding", "Identity-H");
     baseFont.set("DescendantFonts", [this.descendantFontRef]);
-    baseFont.set("ToUnicode", Name.get("Identity-H"));
+    baseFont.setIfName("ToUnicode", "Identity-H");
 
     return this.xref.getNewPersistentRef(baseFont);
   }
@@ -414,10 +424,7 @@ class FakeUnicodeFont {
       [w, h] = [h, w];
     }
 
-    let hscale = 1;
-    if (maxWidth > w) {
-      hscale = w / maxWidth;
-    }
+    const hscale = maxWidth > w ? w / maxWidth : 1;
     let vscale = 1;
     const lineHeight = LINE_FACTOR * fontSize;
     const lineDescent = LINE_DESCENT_FACTOR * fontSize;
@@ -451,7 +458,7 @@ class FakeUnicodeFont {
       const r0 = new Dict(this.xref);
       r0.set("ca", strokeAlpha);
       r0.set("CA", strokeAlpha);
-      r0.set("Type", Name.get("ExtGState"));
+      r0.setIfName("Type", "ExtGState");
       extGState.set("R0", r0);
       resources.set("ExtGState", extGState);
     }
@@ -464,8 +471,8 @@ class FakeUnicodeFont {
     const appearance = buffer.join("\n");
 
     const appearanceStreamDict = new Dict(this.xref);
-    appearanceStreamDict.set("Subtype", Name.get("Form"));
-    appearanceStreamDict.set("Type", Name.get("XObject"));
+    appearanceStreamDict.setIfName("Subtype", "Form");
+    appearanceStreamDict.setIfName("Type", "XObject");
     appearanceStreamDict.set("BBox", [0, 0, w, h]);
     appearanceStreamDict.set("Length", appearance.length);
     appearanceStreamDict.set("Resources", resources);
@@ -475,10 +482,7 @@ class FakeUnicodeFont {
       appearanceStreamDict.set("Matrix", matrix);
     }
 
-    const ap = new StringStream(appearance);
-    ap.dict = appearanceStreamDict;
-
-    return ap;
+    return new StringStream(appearance, appearanceStreamDict);
   }
 }
 

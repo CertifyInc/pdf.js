@@ -112,17 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } ไบต์)
-<<<<<<< HEAD
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } ไบต์)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } ไบต์)
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-title = ชื่อเรื่อง:
 pdfjs-document-properties-author = ผู้สร้าง:
 pdfjs-document-properties-subject = ชื่อเรื่อง:
@@ -132,13 +121,6 @@ pdfjs-document-properties-modification-date = วันที่แก้ไข:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 pdfjs-document-properties-creator = ผู้สร้าง:
 pdfjs-document-properties-producer = ผู้ผลิต PDF:
 pdfjs-document-properties-version = รุ่น PDF:
@@ -184,23 +166,6 @@ pdfjs-printing-not-ready = คำเตือน: PDF ไม่ได้รั�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = เปิด/ปิดแถบข้าง
-pdfjs-toggle-sidebar-notification-button =
-    .title = เปิด/ปิดแถบข้าง (เอกสารมีเค้าร่าง/ไฟล์แนบ/เลเยอร์)
-pdfjs-toggle-sidebar-button-label = เปิด/ปิดแถบข้าง
-pdfjs-document-outline-button =
-    .title = แสดงเค้าร่างเอกสาร (คลิกสองครั้งเพื่อขยาย/ยุบรายการทั้งหมด)
-pdfjs-document-outline-button-label = เค้าร่างเอกสาร
-pdfjs-attachments-button =
-    .title = แสดงไฟล์แนบ
-pdfjs-attachments-button-label = ไฟล์แนบ
-pdfjs-layers-button =
-    .title = แสดงเลเยอร์ (คลิกสองครั้งเพื่อรีเซ็ตเลเยอร์ทั้งหมดเป็นสถานะเริ่มต้น)
-pdfjs-layers-button-label = เลเยอร์
-pdfjs-thumbs-button =
-    .title = แสดงภาพขนาดย่อ
-pdfjs-thumbs-button-label = ภาพขนาดย่อ
 pdfjs-current-outline-item-button =
     .title = ค้นหารายการเค้าร่างปัจจุบัน
 pdfjs-current-outline-item-button-label = รายการเค้าร่างปัจจุบัน
@@ -213,18 +178,23 @@ pdfjs-additional-layers = เลเยอร์เพิ่มเติม
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = หน้า { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = ภาพขนาดย่อของหน้า { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = เลือกหน้า { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = หน้า { $page } จาก { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ค้นหา
     .placeholder = ค้นหาในเอกสาร…
+    .title = ค้นหา
 pdfjs-find-previous-button =
     .title = หาตำแหน่งก่อนหน้าของวลี
 pdfjs-find-previous-button-label = ก่อนหน้า
@@ -273,13 +243,6 @@ pdfjs-rendering-error = เกิดข้อผิดพลาดขณะเ�
 
 ## Annotations
 
-<<<<<<< HEAD
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-=======
->>>>>>> upstream/master
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -303,11 +266,6 @@ pdfjs-web-fonts-disabled = แบบอักษรเว็บถูกปิ�
 
 pdfjs-editor-free-text-button =
     .title = ข้อความ
-<<<<<<< HEAD
-pdfjs-editor-free-text-button-label = ข้อความ
-pdfjs-editor-ink-button =
-    .title = รูปวาด
-=======
 pdfjs-editor-color-picker-free-text-input =
     .title = เปลี่ยนสีข้อความ
 pdfjs-editor-free-text-button-label = ข้อความ
@@ -315,7 +273,6 @@ pdfjs-editor-ink-button =
     .title = รูปวาด
 pdfjs-editor-color-picker-ink-input =
     .title = เปลี่ยนสีรูปวาด
->>>>>>> upstream/master
 pdfjs-editor-ink-button-label = รูปวาด
 pdfjs-editor-stamp-button =
     .title = เพิ่มหรือแก้ไขภาพ
@@ -324,18 +281,16 @@ pdfjs-editor-highlight-button =
     .title = เน้น
 pdfjs-editor-highlight-button-label = เน้น
 pdfjs-highlight-floating-button1 =
-    .title = เน้นสี
     .aria-label = เน้นสี
+    .title = เน้นสี
 pdfjs-highlight-floating-button-label = เน้นสี
-<<<<<<< HEAD
-=======
 pdfjs-comment-floating-button =
-    .title = แสดงความคิดเห็น
     .aria-label = แสดงความคิดเห็น
+    .title = แสดงความคิดเห็น
 pdfjs-comment-floating-button-label = แสดงความคิดเห็น
 pdfjs-editor-comment-button =
-    .title = แสดงความคิดเห็น
     .aria-label = แสดงความคิดเห็น
+    .title = แสดงความคิดเห็น
 pdfjs-editor-comment-button-label = ความคิดเห็น
 pdfjs-editor-signature-button =
     .title = เพิ่มลายเซ็น
@@ -356,7 +311,6 @@ pdfjs-editor-signature-editor1 =
     .aria-description = ตัวแก้ไขลายเซ็น: { $description }
 pdfjs-editor-stamp-editor =
     .aria-label = ตัวแก้ไขภาพ
->>>>>>> upstream/master
 
 ## Remove button for the various kind of editor.
 
@@ -368,11 +322,8 @@ pdfjs-editor-remove-stamp-button =
     .title = เอาภาพออก
 pdfjs-editor-remove-highlight-button =
     .title = เอาการเน้นสีออก
-<<<<<<< HEAD
-=======
 pdfjs-editor-remove-signature-button =
     .title = ลบลายเซ็น
->>>>>>> upstream/master
 
 ##
 
@@ -389,21 +340,6 @@ pdfjs-editor-stamp-add-image-button-label = เพิ่มภาพ
 pdfjs-editor-free-highlight-thickness-input = ความหนา
 pdfjs-editor-free-highlight-thickness-title =
     .title = เปลี่ยนความหนาเมื่อเน้นรายการอื่นๆ ที่ไม่ใช่ข้อความ
-<<<<<<< HEAD
-pdfjs-free-text =
-    .aria-label = ตัวแก้ไขข้อความ
-pdfjs-free-text-default-content = เริ่มพิมพ์…
-pdfjs-ink =
-    .aria-label = ตัวแก้ไขรูปวาด
-pdfjs-ink-canvas =
-    .aria-label = ภาพที่ผู้ใช้สร้างขึ้น
-
-## Alt-text dialog
-
-# Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = ข้อความทดแทน
-pdfjs-editor-alt-text-edit-button-label = แก้ไขข้อความทดแทน
-=======
 pdfjs-editor-add-signature-container =
     .aria-label = ส่วนควบคุมลายเซ็นและลายเซ็นที่บันทึกไว้
 pdfjs-editor-signature-add-signature-button =
@@ -423,8 +359,8 @@ pdfjs-free-text2 =
 #   $count (Number) - the number of comments.
 pdfjs-editor-comments-sidebar-title = ความคิดเห็น
 pdfjs-editor-comments-sidebar-close-button =
-    .title = ปิดแถบข้าง
     .aria-label = ปิดแถบข้าง
+    .title = ปิดแถบข้าง
 pdfjs-editor-comments-sidebar-close-button-label = ปิดแถบข้าง
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = เห็นอะไรที่น่าสนใจใช่ไหม? เน้นสีไว้และแสดงความคิดเห็นได้เลย
@@ -435,7 +371,6 @@ pdfjs-editor-comments-sidebar-no-comments-link = เรียนรู้เพ�
 pdfjs-editor-alt-text-button-label = ข้อความทดแทน
 pdfjs-editor-alt-text-edit-button =
     .aria-label = แก้ไขข้อความทดแทน
->>>>>>> upstream/master
 pdfjs-editor-alt-text-dialog-label = เลือกตัวเลือก
 pdfjs-editor-alt-text-dialog-description = ข้อความทดแทนสามารถช่วยเหลือได้เมื่อผู้ใช้มองไม่เห็นภาพ หรือภาพไม่โหลด
 pdfjs-editor-alt-text-add-description-label = เพิ่มคำอธิบาย
@@ -448,27 +383,13 @@ pdfjs-editor-alt-text-decorative-tooltip = ทำเครื่องหมา�
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = ตัวอย่างเช่น “ชายหนุ่มคนหนึ่งนั่งลงที่โต๊ะเพื่อรับประทานอาหารมื้อหนึ่ง”
-<<<<<<< HEAD
-=======
 # Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button =
     .aria-label = ข้อความทดแทน
->>>>>>> upstream/master
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-<<<<<<< HEAD
-pdfjs-editor-resizer-label-top-left = มุมซ้ายบน — ปรับขนาด
-pdfjs-editor-resizer-label-top-middle = ตรงกลางด้านบน — ปรับขนาด
-pdfjs-editor-resizer-label-top-right = มุมขวาบน — ปรับขนาด
-pdfjs-editor-resizer-label-middle-right = ตรงกลางด้านขวา — ปรับขนาด
-pdfjs-editor-resizer-label-bottom-right = มุมขวาล่าง — ปรับขนาด
-pdfjs-editor-resizer-label-bottom-middle = ตรงกลางด้านล่าง — ปรับขนาด
-pdfjs-editor-resizer-label-bottom-left = มุมซ้ายล่าง — ปรับขนาด
-pdfjs-editor-resizer-label-middle-left = ตรงกลางด้านซ้าย — ปรับขนาด
-=======
->>>>>>> upstream/master
 pdfjs-editor-resizer-top-left =
     .aria-label = มุมซ้ายบน — ปรับขนาด
 pdfjs-editor-resizer-top-middle =
@@ -534,16 +455,6 @@ pdfjs-editor-new-alt-text-error-close-button = ปิด
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-<<<<<<< HEAD
-#   $percent (Number) - the percentage of the downloaded size.
-pdfjs-editor-new-alt-text-ai-model-downloading-progress = กำลังดาวน์โหลดโมเดล AI สำหรับข้อความทดแทน ({ $downloadedSize } จาก { $totalSize } MB)
-    .aria-valuetext = กำลังดาวน์โหลดโมเดล AI สำหรับข้อความทดแทน ({ $downloadedSize } จาก { $totalSize } MB)
-# This is a button that users can click to edit the alt text they have already added.
-pdfjs-editor-new-alt-text-added-button-label = เพิ่มข้อความทดแทนแล้ว
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
-pdfjs-editor-new-alt-text-missing-button-label = ขาดข้อความทดแทน
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
-=======
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = กำลังดาวน์โหลดโมเดล AI สำหรับข้อความทดแทน ({ $downloadedSize } จาก { $totalSize } MB)
     .aria-valuetext = กำลังดาวน์โหลดโมเดล AI สำหรับข้อความทดแทน ({ $downloadedSize } จาก { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -557,7 +468,6 @@ pdfjs-editor-new-alt-text-missing-button-label = ขาดข้อความ�
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button =
     .aria-label = ตรวจสอบข้อความทดแทน
->>>>>>> upstream/master
 pdfjs-editor-new-alt-text-to-review-button-label = ตรวจสอบข้อความทดแทน
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -573,19 +483,10 @@ pdfjs-editor-alt-text-settings-dialog-label = ตั้งค่าข้อค�
 pdfjs-editor-alt-text-settings-automatic-title = การทดแทนด้วยข้อความอัตโนมัติ
 pdfjs-editor-alt-text-settings-create-model-button-label = สร้างข้อความทดแทนอัตโนมัติ
 pdfjs-editor-alt-text-settings-create-model-description = แนะนำคำอธิบายเพื่อช่วยเหลือผู้ที่ไม่สามารถมองเห็นภาพหรือเมื่อภาพไม่โหลด
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = โมเดล AI สำหรับข้อความทดแทน ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = ทำงานในเครื่องของคุณเพื่อให้ข้อมูลของคุณเป็นส่วนตัว จำเป็นสำหรับข้อความทดแทนอัตโนมัติ
-pdfjs-editor-alt-text-settings-delete-model-button = ลบ
-pdfjs-editor-alt-text-settings-download-model-button = ดาวน์โหลด
-pdfjs-editor-alt-text-settings-downloading-model-button = กำลังดาวน์โหลด…
 pdfjs-editor-alt-text-settings-editor-title = ตัวแก้ไขข้อความทดแทน
 pdfjs-editor-alt-text-settings-show-dialog-button-label = แสดงตัวแก้ไขข้อความทดแทนทันทีเมื่อเพิ่มภาพ
 pdfjs-editor-alt-text-settings-show-dialog-description = ช่วยให้คุณแน่ใจว่าภาพทั้งหมดของคุณมีข้อความทดแทน
 pdfjs-editor-alt-text-settings-close-button = ปิด
-<<<<<<< HEAD
-=======
 
 ## Accessibility labels (announced by screen readers) for objects added to the editor.
 
@@ -602,6 +503,7 @@ pdfjs-editor-undo-bar-message-freetext = เอาข้อความออก
 pdfjs-editor-undo-bar-message-ink = เอาภาพวาดออกแล้ว
 pdfjs-editor-undo-bar-message-stamp = เอาภาพออกแล้ว
 pdfjs-editor-undo-bar-message-signature = ลบลายเซ็นแล้ว
+pdfjs-editor-undo-bar-message-comment = เอาความคิดเห็นออกแล้ว
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple = เอาคำอธิบายประกอบ { $count } รายการออกแล้ว
@@ -697,6 +599,79 @@ pdfjs-editor-edit-comment-dialog-cancel-button = ยกเลิก
 pdfjs-editor-add-comment-button =
     .title = เพิ่มความคิดเห็น
 
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = เปิด/ปิดแถบข้าง (เอกสารมีภาพย่อ/เค้าร่าง/ไฟล์แนบ/เลเยอร์)
+pdfjs-toggle-views-manager-button1-label = จัดการหน้า
+pdfjs-views-manager-sidebar =
+    .aria-label = แถบข้าง
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = ตัวปรับขนาดแถบข้าง
+pdfjs-views-manager-view-selector-button =
+    .title = มุมมอง
+pdfjs-views-manager-view-selector-button-label = มุมมอง
+pdfjs-views-manager-pages-title = หน้า
+pdfjs-views-manager-outlines-title1 = โครงร่างเอกสาร
+    .title = โครงร่างเอกสาร (คลิกสองครั้งเพื่อขยาย/ยุบรายการทั้งหมด)
+pdfjs-views-manager-attachments-title = ไฟล์แนบ
+pdfjs-views-manager-layers-title1 = เลเยอร์
+    .title = เลเยอร์ (คลิกสองครั้งเพื่อล้างค่าเลเยอร์ทั้งหมดกลับสู่สถานะเริ่มต้น)
+pdfjs-views-manager-pages-option-label = หน้า
+pdfjs-views-manager-outlines-option-label = เค้าร่างเอกสาร
+pdfjs-views-manager-attachments-option-label = ไฟล์แนบ
+pdfjs-views-manager-layers-option-label = เลเยอร์
+pdfjs-views-manager-add-file-button =
+    .title = เพิ่มไฟล์
+pdfjs-views-manager-add-file-button-label = เพิ่มไฟล์
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label = เลือกอยู่ { $count }
+pdfjs-views-manager-pages-status-none-action-label = เลือกหน้า
+pdfjs-views-manager-pages-status-action-button-label = จัดการ
+pdfjs-views-manager-pages-status-copy-button-label = คัดลอก
+pdfjs-views-manager-pages-status-cut-button-label = ตัด
+pdfjs-views-manager-pages-status-delete-button-label = ลบ
+pdfjs-views-manager-pages-status-export-selected-button-label = ส่งออกรายการที่เลือก…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label = ตัด { $count } หน้าแล้ว
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label = คัดลอก { $count } หน้าแล้ว
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label = ลบ { $count } หน้าแล้ว
+pdfjs-views-manager-pages-status-waiting-ready-label = กำลังเตรียมไฟล์ของคุณให้พร้อม…
+pdfjs-views-manager-pages-status-waiting-uploading-label = กำลังอัปโหลดไฟล์…
+pdfjs-views-manager-status-warning-cut-label = ไม่สามารถตัดได้ โปรดรีเฟรชหน้าแล้วลองอีกครั้ง
+pdfjs-views-manager-status-warning-copy-label = ไม่สามารถคัดลอกได้ โปรดรีเฟรชหน้าแล้วลองอีกครั้ง
+pdfjs-views-manager-status-warning-delete-label = ไม่สามารถลบได้ โปรดรีเฟรชหน้าแล้วลองอีกครั้ง
+pdfjs-views-manager-status-warning-save-label = ไม่สามารถบันทึกได้ โปรดรีเฟรชหน้าแล้วลองอีกครั้ง
+pdfjs-views-manager-status-undo-button-label = เลิกทำ
+pdfjs-views-manager-status-done-button-label = เสร็จสิ้น
+pdfjs-views-manager-status-close-button =
+    .title = ปิด
+pdfjs-views-manager-status-close-button-label = ปิด
+pdfjs-views-manager-paste-button-label = วาง
+pdfjs-views-manager-paste-button-before =
+    .title = วางก่อนหน้าแรก
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = วางหลังหน้า { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = ใหม่
+pdfjs-views-manager-waiting-for-file = กำลังอัปโหลดไฟล์…
+pdfjs-toggle-views-manager-button1 =
+    .title = จัดการหน้า
+
 ## Main menu for adding/removing signatures
 
 pdfjs-editor-delete-signature-button1 =
@@ -710,4 +685,3 @@ pdfjs-editor-add-signature-edit-button-label = แก้ไขคำอธิบ
 ## Edit signature description dialog
 
 pdfjs-editor-edit-signature-dialog-title = แก้ไขคำอธิบาย
->>>>>>> upstream/master

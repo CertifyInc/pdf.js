@@ -23,9 +23,10 @@ import {
   MIN_SCALE,
   toggleExpandedBtn,
 } from "./ui_utils.js";
+import { internalOpt } from "./internal_evt.js";
 
 /**
- * @typedef {Object} ToolbarOptions
+ * @typedef {object} ToolbarOptions
  * @property {HTMLDivElement} container - Container for the secondary toolbar.
  * @property {HTMLSpanElement} numPages - Label that contains number of pages.
  * @property {HTMLInputElement} pageNumber - Control for display and user input
@@ -44,6 +45,8 @@ import {
  */
 
 class Toolbar {
+  #colorPicker = null;
+
   #opts;
 
   /**
@@ -65,6 +68,18 @@ class Toolbar {
       { element: options.zoomOut, eventName: "zoomout" },
       { element: options.print, eventName: "print" },
       { element: options.download, eventName: "download" },
+      {
+        element: options.editorCommentButton,
+        eventName: "switchannotationeditormode",
+        eventDetails: {
+          get mode() {
+            const { classList } = options.editorCommentButton;
+            return classList.contains("toggled")
+              ? AnnotationEditorType.NONE
+              : AnnotationEditorType.POPUP;
+          },
+        },
+      },
       {
         element: options.editorFreeTextButton,
         eventName: "switchannotationeditormode",
@@ -117,6 +132,18 @@ class Toolbar {
           data: { action: "pdfjs.image.icon_click" },
         },
       },
+      {
+        element: options.editorSignatureButton,
+        eventName: "switchannotationeditormode",
+        eventDetails: {
+          get mode() {
+            const { classList } = options.editorSignatureButton;
+            return classList.contains("toggled")
+              ? AnnotationEditorType.NONE
+              : AnnotationEditorType.SIGNATURE;
+          },
+        },
+      },
     ];
 
     // Bind the event listeners for click and various other actions.
@@ -139,12 +166,6 @@ class Toolbar {
     document.documentElement.setAttribute("data-toolbar-density", name);
   }
 
-  #setAnnotationEditorUIManager(uiManager, parentContainer) {
-    const colorPicker = new ColorPicker({ uiManager });
-    uiManager.setMainHighlightColorPicker(colorPicker);
-    parentContainer.append(colorPicker.renderMainDropdown());
-  }
-
   setPageNumber(pageNumber, pageLabel) {
     this.pageNumber = pageNumber;
     this.pageLabel = pageLabel;
@@ -164,6 +185,7 @@ class Toolbar {
   }
 
   reset() {
+    this.#colorPicker = null;
     this.pageNumber = 0;
     this.pageLabel = null;
     this.hasPageLabels = false;
@@ -216,6 +238,16 @@ class Toolbar {
         value: this.value,
       });
     });
+    eventBus.on(
+      "pagesedited",
+      ({ pagesMapper }) => {
+        const pagesCount = pagesMapper.pagesNumber;
+        if (pagesCount !== this.pagesCount) {
+          this.setPagesCount(pagesCount, this.hasPageLabels);
+        }
+      },
+      internalOpt
+    );
 
     scaleSelect.addEventListener("change", function () {
       if (this.value === "custom") {
@@ -241,36 +273,53 @@ class Toolbar {
     // Suppress context menus for some controls.
     scaleSelect.oncontextmenu = noContextMenu;
 
-    eventBus._on(
+    eventBus.on(
       "annotationeditormodechanged",
-      this.#editorModeChanged.bind(this)
+      this.#editorModeChanged.bind(this),
+      internalOpt
     );
-    eventBus._on("showannotationeditorui", ({ mode }) => {
-      switch (mode) {
-        case AnnotationEditorType.HIGHLIGHT:
-          editorHighlightButton.click();
-          break;
-      }
-    });
-    eventBus._on("toolbardensity", this.#updateToolbarDensity.bind(this));
+    eventBus.on(
+      "showannotationeditorui",
+      ({ mode }) => {
+        switch (mode) {
+          case AnnotationEditorType.HIGHLIGHT:
+            editorHighlightButton.click();
+            break;
+        }
+      },
+      internalOpt
+    );
+    eventBus.on(
+      "toolbardensity",
+      this.#updateToolbarDensity.bind(this),
+      internalOpt
+    );
 
     if (editorHighlightColorPicker) {
-      eventBus._on(
+      eventBus.on(
         "annotationeditoruimanager",
         ({ uiManager }) => {
-          this.#setAnnotationEditorUIManager(
-            uiManager,
-            editorHighlightColorPicker
-          );
+          const cp = (this.#colorPicker = new ColorPicker({ uiManager }));
+          uiManager.setMainHighlightColorPicker(cp);
+          editorHighlightColorPicker.append(cp.renderMainDropdown());
         },
-        // Once the color picker has been added, we don't want to add it again.
-        { once: true }
+        internalOpt
+      );
+
+      eventBus.on(
+        "mainhighlightcolorpickerupdatecolor",
+        ({ value }) => {
+          this.#colorPicker?.update(value);
+        },
+        internalOpt
       );
     }
   }
 
   #editorModeChanged({ mode }) {
     const {
+      editorCommentButton,
+      editorCommentParamsToolbar,
       editorFreeTextButton,
       editorFreeTextParamsToolbar,
       editorHighlightButton,
@@ -279,8 +328,15 @@ class Toolbar {
       editorInkParamsToolbar,
       editorStampButton,
       editorStampParamsToolbar,
+      editorSignatureButton,
+      editorSignatureParamsToolbar,
     } = this.#opts;
 
+    toggleExpandedBtn(
+      editorCommentButton,
+      mode === AnnotationEditorType.POPUP,
+      editorCommentParamsToolbar
+    );
     toggleExpandedBtn(
       editorFreeTextButton,
       mode === AnnotationEditorType.FREETEXT,
@@ -301,12 +357,19 @@ class Toolbar {
       mode === AnnotationEditorType.STAMP,
       editorStampParamsToolbar
     );
+    toggleExpandedBtn(
+      editorSignatureButton,
+      mode === AnnotationEditorType.SIGNATURE,
+      editorSignatureParamsToolbar
+    );
 
-    const isDisable = mode === AnnotationEditorType.DISABLE;
-    editorFreeTextButton.disabled = isDisable;
-    editorHighlightButton.disabled = isDisable;
-    editorInkButton.disabled = isDisable;
-    editorStampButton.disabled = isDisable;
+    editorCommentButton.disabled =
+      editorFreeTextButton.disabled =
+      editorHighlightButton.disabled =
+      editorInkButton.disabled =
+      editorStampButton.disabled =
+      editorSignatureButton.disabled =
+        mode === AnnotationEditorType.DISABLE;
   }
 
   #updateUIState(resetNumPages = false) {

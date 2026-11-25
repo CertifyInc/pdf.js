@@ -140,11 +140,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+)$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard font", () => {
->>>>>>> upstream/master
     const fontName = "Foo";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -176,11 +172,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard italic font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard italic font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-Italic";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -214,11 +206,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard bold font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard bold font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-Bold";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -251,11 +239,7 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-  it("should substitute an unknown font but with a standard bold italic font", () => {
-=======
   it("should substitute an unknown sans-serif font but with a standard bold italic font", () => {
->>>>>>> upstream/master
     const fontName = "Foo-BoldItalic";
     const fontSubstitution = getFontSubstitution(
       new Map(),
@@ -291,8 +275,6 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),sans-serif$/);
   });
 
-<<<<<<< HEAD
-=======
   it("should substitute an unknown serif font but with a standard font", () => {
     const fontName = "Foo";
     const fontSubstitution = getFontSubstitution(
@@ -423,7 +405,6 @@ describe("getFontSubstitution", function () {
     expect(fontSubstitution.css).toMatch(/^"Foo",g_d(\d+)_sf(\d+),serif$/);
   });
 
->>>>>>> upstream/master
   it("should substitute Calibri", () => {
     const fontName = "Calibri";
     const fontSubstitution = getFontSubstitution(
@@ -563,6 +544,98 @@ describe("getFontSubstitution", function () {
     );
     expect(fontSubstitution.css).toMatch(
       /^"ArialBlack",g_d(\d+)_sf(\d+),sans-serif$/
+    );
+  });
+
+  it("should substitute HeiseiMin-W3", () => {
+    const fontName = "HeiseiMin-W3";
+    const fontSubstitution = getFontSubstitution(
+      new Map(),
+      idFactory,
+      localFontPath,
+      fontName,
+      undefined,
+      "CIDFontType2"
+    );
+    expect(fontSubstitution).toEqual(
+      jasmine.objectContaining({
+        guessFallback: false,
+        baseFontName: "HeiseiMin-W3",
+        src:
+          "local(Hiragino Mincho ProN),local(Hiragino Mincho Pro)," +
+          "local(Yu Mincho),local(YuMincho),local(Source Han Serif JP)," +
+          "local(Noto Serif JP),local(Noto Serif CJK JP)," +
+          "local(IPAexMincho),local(IPAMincho),local(Takao Mincho)," +
+          "local(MS Mincho),local(MS PMincho)",
+        style: {
+          style: "normal",
+          weight: "normal",
+        },
+      })
+    );
+    expect(fontSubstitution.css).toMatch(
+      /^"HeiseiMin W3",g_d(\d+)_sf(\d+),serif$/
+    );
+  });
+
+  it("should substitute a Kozuka Mincho alias", () => {
+    const fontName = "KozMinPr6N-Regular";
+    const fontSubstitution = getFontSubstitution(
+      new Map(),
+      idFactory,
+      localFontPath,
+      fontName,
+      undefined,
+      "CIDFontType0"
+    );
+    expect(fontSubstitution).toEqual(
+      jasmine.objectContaining({
+        guessFallback: false,
+        baseFontName: "KozMinPr6N-Regular",
+        src:
+          "local(Hiragino Mincho ProN),local(Hiragino Mincho Pro)," +
+          "local(Yu Mincho),local(YuMincho),local(Source Han Serif JP)," +
+          "local(Noto Serif JP),local(Noto Serif CJK JP)," +
+          "local(IPAexMincho),local(IPAMincho),local(Takao Mincho)," +
+          "local(MS Mincho),local(MS PMincho)",
+        style: {
+          style: "normal",
+          weight: "normal",
+        },
+      })
+    );
+    expect(fontSubstitution.css).toMatch(
+      /^"KozMinPr6N",g_d(\d+)_sf(\d+),serif$/
+    );
+  });
+
+  it("should substitute HYGoThic-Medium", () => {
+    const fontName = "HYGoThic-Medium";
+    const fontSubstitution = getFontSubstitution(
+      new Map(),
+      idFactory,
+      localFontPath,
+      fontName,
+      undefined,
+      "CIDFontType2"
+    );
+    expect(fontSubstitution).toEqual(
+      jasmine.objectContaining({
+        guessFallback: false,
+        baseFontName: "HYGoThic-Medium",
+        src:
+          "local(Apple SD Gothic Neo),local(AppleGothic)," +
+          "local(Source Han Sans KR),local(Noto Sans KR)," +
+          "local(Noto Sans CJK KR),local(Nanum Gothic)," +
+          "local(Malgun Gothic),local(Dotum),local(Gulim)",
+        style: {
+          style: "normal",
+          weight: "500",
+        },
+      })
+    );
+    expect(fontSubstitution.css).toMatch(
+      /^"HYGoThic",g_d(\d+)_sf(\d+),sans-serif$/
     );
   });
 });

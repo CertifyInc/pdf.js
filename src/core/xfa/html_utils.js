@@ -28,6 +28,7 @@ import {
 import { createValidAbsoluteUrl, warn } from "../../shared/util.js";
 import { getMeasurement, stripQuotes } from "./utils.js";
 import { selectFont } from "./fonts.js";
+import { serializeFontFamily } from "../../shared/css_utils.js";
 import { TextMeasure } from "./text.js";
 import { XFAObject } from "./xfa_object.js";
 
@@ -86,14 +87,15 @@ const converters = {
       const colSpan = node.colSpan;
       let w;
       if (colSpan === -1) {
-        w = extra.columnWidths
-          .slice(extra.currentColumn)
-          .reduce((a, x) => a + x, 0);
+        w = Math.sumPrecise(extra.columnWidths.slice(extra.currentColumn));
         extra.currentColumn = 0;
       } else {
-        w = extra.columnWidths
-          .slice(extra.currentColumn, extra.currentColumn + colSpan)
-          .reduce((a, x) => a + x, 0);
+        w = Math.sumPrecise(
+          extra.columnWidths.slice(
+            extra.currentColumn,
+            extra.currentColumn + colSpan
+          )
+        );
         extra.currentColumn =
           (extra.currentColumn + node.colSpan) % extra.columnWidths.length;
       }
@@ -328,13 +330,14 @@ function fixDimensions(node) {
     const colSpan = node.colSpan;
     let width;
     if (colSpan === -1) {
-      width = extra.columnWidths
-        .slice(extra.currentColumn)
-        .reduce((a, w) => a + w, 0);
+      width = Math.sumPrecise(extra.columnWidths.slice(extra.currentColumn));
     } else {
-      width = extra.columnWidths
-        .slice(extra.currentColumn, extra.currentColumn + colSpan)
-        .reduce((a, w) => a + w, 0);
+      width = Math.sumPrecise(
+        extra.columnWidths.slice(
+          extra.currentColumn,
+          extra.currentColumn + colSpan
+        )
+      );
     }
     if (!isNaN(width)) {
       node.w = width;
@@ -348,7 +351,7 @@ function fixDimensions(node) {
 
   if (node.layout === "table") {
     if (node.w === "" && Array.isArray(node.columnWidths)) {
-      node.w = node.columnWidths.reduce((a, x) => a + x, 0);
+      node.w = Math.sumPrecise(node.columnWidths);
     }
   }
 }
@@ -381,7 +384,7 @@ function toStyle(node, ...names) {
     if (value === null) {
       continue;
     }
-    if (converters.hasOwnProperty(name)) {
+    if (Object.hasOwn(converters, name)) {
       converters[name](node, style);
       continue;
     }
@@ -595,13 +598,16 @@ function setFontFamily(xfaFont, node, fontFinder, style) {
   }
 
   const name = stripQuotes(xfaFont.typeface);
-  style.fontFamily = `"${name}"`;
+  // Use the same serialization as the `@font-face` rule, resp. the `FontFace`
+  // instance, that the font is registered with; see `createFontFaceRule` and
+  // `createNativeFontFace` in `src/display/font_loader.js`.
+  style.fontFamily = serializeFontFamily(name);
 
   const typeface = fontFinder.find(name);
   if (typeface) {
     const { fontFamily } = typeface.regular.cssFontInfo;
     if (fontFamily !== name) {
-      style.fontFamily = `"${fontFamily}"`;
+      style.fontFamily = serializeFontFamily(fontFamily);
     }
 
     const para = getCurrentPara(node);

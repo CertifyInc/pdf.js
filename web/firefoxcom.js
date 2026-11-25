@@ -13,11 +13,13 @@
  * limitations under the License.
  */
 
-import { isPdfFile, PDFDataRangeTransport } from "pdfjs-lib";
+import { MathClamp, PDFDataRangeTransport } from "pdfjs-lib";
 import { AppOptions } from "./app_options.js";
+import { BaseDownloadManager } from "./base_download_manager.js";
 import { BaseExternalServices } from "./external_services.js";
 import { BasePreferences } from "./preferences.js";
 import { DEFAULT_SCALE_VALUE } from "./ui_utils.js";
+import { internalOpt } from "./internal_evt.js";
 import { L10n } from "./l10n.js";
 
 if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("MOZCENTRAL")) {
@@ -31,17 +33,37 @@ function initCom(app) {
   viewerApp = app;
 }
 
+// nsPagePrintTimer waits ~4.5s over the first ten sheets, then 50ms per sheet.
+const PRINT_TO_PDF_BASE_DELAY = 4_500;
+const PRINT_TO_PDF_PER_ENTRY_DELAY = 50;
+const PRINT_TO_PDF_MIN_TIMEOUT = 10_000;
+
+function getPrintToPDFTimeout(entries) {
+  return Math.max(
+    PRINT_TO_PDF_MIN_TIMEOUT,
+    2 * (PRINT_TO_PDF_BASE_DELAY + PRINT_TO_PDF_PER_ENTRY_DELAY * entries)
+  );
+}
+
 class FirefoxCom {
   /**
    * Creates an event that the extension is listening for and will
    * asynchronously respond to.
    * @param {string} action - The action to trigger.
-   * @param {Object|string} [data] - The data to send.
+   * @param {object | string} [data] - The data to send.
+   * @param {number} [timeout] - Reject after this many milliseconds without a
+   *   response; `0` waits forever.
    * @returns {Promise<any>} A promise that is resolved with the response data.
    */
-  static requestAsync(action, data) {
-    return new Promise(resolve => {
-      this.request(action, data, resolve);
+  static requestAsync(action, data, timeout = 0) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = timeout
+        ? setTimeout(reject, timeout, new Error(`"${action}" timed out.`))
+        : 0;
+      this.request(action, data, response => {
+        clearTimeout(timeoutId);
+        resolve(response);
+      });
     });
   }
 
@@ -49,7 +71,7 @@ class FirefoxCom {
    * Creates an event that the extension is listening for and will, optionally,
    * asynchronously respond to.
    * @param {string} action - The action to trigger.
-   * @param {Object|string} [data] - The data to send.
+   * @param {object | string} [data] - The data to send.
    */
   static request(action, data, callback = null) {
     const request = document.createTextNode("");
@@ -80,69 +102,32 @@ class FirefoxCom {
   }
 }
 
-class DownloadManager {
-  #openBlobUrls = new WeakMap();
-
-  downloadData(data, filename, contentType) {
-    const blobUrl = URL.createObjectURL(
-      new Blob([data], { type: contentType })
-    );
-
+class DownloadManager extends BaseDownloadManager {
+  _triggerDownload(
+    blobUrl,
+    originalUrl,
+    filename,
+    isAttachment = false,
+    isModified = false
+  ) {
     FirefoxCom.request("download", {
       blobUrl,
-      originalUrl: blobUrl,
+      originalUrl,
       filename,
-      isAttachment: true,
+      isAttachment,
+      isModified,
     });
   }
 
-  /**
-   * @returns {boolean} Indicating if the data was opened.
-   */
-  openOrDownloadData(data, filename, dest = null) {
-    const isPdfData = isPdfFile(filename);
-    const contentType = isPdfData ? "application/pdf" : "";
-
-    if (isPdfData) {
-      let blobUrl = this.#openBlobUrls.get(data);
-      if (!blobUrl) {
-        blobUrl = URL.createObjectURL(new Blob([data], { type: contentType }));
-        this.#openBlobUrls.set(data, blobUrl);
-      }
-      // Let Firefox's content handler catch the URL and display the PDF.
-      // NOTE: This cannot use a query string for the filename, see
-      //       https://bugzilla.mozilla.org/show_bug.cgi?id=1632644#c5
-      let viewerUrl = blobUrl + "#filename=" + encodeURIComponent(filename);
-      if (dest) {
-        viewerUrl += `&filedest=${escape(dest)}`;
-      }
-
-      try {
-        window.open(viewerUrl);
-        return true;
-      } catch (ex) {
-        console.error(`openOrDownloadData: ${ex}`);
-        // Release the `blobUrl`, since opening it failed, and fallback to
-        // downloading the PDF file.
-        URL.revokeObjectURL(blobUrl);
-        this.#openBlobUrls.delete(data);
-      }
+  _getOpenDataUrl(blobUrl, filename, dest = null) {
+    // Let Firefox's content handler catch the URL and display the PDF.
+    // NOTE: This cannot use a query string for the filename, see
+    //       https://bugzilla.mozilla.org/show_bug.cgi?id=1632644#c5
+    let url = blobUrl + "#filename=" + encodeURIComponent(filename);
+    if (dest) {
+      url += `&filedest=${escape(dest)}`;
     }
-
-    this.downloadData(data, filename, contentType);
-    return false;
-  }
-
-  download(data, url, filename) {
-    const blobUrl = data
-      ? URL.createObjectURL(new Blob([data], { type: "application/pdf" }))
-      : null;
-
-    FirefoxCom.request("download", {
-      blobUrl,
-      originalUrl: url,
-      filename,
-    });
+    return url;
   }
 }
 
@@ -276,6 +261,20 @@ if (PDFJSDev.test("GECKOVIEW")) {
       );
     });
   })();
+
+  (function listenAddSignatureEvent() {
+    const handleEvent = function ({ detail }) {
+      if (!viewerApp.initialized) {
+        return;
+      }
+      viewerApp.eventBus.dispatch("addsignature", {
+        source: window,
+        text: detail?.text,
+      });
+    };
+
+    window.addEventListener("addsignature", handleEvent);
+  })();
 }
 
 class FirefoxComDataRangeTransport extends PDFDataRangeTransport {
@@ -337,7 +336,9 @@ class MLManager {
   setEventBus(eventBus, abortSignal) {
     this.#eventBus = eventBus;
     this.#abortSignal = abortSignal;
-    eventBus._on(
+
+    const evtOpts = { signal: abortSignal, ...internalOpt };
+    eventBus.on(
       "enablealttextmodeldownload",
       ({ value }) => {
         if (this.enableAltTextModelDownload === value) {
@@ -349,14 +350,14 @@ class MLManager {
           this.deleteModel("altText");
         }
       },
-      { signal: abortSignal }
+      evtOpts
     );
-    eventBus._on(
+    eventBus.on(
       "enableguessalttext",
       ({ value }) => {
         this.toggleService("altText", value);
       },
-      { signal: abortSignal }
+      evtOpts
     );
   }
 
@@ -495,7 +496,231 @@ class MLManager {
   }
 }
 
+class SignatureStorage {
+  #eventBus = null;
+
+  #signatures = null;
+
+  #signal = null;
+
+  constructor(eventBus, signal) {
+    this.#eventBus = eventBus;
+    this.#signal = signal;
+  }
+
+  #handleSignature(data) {
+    return FirefoxCom.requestAsync("handleSignature", data);
+  }
+
+  async getAll() {
+    if (this.#signal) {
+      window.addEventListener(
+        "storedSignaturesChanged",
+        () => {
+          this.#signatures = null;
+          this.#eventBus?.dispatch("storedsignatureschanged", { source: this });
+        },
+        { signal: this.#signal }
+      );
+      this.#signal = null;
+    }
+    if (!this.#signatures) {
+      this.#signatures = new Map();
+      const data = await this.#handleSignature({ action: "get" });
+      if (data) {
+        for (const { uuid, description, signatureData } of data) {
+          this.#signatures.set(uuid, { description, signatureData });
+        }
+      }
+    }
+    return this.#signatures;
+  }
+
+  async isFull() {
+    // We want to store at most 5 signatures.
+    return (await this.size()) === 5;
+  }
+
+  async size() {
+    return (await this.getAll()).size;
+  }
+
+  async create(data) {
+    if (await this.isFull()) {
+      return null;
+    }
+    const uuid = await this.#handleSignature({
+      action: "create",
+      ...data,
+    });
+    if (!uuid) {
+      return null;
+    }
+    this.#signatures.set(uuid, data);
+    return uuid;
+  }
+
+  async delete(uuid) {
+    const signatures = await this.getAll();
+    if (!signatures.has(uuid)) {
+      return false;
+    }
+    if (await this.#handleSignature({ action: "delete", uuid })) {
+      signatures.delete(uuid);
+      return true;
+    }
+    return false;
+  }
+}
+
+// `nsresult` codes from PSM/NSS that we recognize. Names mirror
+// Firefox's nsINSSErrorsService and security/nss codes; values aren't
+// stable, so we compare strings instead of integers.
+const NSS_ERR_CODES = {
+  EXPIRED: new Set([
+    "SEC_ERROR_EXPIRED_CERTIFICATE",
+    "SEC_ERROR_EXPIRED_ISSUER_CERTIFICATE",
+    "MOZILLA_PKIX_ERROR_NOT_YET_VALID_CERTIFICATE",
+    "MOZILLA_PKIX_ERROR_NOT_YET_VALID_ISSUER_CERTIFICATE",
+  ]),
+  // Only definite-revoked codes belong here. We intentionally do NOT
+  // include OCSP-response-missing-style codes (e.g.
+  // MOZILLA_PKIX_ERROR_OCSP_RESPONSE_FOR_CERT_MISSING), since those
+  // mean "we couldn't reach the responder" — they fall through to the
+  // generic untrusted bucket.
+  REVOKED: new Set([
+    "SEC_ERROR_REVOKED_CERTIFICATE",
+    "SEC_ERROR_REVOKED_KEY",
+    "MOZILLA_PKIX_ERROR_REVOKED_CERTIFICATE",
+  ]),
+  UNTRUSTED: new Set([
+    "SEC_ERROR_UNKNOWN_ISSUER",
+    "SEC_ERROR_UNTRUSTED_CERT",
+    "SEC_ERROR_UNTRUSTED_ISSUER",
+    "MOZILLA_PKIX_ERROR_SELF_SIGNED_CERT",
+    "MOZILLA_PKIX_ERROR_ADDITIONAL_POLICY_CONSTRAINT_FAILED",
+  ]),
+  CMS_NOT_YET_ATTEMPTED: "NS_ERROR_CMS_VERIFY_NOT_YET_ATTEMPTED",
+};
+
+function mapVerificationStatus(signatureCode, certificateCode) {
+  if (signatureCode === NSS_ERR_CODES.CMS_NOT_YET_ATTEMPTED) {
+    return { status: "unknown", errorCode: signatureCode };
+  }
+  if (signatureCode && signatureCode !== "NS_OK") {
+    return { status: "invalid", errorCode: signatureCode };
+  }
+  if (!certificateCode || certificateCode === "NS_OK") {
+    return { status: "verified", errorCode: null };
+  }
+  if (NSS_ERR_CODES.REVOKED.has(certificateCode)) {
+    return { status: "revoked", errorCode: certificateCode };
+  }
+  if (NSS_ERR_CODES.EXPIRED.has(certificateCode)) {
+    return { status: "expired", errorCode: certificateCode };
+  }
+  return NSS_ERR_CODES.UNTRUSTED.has(certificateCode)
+    ? { status: "untrusted", errorCode: certificateCode }
+    : { status: "untrusted", errorCode: certificateCode };
+}
+
+class SignatureVerifier {
+  async verify(signature) {
+    if (signature.signatureType === null) {
+      return {
+        status: "unknown",
+        errorCode: "SUBFILTER_NOT_SUPPORTED",
+        message: signature.subFilter,
+        certificate: null,
+        documentModifiedAfterSigning: !signature.coversWholeDocument,
+        modificationsAfterSignature: signature.modificationsAfterSignature,
+      };
+    }
+
+    let response;
+    try {
+      response = await FirefoxCom.requestAsync("verifyPdfSignature", {
+        pkcs7: signature.pkcs7,
+        data: signature.data,
+        signatureType: signature.signatureType,
+      });
+    } catch (ex) {
+      return {
+        status: "unknown",
+        errorCode: "BRIDGE_ERROR",
+        message: ex?.message ?? null,
+        certificate: null,
+        documentModifiedAfterSigning: !signature.coversWholeDocument,
+        modificationsAfterSignature: signature.modificationsAfterSignature,
+      };
+    }
+    if (!response || response.error) {
+      return {
+        status: "unknown",
+        errorCode: response?.error ?? "EMPTY_RESPONSE",
+        message: null,
+        certificate: null,
+        documentModifiedAfterSigning: !signature.coversWholeDocument,
+        modificationsAfterSignature: signature.modificationsAfterSignature,
+      };
+    }
+
+    // The chrome side returns an Array<nsIPDFVerificationResult>, but for
+    // a single PKCS#7 input it has exactly one entry.
+    const entry = Array.isArray(response) ? response[0] : response;
+    if (!entry) {
+      return {
+        status: "unknown",
+        errorCode: "EMPTY_RESPONSE",
+        message: null,
+        certificate: null,
+        documentModifiedAfterSigning: !signature.coversWholeDocument,
+        modificationsAfterSignature: signature.modificationsAfterSignature,
+      };
+    }
+    const { status, errorCode } = mapVerificationStatus(
+      entry.signatureResult,
+      entry.certificateResult
+    );
+    return {
+      status,
+      errorCode,
+      message: entry.message ?? null,
+      certificate: entry.certificate ?? null,
+      documentModifiedAfterSigning: !signature.coversWholeDocument,
+      modificationsAfterSignature: signature.modificationsAfterSignature,
+    };
+  }
+
+  async viewCertificate(certificate) {
+    if (!certificate) {
+      return false;
+    }
+    const certs =
+      Array.isArray(certificate.chain) && certificate.chain.length
+        ? certificate.chain.map(c => c.derBase64).filter(Boolean)
+        : [certificate.derBase64].filter(Boolean);
+    if (certs.length === 0) {
+      return false;
+    }
+    try {
+      return await FirefoxCom.requestAsync("viewPdfCertificate", { certs });
+    } catch {
+      return false;
+    }
+  }
+}
+
 class ExternalServices extends BaseExternalServices {
+  printToPDF = async data => {
+    const buffer = await FirefoxCom.requestAsync(
+      "printToPDF",
+      data,
+      getPrintToPDFTimeout(data.length)
+    );
+    return buffer ? new Uint8Array(buffer) : null;
+  };
+
   updateFindControlState(data) {
     FirefoxCom.request("updateFindControlState", data);
   }
@@ -536,21 +761,18 @@ class ExternalServices extends BaseExternalServices {
         case "range":
           pdfDataRangeTransport.onDataRange(args.begin, args.chunk);
           break;
-        case "rangeProgress":
-          pdfDataRangeTransport.onDataProgress(args.loaded);
-          break;
         case "progressiveRead":
           pdfDataRangeTransport.onDataProgressiveRead(args.chunk);
-
-          // Don't forget to report loading progress as well, since otherwise
-          // the loadingBar won't update when `disableRange=true` is set.
-          pdfDataRangeTransport.onDataProgress(args.loaded, args.total);
           break;
         case "progressiveDone":
           pdfDataRangeTransport?.onDataProgressiveDone();
           break;
         case "progress":
-          viewerApp.progress(args.loaded / args.total);
+          const percent = args.total
+            ? MathClamp(Math.round((args.loaded / args.total) * 100), 0, 100)
+            : NaN;
+
+          viewerApp.progress(percent);
           break;
         case "complete":
           if (!args.data) {
@@ -568,12 +790,21 @@ class ExternalServices extends BaseExternalServices {
     FirefoxCom.request("reportTelemetry", data);
   }
 
+  reportText(data) {
+    FirefoxCom.request("reportText", data);
+  }
+
   updateEditorStates(data) {
     FirefoxCom.request("updateEditorStates", data);
   }
 
   async createL10n() {
-    await document.l10n.ready;
+    try {
+      await document.l10n.ready;
+    } catch (ex) {
+      // In automation, initial translation errors reject this promise.
+      console.error(`createL10n: "${ex}".`);
+    }
     return new L10n(AppOptions.get("localeProperties"), document.l10n);
   }
 
@@ -581,8 +812,23 @@ class ExternalServices extends BaseExternalServices {
     return FirefoxScripting;
   }
 
+  createSignatureStorage(eventBus, signal) {
+    return new SignatureStorage(eventBus, signal);
+  }
+
+  createSignatureVerifier() {
+    return new SignatureVerifier();
+  }
+
   dispatchGlobalEvent(event) {
     FirefoxCom.request("dispatchGlobalEvent", event);
+  }
+
+  openAboutPdfFeatures() {
+    if (PDFJSDev.test("GECKOVIEW")) {
+      throw new Error("Not implemented: openAboutPdfFeatures");
+    }
+    FirefoxCom.request("openAboutPdfFeatures", null);
   }
 }
 

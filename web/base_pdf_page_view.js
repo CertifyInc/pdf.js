@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-import { RenderingCancelledException } from "pdfjs-lib";
-import { RenderingStates } from "./ui_utils.js";
+import { FeatureTest, RenderingCancelledException } from "pdfjs-lib";
+import { RenderableView, RenderingStates } from "./renderable_view.js";
 
-class BasePDFPageView {
+class BasePDFPageView extends RenderableView {
   #loadingId = null;
-
-  #minDurationToUpdateCanvas = 0;
 
   #renderError = null;
 
@@ -38,9 +36,15 @@ class BasePDFPageView {
 
   enableOptimizedPartialRendering = false;
 
+  enableSelectionRendering = true;
+
+  imagesRightClickMinSize = -1;
+
   eventBus = null;
 
   id = null;
+
+  imageCoordinates = null;
 
   pageColors = null;
 
@@ -48,18 +52,19 @@ class BasePDFPageView {
 
   renderingQueue = null;
 
-  renderTask = null;
-
-  resume = null;
-
   constructor(options) {
+    super();
     this.eventBus = options.eventBus;
     this.id = options.id;
     this.pageColors = options.pageColors || null;
     this.renderingQueue = options.renderingQueue;
     this.enableOptimizedPartialRendering =
       options.enableOptimizedPartialRendering ?? false;
-    this.#minDurationToUpdateCanvas = options.minDurationToUpdateCanvas ?? 500;
+    this.enableSelectionRendering =
+      options.enableSelectionRendering !== false &&
+      FeatureTest.isBackdropFilterSupported;
+    this.imagesRightClickMinSize = options.imagesRightClickMinSize ?? -1;
+    this.minDurationToUpdateCanvas = options.minDurationToUpdateCanvas ?? 500;
   }
 
   get renderingState() {
@@ -80,9 +85,11 @@ class BasePDFPageView {
     switch (state) {
       case RenderingStates.PAUSED:
         this.div.classList.remove("loading");
-        // Display the canvas as it has been drawn.
         this.#startTime = 0;
-        this.#showCanvas?.(false);
+        // Let onFrame show the worker canvas after drawing a frame.
+        if (!this.renderTask?.isWorkerRendering) {
+          this.#showCanvas?.(false);
+        }
         break;
       case RenderingStates.RUNNING:
         this.div.classList.add("loadingIcon");
@@ -119,14 +126,20 @@ class BasePDFPageView {
     this.#showCanvas = isLastShow => {
       if (updateOnFirstShow) {
         let tempCanvas = this.#tempCanvas;
-        if (!isLastShow && this.#minDurationToUpdateCanvas > 0) {
+        // When rendering in the worker, each frame handed back is already
+        // a complete snapshot, throttled worker-side, so double-buffering
+        // through a temporary canvas would only add a copy.
+        if (
+          !isLastShow &&
+          this.minDurationToUpdateCanvas > 0 &&
+          !this.renderTask?.isWorkerRendering
+        ) {
           // We draw on the canvas at 60fps (in using `requestAnimationFrame`),
           // so if the canvas is large, updating it at 60fps can be a way too
           // much and can cause some serious performance issues.
           // To avoid that we only update the canvas every
           // `this.#minDurationToUpdateCanvas` ms.
-
-          if (Date.now() - this.#startTime < this.#minDurationToUpdateCanvas) {
+          if (Date.now() - this.#startTime < this.minDurationToUpdateCanvas) {
             return;
           }
           if (!tempCanvas) {
@@ -172,7 +185,10 @@ class BasePDFPageView {
   }
 
   #renderContinueCallback = cont => {
-    this.#showCanvas?.(false);
+    // In the worker path the canvas only gains pixels in `onFrame`.
+    if (!this.renderTask?.isWorkerRendering) {
+      this.#showCanvas?.(false);
+    }
     if (this.renderingQueue && !this.renderingQueue.isHighestPriority(this)) {
       this.renderingState = RenderingStates.PAUSED;
       this.resume = () => {
@@ -205,6 +221,7 @@ class BasePDFPageView {
   async _drawCanvas(options, onCancel, onFinish) {
     const renderTask = (this.renderTask = this.pdfPage.render(options));
     renderTask.onContinue = this.#renderContinueCallback;
+    renderTask.onFrame = () => this.#showCanvas?.(false);
     renderTask.onError = error => {
       if (error instanceof RenderingCancelledException) {
         onCancel();
@@ -236,6 +253,9 @@ class BasePDFPageView {
         this.renderTask = null;
         if (this.enableOptimizedPartialRendering) {
           this.recordedBBoxes ??= renderTask.recordedBBoxes;
+        }
+        if (this.imagesRightClickMinSize !== -1) {
+          this.imageCoordinates ??= this.pdfPage.imageCoordinates;
         }
       }
     }

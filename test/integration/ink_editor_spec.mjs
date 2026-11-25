@@ -15,42 +15,10 @@
 
 import {
   awaitPromise,
-<<<<<<< HEAD
-  closePages,
-  createPromise,
-  getEditorSelector,
-  getRect,
-  getSelectedEditors,
-  kbRedo,
-  kbSelectAll,
-  kbUndo,
-  loadAndWait,
-  scrollIntoView,
-  switchToEditor,
-  waitForSerialized,
-  waitForStorageEntries,
-} from "./test_utils.mjs";
-
-const waitForPointerUp = page =>
-  createPromise(page, resolve => {
-    window.addEventListener("pointerup", resolve, { once: true });
-  });
-
-const selectAll = async page => {
-  await kbSelectAll(page);
-  await page.waitForFunction(
-    () => !document.querySelector(".inkEditor.disabled:not(.selectedEditor)")
-  );
-};
-
-const clearAll = async page => {
-  await selectAll(page);
-  await page.keyboard.press("Backspace");
-  await waitForStorageEntries(page, 0);
-};
-=======
   clearEditors,
   closePages,
+  countStorageEntries,
+  createPromise,
   dragAndDrop,
   getAnnotationSelector,
   getEditors,
@@ -59,26 +27,31 @@ const clearAll = async page => {
   getSerialized,
   isCanvasMonochrome,
   kbRedo,
+  kbSave,
   kbUndo,
   loadAndWait,
   moveEditor,
+  pinch,
   scrollIntoView,
   selectEditor,
   selectEditors,
   switchToEditor,
+  unselectEditor,
   waitForAnnotationModeChanged,
+  waitForBrowserTrip,
   waitForNoElement,
   waitForPointerUp,
   waitForSelectedEditor,
   waitForSerialized,
   waitForStorageEntries,
+  waitForTextToBe,
   waitForTimeout,
 } from "./test_utils.mjs";
+import { AnnotationEditorType } from "../../src/shared/util.js";
 
 const selectAll = selectEditors.bind(null, "ink");
 
 const clearAll = clearEditors.bind(null, "ink");
->>>>>>> upstream/master
 
 const commit = async page => {
   await page.keyboard.press("Escape");
@@ -87,8 +60,6 @@ const commit = async page => {
 
 const switchToInk = switchToEditor.bind(null, "Ink");
 
-<<<<<<< HEAD
-=======
 const drawLine = async (page, x0, y0, x1, y1) => {
   const clickHandle = await waitForPointerUp(page);
   await page.mouse.move(x0, y0);
@@ -98,24 +69,48 @@ const drawLine = async (page, x0, y0, x1, y1) => {
   await awaitPromise(clickHandle);
 };
 
->>>>>>> upstream/master
+// Tokenize generated SVG paths, ignoring whitespace.
+const getPathTokens = d => d.match(/[a-z]|-?[\d.]+/gi);
+
+// Extract endpoints and control points from the generated M/L/C/Z paths.
+const getPathPoints = d => {
+  const numbers = d.match(/-?[\d.]+/g).map(Number);
+  const points = [];
+  for (let i = 0; i < numbers.length; i += 2) {
+    points.push([numbers[i], numbers[i + 1]]);
+  }
+  return points;
+};
+
+// Draw an editor large enough to have room for two fingers on it, and leave it
+// selected since that's what makes it resizable with a touchscreen.
+const drawAndSelectEditor = async page => {
+  await switchToInk(page);
+  const { x, y, width, height } = await getRect(page, ".annotationEditorLayer");
+  await drawLine(
+    page,
+    x + 0.15 * width,
+    y + 0.1 * height,
+    x + 0.75 * width,
+    y + 0.35 * height
+  );
+  await commit(page);
+
+  return {
+    layer: { x, y, width, height },
+    editor: await getRect(page, getEditorSelector(0)),
+  };
+};
+
 describe("Ink Editor", () => {
   describe("Basic operations", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("aboutstacks.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -125,41 +120,20 @@ describe("Ink Editor", () => {
           await switchToInk(page);
 
           const rect = await getRect(page, ".annotationEditorLayer");
-
           for (let i = 0; i < 3; i++) {
             const x = rect.x + 100 + i * 100;
             const y = rect.y + 100 + i * 100;
-<<<<<<< HEAD
-            const clickHandle = await waitForPointerUp(page);
-            await page.mouse.move(x, y);
-            await page.mouse.down();
-            await page.mouse.move(x + 50, y + 50);
-            await page.mouse.up();
-            await awaitPromise(clickHandle);
-
-            await commit(page);
-          }
-
-=======
             await drawLine(page, x, y, x + 50, y + 50);
             await commit(page);
           }
+          await waitForTextToBe(page, "#viewer-alert", "Drawing added");
 
-          await page.waitForFunction(
-            `document.getElementById("viewer-alert").textContent === "Drawing added"`
-          );
-
->>>>>>> upstream/master
           await clearAll(page);
 
           await kbUndo(page);
           await waitForStorageEntries(page, 3);
 
-<<<<<<< HEAD
-          expect(await getSelectedEditors(page))
-=======
           expect(await getEditors(page, "selected"))
->>>>>>> upstream/master
             .withContext(`In ${browserName}`)
             .toEqual([]);
         })
@@ -169,24 +143,6 @@ describe("Ink Editor", () => {
     it("must draw, undo/redo and check that the editor don't move", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-<<<<<<< HEAD
-          await clearAll(page);
-
-          const rect = await getRect(page, ".annotationEditorLayer");
-
-          const xStart = rect.x + 300;
-          const yStart = rect.y + 300;
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(xStart, yStart);
-          await page.mouse.down();
-          await page.mouse.move(xStart + 50, yStart + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-
-          await commit(page);
-
-          const rectBefore = await getRect(page, ".inkEditor canvas");
-=======
           await switchToInk(page);
 
           const rect = await getRect(page, ".annotationEditorLayer");
@@ -197,7 +153,6 @@ describe("Ink Editor", () => {
           await commit(page);
 
           const rectBefore = await getRect(page, ".canvasWrapper .draw");
->>>>>>> upstream/master
 
           for (let i = 0; i < 30; i++) {
             await kbUndo(page);
@@ -206,11 +161,7 @@ describe("Ink Editor", () => {
             await waitForStorageEntries(page, 1);
           }
 
-<<<<<<< HEAD
-          const rectAfter = await getRect(page, ".inkEditor canvas");
-=======
           const rectAfter = await getRect(page, ".canvasWrapper .draw");
->>>>>>> upstream/master
 
           expect(Math.round(rectBefore.x))
             .withContext(`In ${browserName}`)
@@ -222,8 +173,6 @@ describe("Ink Editor", () => {
         })
       );
     });
-<<<<<<< HEAD
-=======
 
     it("must draw and move with the keyboard", async () => {
       await Promise.all(
@@ -262,25 +211,16 @@ describe("Ink Editor", () => {
         })
       );
     });
->>>>>>> upstream/master
   });
 
   describe("with a rotated pdf", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("issue16278.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("issue16278.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -293,26 +233,12 @@ describe("Ink Editor", () => {
 
           const x = rect.x + 20;
           const y = rect.y + 20;
-<<<<<<< HEAD
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(x, y);
-          await page.mouse.down();
-          await page.mouse.move(x + 50, y + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-
-=======
           await drawLine(page, x, y, x + 50, y + 50);
->>>>>>> upstream/master
           await commit(page);
 
           await selectAll(page);
 
-<<<<<<< HEAD
-          expect(await getSelectedEditors(page))
-=======
           expect(await getEditors(page, "selected"))
->>>>>>> upstream/master
             .withContext(`In ${browserName}`)
             .toEqual([0]);
         })
@@ -323,19 +249,11 @@ describe("Ink Editor", () => {
   describe("Invisible layers must be disabled", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -348,17 +266,7 @@ describe("Ink Editor", () => {
 
           const x = rect.x + 20;
           const y = rect.y + 20;
-<<<<<<< HEAD
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(x, y);
-          await page.mouse.down();
-          await page.mouse.move(x + 50, y + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-
-=======
           await drawLine(page, x, y, x + 50, y + 50);
->>>>>>> upstream/master
           await commit(page);
 
           const oneToFourteen = Array.from(new Array(13).keys(), n => n + 2);
@@ -390,19 +298,11 @@ describe("Ink Editor", () => {
   describe("Ink editor must be committed when blurred", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -415,20 +315,9 @@ describe("Ink Editor", () => {
 
           const x = rect.x + 20;
           const y = rect.y + 20;
-<<<<<<< HEAD
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(x, y);
-          await page.mouse.down();
-          await page.mouse.move(x + 50, y + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-
-          page.mouse.click(rect.x - 10, rect.y + 10);
-=======
           await drawLine(page, x, y, x + 50, y + 50);
 
           await page.mouse.click(rect.x - 10, rect.y + 10);
->>>>>>> upstream/master
           await page.waitForSelector(`${getEditorSelector(0)}.disabled`);
         })
       );
@@ -438,19 +327,11 @@ describe("Ink Editor", () => {
   describe("Undo a draw", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -461,23 +342,6 @@ describe("Ink Editor", () => {
 
           const rect = await getRect(page, ".annotationEditorLayer");
 
-<<<<<<< HEAD
-          const xStart = rect.x + 300;
-          const yStart = rect.y + 300;
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(xStart, yStart);
-          await page.mouse.down();
-          await page.mouse.move(xStart + 50, yStart + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-          await commit(page);
-
-          await page.waitForSelector(getEditorSelector(0));
-          await waitForSerialized(page, 1);
-
-          await page.waitForSelector(`${getEditorSelector(0)} button.delete`);
-          await page.click(`${getEditorSelector(0)} button.delete`);
-=======
           const x = rect.x + 300;
           const y = rect.y + 300;
           await drawLine(page, x, y, x + 50, y + 50);
@@ -489,16 +353,11 @@ describe("Ink Editor", () => {
 
           await page.waitForSelector(`${editorSelector} button.deleteButton`);
           await page.click(`${editorSelector} button.deleteButton`);
->>>>>>> upstream/master
           await waitForSerialized(page, 0);
 
           await kbUndo(page);
           await waitForSerialized(page, 1);
-<<<<<<< HEAD
-          await page.waitForSelector(getEditorSelector(0));
-=======
           await page.waitForSelector(editorSelector);
->>>>>>> upstream/master
         })
       );
     });
@@ -507,19 +366,11 @@ describe("Ink Editor", () => {
   describe("Delete a draw and undo it on another page", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -530,23 +381,6 @@ describe("Ink Editor", () => {
 
           const rect = await getRect(page, ".annotationEditorLayer");
 
-<<<<<<< HEAD
-          const xStart = rect.x + 300;
-          const yStart = rect.y + 300;
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(xStart, yStart);
-          await page.mouse.down();
-          await page.mouse.move(xStart + 50, yStart + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-          await commit(page);
-
-          await page.waitForSelector(getEditorSelector(0));
-          await waitForSerialized(page, 1);
-
-          await page.waitForSelector(`${getEditorSelector(0)} button.delete`);
-          await page.click(`${getEditorSelector(0)} button.delete`);
-=======
           const x = rect.x + 300;
           const y = rect.y + 300;
           await drawLine(page, x, y, x + 50, y + 50);
@@ -558,7 +392,6 @@ describe("Ink Editor", () => {
 
           await page.waitForSelector(`${editorSelector} button.deleteButton`);
           await page.click(`${editorSelector} button.deleteButton`);
->>>>>>> upstream/master
           await waitForSerialized(page, 0);
 
           const twoToFourteen = Array.from(new Array(13).keys(), n => n + 2);
@@ -576,11 +409,7 @@ describe("Ink Editor", () => {
             await scrollIntoView(page, pageSelector);
           }
 
-<<<<<<< HEAD
-          await page.waitForSelector(getEditorSelector(0));
-=======
           await page.waitForSelector(editorSelector);
->>>>>>> upstream/master
         })
       );
     });
@@ -589,19 +418,11 @@ describe("Ink Editor", () => {
   describe("Delete a draw, scroll and undo it", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("tracemonkey.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -612,23 +433,6 @@ describe("Ink Editor", () => {
 
           const rect = await getRect(page, ".annotationEditorLayer");
 
-<<<<<<< HEAD
-          const xStart = rect.x + 300;
-          const yStart = rect.y + 300;
-          const clickHandle = await waitForPointerUp(page);
-          await page.mouse.move(xStart, yStart);
-          await page.mouse.down();
-          await page.mouse.move(xStart + 50, yStart + 50);
-          await page.mouse.up();
-          await awaitPromise(clickHandle);
-          await commit(page);
-
-          await page.waitForSelector(getEditorSelector(0));
-          await waitForSerialized(page, 1);
-
-          await page.waitForSelector(`${getEditorSelector(0)} button.delete`);
-          await page.click(`${getEditorSelector(0)} button.delete`);
-=======
           const x = rect.x + 300;
           const y = rect.y + 300;
           await drawLine(page, x, y, x + 50, y + 50);
@@ -640,7 +444,6 @@ describe("Ink Editor", () => {
 
           await page.waitForSelector(`${editorSelector} button.deleteButton`);
           await page.click(`${editorSelector} button.deleteButton`);
->>>>>>> upstream/master
           await waitForSerialized(page, 0);
 
           const twoToOne = Array.from(new Array(13).keys(), n => n + 2).concat(
@@ -653,11 +456,7 @@ describe("Ink Editor", () => {
 
           await kbUndo(page);
           await waitForSerialized(page, 1);
-<<<<<<< HEAD
-          await page.waitForSelector(getEditorSelector(0));
-=======
           await page.waitForSelector(editorSelector);
->>>>>>> upstream/master
         })
       );
     });
@@ -666,19 +465,11 @@ describe("Ink Editor", () => {
   describe("Draw several times in the same editor", () => {
     let pages;
 
-<<<<<<< HEAD
-    beforeAll(async () => {
-      pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
-    });
-
-    afterAll(async () => {
-=======
     beforeEach(async () => {
       pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
     });
 
     afterEach(async () => {
->>>>>>> upstream/master
       await closePages(pages);
     });
 
@@ -688,24 +479,11 @@ describe("Ink Editor", () => {
           await switchToInk(page);
           const rect = await getRect(page, ".annotationEditorLayer");
 
-<<<<<<< HEAD
-          let xStart = rect.x + 10;
-          const yStart = rect.y + 10;
-          for (let i = 0; i < 5; i++) {
-            const clickHandle = await waitForPointerUp(page);
-            await page.mouse.move(xStart, yStart);
-            await page.mouse.down();
-            await page.mouse.move(xStart + 50, yStart + 50);
-            await page.mouse.up();
-            await awaitPromise(clickHandle);
-            xStart += 70;
-=======
           let x = rect.x + 10;
           const y = rect.y + 10;
           for (let i = 0; i < 5; i++) {
             await drawLine(page, x, y, x + 50, y + 50);
             x += 70;
->>>>>>> upstream/master
           }
           await commit(page);
 
@@ -714,8 +492,6 @@ describe("Ink Editor", () => {
       );
     });
   });
-<<<<<<< HEAD
-=======
 
   describe("Drawing must unselect all", () => {
     let pages;
@@ -1123,19 +899,11 @@ describe("Ink Editor", () => {
           await page.waitForSelector(`${editorSelector} button.deleteButton`);
           await page.click(`${editorSelector} button.deleteButton`);
           await waitForSerialized(page, 0);
-
-          await page.waitForFunction(() => {
-            const messageElement = document.querySelector(
-              "#editorUndoBarMessage"
-            );
-            return messageElement && messageElement.textContent.trim() !== "";
-          });
-          const message = await page.waitForSelector("#editorUndoBarMessage");
-          const messageText = await page.evaluate(
-            el => el.textContent,
-            message
+          await waitForTextToBe(
+            page,
+            "#editorUndoBarMessage",
+            "Drawing removed"
           );
-          expect(messageText).toContain("Drawing removed");
         })
       );
     });
@@ -1341,6 +1109,271 @@ describe("Ink Editor", () => {
   });
 });
 
+describe("The drawn line must reach the pointer", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that the line ends at the pointer while drawing", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+        const x = Math.round(rect.x + 50);
+        const y = Math.round(rect.y + rect.height / 2);
+        const clickHandle = await waitForPointerUp(page);
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+
+        // Once at least three points are accepted, each smoothed segment ends
+        // halfway between the two latest ones. Without the transient tip, the
+        // displayed path would end at that midpoint rather than at the pointer.
+        for (const deltaX of [20, 60, 120, 200]) {
+          await page.mouse.move(x + deltaX, y);
+          const d = await page.$eval(
+            `.canvasWrapper svg.draw path[d]:not([d=""])`,
+            el => el.getAttribute("d")
+          );
+          // Ink path coordinates are normalized to a "0 0 10000 10000"
+          // viewBox.
+          const numbers = d
+            .trim()
+            .split(/[^0-9.-]+/)
+            .filter(Boolean);
+          const lastX = (numbers.at(-2) / 10000) * rect.width;
+          expect(Math.abs(lastX - deltaX - 50))
+            .withContext(`In ${browserName}, at ${deltaX}, with "${d}"`)
+            .toBeLessThan(1);
+        }
+
+        await page.mouse.up();
+        await awaitPromise(clickHandle);
+
+        // Once the line is done, the transient tip segment must be gone.
+        const d = await page.$eval(
+          `.canvasWrapper svg.draw path[d]:not([d=""])`,
+          el => el.getAttribute("d")
+        );
+        expect(/L\s*[\d.-]+\s+[\d.-]+\s*$/.test(d))
+          .withContext(`In ${browserName}, with "${d}"`)
+          .toBeFalse();
+      })
+    );
+  });
+
+  it("must update the path when the drawing session is cancelled", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+        const x = Math.round(rect.x + 50);
+        const y = Math.round(rect.y + rect.height / 2);
+        await page.evaluate(() => {
+          window.addEventListener(
+            "pointerdown",
+            e => {
+              globalThis.__pointerId = e.pointerId;
+            },
+            { capture: true, once: true }
+          );
+        });
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        for (const deltaX of [20, 60, 120, 200]) {
+          await page.mouse.move(x + deltaX, y);
+        }
+        await page.evaluate(() => {
+          window.dispatchEvent(
+            new PointerEvent("pointercancel", {
+              pointerId: globalThis.__pointerId,
+            })
+          );
+          delete globalThis.__pointerId;
+        });
+        await page.waitForSelector(getEditorSelector(0));
+
+        // Compare paths before releasing the mouse button.
+        const { displayed, stored } = await page.evaluate(id => {
+          const editor =
+            window.PDFViewerApplication.pdfViewer._layerProperties.annotationEditorUIManager.getEditor(
+              id
+            );
+          return {
+            displayed: document
+              .querySelector(".canvasWrapper svg.draw path[d]")
+              .getAttribute("d"),
+            stored: editor._drawOutlines.toSVGPath(),
+          };
+        }, getEditorSelector(0).slice(1));
+        await page.mouse.up();
+
+        expect(getPathPoints(displayed))
+          .withContext(`In ${browserName}, with "${displayed}"`)
+          .toEqual(getPathPoints(stored));
+      })
+    );
+  });
+
+  it("must use coalesced events on a rotated page", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await page.evaluate(() => {
+          window.PDFViewerApplication.rotatePages(90);
+        });
+        await page.waitForSelector(
+          ".annotationEditorLayer[data-main-rotation='90']"
+        );
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+        const x = Math.round(rect.x + 50);
+        const y = Math.round(rect.y + rect.height / 2);
+        // Use a bend to expose dropped intermediate samples.
+        const points = [
+          [x + 20, y + 10],
+          [x + 60, y - 10],
+          [x + 120, y + 15],
+        ];
+
+        // Replay positions and time intervals: smoothing uses both.
+        await page.evaluate(() => {
+          const samples = (globalThis.__samples = []);
+          const ac = new AbortController();
+          globalThis.__stopRecording = () => ac.abort();
+          window.addEventListener(
+            "pointerdown",
+            e => samples.push([e.clientX, e.clientY, e.timeStamp]),
+            { capture: true, signal: ac.signal }
+          );
+          window.addEventListener(
+            "pointermove",
+            e => {
+              if (!samples.length) {
+                // The pointer isn't down yet.
+                return;
+              }
+              const coalesced = e.getCoalescedEvents?.();
+              for (const s of coalesced?.length ? coalesced : [e]) {
+                samples.push([s.clientX, s.clientY, s.timeStamp]);
+              }
+            },
+            { capture: true, signal: ac.signal }
+          );
+        });
+        let pointerUpHandle = await waitForPointerUp(page);
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        for (const [clientX, clientY] of points) {
+          await page.mouse.move(clientX, clientY);
+        }
+        const sequentialPath = await page.$eval(
+          `.canvasWrapper svg.draw path[d]:not([d=""])`,
+          el => el.getAttribute("d").trim()
+        );
+        const samples = await page.evaluate(() => {
+          globalThis.__stopRecording();
+          delete globalThis.__stopRecording;
+          const s = globalThis.__samples;
+          delete globalThis.__samples;
+          return s;
+        });
+        await page.mouse.up();
+        await awaitPromise(pointerUpHandle);
+
+        pointerUpHandle = await waitForPointerUp(page);
+        await page.evaluate(() => {
+          window.addEventListener(
+            "pointerdown",
+            e => {
+              globalThis.__pointerDownTime = e.timeStamp;
+            },
+            { capture: true, once: true }
+          );
+        });
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        // Preserve sample offsets if event coordinates are rounded.
+        const [[, , startTime], ...moves] = samples;
+        const [lastX, lastY] = moves.at(-1);
+        const deltas = moves.map(([px, py, time]) => [
+          px - lastX,
+          py - lastY,
+          time - startTime,
+        ]);
+        await page.evaluate(sampleDeltas => {
+          const prototype = PointerEvent.prototype;
+          const descriptor = Object.getOwnPropertyDescriptor(
+            prototype,
+            "getCoalescedEvents"
+          );
+          globalThis.__restoreGetCoalescedEvents = () => {
+            if (descriptor) {
+              Object.defineProperty(
+                prototype,
+                "getCoalescedEvents",
+                descriptor
+              );
+            } else {
+              delete prototype.getCoalescedEvents;
+            }
+          };
+          globalThis.__coalescedEventsCalls = 0;
+          Object.defineProperty(prototype, "getCoalescedEvents", {
+            configurable: true,
+            value() {
+              globalThis.__coalescedEventsCalls++;
+              return sampleDeltas.map(([deltaX, deltaY, deltaTime]) => {
+                const sample = new PointerEvent("pointermove", {
+                  buttons: this.buttons,
+                  clientX: this.clientX + deltaX,
+                  clientY: this.clientY + deltaY,
+                  isPrimary: this.isPrimary,
+                  pointerId: this.pointerId,
+                  pointerType: this.pointerType,
+                });
+                Object.defineProperty(sample, "timeStamp", {
+                  value: globalThis.__pointerDownTime + deltaTime,
+                });
+                return sample;
+              });
+            },
+          });
+        }, deltas);
+        await page.mouse.move(...points.at(-1));
+        const { coalescedEventsCalls, path } = await page.evaluate(() => {
+          const d = document
+            .querySelector(`.canvasWrapper svg.draw path[d]:not([d=""])`)
+            .getAttribute("d");
+          const calls = globalThis.__coalescedEventsCalls;
+          globalThis.__restoreGetCoalescedEvents();
+          delete globalThis.__coalescedEventsCalls;
+          delete globalThis.__restoreGetCoalescedEvents;
+          delete globalThis.__pointerDownTime;
+          return {
+            coalescedEventsCalls: calls,
+            path: d.slice(d.lastIndexOf("M")).trim(),
+          };
+        });
+        await page.mouse.up();
+        await awaitPromise(pointerUpHandle);
+
+        expect(coalescedEventsCalls).withContext(`In ${browserName}`).toBe(1);
+        expect(getPathTokens(path))
+          .withContext(`In ${browserName}, with "${path}"`)
+          .toEqual(getPathTokens(sequentialPath));
+      })
+    );
+  });
+});
+
 describe("The pen-drawn shape must maintain correct curvature regardless of the page it is drawn on or whether the curve's endpoint lies within or beyond the page boundaries", () => {
   let pages;
 
@@ -1362,10 +1395,10 @@ describe("The pen-drawn shape must maintain correct curvature regardless of the 
     const y = rect.y + 200;
     await page.mouse.move(x, y);
     await page.mouse.down();
-    // Create a reference curve on first page.
+    // Draw to the left page edge.
     await page.mouse.move(x - 100, y);
-    if (page !== 1) {
-      // Add a move to create a curve that extends beyond the page boundary.
+    if (pageNumber !== 1) {
+      // Continue beyond the page boundary.
       await page.mouse.move(x - 200, y);
     }
     await page.mouse.up();
@@ -1388,17 +1421,27 @@ describe("The pen-drawn shape must maintain correct curvature regardless of the 
 
         await switchToInk(page);
 
-        // Creating a reference curve on the first page with end
-        // within the page boundaries.
+        // End at the page edge.
         const d1 = await getCurveOnPage({ pageNumber: 1, page });
 
-        // Creating a curve on the second page with end
-        // beyond the page boundaries.
+        // Release outside the second page.
         const d2 = await getCurveOnPage({ pageNumber: 2, page });
 
-        // Expect that the endpoint beyond the boundaries is ignored,
-        // ensuring both curves have the same shape on both pages.
-        expect(d1).withContext(`In ${browserName}`).toEqual(d2);
+        // Timestamps can change the samples, but all path points must stay on
+        // the horizontal segment between the start and the left page edge.
+        const points1 = getPathPoints(d1);
+        const points2 = getPathPoints(d2);
+        const [startX, startY] = points1[0];
+        expect(points2[0])
+          .withContext(`In ${browserName}, with "${d2}"`)
+          .toEqual(points1[0]);
+        expect(
+          [...points1, ...points2].every(
+            ([x, y]) => y === startY && x >= 0 && x <= startX
+          )
+        )
+          .withContext(`In ${browserName}, with "${d1}" and "${d2}"`)
+          .toBeTrue();
       })
     );
   });
@@ -1496,5 +1539,459 @@ describe("Ink must update its color", () => {
       })
     );
   });
->>>>>>> upstream/master
+});
+
+describe("Ink color and opacity change must be a single undo step", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must restore both color and opacity with a single undo", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+        const x = rect.x + 20;
+        const y = rect.y + 20;
+        await drawLine(page, x, y, x + 50, y + 50);
+        await commit(page);
+
+        const drawSelector = ".canvasWrapper svg.draw";
+        await page.waitForSelector(drawSelector, { visible: true });
+
+        // Dispatch a combined color+opacity update (single undo step).
+        await page.evaluate(
+          value => {
+            window.PDFViewerApplication.eventBus.dispatch(
+              "switchannotationeditorparams",
+              {
+                source: null,
+                type: window.pdfjsLib.AnnotationEditorParamsType
+                  .INK_COLOR_AND_OPACITY,
+                value,
+              }
+            );
+          },
+          { color: "#ff0000", opacity: 0.5 }
+        );
+
+        await page.waitForSelector(`${drawSelector}[stroke='#ff0000']`, {
+          visible: true,
+        });
+        let opacity = await page.evaluate(
+          sel => document.querySelector(sel).getAttribute("stroke-opacity"),
+          drawSelector
+        );
+        expect(opacity).withContext(`In ${browserName}`).toEqual("0.5");
+
+        // One undo must restore both color and opacity atomically.
+        await kbUndo(page);
+
+        await page.waitForSelector(`${drawSelector}[stroke='#000000']`, {
+          visible: true,
+        });
+        opacity = await page.evaluate(
+          sel => document.querySelector(sel).getAttribute("stroke-opacity"),
+          drawSelector
+        );
+        expect(opacity).withContext(`In ${browserName}`).toEqual("1");
+
+        // A second undo removes the draw, proving the color+opacity change
+        // was a single undo step and not two.
+        await kbUndo(page);
+        await waitForNoElement(page, drawSelector);
+      })
+    );
+  });
+});
+
+describe("Ink must committed when leaving the tab", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that the annotation storage is updated when leaving the tab", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+
+        const x = rect.x + 20;
+        const y = rect.y + 20;
+        await drawLine(page, x, y, x + 50, y + 50);
+
+        const count = await countStorageEntries(page);
+        expect(count).withContext(`In ${browserName}`).toEqual(0);
+
+        // Trigger the beforeunload event to force auto-commit
+        await page.evaluate(() => {
+          window.dispatchEvent(new Event("beforeunload"));
+        });
+
+        // Wait for the annotation to be committed to storage
+        await waitForStorageEntries(page, 1);
+
+        const countAfter = await countStorageEntries(page);
+        expect(countAfter).withContext(`In ${browserName}`).toEqual(1);
+      })
+    );
+  });
+});
+
+describe("Ink must be committed when the document is saved", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that an in-progress drawing is committed and saved", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+
+        const x = rect.x + 20;
+        const y = rect.y + 20;
+        await drawLine(page, x, y, x + 50, y + 50);
+
+        // The drawing session is still open, hence nothing has been committed
+        // to the annotation storage yet.
+        const count = await countStorageEntries(page);
+        expect(count).withContext(`In ${browserName}`).toEqual(0);
+
+        // `saveDocument` is only called when the annotation storage isn't
+        // empty. If the in-progress drawing weren't committed first, then
+        // `downloadOrSave` would take the "download" path and `saveDocument`
+        // would never run.
+        const saveDocumentCalled = await createPromise(page, resolve => {
+          window.PDFViewerApplication.pdfDocument.saveDocument = () =>
+            resolve();
+        });
+
+        // Save the document with the keyboard shortcut (Ctrl/Cmd+S).
+        await kbSave(page);
+
+        // The in-progress drawing must have been committed to the storage...
+        await waitForStorageEntries(page, 1);
+
+        // ...as an ink annotation...
+        const serialized = await getSerialized(page);
+        expect(serialized.length).withContext(`In ${browserName}`).toEqual(1);
+        expect(serialized[0].annotationType)
+          .withContext(`In ${browserName}`)
+          .toEqual(AnnotationEditorType.INK);
+
+        // ...and the document must have been saved (and not merely downloaded).
+        await awaitPromise(saveDocumentCalled);
+      })
+    );
+  });
+});
+
+describe("Pinch to resize a drawing", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must keep resizing a drawing which came back with an undo", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        await switchToInk(page);
+
+        const rect = await getRect(page, ".annotationEditorLayer");
+        await drawLine(
+          page,
+          rect.x + 200,
+          rect.y + 200,
+          rect.x + 300,
+          rect.y + 260
+        );
+        await commit(page);
+
+        const editorSelector = getEditorSelector(0);
+        await clearAll(page);
+        await waitForNoElement(page, editorSelector);
+        await kbUndo(page);
+        await page.waitForSelector(editorSelector);
+        await selectEditor(page, editorSelector);
+
+        const before = await getRect(page, editorSelector);
+        const startGap = Math.min(before.width, before.height) * 0.2;
+        const endGap = Math.max(before.width, before.height) * 1.8;
+        await pinch(page, {
+          centerX: before.x + before.width / 2,
+          centerY: before.y + before.height / 2,
+          startGap,
+          endGap,
+        });
+        const { width: after } = await getRect(page, editorSelector);
+
+        expect(after)
+          .withContext(`In ${browserName}`)
+          .toBeGreaterThan(before.width);
+      })
+    );
+  });
+});
+
+describe("Resize with a touchscreen", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that the resize session is ended when the finger is lifted while another one is down", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        const { layer } = await drawAndSelectEditor(page);
+
+        // Grabbing a resizer starts a resize session, which disables the
+        // pointer events of the editor layer until the finger is lifted.
+        const resizer = await getRect(
+          page,
+          `${getEditorSelector(0)} .resizer.bottomRight`
+        );
+        await pinch(page, {
+          steps: 0,
+          startPoints: [
+            {
+              x: resizer.x + resizer.width / 2,
+              y: resizer.y + resizer.height / 2,
+            },
+            {
+              x: layer.x + 0.3 * layer.width,
+              y: layer.y + 0.9 * layer.height,
+            },
+          ],
+          afterFirstStart: () =>
+            page.waitForSelector(".annotationEditorLayer.disabled"),
+          afterFirstEnd: () =>
+            // The `pointerup` of the resizing finger must still be dispatched,
+            // else the resize session would never end and the editor would keep
+            // being resized by the plain mouse moves coming afterwards.
+            page.waitForSelector(".annotationEditorLayer:not(.disabled)"),
+        });
+      })
+    );
+  });
+
+  it("must end pinch-resize when one editor finger is lifted with another finger elsewhere", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        const { layer, editor } = await drawAndSelectEditor(page);
+        // Keep both fingers inside the editor body.
+        const fingerY = editor.y + 0.8 * editor.height;
+        let finger0, finger1, finger2;
+
+        try {
+          // Two fingers start a pinch-resize session, which disables the layer.
+          finger0 = await page.touchscreen.touchStart(
+            editor.x + 0.2 * editor.width,
+            fingerY
+          );
+          finger1 = await page.touchscreen.touchStart(
+            editor.x + 0.55 * editor.width,
+            fingerY
+          );
+          await page.waitForSelector(".annotationEditorLayer.disabled");
+
+          // On the following editor `touchend`, this foreign finger is present
+          // in `evt.touches` but absent from `evt.changedTouches`.
+          finger2 = await page.touchscreen.touchStart(
+            layer.x + 0.2 * layer.width,
+            layer.y + 0.85 * layer.height
+          );
+
+          // Fewer than two editor fingers remain, so its pinch-resize session
+          // ends.
+          await finger0.end();
+          finger0 = null;
+          await page.waitForSelector(".annotationEditorLayer:not(.disabled)");
+        } finally {
+          await finger0?.end();
+          await finger1?.end();
+          await finger2?.end();
+        }
+      })
+    );
+  });
+
+  it("must keep pinch-resizing when a finger is lifted and put down again", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        const { editor } = await drawAndSelectEditor(page);
+        const editorSelector = getEditorSelector(0);
+        // Keep every finger inside the editor body.
+        const fingerY = editor.y + 0.8 * editor.height;
+        const getCenter = async () => {
+          const { x, y, width, height } = await getRect(page, editorSelector);
+          return [x + width / 2, y + height / 2];
+        };
+        let finger0, finger1;
+
+        try {
+          finger0 = await page.touchscreen.touchStart(
+            editor.x + 0.15 * editor.width,
+            fingerY
+          );
+          finger1 = await page.touchscreen.touchStart(
+            editor.x + 0.85 * editor.width,
+            fingerY
+          );
+          await page.waitForSelector(".annotationEditorLayer.disabled");
+
+          // The second finger is lifted, which ends the session, and put down
+          // again next to the first one, which starts a new one.
+          await finger1.end();
+          await page.waitForSelector(".annotationEditorLayer:not(.disabled)");
+          // Let Firefox update hit-testing after the layer is re-enabled.
+          await waitForBrowserTrip(page);
+          finger1 = await page.touchscreen.touchStart(
+            editor.x + 0.5 * editor.width,
+            fingerY
+          );
+          await page.waitForSelector(".annotationEditorLayer.disabled");
+
+          // Spreading the fingers must resize the editor around its center and
+          // not drag it: the `pointerdown` of the returning finger mustn't have
+          // started a drag session. The editor is deliberately grown by little,
+          // else it would hit the page borders and be moved to fit in them.
+          const [centerX, centerY] = await getCenter();
+          for (let i = 1; i <= 6; i++) {
+            await finger1.move(editor.x + 0.5 * editor.width + 10 * i, fingerY);
+          }
+
+          const [newCenterX, newCenterY] = await getCenter();
+          expect(Math.abs(newCenterX - centerX))
+            .withContext(`In ${browserName}`)
+            .toBeLessThan(2);
+          expect(Math.abs(newCenterY - centerY))
+            .withContext(`In ${browserName}`)
+            .toBeLessThan(2);
+        } finally {
+          await finger0?.end();
+          await finger1?.end();
+        }
+      })
+    );
+  });
+});
+
+describe("Tap after a two-finger gesture", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that the tap following a two-finger gesture selects the editor", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        const { layer, editor } = await drawAndSelectEditor(page);
+        const editorSelector = getEditorSelector(0);
+
+        // One finger on the editor, which starts a drag session, and a second
+        // one elsewhere on the page, which turns it into a two-finger gesture.
+        await pinch(page, {
+          steps: 0,
+          startPoints: [
+            {
+              x: editor.x + 0.5 * editor.width,
+              y: editor.y + 0.8 * editor.height,
+            },
+            {
+              x: layer.x + 0.3 * layer.width,
+              y: layer.y + 0.9 * layer.height,
+            },
+          ],
+        });
+
+        // Once every finger is up, no listener may be left behind to swallow
+        // the `pointerdown` of the next tap on the editor.
+        await unselectEditor(page, editorSelector);
+        await page.touchscreen.tap(
+          editor.x + 0.5 * editor.width,
+          editor.y + 0.8 * editor.height
+        );
+        await waitForSelectedEditor(page, editorSelector);
+      })
+    );
+  });
+});
+
+describe("Removal during a pinch-resize", () => {
+  let pages;
+
+  beforeEach(async () => {
+    pages = await loadAndWait("empty.pdf", ".annotationEditorLayer");
+  });
+
+  afterEach(async () => {
+    await closePages(pages);
+  });
+
+  it("must check that removing the editor being pinch-resized ends the gesture", async () => {
+    await Promise.all(
+      pages.map(async ([browserName, page]) => {
+        const { editor } = await drawAndSelectEditor(page);
+        const fingerY = editor.y + 0.8 * editor.height;
+        let finger0, finger1;
+
+        try {
+          finger0 = await page.touchscreen.touchStart(
+            editor.x + 0.2 * editor.width,
+            fingerY
+          );
+          finger1 = await page.touchscreen.touchStart(
+            editor.x + 0.55 * editor.width,
+            fingerY
+          );
+          await page.waitForSelector(".annotationEditorLayer.disabled");
+
+          // Removal must re-enable the layer before the touches end.
+          await page.keyboard.press("Backspace");
+          await waitForStorageEntries(page, 0);
+          await page.waitForSelector(".annotationEditorLayer:not(.disabled)");
+        } finally {
+          await finger0?.end();
+          await finger1?.end();
+        }
+      })
+    );
+  });
 });

@@ -14,102 +14,81 @@
  */
 
 import {
+  assert,
   bytesToString,
+  DrawOPS,
+  FeatureTest,
   FONT_IDENTITY_MATRIX,
-  FontRenderOps,
   FormatError,
+  shadow,
   unreachable,
+  Util,
   warn,
 } from "../shared/util.js";
 import { CFFParser } from "./cff_parser.js";
+import { compileFontPathInfo } from "./obj_bin_transform_core.js";
 import { getGlyphsUnicode } from "./glyphlist.js";
 import { isNumberArray } from "./core_utils.js";
 import { StandardEncoding } from "./encodings.js";
 import { Stream } from "./stream.js";
 
-// TODO: use DataView and its methods.
-
-function getUint32(data, offset) {
-  return (
-    ((data[offset] << 24) |
-      (data[offset + 1] << 16) |
-      (data[offset + 2] << 8) |
-      data[offset + 3]) >>>
-    0
-  );
-}
-
-function getUint16(data, offset) {
-  return (data[offset] << 8) | data[offset + 1];
-}
-
-function getInt16(data, offset) {
-  return ((data[offset] << 24) | (data[offset + 1] << 16)) >> 16;
-}
-
-function getInt8(data, offset) {
-  return (data[offset] << 24) >> 24;
-}
-
-function getFloat214(data, offset) {
-  return getInt16(data, offset) / 16384;
+function getFloat214(view, offset) {
+  return view.getInt16(offset) / 16384;
 }
 
 function getSubroutineBias(subrs) {
   const numSubrs = subrs.length;
-  let bias = 32768;
-  if (numSubrs < 1240) {
-    bias = 107;
-  } else if (numSubrs < 33900) {
-    bias = 1131;
+  if (numSubrs >= 33900) {
+    return 32768;
   }
-  return bias;
+  return numSubrs < 1240 ? 107 : 1131;
 }
 
 function parseCmap(data, start, end) {
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
   const offset =
-    getUint16(data, start + 2) === 1
-      ? getUint32(data, start + 8)
-      : getUint32(data, start + 16);
-  const format = getUint16(data, start + offset);
+    view.getUint16(start + 2) === 1
+      ? view.getUint32(start + 8)
+      : view.getUint32(start + 16);
+  const format = view.getUint16(start + offset);
   let ranges, p, i;
   if (format === 4) {
-    getUint16(data, start + offset + 2); // length
-    const segCount = getUint16(data, start + offset + 6) >> 1;
+    // Skip length, at `start + offset + 2`.
+    const segCount = view.getUint16(start + offset + 6) >> 1;
     p = start + offset + 14;
     ranges = [];
     for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i] = { end: getUint16(data, p) };
+      ranges[i] = { end: view.getUint16(p) };
     }
     p += 2;
     for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i].start = getUint16(data, p);
+      ranges[i].start = view.getUint16(p);
     }
     for (i = 0; i < segCount; i++, p += 2) {
-      ranges[i].idDelta = getUint16(data, p);
+      ranges[i].idDelta = view.getUint16(p);
     }
     for (i = 0; i < segCount; i++, p += 2) {
-      let idOffset = getUint16(data, p);
+      let idOffset = view.getUint16(p);
       if (idOffset === 0) {
         continue;
       }
       ranges[i].ids = [];
       for (let j = 0, jj = ranges[i].end - ranges[i].start + 1; j < jj; j++) {
-        ranges[i].ids[j] = getUint16(data, p + idOffset);
+        ranges[i].ids[j] = view.getUint16(p + idOffset);
         idOffset += 2;
       }
     }
     return ranges;
   } else if (format === 12) {
-    const groups = getUint32(data, start + offset + 12);
+    const groups = view.getUint32(start + offset + 12);
     p = start + offset + 16;
     ranges = [];
     for (i = 0; i < groups; i++) {
-      start = getUint32(data, p);
+      start = view.getUint32(p);
       ranges.push({
         start,
-        end: getUint32(data, p + 4),
-        idDelta: getUint32(data, p + 8) - start,
+        end: view.getUint32(p + 4),
+        idDelta: view.getUint32(p + 8) - start,
       });
       p += 12;
     }
@@ -137,18 +116,19 @@ function parseCff(data, start, end, seacAnalysisEnabled) {
 }
 
 function parseGlyfTable(glyf, loca, isGlyphLocationsLong) {
+  const view = new DataView(loca.buffer, loca.byteOffset, loca.byteLength);
   let itemSize, itemDecode;
   if (isGlyphLocationsLong) {
     itemSize = 4;
-    itemDecode = getUint32;
+    itemDecode = (dv, offset) => dv.getUint32(offset);
   } else {
     itemSize = 2;
-    itemDecode = (data, offset) => 2 * getUint16(data, offset);
+    itemDecode = (dv, offset) => 2 * dv.getUint16(offset);
   }
   const glyphs = [];
-  let startOffset = itemDecode(loca, 0);
+  let startOffset = itemDecode(view, 0);
   for (let j = itemSize; j < loca.length; j += itemSize) {
-    const endOffset = itemDecode(loca, j);
+    const endOffset = itemDecode(view, j);
     glyphs.push(glyf.subarray(startOffset, endOffset));
     startOffset = endOffset;
   }
@@ -180,42 +160,58 @@ function lookupCmap(ranges, unicode) {
   };
 }
 
-function compileGlyf(code, cmds, font) {
+function compileGlyf(code, cmds, font, visitedGlyphs = new Set()) {
+  if (!code?.length) {
+    return;
+  }
+  if (visitedGlyphs.has(code)) {
+    warn("compileGlyf: skipping recursive composite glyph reference.");
+    return;
+  }
+  visitedGlyphs.add(code);
+
   function moveTo(x, y) {
-    cmds.add(FontRenderOps.MOVE_TO, [x, y]);
+    if (firstPoint) {
+      // Close the current subpath in adding a straight line to the first point.
+      cmds.add(DrawOPS.lineTo, firstPoint);
+    }
+    firstPoint = [x, y];
+    cmds.add(DrawOPS.moveTo, [x, y]);
   }
   function lineTo(x, y) {
-    cmds.add(FontRenderOps.LINE_TO, [x, y]);
+    cmds.add(DrawOPS.lineTo, [x, y]);
   }
   function quadraticCurveTo(xa, ya, x, y) {
-    cmds.add(FontRenderOps.QUADRATIC_CURVE_TO, [xa, ya, x, y]);
+    cmds.add(DrawOPS.quadraticCurveTo, [xa, ya, x, y]);
   }
 
+  const view = new DataView(code.buffer, code.byteOffset, code.byteLength);
   let i = 0;
-  const numberOfContours = getInt16(code, i);
+  const numberOfContours = view.getInt16(i);
   let flags;
+  let firstPoint = null;
   let x = 0,
     y = 0;
   i += 10;
   if (numberOfContours < 0) {
     // composite glyph
     do {
-      flags = getUint16(code, i);
-      const glyphIndex = getUint16(code, i + 2);
+      flags = view.getUint16(i);
+      const glyphIndex = view.getUint16(i + 2);
       i += 4;
       let arg1, arg2;
       if (flags & 0x01) {
         if (flags & 0x02) {
-          arg1 = getInt16(code, i);
-          arg2 = getInt16(code, i + 2);
+          arg1 = view.getInt16(i);
+          arg2 = view.getInt16(i + 2);
         } else {
-          arg1 = getUint16(code, i);
-          arg2 = getUint16(code, i + 2);
+          arg1 = view.getUint16(i);
+          arg2 = view.getUint16(i + 2);
         }
         i += 4;
       } else if (flags & 0x02) {
-        arg1 = getInt8(code, i++);
-        arg2 = getInt8(code, i++);
+        arg1 = view.getInt8(i++);
+        arg2 = view.getInt8(i++);
       } else {
         arg1 = code[i++];
         arg2 = code[i++];
@@ -232,39 +228,32 @@ function compileGlyf(code, cmds, font) {
         scale01 = 0,
         scale10 = 0;
       if (flags & 0x08) {
-        scaleX = scaleY = getFloat214(code, i);
+        scaleX = scaleY = getFloat214(view, i);
         i += 2;
       } else if (flags & 0x40) {
-        scaleX = getFloat214(code, i);
-        scaleY = getFloat214(code, i + 2);
+        scaleX = getFloat214(view, i);
+        scaleY = getFloat214(view, i + 2);
         i += 4;
       } else if (flags & 0x80) {
-        scaleX = getFloat214(code, i);
-        scale01 = getFloat214(code, i + 2);
-        scale10 = getFloat214(code, i + 4);
-        scaleY = getFloat214(code, i + 6);
+        scaleX = getFloat214(view, i);
+        scale01 = getFloat214(view, i + 2);
+        scale10 = getFloat214(view, i + 4);
+        scaleY = getFloat214(view, i + 6);
         i += 8;
       }
       const subglyph = font.glyphs[glyphIndex];
       if (subglyph) {
         // TODO: the transform should be applied only if there is a scale:
         // https://github.com/freetype/freetype/blob/edd4fedc5427cf1cf1f4b045e53ff91eb282e9d4/src/truetype/ttgload.c#L1205
-        cmds.add(FontRenderOps.SAVE);
-        cmds.add(FontRenderOps.TRANSFORM, [
-          scaleX,
-          scale01,
-          scale10,
-          scaleY,
-          x,
-          y,
-        ]);
+        cmds.save();
+        cmds.transform([scaleX, scale01, scale10, scaleY, x, y]);
 
         if (!(flags & 0x02)) {
           // TODO: we must use arg1 and arg2 to make something similar to:
           // https://github.com/freetype/freetype/blob/edd4fedc5427cf1cf1f4b045e53ff91eb282e9d4/src/truetype/ttgload.c#L1209
         }
-        compileGlyf(subglyph, cmds, font);
-        cmds.add(FontRenderOps.RESTORE);
+        compileGlyf(subglyph, cmds, font, visitedGlyphs);
+        cmds.restore();
       }
     } while (flags & 0x20);
   } else {
@@ -272,10 +261,10 @@ function compileGlyf(code, cmds, font) {
     const endPtsOfContours = [];
     let j, jj;
     for (j = 0; j < numberOfContours; j++) {
-      endPtsOfContours.push(getUint16(code, i));
+      endPtsOfContours.push(view.getUint16(i));
       i += 2;
     }
-    const instructionLength = getUint16(code, i);
+    const instructionLength = view.getUint16(i);
     i += 2 + instructionLength; // skipping the instructions
     const numberOfPoints = endPtsOfContours.at(-1) + 1;
     const points = [];
@@ -292,7 +281,7 @@ function compileGlyf(code, cmds, font) {
     for (j = 0; j < numberOfPoints; j++) {
       switch (points[j].flags & 0x12) {
         case 0x00:
-          x += getInt16(code, i);
+          x += view.getInt16(i);
           i += 2;
           break;
         case 0x02:
@@ -307,7 +296,7 @@ function compileGlyf(code, cmds, font) {
     for (j = 0; j < numberOfPoints; j++) {
       switch (points[j].flags & 0x24) {
         case 0x00:
-          y += getInt16(code, i);
+          y += view.getInt16(i);
           i += 2;
           break;
         case 0x04:
@@ -365,25 +354,33 @@ function compileGlyf(code, cmds, font) {
       startPoint = endPoint + 1;
     }
   }
+  visitedGlyphs.delete(code);
 }
 
 function compileCharString(charStringCode, cmds, font, glyphId) {
   function moveTo(x, y) {
-    cmds.add(FontRenderOps.MOVE_TO, [x, y]);
+    if (firstPoint) {
+      // Close the current subpath in adding a straight line to the first point.
+      cmds.add(DrawOPS.lineTo, firstPoint);
+    }
+    firstPoint = [x, y];
+    cmds.add(DrawOPS.moveTo, [x, y]);
   }
   function lineTo(x, y) {
-    cmds.add(FontRenderOps.LINE_TO, [x, y]);
+    cmds.add(DrawOPS.lineTo, [x, y]);
   }
   function bezierCurveTo(x1, y1, x2, y2, x, y) {
-    cmds.add(FontRenderOps.BEZIER_CURVE_TO, [x1, y1, x2, y2, x, y]);
+    cmds.add(DrawOPS.curveTo, [x1, y1, x2, y2, x, y]);
   }
 
   const stack = [];
   let x = 0,
     y = 0;
   let stems = 0;
+  let firstPoint = null;
 
   function parse(code) {
+    const view = new DataView(code.buffer, code.byteOffset, code.byteLength);
     let i = 0;
     while (i < code.length) {
       let stackClean = false;
@@ -548,8 +545,8 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
             const bchar = stack.pop();
             y = stack.pop();
             x = stack.pop();
-            cmds.add(FontRenderOps.SAVE);
-            cmds.add(FontRenderOps.TRANSLATE, [x, y]);
+            cmds.save();
+            cmds.translate(x, y);
             let cmap = lookupCmap(
               font.cmap,
               String.fromCharCode(font.glyphNameMap[StandardEncoding[achar]])
@@ -560,7 +557,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
               font,
               cmap.glyphId
             );
-            cmds.add(FontRenderOps.RESTORE);
+            cmds.restore();
 
             cmap = lookupCmap(
               font.cmap,
@@ -660,7 +657,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
           }
           break;
         case 28:
-          stack.push(((code[i] << 24) | (code[i + 1] << 16)) >> 16);
+          stack.push(view.getInt16(i));
           i += 2;
           break;
         case 29: // callgsubr
@@ -725,13 +722,7 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
           } else if (v < 255) {
             stack.push(-(v - 251) * 256 - code[i++] - 108);
           } else {
-            stack.push(
-              ((code[i] << 24) |
-                (code[i + 1] << 16) |
-                (code[i + 2] << 8) |
-                code[i + 3]) /
-                65536
-            );
+            stack.push(view.getInt32(i) / 65536);
             i += 4;
           }
           break;
@@ -744,30 +735,57 @@ function compileCharString(charStringCode, cmds, font, glyphId) {
   parse(charStringCode);
 }
 
-const NOOP = [];
-
 class Commands {
   cmds = [];
 
+  transformStack = [];
+
+  currentTransform = [1, 0, 0, 1, 0, 0];
+
   add(cmd, args) {
     if (args) {
-      if (!isNumberArray(args, null)) {
-        warn(
-          `Commands.add - "${cmd}" has at least one non-number arg: "${args}".`
-        );
-        // "Fix" the wrong args by replacing them with 0.
-        const newArgs = args.map(arg => (typeof arg === "number" ? arg : 0));
-        this.cmds.push(cmd, ...newArgs);
-      } else {
-        this.cmds.push(cmd, ...args);
+      const { currentTransform } = this;
+      for (let i = 0, ii = args.length; i < ii; i += 2) {
+        Util.applyTransform(args, currentTransform, i);
       }
+      this.cmds.push(cmd, ...args);
     } else {
       this.cmds.push(cmd);
     }
   }
+
+  transform(transf) {
+    this.currentTransform = Util.transform(this.currentTransform, transf);
+  }
+
+  translate(x, y) {
+    this.transform([1, 0, 0, 1, x, y]);
+  }
+
+  save() {
+    this.transformStack.push(this.currentTransform.slice());
+  }
+
+  restore() {
+    this.currentTransform = this.transformStack.pop() || [1, 0, 0, 1, 0, 0];
+  }
+
+  getPath() {
+    if (
+      (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
+      FeatureTest.isFloat16ArraySupported
+    ) {
+      return new Float16Array(this.cmds);
+    }
+    return new Float32Array(this.cmds);
+  }
 }
 
 class CompiledFont {
+  #compiledCharCodes = new Set();
+
+  #compiledGlyphs = new Map();
+
   constructor(fontMatrix) {
     if (
       (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) &&
@@ -776,36 +794,47 @@ class CompiledFont {
       unreachable("Cannot initialize CompiledFont.");
     }
     this.fontMatrix = fontMatrix;
-
-    this.compiledGlyphs = Object.create(null);
-    this.compiledCharCodeToGlyphId = Object.create(null);
   }
 
-  getPathJs(unicode) {
+  static get NOOP() {
+    return shadow(
+      this,
+      "NOOP",
+      (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) ||
+        FeatureTest.isFloat16ArraySupported
+        ? new Float16Array(0)
+        : new Float32Array(0)
+    );
+  }
+
+  getPath(unicode) {
     const { charCode, glyphId } = lookupCmap(this.cmap, unicode);
-    let fn = this.compiledGlyphs[glyphId],
-      compileEx;
-    if (!fn) {
+
+    if (
+      this.#compiledGlyphs.has(glyphId) &&
+      this.#compiledCharCodes.has(charCode)
+    ) {
+      return null; // Previously compiled.
+    }
+
+    const path = this.#compiledGlyphs.getOrInsertComputed(glyphId, () => {
       try {
-        fn = this.compileGlyph(this.glyphs[glyphId], glyphId);
+        return this.compileGlyph(this.glyphs[glyphId], glyphId);
       } catch (ex) {
-        fn = NOOP; // Avoid attempting to re-compile a corrupt glyph.
-
-        compileEx = ex;
+        return ex; // Avoid attempting to re-compile a corrupt glyph.
       }
-      this.compiledGlyphs[glyphId] = fn;
-    }
-    this.compiledCharCodeToGlyphId[charCode] ??= glyphId;
+    });
+    this.#compiledCharCodes.add(charCode);
 
-    if (compileEx) {
-      throw compileEx;
+    if (path instanceof Error) {
+      throw path;
     }
-    return fn;
+    return compileFontPathInfo(path);
   }
 
   compileGlyph(code, glyphId) {
-    if (!code || code.length === 0 || code[0] === 14) {
-      return NOOP;
+    if (!code?.length || code[0] === 14) {
+      return CompiledFont.NOOP;
     }
 
     let fontMatrix = this.fontMatrix;
@@ -820,27 +849,18 @@ class CompiledFont {
         warn("Invalid fd index for glyph index.");
       }
     }
+    assert(isNumberArray(fontMatrix, 6), "Expected a valid fontMatrix.");
 
     const cmds = new Commands();
-    cmds.add(FontRenderOps.SAVE);
-    cmds.add(FontRenderOps.TRANSFORM, fontMatrix.slice());
-    cmds.add(FontRenderOps.SCALE);
+    cmds.transform(fontMatrix.slice());
     this.compileGlyphImpl(code, cmds, glyphId);
-    cmds.add(FontRenderOps.RESTORE);
+    cmds.add(DrawOPS.closePath);
 
-    return cmds.cmds;
+    return cmds.getPath();
   }
 
   compileGlyphImpl() {
     unreachable("Children classes should implement this.");
-  }
-
-  hasBuiltPath(unicode) {
-    const { charCode, glyphId } = lookupCmap(this.cmap, unicode);
-    return (
-      this.compiledGlyphs[glyphId] !== undefined &&
-      this.compiledCharCodeToGlyphId[charCode] !== undefined
-    );
   }
 }
 
@@ -858,14 +878,14 @@ class TrueTypeCompiled extends CompiledFont {
 }
 
 class Type2Compiled extends CompiledFont {
-  constructor(cffInfo, cmap, fontMatrix, glyphNameMap) {
+  constructor(cffInfo, cmap, fontMatrix) {
     super(fontMatrix || [0.001, 0, 0, 0.001, 0, 0]);
 
     this.glyphs = cffInfo.glyphs;
     this.gsubrs = cffInfo.gsubrs || [];
     this.subrs = cffInfo.subrs || [];
     this.cmap = cmap;
-    this.glyphNameMap = glyphNameMap || getGlyphsUnicode();
+    this.glyphNameMap = getGlyphsUnicode();
 
     this.gsubrsBias = getSubroutineBias(this.gsubrs);
     this.subrsBias = getSubroutineBias(this.subrs);
@@ -882,13 +902,14 @@ class Type2Compiled extends CompiledFont {
 
 class FontRendererFactory {
   static create(font, seacAnalysisEnabled) {
-    const data = new Uint8Array(font.data);
+    const data = new Uint8Array(font.data),
+      view = new DataView(data.buffer);
     let cmap, glyf, loca, cff, indexToLocFormat, unitsPerEm;
-    const numTables = getUint16(data, 4);
+    const numTables = view.getUint16(4);
     for (let i = 0, p = 12; i < numTables; i++, p += 16) {
       const tag = bytesToString(data.subarray(p, p + 4));
-      const offset = getUint32(data, p + 8);
-      const length = getUint32(data, p + 12);
+      const offset = view.getUint32(p + 8);
+      const length = view.getUint32(p + 12);
       switch (tag) {
         case "cmap":
           cmap = parseCmap(data, offset, offset + length);
@@ -900,8 +921,8 @@ class FontRendererFactory {
           loca = data.subarray(offset, offset + length);
           break;
         case "head":
-          unitsPerEm = getUint16(data, offset + 18);
-          indexToLocFormat = getUint16(data, offset + 50);
+          unitsPerEm = view.getUint16(offset + 18);
+          indexToLocFormat = view.getUint16(offset + 50);
           break;
         case "CFF ":
           cff = parseCff(data, offset, offset + length, seacAnalysisEnabled);
@@ -919,7 +940,7 @@ class FontRendererFactory {
         fontMatrix
       );
     }
-    return new Type2Compiled(cff, cmap, font.fontMatrix, font.glyphNameMap);
+    return new Type2Compiled(cff, cmap, font.fontMatrix);
   }
 }
 
