@@ -45,9 +45,6 @@ jobs:
             skip: --noFirefox
 
     runs-on: ${{ matrix.os }}
-    environment:
-      name: code-coverage
-      deployment: false
 
     steps:
       - name: Checkout repository
@@ -74,8 +71,8 @@ jobs:
             cached-pdf-files-
           enableCrossOsArchive: true
 
-      - name: Run unit tests with code coverage
-        run: npx gulp unittest --headless --coverage --coverage-output build/coverage/unit ${{ matrix.skip }}
+      - name: Run unit tests
+        run: npx gulp unittest --headless ${{ matrix.skip }}
 
       - name: Save cached PDF files
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

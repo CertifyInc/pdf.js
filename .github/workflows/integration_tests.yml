@@ -45,9 +45,6 @@ jobs:
             skip: --noFirefox
 
     runs-on: ${{ matrix.os }}
-    environment:
-      name: code-coverage
-      deployment: false
 
     steps:
       - name: Checkout repository
@@ -82,13 +79,13 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
-      - name: Run integration tests with code coverage (Windows)
+      - name: Run integration tests (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
-        run: npx gulp integrationtest --coverage --coverage-output build/coverage/integration ${{ matrix.skip }}
+        run: npx gulp integrationtest ${{ matrix.skip }}
 
-      - name: Run integration tests with code coverage (Linux)
+      - name: Run integration tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: xvfb-run -a --server-args="-screen 0, 1920x1080x24" npx gulp integrationtest --coverage --coverage-output build/coverage/integration ${{ matrix.skip }}
+        run: xvfb-run -a --server-args="-screen 0, 1920x1080x24" npx gulp integrationtest ${{ matrix.skip }}
 
       - name: Save cached PDF files
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

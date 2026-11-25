@@ -7,9 +7,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    environment:
-      name: code-coverage
-      deployment: false
 
     strategy:
       fail-fast: false
@@ -44,8 +41,8 @@ jobs:
       - name: Run external tests
         run: npx gulp externaltest
 
-      - name: Run CLI unit tests with code coverage
-        run: npx gulp unittestcli --coverage --coverage-output build/coverage/unitcli
+      - name: Run CLI unit tests
+        run: npx gulp unittestcli
 
       - name: Save cached PDF files
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
